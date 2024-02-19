@@ -23,6 +23,8 @@ const ViewUserPage = Loadable(lazy(() => import('views/user-management/view-user
 //Institute Management
 const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes/institutes')));
 const InstituteProfile = Loadable(lazy(() => import('views/institute-management/institutes/overView/instituteProfile')));
+const HelpsPage = Loadable(lazy(() => import('views/help-center/helps')));
+const TicketsPage = Loadable(lazy(() => import('views/help-center/tickets')));
 
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
@@ -76,6 +78,12 @@ const ApplicationRoutes = () => {
         <Route index element={<Navigate to="/institute-management/institutes" />} />
         <Route path="institutes" element={<InstitutesPage />} />
         <Route path="institutes/profile/:id" element={<InstituteProfile />} />
+      </Route>
+
+      <Route path="/help-center" element={<MainLayout />}>
+        <Route index element={<Navigate to="/help-center/helps" />} />
+        <Route path="helps" element={<HelpsPage />} />
+        <Route path="tickets" element={<TicketsPage />} />
       </Route>
 
       <Route element={<MinimalLayout />}>
