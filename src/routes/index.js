@@ -30,6 +30,9 @@ const TaxesPage = Loadable(lazy(() => import('views/tax-management/taxes')));
 // Discount Management
 const DiscountsPage = Loadable(lazy(() => import('views/discount-management/discounts')));
 
+// Notification Management
+const NotificationsPage = Loadable(lazy(() => import('views/notification-management/notifications')));
+
 
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
@@ -94,6 +97,12 @@ const ApplicationRoutes = () => {
       <Route path="/discount-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/discount-management/discounts" />} />
         <Route path="discounts" element={<DiscountsPage />} />
+      </Route>
+
+      {/* Notification Route */}
+      <Route path="/notification-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/notification-management/notifications" />} />
+        <Route path="notifications" element={<NotificationsPage />} />
       </Route>
 
       <Route element={<MinimalLayout />}>
