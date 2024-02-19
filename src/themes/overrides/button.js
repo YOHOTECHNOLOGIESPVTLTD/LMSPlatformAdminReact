@@ -1,6 +1,5 @@
 // ** Theme Config Imports
 // import themeConfig from 'src/configs/themeConfig';
-
 // ** Util Import
 import { hexToRGBA } from 'utils/hex-to-rgba';
 
@@ -204,19 +203,19 @@ const Button = () => {
         }),
         contained: ({ theme }) => ({
           boxShadow: theme.shadows[2],
-          padding: theme.spacing(2.5, 5),
+          // padding: theme.spacing(2.5, 5),
           '&:hover': {
             boxShadow: theme.shadows[2]
           }
         }),
         tonal: ({ theme }) => ({
-          padding: theme.spacing(2.5, 5),
+          // padding: theme.spacing(2.5, 5),
           '&.Mui-disabled': {
             backgroundColor: theme.palette.action.disabledBackground
           }
         }),
         outlined: ({ theme, ownerState }) => ({
-          padding: theme.spacing(2.25, 4.75),
+          // padding: theme.spacing(2.25, 4.75),
           ...(ownerState.color === 'primary' && {
             borderColor: theme.palette.primary.main
           }),
@@ -236,33 +235,39 @@ const Button = () => {
             borderColor: theme.palette.info.main
           })
         }),
-        sizeSmall: ({ ownerState, theme }) => ({
+        sizeSmall: ({ ownerState }) => ({
           lineHeight: 1.231,
           borderRadius: '4px',
           fontSize: '0.8125rem',
-          ...(ownerState.variant === 'text' && {
-            padding: theme.spacing(1.5, 2.25)
-          }),
-          ...((ownerState.variant === 'contained' || ownerState.variant === 'tonal') && {
-            padding: theme.spacing(1.5, 3.5)
-          }),
-          ...(ownerState.variant === 'outlined' && {
-            padding: theme.spacing(1.25, 3.25)
-          })
+          ...(ownerState.variant === 'text' &&
+            {
+              // padding: theme.spacing(1.5, 2.25)
+            }),
+          ...((ownerState.variant === 'contained' || ownerState.variant === 'tonal') &&
+            {
+              // padding: theme.spacing(1.5, 3.5)
+            }),
+          ...(ownerState.variant === 'outlined' &&
+            {
+              // padding: theme.spacing(1.25, 3.25)
+            })
         }),
-        sizeLarge: ({ ownerState, theme }) => ({
+        sizeLarge: ({ ownerState }) => ({
           lineHeight: 1.295,
           borderRadius: '8px',
           fontSize: '1.0625rem',
-          ...(ownerState.variant === 'text' && {
-            padding: theme.spacing(3.25, 4)
-          }),
-          ...((ownerState.variant === 'contained' || ownerState.variant === 'tonal') && {
-            padding: theme.spacing(3.25, 6.5)
-          }),
-          ...(ownerState.variant === 'outlined' && {
-            padding: theme.spacing(3, 6.25)
-          })
+          ...(ownerState.variant === 'text' &&
+            {
+              // padding: theme.spacing(3.25, 4)
+            }),
+          ...((ownerState.variant === 'contained' || ownerState.variant === 'tonal') &&
+            {
+              // padding: theme.spacing(3.25, 6.5)
+            }),
+          ...(ownerState.variant === 'outlined' &&
+            {
+              // padding: theme.spacing(3, 6.25)
+            })
         })
       }
     }

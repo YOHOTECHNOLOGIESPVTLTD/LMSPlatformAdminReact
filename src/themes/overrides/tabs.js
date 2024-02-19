@@ -35,7 +35,7 @@ const Tabs = () => {
     MuiTabPanel: {
       styleOverrides: {
         root: ({ theme }) => ({
-          padding: theme.spacing(6)
+          padding: theme.spacing(2)
         })
       }
     }

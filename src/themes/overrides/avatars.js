@@ -6,8 +6,8 @@ const Avatar = () => {
           fontSize: theme.typography.body1.fontSize
         }),
         colorDefault: ({ theme }) => ({
-          color: theme.palette.text.secondary,
-          backgroundColor: theme.palette.customColors.avatarBg
+          color: theme.palette.text.main,
+          backgroundColor: theme.palette.primary.main
         })
       }
     },
