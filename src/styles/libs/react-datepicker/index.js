@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 
 // ** Hooks
-import { useSettings } from 'hooks/useSettings' // ** Hooks Imports
 import useBgColor from 'hooks/useBgColor'
 
 // ** Util Import
@@ -14,7 +13,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 const DatePickerWrapper = styled(Box)(({ theme }) => {
   // ** Hook
-  const { settings } = useSettings()
   const bgColors = useBgColor()
 
   return {
@@ -29,8 +27,8 @@ const DatePickerWrapper = styled(Box)(({ theme }) => {
       borderRadius: theme.shape.borderRadius,
       fontFamily: theme.typography.fontFamily,
       backgroundColor: theme.palette.background.paper,
-      boxShadow: theme.shadows[settings.skin === 'bordered' ? 0 : 4],
-      border: settings.skin === 'bordered' ? `1px solid ${theme.palette.divider}` : 'none',
+      boxShadow: theme.shadows[4],
+      border:'none',
       '& .react-datepicker__header': {
         padding: 0,
         border: 'none',
