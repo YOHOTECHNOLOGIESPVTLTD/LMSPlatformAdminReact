@@ -1,7 +1,6 @@
 import dashboard from './dashboard';
 import userManagement from './user-management'
 import PaymentManagement from "./payment-management"
-import userManagement from './user-management';
 import instituteManagement from './institute-management';
 import taxManagement from './tax-management'
 import discountManagement from './discount-management';
