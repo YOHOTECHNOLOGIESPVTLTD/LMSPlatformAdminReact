@@ -15,7 +15,6 @@ import {
   InputLabel,
   OutlinedInput,
   Stack,
-  Typography,
 } from '@mui/material';
 
 // third party
@@ -30,14 +29,12 @@ import AnimateButton from 'components/extended/AnimateButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
   const scriptedRef = useScriptRef();
   const [checked, setChecked] = useState(true);
-
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -51,20 +48,15 @@ const FirebaseLogin = ({ ...others }) => {
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
-        <Grid item xs={12}>
-        
-        </Grid>
+        <Grid item xs={12}></Grid>
         <Grid item xs={12}>
           <Box
             sx={{
               alignItems: 'center',
               display: 'flex'
             }}
-          >
-            
-          </Box>
+          ></Box>
         </Grid>
-       
       </Grid>
 
       <Formik
@@ -152,9 +144,7 @@ const FirebaseLogin = ({ ...others }) => {
                 }
                 label="Remember me"
               />
-              <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
-                Forgot Password?
-              </Typography>
+             
             </Stack>
             {errors.submit && (
               <Box sx={{ mt: 3 }}>
