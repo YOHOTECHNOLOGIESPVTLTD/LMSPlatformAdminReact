@@ -19,10 +19,16 @@ const ViewGroupPage = Loadable(lazy(() => import('views/user-management/view-gro
 const EditGroupPage = Loadable(lazy(() => import('views/user-management/edit-group')));
 const UsersPage = Loadable(lazy(() => import('views/user-management/users')));
 const ViewUserPage = Loadable(lazy(() => import('views/user-management/view-user')));
+//Payment Management
+const Fee = Loadable(lazy(() => import('views/payment-management/fee')));
+const Salary = Loadable(lazy(() => import('views/payment-management/salary')));
+const Subscription = Loadable(lazy(() => import('views/payment-management/subscription')));
 
 //Institute Management
 const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes/institutes')));
 const InstituteProfile = Loadable(lazy(() => import('views/institute-management/institutes/overView/instituteProfile')));
+const HelpsPage = Loadable(lazy(() => import('views/help-center/helps')));
+const TicketsPage = Loadable(lazy(() => import('views/help-center/tickets')));
 
 // Tax Management
 const TaxesPage = Loadable(lazy(() => import('views/tax-management/taxes')));
@@ -82,6 +88,14 @@ const ApplicationRoutes = () => {
         <Route path="users/:id" element={<ViewUserPage />} />
       </Route>
       {/* </Route> */}
+
+      {/* PaymentManagement */}
+      <Route path="/payment-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/payment-management/fee" />} />
+        <Route path="fee" element={<Fee/>} />
+        <Route path="salary" element={<Salary />} />
+        <Route path="subscription" element={<Subscription />} />
+        </Route>
       <Route path="/institute-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/institute-management/institutes" />} />
         <Route path="institutes" element={<InstitutesPage />} />
@@ -103,6 +117,11 @@ const ApplicationRoutes = () => {
       <Route path="/notification-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/notification-management/notifications" />} />
         <Route path="notifications" element={<NotificationsPage />} />
+        </Route>
+      <Route path="/help-center" element={<MainLayout />}>
+        <Route index element={<Navigate to="/help-center/helps" />} />
+        <Route path="helps" element={<HelpsPage />} />
+        <Route path="tickets" element={<TicketsPage />} />
       </Route>
 
       <Route element={<MinimalLayout />}>
