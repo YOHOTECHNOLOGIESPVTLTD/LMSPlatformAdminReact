@@ -20,7 +20,9 @@ const EditGroupPage = Loadable(lazy(() => import('views/user-management/edit-gro
 const UsersPage = Loadable(lazy(() => import('views/user-management/users')));
 const ViewUserPage = Loadable(lazy(() => import('views/user-management/view-user')));
 
-
+//Institute Management
+const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes/institutes')));
+const InstituteProfile = Loadable(lazy(() => import('views/institute-management/institutes/overView/instituteProfile')));
 
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
@@ -54,31 +56,35 @@ const ApplicationRoutes = () => {
   return (
     <Routes>
       {/* <Route element={<Protected />}> */}
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Navigate to="/dashboard" />} />
-          <Route path="dashboard" element={<DashboardDefault />} />
-        </Route>
-        
-        {/* <Route element={<AdminRoute />}> */}
-          <Route path="/user-management" element={<MainLayout />}>
-            <Route index element={<Navigate to="/user-management/groups" />} />
-            <Route path="groups" element={<GroupsPage />} />
-            <Route path="groups/add" element={<AddGroupPage />} />
-            <Route path="groups/view" element={<ViewGroupPage />} />
-            <Route path="groups/edit/:id" element={<EditGroupPage />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="users/:id" element={<ViewUserPage />} />
-          </Route>
-        {/* </Route> */}
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<Navigate to="/dashboard" />} />
+        <Route path="dashboard" element={<DashboardDefault />} />
+      </Route>
 
-      
-        <Route element={<MinimalLayout />}>
-          <Route path="*" element={<Page404 />} />
-        </Route>
-        <Route element={<MinimalLayout />}>
-          <Route path="/server-error" element={<Page500 />} />
-        </Route>
-        {/* <Route element={<MinimalLayout />}>
+      {/* <Route element={<AdminRoute />}> */}
+      <Route path="/user-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/user-management/groups" />} />
+        <Route path="groups" element={<GroupsPage />} />
+        <Route path="groups/add" element={<AddGroupPage />} />
+        <Route path="groups/view" element={<ViewGroupPage />} />
+        <Route path="groups/edit/:id" element={<EditGroupPage />} />
+        <Route path="users" element={<UsersPage />} />
+        <Route path="users/:id" element={<ViewUserPage />} />
+      </Route>
+      {/* </Route> */}
+      <Route path="/institute-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/institute-management/institutes" />} />
+        <Route path="institutes" element={<InstitutesPage />} />
+        <Route path="institutes/profile/:id" element={<InstituteProfile />} />
+      </Route>
+
+      <Route element={<MinimalLayout />}>
+        <Route path="*" element={<Page404 />} />
+      </Route>
+      <Route element={<MinimalLayout />}>
+        <Route path="/server-error" element={<Page500 />} />
+      </Route>
+      {/* <Route element={<MinimalLayout />}>
           <Route path="/login" element={<Navigate to="/" />} />
         </Route> */}
       {/* </Route> */}
