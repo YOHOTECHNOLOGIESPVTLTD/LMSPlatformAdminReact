@@ -19,12 +19,23 @@ const ViewGroupPage = Loadable(lazy(() => import('views/user-management/view-gro
 const EditGroupPage = Loadable(lazy(() => import('views/user-management/edit-group')));
 const UsersPage = Loadable(lazy(() => import('views/user-management/users')));
 const ViewUserPage = Loadable(lazy(() => import('views/user-management/view-user')));
+//Payment Management
+const Fee = Loadable(lazy(() => import('views/payment-management/fee')));
+const Salary = Loadable(lazy(() => import('views/payment-management/salary')));
+const Subscription = Loadable(lazy(() => import('views/payment-management/subscription')));
 
 //Institute Management
 const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes/institutes')));
 const InstituteProfile = Loadable(lazy(() => import('views/institute-management/institutes/overView/instituteProfile')));
 const HelpsPage = Loadable(lazy(() => import('views/help-center/helps')));
 const TicketsPage = Loadable(lazy(() => import('views/help-center/tickets')));
+
+// Tax Management
+const TaxesPage = Loadable(lazy(() => import('views/tax-management/taxes')));
+
+// Discount Management
+const DiscountsPage = Loadable(lazy(() => import('views/discount-management/discounts')));
+
 
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
@@ -74,10 +85,29 @@ const ApplicationRoutes = () => {
         <Route path="users/:id" element={<ViewUserPage />} />
       </Route>
       {/* </Route> */}
+
+      {/* PaymentManagement */}
+      <Route path="/payment-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/payment-management/fee" />} />
+        <Route path="fee" element={<Fee/>} />
+        <Route path="salary" element={<Salary />} />
+        <Route path="subscription" element={<Subscription />} />
+        </Route>
       <Route path="/institute-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/institute-management/institutes" />} />
         <Route path="institutes" element={<InstitutesPage />} />
         <Route path="institutes/profile/:id" element={<InstituteProfile />} />
+      </Route>
+      {/* </ Tax Route> */}
+      <Route path="/tax-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/tax-management/taxes" />} />
+        <Route path="taxes" element={<TaxesPage />} />
+      </Route>
+
+      {/* Discount Route */}
+      <Route path="/discount-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/discount-management/discounts" />} />
+        <Route path="discounts" element={<DiscountsPage />} />
       </Route>
 
       <Route path="/help-center" element={<MainLayout />}>
