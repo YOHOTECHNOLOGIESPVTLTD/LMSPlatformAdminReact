@@ -24,7 +24,7 @@ const pages = {
       children: [
         {
           id: 'helps',
-          title: 'Helps',
+          title: 'Faqs',
           icon: icons.IconHelp,
           type: 'item',
           url: '/help-center/helps',
