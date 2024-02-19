@@ -73,20 +73,20 @@
 // }
 
 import { useSelector } from 'react-redux';
-// import tinycolor from 'tinycolor2';
+import tinycolor from 'tinycolor2';
 const DefaultPalette = () => {
-  // const generatePrimaryObject = (primaryColor) => {
-  //   const color = tinycolor(primaryColor);
+  const generatePrimaryObject = (primaryColor) => {
+    const color = tinycolor(primaryColor);
 
-  //   return {
-  //     light: color.lighten(20).toHexString(),
-  //     main: primaryColor,
-  //     dark: color.darken(20).toHexString(),
-  //     800: color.darken(40).toHexString(),
-  //     200: color.lighten(60).toHexString(),
-  //     contrastText: '#FFF'
-  //   };
-  // };
+    return {
+      light: color.lighten(20).toHexString(),
+      main: primaryColor,
+      dark: color.darken(40).toHexString(),
+      800: color.darken(40).toHexString(),
+      200: color.lighten(60).toHexString(),
+      contrastText: '#FFF'
+    };
+  };
   // ** Vars
 
   const isDarkMode = useSelector((state) => state.customization.darkMode);
@@ -98,7 +98,8 @@ const DefaultPalette = () => {
   const darkPaperBgColor = '#2F3349';
   const mainColor = mode === 'light' ? lightColor : darkColor;
 
-  // const primary = generatePrimaryObject('#7367F0');
+  const primary = generatePrimaryObject('#D80032');
+  const secondary = generatePrimaryObject('#F79BD3');
   const defaultBgColor = () => {
     if (skin === 'bordered' && mode === 'light') {
       return whiteColor;
@@ -126,22 +127,24 @@ const DefaultPalette = () => {
       black: '#000',
       white: whiteColor
     },
-    primary: {
-      light: '#e3e1fc',
-      main: '#7367F0',
-      dark: '#655BD3',
-      800: '#2e2960',
-      200: '#c7c2f9',
-      contrastText: whiteColor
-    },
-    secondary: {
-      light: '#d3eafd',
-      200: '#a6d5fa',
-      main: '#2196f3',
-      dark: '#1e88e5',
-      800: '#0d3c61',
-      contrastText: whiteColor
-    },
+    primary: primary,
+    // primary: {
+    //   light: '#e3e1fc',
+    //   main: '#7367F0',
+    //   dark: '#655BD3',
+    //   800: '#2e2960',
+    //   200: '#c7c2f9',
+    //   contrastText: whiteColor
+    // },
+    // secondary: {
+    //   light: '#d3eafd',
+    //   200: '#a6d5fa',
+    //   main: '#2196f3',
+    //   dark: '#1e88e5',
+    //   800: '#0d3c61',
+    //   contrastText: whiteColor
+    // },
+    secondary: secondary,
 
     error: {
       light: '#ED6F70',

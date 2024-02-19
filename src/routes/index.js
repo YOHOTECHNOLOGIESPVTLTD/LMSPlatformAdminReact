@@ -24,6 +24,17 @@ const Fee = Loadable(lazy(() => import('views/payment-management/fee')));
 const Salary = Loadable(lazy(() => import('views/payment-management/salary')));
 const Subscription = Loadable(lazy(() => import('views/payment-management/subscription')));
 
+//Institute Management
+const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes/institutes')));
+const InstituteProfile = Loadable(lazy(() => import('views/institute-management/institutes/overView/instituteProfile')));
+
+// Tax Management
+const TaxesPage = Loadable(lazy(() => import('views/tax-management/taxes')));
+
+// Discount Management
+const DiscountsPage = Loadable(lazy(() => import('views/discount-management/discounts')));
+
+
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
 const Page401 = Loadable(lazy(() => import('views/error-pages/401-page')));
@@ -79,6 +90,22 @@ const ApplicationRoutes = () => {
         <Route path="fee" element={<Fee/>} />
         <Route path="salary" element={<Salary />} />
         <Route path="subscription" element={<Subscription />} />
+        </Route>
+      <Route path="/institute-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/institute-management/institutes" />} />
+        <Route path="institutes" element={<InstitutesPage />} />
+        <Route path="institutes/profile/:id" element={<InstituteProfile />} />
+      </Route>
+      {/* </ Tax Route> */}
+      <Route path="/tax-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/tax-management/taxes" />} />
+        <Route path="taxes" element={<TaxesPage />} />
+      </Route>
+
+      {/* Discount Route */}
+      <Route path="/discount-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/discount-management/discounts" />} />
+        <Route path="discounts" element={<DiscountsPage />} />
       </Route>
 
       <Route element={<MinimalLayout />}>
