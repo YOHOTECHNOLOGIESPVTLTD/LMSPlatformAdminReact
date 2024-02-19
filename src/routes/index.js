@@ -29,6 +29,7 @@ const InstitutesPage = Loadable(lazy(() => import('views/institute-management/in
 const InstituteProfile = Loadable(lazy(() => import('views/institute-management/institutes/overView/instituteProfile')));
 const HelpsPage = Loadable(lazy(() => import('views/help-center/helps')));
 const TicketsPage = Loadable(lazy(() => import('views/help-center/tickets')));
+const ChatSupport = Loadable(lazy(() => import('views/help-center/chat-support')));
 
 // Tax Management
 const TaxesPage = Loadable(lazy(() => import('views/tax-management/taxes')));
@@ -122,6 +123,7 @@ const ApplicationRoutes = () => {
         <Route index element={<Navigate to="/help-center/helps" />} />
         <Route path="helps" element={<HelpsPage />} />
         <Route path="tickets" element={<TicketsPage />} />
+        <Route path="chatSupport" element={<ChatSupport/>} />
       </Route>
 
       <Route element={<MinimalLayout />}>

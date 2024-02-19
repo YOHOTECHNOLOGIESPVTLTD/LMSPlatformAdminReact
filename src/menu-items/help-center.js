@@ -24,7 +24,7 @@ const pages = {
       children: [
         {
           id: 'helps',
-          title: 'Helps',
+          title: 'Faqs',
           icon: icons.IconHelp,
           type: 'item',
           url: '/help-center/helps',
@@ -36,6 +36,15 @@ const pages = {
           title: 'Tickets',
           type: 'item',
           url: '/help-center/tickets',
+          target: false,
+          icon: icons.IconTicket,
+          breadcrumbs: false
+        },
+        {
+          id: 'chatsupport',
+          title: 'Chat Support',
+          type: 'item',
+          url: '/help-center/ChatSupport',
           target: false,
           icon: icons.IconTicket,
           breadcrumbs: false
