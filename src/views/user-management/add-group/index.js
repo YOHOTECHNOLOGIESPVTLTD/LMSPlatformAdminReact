@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+// import CheckBoxIcon from '@mui/icons-material/CheckBox';
+// import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import {
   Box,
   Button,
@@ -21,16 +21,16 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
+// import Autocomplete from '@mui/material/Autocomplete';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 import Icon from 'components/icon';
-import CustomChip from 'components/mui/chip';
-import { addGroup, getAllPermissions } from 'features/user-management/groups/services/groupService';
+// import CustomChip from 'components/mui/chip';
+import { getAllPermissions } from 'features/user-management/groups/services/groupService';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
+// import toast from 'react-hot-toast';
+// import { useSelector } from 'react-redux';
+// import { useNavigate } from 'react-router';
 import * as yup from 'yup';
 
 const showErrors = (field, valueLen, min) => {
@@ -48,12 +48,12 @@ const schema = yup.object().shape({
     .string()
     .min(3, (obj) => showErrors('Group Name', obj.value.length, obj.min))
     .required(),
-  branch: yup.array().min(1, 'Select at least one Branch').required()
+  // branch: yup.array().min(1, 'Select at least one Branch').required()
 });
 
 const defaultValues = {
   groupName: '',
-  branch: []
+  // branch: []
 };
 
 const useTimeout = (callback, delay) => {
@@ -85,37 +85,37 @@ const GroupAddPage = () => {
 
   const handleClose = () => {
     setValue('groupName', '');
-    setValue('branch', '');
+    // setValue('branch', '');
     reset();
   };
 
   const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = React.useState(false);
   const [permissions, setPermissions] = React.useState([]);
-  const branches = useSelector((state) => state.auth.branches);
-  const navigate = useNavigate();
+  // const branches = useSelector((state) => state.auth.branches);
+  // const navigate = useNavigate();
 
-  const onSubmit = async (data) => {
-    try {
-      const branchIds = data?.branch?.map((branch) => branch.branch_id);
-      console.log(branchIds);
-      const inputData = {
-        branch_ids: branchIds,
-        name: data.groupName,
-        permissions: selectedCheckbox
-      };
-      const result = await addGroup(inputData);
+  // const onSubmit = async (data) => {
+  //   try {
+  //     const branchIds = data?.branch?.map((branch) => branch.branch_id);
+  //     console.log(branchIds);
+  //     const inputData = {
+  //       branch_ids: branchIds,
+  //       name: data.groupName,
+  //       permissions: selectedCheckbox
+  //     };
+  //     const result = await addGroup(inputData);
 
-      if (result.success) {
-        navigate(-1);
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     if (result.success) {
+  //       navigate(-1);
+  //       toast.success(result.message);
+  //     } else {
+  //       toast.error(result.message);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     if (selectedCheckbox.length > 0 && selectedCheckbox.length < permissions.length * 8) {
@@ -207,7 +207,7 @@ const GroupAddPage = () => {
         <AddGroupSkeleton />
       ) : (
         <Card fullWidth maxWidth="md" scroll="body">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit()}>
             <CardHeader
               sx={{
                 textAlign: 'center',
@@ -224,7 +224,7 @@ const GroupAddPage = () => {
               }}
             >
               <Grid sx={{ my: 4, gap: 2 }} container>
-                <Grid xs={12} sm={5.9}>
+                <Grid xs={12} sm={4}>
                   <Controller
                     name="groupName"
                     control={control}
@@ -242,7 +242,7 @@ const GroupAddPage = () => {
                     )}
                   />
                 </Grid>
-                <Grid xs={12} sm={5.9}>
+                {/* <Grid xs={12} sm={5.9}>
                   <Controller
                     name="branch"
                     control={control}
@@ -312,7 +312,7 @@ const GroupAddPage = () => {
                       );
                     }}
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
               <Typography variant="h4">Group Permissions</Typography>
               <TableContainer>

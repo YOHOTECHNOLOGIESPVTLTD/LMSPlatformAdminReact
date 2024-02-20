@@ -224,6 +224,21 @@ const UserBodySection = ({ groups, users, setLoading }) => {
       }
     },
     {
+      flex: 0.15,
+      field: 'designation',
+      minWidth: 170,
+      headerName: 'Designation',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row?.role_group?.role?.designation}
+            </Typography>
+          </Box>
+        );
+      }
+    },
+    {
       flex: 1.25,
       minWidth: 180,
       field: 'status',
