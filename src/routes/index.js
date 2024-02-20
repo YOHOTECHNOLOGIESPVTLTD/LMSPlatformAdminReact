@@ -25,7 +25,9 @@ const Payments =Loadable(lazy(() => import('views/payment-management/fee')))
 
 //Institute Management
 const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes/institutes')));
-const InstituteProfile = Loadable(lazy(() => import('views/institute-management/institutes/overView/instituteProfile')));
+const InstituteProfile = Loadable(lazy(() => import('views/institute-management/institutes/institutes/view-profile')));
+const AddNewInstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes/institutes/add-new-institute/ValidatedStepper')));
+
 const HelpsPage = Loadable(lazy(() => import('views/help-center/helps')));
 const TicketsPage = Loadable(lazy(() => import('views/help-center/tickets')));
 const ChatSupport = Loadable(lazy(() => import('views/help-center/chat-support')));
@@ -96,10 +98,13 @@ const ApplicationRoutes = () => {
         <Route index element={<Navigate to="/payment-management/payments" />} />
         <Route path="payments" element={<Payments/>} />
         </Route>
-      <Route path="/institute-management" element={<MainLayout />}>
+        
+        <Route path="/institute-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/institute-management/institutes" />} />
         <Route path="institutes" element={<InstitutesPage />} />
         <Route path="institutes/profile/:id" element={<InstituteProfile />} />
+        <Route path="institutes/add" element={<AddNewInstitutesPage />} />
+
       </Route>
 
       {/* SubscriptionManagement */}

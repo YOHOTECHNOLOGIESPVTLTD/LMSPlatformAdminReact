@@ -1,45 +1,31 @@
-// material-ui
-
-// project imports
-import MainCard from 'components/cards/MainCard';
-////////////////////////////////////////////////////
-import { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
+import MainCard from 'components/cards/MainCard';
+import { useCallback, useEffect, useState } from 'react';
 // ** MUI Imports
+import CustomAvatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Menu from '@mui/material/Menu';
-import Grid from '@mui/material/Grid';
-import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-// import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography';
-import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-import { DataGrid } from '@mui/x-data-grid';
+import CardHeader from '@mui/material/CardHeader';
 import CustomChip from '@mui/material/Chip';
-import CustomAvatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import CustomTextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { DataGrid } from '@mui/x-data-grid';
+
 import Icon from 'components/icon';
+
 import CardStatsHorizontalWithDetails from 'components/card-statistics/card-stats-horizontal-with-details';
 
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
-
 // ** Custom Table Components Imports
-import TableHeader from './TableHeader';
 import { Button } from '@mui/material';
-// import AddUserDrawer from './AddUserDrawer'
 import { Link } from 'react-router-dom';
-
-// ==============================|| SAMPLE PAGE ||============================== //
-// const userRoleObj = {
-//   admin: { icon: 'tabler:device-laptop', color: 'secondary' },
-//   author: { icon: 'tabler:circle-check', color: 'success' },
-//   editor: { icon: 'tabler:edit', color: 'info' },
-//   maintainer: { icon: 'tabler:chart-pie-2', color: 'primary' },
-//   subscriber: { icon: 'tabler:user', color: 'warning' }
-// }
+import TableHeader from './TableHeader';
 
 const userStatusObj = {
   active: 'success',
@@ -60,38 +46,19 @@ const renderClient = (row) => {
   }
 };
 
-// const RowOptions = ({ id }) => {
 const RowOptions = ({ id }) => {
-  // ** Hooks
-  // const dispatch = useDispatch()
-
   // ** State
   const [anchorEl, setAnchorEl] = useState(null);
   const rowOptionsOpen = Boolean(anchorEl);
-
-  // const handleRowOptionsClick = event => {
-  //   setAnchorEl(event.currentTarget)
-  // }
 
   const handleRowOptionsClose = () => {
     setAnchorEl(null);
   };
 
-  // const authToken = localStorage.getItem('token')
-  // const [allInstitutes,setAllInstitutes] = useState(null)
-
   return (
     <>
       <Link to={`profile/${id}`} state={{ id: id }}>
-        <Button
-          size="small"
-          //  onClick={GetInstituteById}
-          // onClick={handleRowOptionsClose}
-
-          variant="outlined"
-          color="secondary"
-        >
-          {/* <Icon icon='tabler:eye' /> */}
+        <Button size="small" variant="outlined" color="secondary">
           View
         </Button>
       </Link>
@@ -111,12 +78,7 @@ const RowOptions = ({ id }) => {
         }}
         PaperProps={{ style: { minWidth: '8rem' } }}
       >
-        <MenuItem
-          // component={Link}
-          sx={{ '& svg': { mr: 2 } }}
-          href="/apps/user/view/account"
-          onClick={handleRowOptionsClose}
-        >
+        <MenuItem sx={{ '& svg': { mr: 2 } }} href="/apps/user/view/account" onClick={handleRowOptionsClose}>
           <Icon icon="tabler:eye" fontSize={20} />
           View
         </MenuItem>
@@ -140,7 +102,6 @@ const columns = [
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <Typography
               noWrap
-              // component={Link}
               href="/apps/user/view/account"
               sx={{
                 fontWeight: 500,
@@ -180,13 +141,6 @@ const columns = [
     renderCell: ({ row }) => {
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {/* <CustomAvatar
-            skin='light'
-            sx={{ mr: 4, width: 30, height: 30 }}
-            color={userRoleObj[row.role].color || 'primary'}
-          >
-            <Icon icon={userRoleObj[row.role].icon} />
-          </CustomAvatar> */}
           <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
             {row?.phone}
           </Typography>
@@ -404,12 +358,10 @@ const Institutes = () => {
       await axios
         .get('http://115.246.236.90:8000/api/platform/admin/institute-management/institutes/read', { headers })
         .then((response) => {
-          // Handle the response data here
           console.log('Response:', response.data.data);
           setAllInstitutes(response.data.data);
         });
     } catch (error) {
-      // Handle errors here
       console.error('Error:', error);
     }
   }
@@ -506,7 +458,6 @@ const Institutes = () => {
                 pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                // allInstitutes={allInstitutes}
               />
             </Card>
           </Grid>
