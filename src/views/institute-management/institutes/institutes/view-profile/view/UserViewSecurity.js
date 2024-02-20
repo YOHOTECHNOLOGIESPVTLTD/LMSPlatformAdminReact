@@ -17,7 +17,6 @@ import Icon from 'components/icon';
 // ** Custom Component Import
 import CustomTextField from 'components/mui/text-field';
 
-
 const UserViewSecurity = () => {
   // ** States
   const [values, setValues] = useState({

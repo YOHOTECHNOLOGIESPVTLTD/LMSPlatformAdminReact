@@ -1,31 +1,29 @@
 // ** React Imports
-import { Fragment, useState, forwardRef } from 'react';
-
+import { useState } from 'react';
 // ** MUI Imports
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Stepper from '@mui/material/Stepper';
-import MenuItem from '@mui/material/MenuItem';
-import StepLabel from '@mui/material/StepLabel';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { styled } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import MuiStep from '@mui/material/Step';
-import InputAdornment from '@mui/material/InputAdornment';
 import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
-import { Controller, useForm } from 'react-hook-form';
 import DialogContent from '@mui/material/DialogContent';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
+import MuiStep from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Controller, useForm } from 'react-hook-form';
 
 // ** Third Party Imports
 import DatePicker from 'react-datepicker';
-// import { popperPlacement } from '../institutes/pickers/index'
 // ** Custom Component Imports
 import CustomInput from './pickers/PickersCustomInput';
 // ** Third Party Imports
@@ -38,20 +36,17 @@ import Icon from 'components/icon';
 import StepperCustomDot from './add-new-institute/StepperCustomDot';
 
 import CustomAvatar from 'components/mui/avatar';
-// import CustomTextField from '@core/components/mui/text-field'
-import { TextField as CustomTextField, TextField } from '@mui/material';
+
+import { TextField as CustomTextField } from '@mui/material';
 
 // ** Hook Import
 import { useSettings } from 'hooks/useSettings';
 // ** Util Import
-import { hexToRGBA } from 'utils/hex-to-rgba';
-import StepperWrapper from 'styles/mui/stepper';
-// ** Styled Component
-
-import Gallery from './add-new-institute/gallery';
-
 import { useFormik } from 'formik';
+import StepperWrapper from 'styles/mui/stepper';
+import { hexToRGBA } from 'utils/hex-to-rgba';
 import * as Yup from 'yup';
+import Gallery from './add-new-institute/gallery';
 
 const steps = [
   {
@@ -285,11 +280,9 @@ const StepperCustomHorizontal = () => {
       email: '',
       phone: '',
       alt_phone: ''
-      // Add initial values for other fields if needed
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // Handle form submission here
       console.log(values);
     }
   });

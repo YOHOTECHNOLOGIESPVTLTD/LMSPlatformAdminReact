@@ -1,9 +1,7 @@
 import { Box, Button } from '@mui/material';
-import React from 'react';
-import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
-
 
 const ImageUploader = ({ galleryImages, setGalleryImages }) => {
   const handleImageChange = (event) => {
@@ -17,8 +15,7 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
   };
 
   const handleRemoveImage = (index) => {
-    // Create a copy of the array without the selected image
-    const updatedImages = [...galleryImages]; 
+    const updatedImages = [...galleryImages];
     updatedImages.splice(index, 1);
 
     // Update galleryImages state
