@@ -20,9 +20,8 @@ const EditGroupPage = Loadable(lazy(() => import('views/user-management/edit-gro
 const UsersPage = Loadable(lazy(() => import('views/user-management/users')));
 const ViewUserPage = Loadable(lazy(() => import('views/user-management/view-user')));
 //Payment Management
-const Fee = Loadable(lazy(() => import('views/payment-management/fee')));
-const Salary = Loadable(lazy(() => import('views/payment-management/salary')));
-const Subscription = Loadable(lazy(() => import('views/payment-management/subscription')));
+const Payments =Loadable(lazy(() => import('views/payment-management/fee')))
+
 
 //Institute Management
 const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes/institutes')));
@@ -33,6 +32,9 @@ const HelpsPage = Loadable(lazy(() => import('views/help-center/helps')));
 const TicketsPage = Loadable(lazy(() => import('views/help-center/tickets')));
 const ChatSupport = Loadable(lazy(() => import('views/help-center/chat-support')));
 
+//SubscriptionManagement
+const Subscription = Loadable(lazy(() => import('views/subscription-management/plans-and-features')));
+
 // Tax Management
 const TaxesPage = Loadable(lazy(() => import('views/tax-management/taxes')));
 
@@ -41,7 +43,6 @@ const DiscountsPage = Loadable(lazy(() => import('views/discount-management/disc
 
 // Notification Management
 const NotificationsPage = Loadable(lazy(() => import('views/notification-management/notifications')));
-
 
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
@@ -94,10 +95,8 @@ const ApplicationRoutes = () => {
 
       {/* PaymentManagement */}
       <Route path="/payment-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/payment-management/fee" />} />
-        <Route path="fee" element={<Fee/>} />
-        <Route path="salary" element={<Salary />} />
-        <Route path="subscription" element={<Subscription />} />
+        <Route index element={<Navigate to="/payment-management/payments" />} />
+        <Route path="payments" element={<Payments/>} />
         </Route>
         
         <Route path="/institute-management" element={<MainLayout />}>
@@ -107,6 +106,12 @@ const ApplicationRoutes = () => {
         <Route path="institutes/add" element={<AddNewInstitutesPage />} />
 
       </Route>
+
+      {/* SubscriptionManagement */}
+      <Route path="/subscription-management" element={<MainLayout />}>
+        <Route path="plans-and-features" element={<Subscription />} />
+      </Route>
+
       {/* </ Tax Route> */}
       <Route path="/tax-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/tax-management/taxes" />} />
@@ -123,12 +128,12 @@ const ApplicationRoutes = () => {
       <Route path="/notification-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/notification-management/notifications" />} />
         <Route path="notifications" element={<NotificationsPage />} />
-        </Route>
+      </Route>
       <Route path="/help-center" element={<MainLayout />}>
         <Route index element={<Navigate to="/help-center/helps" />} />
         <Route path="helps" element={<HelpsPage />} />
         <Route path="tickets" element={<TicketsPage />} />
-        <Route path="chatSupport" element={<ChatSupport/>} />
+        <Route path="chatSupport" element={<ChatSupport />} />
       </Route>
 
       <Route element={<MinimalLayout />}>
