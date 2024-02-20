@@ -1,36 +1,41 @@
 // ** React Imports
-import { Fragment, forwardRef, useState } from 'react';
+import { Fragment, useState, forwardRef } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Step from '@mui/material/Step';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
-import Step from '@mui/material/Step';
 import Stepper from '@mui/material/Stepper';
 // import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
+import IconButton from '@mui/material/IconButton';
+import CardContent from '@mui/material/CardContent';
+import InputAdornment from '@mui/material/InputAdornment';
 import Gallery from './gallery';
+import axios from 'axios';
 // ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import * as yup from 'yup';
-// import DatePickerWrapper from 'styles/libs/react-datepicker';
+import toast from 'react-hot-toast';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+// import DatePickerWrapper from '@core/styles/libs/react-datepicker';
 // ** Icon Imports
 import Icon from 'components/icon';
+
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
+import StepperCustomDot from './StepperCustomDot';
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import StepperCustomDot from './StepperCustomDot';
 // ** Styled Components
-import DatePicker from 'react-datepicker';
+
 import StepperWrapper from 'styles/mui/stepper';
+import DatePicker from 'react-datepicker';
+import MenuItem from '@mui/material/MenuItem';
 
 const steps = [
   {
@@ -115,7 +120,9 @@ const personalSchema = yup.object().shape({
   phone: yup.number().required(),
   alt_phone: yup.number().required(),
   description: yup.string().required(),
-  official_email: yup.string().required()
+  official_email: yup.string().required(),
+  official_website: yup.string().required(),
+  subscription: yup.string().required(),
   //   language: yup.array().min(1).required()
 });
 
@@ -193,9 +200,11 @@ const StepperLinearWithValidation = () => {
       registered_date: '',
       institute_name: '',
       official_email: '',
+      official_website: '',
+      subscription: '',
       phone: Number(''),
       alt_phone: Number(''),
-      description: ''
+      description: '',
     });
   };
 
@@ -356,12 +365,12 @@ const StepperLinearWithValidation = () => {
           // <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: 'auto' } }}>
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
-              <Grid item xs={12} sx={{mt:3}}>
+              <Grid item xs={12}>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[0].title}
+                  {steps[1].title}
                 </Typography>
                 <Typography variant="caption" component="p">
-                  {steps[0].subtitle}
+                  {steps[1].subtitle}
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -583,6 +592,29 @@ const StepperLinearWithValidation = () => {
                   )}
                 />
               </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="subscription"
+                  control={personalControl}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField {...field} fullWidth select label="Subscription" id="custom-select"
+                    error={Boolean(personalErrors['official_website'])}
+                    aria-describedby="stepper-linear-personal-official_website"
+                    {...(personalErrors['official_website'] && { helperText: 'This field is required' })}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={10}>Ten</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </TextField>
+                  )}
+                />
+              </Grid>
+
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="description"
@@ -621,12 +653,12 @@ const StepperLinearWithValidation = () => {
         return (
           <form key={2} onSubmit={handleGallerySubmit(onSubmit)}>
             <Grid container spacing={5}>
-              <Grid item xs={12} sx={{mt:3}}>
+              <Grid item xs={12}>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[1].title}
+                  {steps[2].title}
                 </Typography>
                 <Typography variant="caption" component="p">
-                  {steps[1].subtitle}
+                  {steps[2].subtitle}
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -709,7 +741,7 @@ const StepperLinearWithValidation = () => {
         return (
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <Grid container spacing={5}>
-              <Grid item xs={12} sx={{mt:3}}>
+              <Grid item xs={12}>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
                   {steps[2].title}
                 </Typography>
@@ -827,12 +859,12 @@ const StepperLinearWithValidation = () => {
         return (
           <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
             <Grid container spacing={5}>
-              <Grid item xs={12} sx={{mt:3}}>
+              <Grid item xs={12}>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[3].title}
+                  {steps[0].title}
                 </Typography>
                 <Typography variant="caption" component="p">
-                  {steps[3].subtitle}
+                  {steps[0].subtitle}
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -1016,53 +1048,55 @@ const StepperLinearWithValidation = () => {
   };
 
   return (
-    <Grid>
-      <StepperWrapper >
-        <Stepper activeStep={activeStep}>
-          {steps.map((step, index) => {
-            const labelProps = {};
-            if (index === activeStep) {
-              labelProps.error = false;
-              if (
-                (accountErrors.email || accountErrors.username || accountErrors.password || accountErrors['confirm_password']) &&
-                activeStep === 3
-              ) {
-                labelProps.error = true;
-              } else if ((personalErrors['registered_date'] || personalErrors['first-name']) && activeStep === 0) {
-                labelProps.error = true;
-              } else if (galleryErrors.logo || (galleryErrors.gallery && activeStep === 1)) {
-                labelProps.error = true;
-              } else if (
-                (socialErrors.instagram || socialErrors.twitter || socialErrors.facebook || socialErrors.linkedIn) &&
-                activeStep === 2
-              ) {
-                labelProps.error = true;
-              } else {
+    <Card>
+      <CardContent>
+        <StepperWrapper>
+          <Stepper activeStep={activeStep}>
+            {steps.map((step, index) => {
+              const labelProps = {};
+              if (index === activeStep) {
                 labelProps.error = false;
+                if (
+                  (accountErrors.email || accountErrors.username || accountErrors.password || accountErrors['confirm_password']) &&
+                  activeStep === 3
+                ) {
+                  labelProps.error = true;
+                } else if ((personalErrors['registered_date'] || personalErrors['first-name']) && activeStep === 0) {
+                  labelProps.error = true;
+                } else if (galleryErrors.logo || (galleryErrors.gallery && activeStep === 1)) {
+                  labelProps.error = true;
+                } else if (
+                  (socialErrors.instagram || socialErrors.twitter || socialErrors.facebook || socialErrors.linkedIn) &&
+                  activeStep === 2
+                ) {
+                  labelProps.error = true;
+                } else {
+                  labelProps.error = false;
+                }
               }
-            }
 
-            return (
-              <Step key={index} >
-                <StepLabel {...labelProps} StepIconComponent={StepperCustomDot}>
-                  <div className="step-label">
-                    <Typography className="step-number">{`0${index + 1}`}</Typography>
-                    <div>
-                      <Typography className="step-title">{step.title}</Typography>
-                      <Typography className="step-subtitle">{step.subtitle}</Typography>
+              return (
+                <Step key={index}>
+                  <StepLabel {...labelProps} StepIconComponent={StepperCustomDot}>
+                    <div className="step-label">
+                      <Typography className="step-number">{`0${index + 1}`}</Typography>
+                      <div>
+                        <Typography className="step-title">{step.title}</Typography>
+                        <Typography className="step-subtitle">{step.subtitle}</Typography>
+                      </div>
                     </div>
-                  </div>
-                </StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-      </StepperWrapper>
+                  </StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
+        </StepperWrapper>
+      </CardContent>
 
       <Divider sx={{ m: '0 !important' }} />
 
-      <Grid>{renderContent()}</Grid>
-    </Grid>
+      <CardContent>{renderContent()}</CardContent>
+    </Card>
   );
 };
 

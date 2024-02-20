@@ -1,6 +1,5 @@
-// material-ui
-
 // project imports
+
 import MainCard from 'components/cards/MainCard';
 ////////////////////////////////////////////////////
 import { useState, useCallback, useEffect } from 'react';
@@ -20,12 +19,14 @@ import { DataGrid } from '@mui/x-data-grid';
 import CustomChip from '@mui/material/Chip';
 import CustomAvatar from '@mui/material/Avatar';
 import CustomTextField from '@mui/material/TextField';
+
 import Icon from 'components/icon';
+
 import CardStatsHorizontalWithDetails from 'components/card-statistics/card-stats-horizontal-with-details';
 
 // ** Utils Import
-import { getInitials } from 'utils/get-initials';
 
+import { getInitials } from 'utils/get-initials';
 // ** Custom Table Components Imports
 import TableHeader from './TableHeader';
 import { Button } from '@mui/material';
