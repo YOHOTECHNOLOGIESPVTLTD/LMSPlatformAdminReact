@@ -147,7 +147,7 @@ const FeesTable = () => {
       flex: 1.25,
       minWidth: 210,
       field: 'name',
-      headerName: 'Students',
+      headerName: 'Institutes',
       renderCell: ({ row }) => {
         const { name, companyEmail } = row;
 
@@ -179,18 +179,6 @@ const FeesTable = () => {
       field: 'issuedDate',
       headerName: 'Issued Date',
       renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.issuedDate}</Typography>
-    },
-    {
-      flex: 1,
-      minWidth: 130,
-      field: 'balance',
-      headerName: 'Balance',
-      renderCell: ({ row }) =>
-        row.balance !== 0 ? (
-          <Typography sx={{ color: 'text.secondary' }}>{row.balance}</Typography>
-        ) : (
-          <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
-        )
     },
     {
       flex: 1.25,
@@ -313,7 +301,7 @@ const FeesTable = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Fee" />
+            <CardHeader title="Payments" />
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={4}>

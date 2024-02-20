@@ -13,6 +13,7 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -24,9 +25,7 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  course: yup.string().required('Course is required'),
-  batch: yup.string().required('Batch is required'),
-  students: yup.string().required('Students is required'),
+  paymentMode: yup.string().required('Payment Mode is required'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
@@ -49,6 +48,13 @@ const FeesEditDrawer = (props) => {
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
+  const [selectedInstitutes, setSelectedInstitutes] = useState([]);
+
+  const institutes = [
+    { institute_id: '1', institute_name: 'Institute 1' },
+    { institute_id: '2', institute_name: 'Institute 2' },
+    { institute_id: '3', institute_name: 'Institute 3' }
+  ];
 
   useEffect(() => {}, []);
 
@@ -115,7 +121,7 @@ const FeesEditDrawer = (props) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Add Fees</Typography>
+          <Typography variant="h5">Edit Payments</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -150,113 +156,113 @@ const FeesEditDrawer = (props) => {
                 </ButtonStyled>
               </div>
             </Box>
+            <Grid container spacing={2}>
+            
+              <Grid item xs={12} sm={12}>
+                <Autocomplete
+                  disableCloseOnSelect
+                  options={institutes}
+                  getOptionLabel={(option) => option.institute_name}
+                  value={selectedInstitutes}
+                  onChange={(e, newValue) => setSelectedInstitutes(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      label="Institutes"
+                      InputProps={{
+                        ...params.InputProps,
+                        style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                      }}
+                    />
+                  )}
+                  renderOption={(props, option) => (
+                    <li {...props} style={{ padding: '16px 32px',margin:"0px 16px 8px" }}>
+                      {option.institute_name}
+                    </li>
+                  )}
+                  renderTags={(value) => (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+                      {value.map((option, index) => (
+                        <div
+                          key={option.institute_id}
+                          style={{ margin: '0.5rem', padding: '0.25rem', border: '1px solid #ccc', borderRadius: '4px' }}
+                        >
+                          <span>{option.institute_name}</span>
+                          <button
+                            onClick={() => {
+                              const updatedValue = [...selectedInstitutes];
+                              updatedValue.splice(index, 1);
+                              setSelectedInstitutes(updatedValue);
+                            }}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  isOptionEqualToValue={(option, value) => option.institute_id === value?.institute_id}
+                />
+              </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="course"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    select
-                    fullWidth
-                    value={value}
-                    sx={{ mb: 4 }}
-                    label="Select Course"
-                    onChange={onChange}
-                    SelectProps={{ value: value, onChange: onChange }}
-                    error={Boolean(errors.course)}
-                    {...(errors.course && { helperText: errors.course.message })}
-                  >
-                    <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                    <MenuItem value={'Android Development'}>Android Development</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
+              <Grid item xs={12} sm={12}>
+                <Controller
+                  name="paymentMode"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      select
+                      fullWidth
+                      value={value}
+                      placeholder="Payment Mode"
+                      label="Payment Mode"
+                      onChange={onChange}
+                      SelectProps={{ value: value, onChange: onChange }}
+                      error={Boolean(errors.paymentMode)}
+                      {...(errors.paymentMode && { helperText: errors.paymentMode.message })}
+                    >
+                      <MenuItem value={'Gpay'}>Gpay</MenuItem>
+                      <MenuItem value={'Phonepe'}>Phonepe</MenuItem>
+                    </TextField>
+                  )}
+                />
+              </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="batch"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    select
-                    fullWidth
-                    value={value}
-                    sx={{ mb: 4 }}
-                    label="Select Batch"
-                    onChange={onChange}
-                    SelectProps={{ value: value, onChange: onChange }}
-                    error={Boolean(errors.batch)}
-                    {...(errors.batch && { helperText: errors.batch.message })}
-                  >
-                    <MenuItem value={'Batch 1'}>Batch 1</MenuItem>
-                    <MenuItem value={'Batch 2'}>Batch 2</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
+              <Grid item xs={12} sm={12}>
+                <Controller
+                  name="paymentId"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="Payment Id"
+                      type="number"
+                      error={Boolean(errors.paymentId)}
+                      helperText={errors.paymentId?.message}
+                    />
+                  )}
+                />
+              </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="students"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    select
-                    fullWidth
-                    value={value}
-                    sx={{ mb: 4 }}
-                    label="Select Students"
-                    onChange={onChange}
-                    SelectProps={{ value: value, onChange: onChange }}
-                    error={Boolean(errors.students)}
-                    {...(errors.students && { helperText: errors.students.message })}
-                  >
-                    <MenuItem value={'Student 1'}>Student 1</MenuItem>
-                    <MenuItem value={'Student 2'}>Student 2</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="paymentId"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
-                    fullWidth
-                    label="Payment Id"
-                    type="number"
-                    error={Boolean(errors.paymentId)}
-                    helperText={errors.paymentId?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="paidAmount"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
-                    fullWidth
-                    label="Paid Amount"
-                    type="number"
-                    error={Boolean(errors.paidAmount)}
-                    helperText={errors.paidAmount?.message}
-                  />
-                )}
-              />
+              <Grid item xs={12} sm={12}>
+                <Controller
+                  name="paidAmount"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="Paid Amount"
+                      type="number"
+                      error={Boolean(errors.paidAmount)}
+                      helperText={errors.paidAmount?.message}
+                    />
+                  )}
+                />
+              </Grid>
             </Grid>
 
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
