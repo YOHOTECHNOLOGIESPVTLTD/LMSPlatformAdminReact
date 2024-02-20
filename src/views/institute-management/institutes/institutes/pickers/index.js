@@ -8,11 +8,11 @@ import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 
 // ** Custom Components Imports
-import PageHeader from 'components/page-header'
-import CardSnippet from 'components/card-snippet'
+import PageHeader from 'src/@core/components/page-header'
+import CardSnippet from 'src/@core/components/card-snippet'
 
 // ** Styled Component
-import DatePickerWrapper from 'styles/libs/react-datepicker'
+import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 // ** Demo Components Imports
 import PickersTime from 'src/views/forms/form-elements/pickers/PickersTime'

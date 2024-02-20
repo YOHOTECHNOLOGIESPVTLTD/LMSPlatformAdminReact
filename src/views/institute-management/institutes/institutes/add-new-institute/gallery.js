@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Icon from 'components/icon';
 
+
 const ImageUploader = ({ galleryImages, setGalleryImages }) => {
   const handleImageChange = (event) => {
     const files = event.target.files;

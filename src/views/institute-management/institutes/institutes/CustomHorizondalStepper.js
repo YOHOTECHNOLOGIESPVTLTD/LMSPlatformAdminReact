@@ -35,20 +35,20 @@ import toast from 'react-hot-toast';
 import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import StepperCustomDot from './StepperCustomDot';
+import StepperCustomDot from './add-new-institute/StepperCustomDot';
+
 import CustomAvatar from 'components/mui/avatar';
-// import CustomTextField from 'components/mui/text-field'
+// import CustomTextField from '@core/components/mui/text-field'
 import { TextField as CustomTextField, TextField } from '@mui/material';
 
 // ** Hook Import
 import { useSettings } from 'hooks/useSettings';
-
 // ** Util Import
 import { hexToRGBA } from 'utils/hex-to-rgba';
-
-// ** Styled Component
 import StepperWrapper from 'styles/mui/stepper';
-import Gallery from './gallery';
+// ** Styled Component
+
+import Gallery from './add-new-institute/gallery';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -170,8 +170,6 @@ const StepperCustomHorizontal = () => {
       toast.success('Successfully Added a new Institute');
     }
   };
-
-
 
   const handleReset = () => {
     setEmail('');
