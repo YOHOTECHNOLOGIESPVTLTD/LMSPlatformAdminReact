@@ -34,6 +34,7 @@ import { Link } from 'react-router-dom';
 import FeesAddDrawer from './FeesAddDrawer';
 import FeesCardHeader from './FeesCardHeader';
 import FeesEditDrawer from './FeesEditDrawer';
+import FeesViewDrawer from './FeeViewDrawer';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -84,7 +85,13 @@ const FeesTable = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
+  const [viewUserOpen, setViewUserOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const toggleViewUserDrawer = () => {
+    setViewUserOpen(!viewUserOpen);
+    console.log('Toggle drawer');
+  };
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -208,7 +215,7 @@ const FeesTable = () => {
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Tooltip title="View">
-            <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
+            <IconButton size="small" onClick={toggleViewUserDrawer} sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
               <Icon icon="tabler:eye" />
             </IconButton>
           </Tooltip>
@@ -472,6 +479,7 @@ const FeesTable = () => {
 
       <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
       <FeesEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
+      <FeesViewDrawer open={viewUserOpen} toggle={toggleViewUserDrawer} />
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}

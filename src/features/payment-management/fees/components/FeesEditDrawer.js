@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react';
+import { useEffect, useState, forwardRef, } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -15,7 +15,17 @@ import * as yup from 'yup';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
+import format from 'date-fns/format';
+import DatePicker from 'react-datepicker';
+
+const CustomInput = forwardRef((props, ref) => {
+  const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
+  const value = `${startDate}`;
+  props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
+  const updatedProps = { ...props };
+  delete updatedProps.setDates;
+  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
+});
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -49,6 +59,17 @@ const FeesEditDrawer = (props) => {
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
   const [selectedInstitutes, setSelectedInstitutes] = useState([]);
+  const [dates, setDates] = useState([]);
+  const [startDateRange, setStartDateRange] = useState(null);
+
+  const handleOnChangeRange = (dates) => {
+    const [start, end] = dates;
+    if (start !== null && end !== null) {
+      setDates(dates);
+    }
+    setStartDateRange(start);
+  };
+
 
   const institutes = [
     { institute_id: '1', institute_name: 'Institute 1' },
@@ -111,7 +132,7 @@ const FeesEditDrawer = (props) => {
   };
 
   return (
-    <DatePickerWrapper>
+    <Grid>
       <Drawer
         open={open}
         anchor="right"
@@ -263,6 +284,27 @@ const FeesEditDrawer = (props) => {
                   )}
                 />
               </Grid>
+
+              <Grid item xs={12} sm={12}>
+              <DatePicker
+                    isClearable
+                    selectsRange
+                    monthsShown={2}
+                    selected={startDateRange}
+                    startDate={startDateRange}
+                    shouldCloseOnSelect={false}
+                    id="date-range-picker-months"
+                    onChange={handleOnChangeRange}
+                    customInput={
+                      <CustomInput
+                        dates={dates}
+                        setDates={setDates}
+                        label="Start date End date"
+                        start={startDateRange}
+                      />
+                    }
+                  />
+              </Grid>
             </Grid>
 
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
@@ -276,7 +318,7 @@ const FeesEditDrawer = (props) => {
           </form>
         </Box>
       </Drawer>
-    </DatePickerWrapper>
+    </Grid>
   );
 };
 
