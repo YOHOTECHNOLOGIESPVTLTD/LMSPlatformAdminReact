@@ -7,7 +7,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import TabContext from '@mui/lab/TabContext';
 import PricingPlans from 'features/subscription-management/plans/components';
-import { Button, Card,Box } from '@mui/material';
+import { Card, Box } from '@mui/material';
 import SubscriptionFeatures from 'features/subscription-management/features/components';
 
 const Subscription = () => {
@@ -20,10 +20,8 @@ const Subscription = () => {
 
   return (
     <Card>
-      <Box sx={{p:2,justifyContent:'end',display:'flex'}}>
-        <Button variant="contained" color="primary">
-          Create New plan +
-        </Button>
+      <Box sx={{ p: 2, justifyContent: 'end', display: 'flex' }}>
+    
       </Box>
       <TabContext value={value}>
         <TabList variant="" onChange={handleChange} aria-label="full width tabs example">
@@ -34,7 +32,7 @@ const Subscription = () => {
           <PricingPlans />
         </TabPanel>
         <TabPanel value="features">
-          <SubscriptionFeatures/>
+          <SubscriptionFeatures />
         </TabPanel>
       </TabContext>
     </Card>
