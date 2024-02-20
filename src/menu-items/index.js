@@ -3,14 +3,14 @@ import userManagement from './user-management'
 import PaymentManagement from "./payment-management"
 import instituteManagement from './institute-management';
 import helpCenter from './help-center';
-import taxManagement from './tax-management'
-import discountManagement from './discount-management';
+// import taxManagement from './tax-management'
+// import discountManagement from './discount-management';
 import notificationManagement from './notification-management';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [dashboard, userManagement, instituteManagement,taxManagement,discountManagement,PaymentManagement, helpCenter,notificationManagement]
+  items: [dashboard, userManagement, instituteManagement,PaymentManagement, helpCenter, notificationManagement]
 };
 
 export default menuItems;
