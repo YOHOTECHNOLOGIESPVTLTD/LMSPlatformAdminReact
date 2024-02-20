@@ -20,9 +20,8 @@ const EditGroupPage = Loadable(lazy(() => import('views/user-management/edit-gro
 const UsersPage = Loadable(lazy(() => import('views/user-management/users')));
 const ViewUserPage = Loadable(lazy(() => import('views/user-management/view-user')));
 //Payment Management
-const Fee = Loadable(lazy(() => import('views/payment-management/fee')));
-const Salary = Loadable(lazy(() => import('views/payment-management/salary')));
-const Subscription = Loadable(lazy(() => import('views/payment-management/subscription')));
+const Payments =Loadable(lazy(() => import('views/payment-management/fee')))
+
 
 //Institute Management
 const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes/institutes')));
@@ -92,10 +91,8 @@ const ApplicationRoutes = () => {
 
       {/* PaymentManagement */}
       <Route path="/payment-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/payment-management/fee" />} />
-        <Route path="fee" element={<Fee/>} />
-        <Route path="salary" element={<Salary />} />
-        <Route path="subscription" element={<Subscription />} />
+        <Route index element={<Navigate to="/payment-management/payments" />} />
+        <Route path="payments" element={<Payments/>} />
         </Route>
       <Route path="/institute-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/institute-management/institutes" />} />
