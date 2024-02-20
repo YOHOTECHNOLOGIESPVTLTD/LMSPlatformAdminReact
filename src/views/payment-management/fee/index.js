@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
 import FeesTable from 'features/payment-management/fees/components/FeesTable';
 
-const Fee = () => {
+const Payments = () => {
   const [loading, setLoading] = useState(true);
   // Simulate loading delay with useEffect
   useEffect(() => {
@@ -27,4 +27,4 @@ const Fee = () => {
   );
 };
 
-export default Fee;
+export default Payments;

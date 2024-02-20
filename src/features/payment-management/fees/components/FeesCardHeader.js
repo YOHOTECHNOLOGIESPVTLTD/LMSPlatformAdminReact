@@ -27,12 +27,12 @@ const FeesCardHeader = (props) => {
           sx={{
             width: 400
           }}
-          placeholder="Search Fee"
+          placeholder="Search Payments"
           onChange={(e) => handleFilter(e.target.value)}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={toggle} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
-            Add Fee
+            Add payments
           </Button>
         </Box>
       </Box>

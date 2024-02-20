@@ -7,15 +7,18 @@ import { selectLoading as selectGroupLoading, selectGroups } from 'features/user
 import { setGroups } from 'features/user-management/groups/redux/groupSlice';
 import { getAllGroups } from 'features/user-management/groups/redux/groupThunks';
 import { deleteGroup, searchGroups } from 'features/user-management/groups/services/groupService';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useCallback, } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import CustomTextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
 const GroupManagement = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
+  const [status, setStatus] = useState('');
 
   const dispatch = useDispatch();
   const groups = useSelector(selectGroups);
@@ -27,7 +30,9 @@ const GroupManagement = () => {
   useEffect(() => {
     dispatch(getAllGroups(selectedBranchId));
   }, [dispatch, selectedBranchId]);
-
+  const handleStatusChange = useCallback((e) => {
+    setStatus(e.target.value);
+  }, []);
   const AddRoleAvatar = require('assets/images/avatar/add-role.png');
 
   const handleDeleteGroup = async () => {
@@ -94,6 +99,23 @@ const GroupManagement = () => {
                 >
                   Edit Role
                 </Typography>
+              </Box>
+              <Box>
+                <CustomTextField
+                  select
+                  fullWidth
+                  defaultValue="Select Status"
+                  SelectProps={{
+                    value: status,
+                    displayEmpty: true,
+                    onChange: (e) => handleStatusChange(e)
+                  }}
+                >
+                  <MenuItem value="">Select Status</MenuItem>
+                  <MenuItem value="pending">Pending</MenuItem>
+                  <MenuItem value="active">Active</MenuItem>
+                  <MenuItem value="inactive">Inactive</MenuItem>
+                </CustomTextField>
               </Box>
               <Box sx={{ display: 'flex' }}>
                 <Box component={Link} to={'view'} state={{ group: item }}>
