@@ -1,30 +1,29 @@
 import { forwardRef, useState } from 'react';
 // ** MUI Imports
+import { yupResolver } from '@hookform/resolvers/yup';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
-import InputAdornment from '@mui/material/InputAdornment';
-import Typography from '@mui/material/Typography';
-// ** Custom Components
-import { yupResolver } from '@hookform/resolvers/yup';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import CardHeader from '@mui/material/CardHeader';
 import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import TextField from 'components/mui/text-field';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import * as yup from 'yup';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
 const data = {
@@ -82,7 +81,6 @@ const personalSchema = yup.object().shape({
   official_email: yup.string().required(),
   official_website: yup.string().required(),
   subscription: yup.string().required()
-  //   language: yup.array().min(1).required()
 });
 
 const UserViewAccount = () => {
@@ -277,7 +275,6 @@ const UserViewAccount = () => {
                               value={value}
                               label="State"
                               onChange={onChange}
-                              // id="stepper-linear-personal-state"
                               error={Boolean(personalErrors.state)}
                               aria-describedby="stepper-linear-personal-state-helper"
                               {...(personalErrors.state && { helperText: 'This field is required' })}
@@ -296,7 +293,6 @@ const UserViewAccount = () => {
                               value={value}
                               label="City"
                               onChange={onChange}
-                              // id="stepper-linear-personal-city"
                               error={Boolean(personalErrors.city)}
                               aria-describedby="stepper-linear-personal-city-helper"
                               {...(personalErrors.city && { helperText: 'This field is required' })}

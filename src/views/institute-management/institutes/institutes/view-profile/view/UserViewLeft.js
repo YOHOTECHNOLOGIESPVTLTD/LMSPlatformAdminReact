@@ -9,7 +9,6 @@ import { styled } from '@mui/material/styles';
 // ** Icon Imports
 import Icon from 'components/icon';
 
-
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 108,
   height: 108,

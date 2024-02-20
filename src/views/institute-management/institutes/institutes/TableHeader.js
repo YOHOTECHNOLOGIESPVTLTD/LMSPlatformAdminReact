@@ -1,10 +1,7 @@
 // ** MUI Imports
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-
-// ** Custom Component Import
-// import CustomTextField from '@core/components/mui/text-field'
-import { TextField } from '@mui/material';
 // ** Icon Imports
 
 import Icon from 'components/icon';
@@ -12,8 +9,7 @@ import Icon from 'components/icon';
 import { Link } from 'react-router-dom';
 
 const TableHeader = (props) => {
-  // ** Props
-  const { handleFilter, value,  } = props;
+  const { handleFilter, value } = props;
 
   return (
     <Box

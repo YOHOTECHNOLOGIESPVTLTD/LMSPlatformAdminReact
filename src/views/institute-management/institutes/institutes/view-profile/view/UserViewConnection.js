@@ -14,10 +14,6 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 // ** Icon Imports
 import Icon from 'components/icon';
-
-
-// ** Custom Components Imports
-
 import OptionsMenu from 'components/option-menu';
 
 // Styled Timeline component

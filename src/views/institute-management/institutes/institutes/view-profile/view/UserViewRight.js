@@ -11,7 +11,6 @@ import { styled } from '@mui/material/styles';
 
 import Icon from 'components/icon';
 
-// ** Demo Components Imports
 import UserViewAccount from './UserViewAccount';
 import UserViewConnection from './UserViewConnection';
 

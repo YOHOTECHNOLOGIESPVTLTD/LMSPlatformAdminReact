@@ -3,13 +3,10 @@ import MuiBox from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
 
 // ** Custom Icon Import
-
 import Icon from 'components/icon';
 
 // ** Hooks Imports
-
 import UseBgColor from 'hooks/useBgColor';
-
 
 // Styled Box component
 const Box = styled(MuiBox)(() => ({

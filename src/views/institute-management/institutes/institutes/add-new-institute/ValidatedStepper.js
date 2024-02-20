@@ -1,41 +1,37 @@
 // ** React Imports
-import { Fragment, useState, forwardRef } from 'react';
+import { Fragment, forwardRef, useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Step from '@mui/material/Step';
-import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Stepper from '@mui/material/Stepper';
-// import MenuItem from '@mui/material/MenuItem';
-import StepLabel from '@mui/material/StepLabel';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import Gallery from './gallery';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
+import Typography from '@mui/material/Typography';
 import axios from 'axios';
+import Gallery from './gallery';
 // ** Third Party Imports
-import * as yup from 'yup';
-import toast from 'react-hot-toast';
-import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// import DatePickerWrapper from '@core/styles/libs/react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import * as yup from 'yup';
 // ** Icon Imports
 import Icon from 'components/icon';
 
-import 'react-datepicker/dist/react-datepicker.css';
-// ** Custom Components Imports
-import StepperCustomDot from './StepperCustomDot';
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
-// ** Styled Components
+import 'react-datepicker/dist/react-datepicker.css';
+import StepperCustomDot from './StepperCustomDot';
 
-import StepperWrapper from 'styles/mui/stepper';
-import DatePicker from 'react-datepicker';
 import MenuItem from '@mui/material/MenuItem';
+import DatePicker from 'react-datepicker';
+import StepperWrapper from 'styles/mui/stepper';
 
 const steps = [
   {
@@ -122,8 +118,7 @@ const personalSchema = yup.object().shape({
   description: yup.string().required(),
   official_email: yup.string().required(),
   official_website: yup.string().required(),
-  subscription: yup.string().required(),
-  //   language: yup.array().min(1).required()
+  subscription: yup.string().required()
 });
 
 const socialSchema = yup.object().shape({});
@@ -181,7 +176,7 @@ const StepperLinearWithValidation = () => {
   });
   console.log(galleryControl);
   console.log(defaultPersonalValues);
-  // Handle Stepper
+
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -204,12 +199,11 @@ const StepperLinearWithValidation = () => {
       subscription: '',
       phone: Number(''),
       alt_phone: Number(''),
-      description: '',
+      description: ''
     });
   };
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
 
     // Extract the year, month, and day components
@@ -327,8 +321,6 @@ const StepperLinearWithValidation = () => {
       reader.onload = () => setLogoSrc(reader.result);
       reader.readAsDataURL(files[0]);
       setLogo(files[0]);
-      // if (reader.result !== null) {
-      // }
     }
   };
 
@@ -339,15 +331,10 @@ const StepperLinearWithValidation = () => {
       reader.onload = () => setInstituteSrc(reader.result);
       reader.readAsDataURL(files[0]);
       setInstituteImage(files[0]);
-      // if (reader.result !== null) {
-      // }
     }
   };
 
-  // const personalData = personalControl?._formValues;
-
   console.log('Gallery : ', galleryImages, 'Institute Image :', instituteImage, 'logo :', logo);
-  // console.log(personalData);
 
   const handleInputImageReset = () => {
     setLogo('');
@@ -362,7 +349,6 @@ const StepperLinearWithValidation = () => {
     switch (step) {
       case 0:
         return (
-          // <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: 'auto' } }}>
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
@@ -428,7 +414,6 @@ const StepperLinearWithValidation = () => {
                       value={value}
                       label="State"
                       onChange={onChange}
-                      // id="stepper-linear-personal-state"
                       error={Boolean(personalErrors.state)}
                       aria-describedby="stepper-linear-personal-state-helper"
                       {...(personalErrors.state && { helperText: 'This field is required' })}
@@ -447,7 +432,6 @@ const StepperLinearWithValidation = () => {
                       value={value}
                       label="City"
                       onChange={onChange}
-                      // id="stepper-linear-personal-city"
                       error={Boolean(personalErrors.city)}
                       aria-describedby="stepper-linear-personal-city-helper"
                       {...(personalErrors.city && { helperText: 'This field is required' })}
@@ -599,10 +583,15 @@ const StepperLinearWithValidation = () => {
                   control={personalControl}
                   defaultValue=""
                   render={({ field }) => (
-                    <TextField {...field} fullWidth select label="Subscription" id="custom-select"
-                    error={Boolean(personalErrors['official_website'])}
-                    aria-describedby="stepper-linear-personal-official_website"
-                    {...(personalErrors['official_website'] && { helperText: 'This field is required' })}
+                    <TextField
+                      {...field}
+                      fullWidth
+                      select
+                      label="Subscription"
+                      id="custom-select"
+                      error={Boolean(personalErrors['official_website'])}
+                      aria-describedby="stepper-linear-personal-official_website"
+                      {...(personalErrors['official_website'] && { helperText: 'This field is required' })}
                     >
                       <MenuItem value="">
                         <em>None</em>

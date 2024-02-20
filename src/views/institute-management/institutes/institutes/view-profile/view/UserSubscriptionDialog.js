@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 // ** Icon Imports
 import Icon from 'components/icon';
 
-
 const UserSuspendDialog = (props) => {
   // ** Props
   const { open, setOpen } = props;
