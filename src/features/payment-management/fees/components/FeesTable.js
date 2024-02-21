@@ -232,6 +232,12 @@ const FeesTable = () => {
                 to: `/apps/invoice/edit/${row.id}`,
                 icon: <Icon icon="tabler:edit" fontSize={20} />,
                 menuItemProps: { onClick: toggleEditUserDrawer }
+              },
+              {
+                text: 'Delete',
+                to: `/apps/invoice/edit/${row.id}`,
+                icon: <Icon icon="tabler:archive-filled" fontSize={20} />,
+                // menuItemProps: { onClick: toggleEditUserDrawer }
               }
             ]}
           />
