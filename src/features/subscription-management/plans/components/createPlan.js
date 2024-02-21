@@ -2,7 +2,7 @@
 import { useState } from 'react';
 // ** MUI Imports
 import Dialog from '@mui/material/Dialog';
-import Typography from '@mui/material/Typography';
+// import Typography from '@mui/material/Typography';
 // import DialogTitle from '@mui/material/DialogTitle';
 import { DialogContent, Grid } from '@mui/material';
 import styled from '@emotion/styled';
@@ -14,7 +14,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { DialogActions } from '@mui/material';
 import { Fragment } from 'react';
 
-const CreatePlan = ({ handleDialogClose, open, selectedValue }) => {
+const CreatePlan = ({ handleDialogClose, open }) => {
   // ** States
   //   const theme = useTheme();
   //   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -78,9 +78,9 @@ const CreatePlan = ({ handleDialogClose, open, selectedValue }) => {
 
   return (
     <Fragment>
-      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+      {/* <Typography variant="subtitle1" sx={{ mb: 2 }}>
         Selected: {selectedValue}
-      </Typography>
+      </Typography> */}
       <Dialog onClose={handleDialogClose} fullWidth aria-labelledby="responsive-dialog-title" open={open}>
         {/* <DialogTitle id="simple-dialog-title">Add New Plan</DialogTitle> */}
         <DialogContent>
