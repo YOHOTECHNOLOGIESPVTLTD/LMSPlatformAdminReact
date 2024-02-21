@@ -23,7 +23,7 @@ const Header = styled(Box)(({ theme }) => ({
   padding: theme.spacing(6),
   justifyContent: 'space-between'
 }));
-setInputValue;
+
 const schema = yup.object().shape({
   paymentMode: yup.string().required('Payment Mode is required'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
@@ -157,6 +157,7 @@ const FeesAddDrawer = (props) => {
               </div>
             </Box>
             <Grid container spacing={2}>
+            
               <Grid item xs={12} sm={12}>
                 <Autocomplete
                   disableCloseOnSelect
@@ -176,7 +177,7 @@ const FeesAddDrawer = (props) => {
                     />
                   )}
                   renderOption={(props, option) => (
-                    <li {...props} style={{ padding: '16px 32px', margin: '0px 16px 8px' }}>
+                    <li {...props} style={{ padding: '16px 32px',margin:"0px 16px 8px" }}>
                       {option.institute_name}
                     </li>
                   )}
