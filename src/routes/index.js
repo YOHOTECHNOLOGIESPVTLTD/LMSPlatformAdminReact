@@ -49,6 +49,9 @@ const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
 const Page401 = Loadable(lazy(() => import('views/error-pages/401-page')));
 const Page500 = Loadable(lazy(() => import('views/error-pages/500-page')));
 
+// Account 
+const AccountSettings = Loadable(lazy(() => import('layout/MainLayout/Header/ProfileSection/AccountSettings')));
+
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 // const Protected = () => {
@@ -97,6 +100,11 @@ const ApplicationRoutes = () => {
       <Route path="/payment-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/payment-management/payments" />} />
         <Route path="payments" element={<Payments/>} />
+        </Route>
+        {/* Profile */}
+        <Route path="/profile-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/account-settings" />} />
+          <Route path="account-settings" element={<AccountSettings />} />
         </Route>
         
         <Route path="/institute-management" element={<MainLayout />}>
