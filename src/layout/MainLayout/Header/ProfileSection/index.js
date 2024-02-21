@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 // material-ui
@@ -35,16 +34,20 @@ import MainCard from 'components/cards/MainCard';
 import Transitions from 'components/extended/Transitions';
 import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
+// import { Link } from 'react-router-dom';
+import { logout } from 'features/authentication/authActions';
+import { useDispatch } from 'react-redux';
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
-
+import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [sdm, setSdm] = useState(true);
   const [value, setValue] = useState('');
@@ -56,7 +59,7 @@ const ProfileSection = () => {
    * */
   const anchorRef = useRef(null);
   const handleLogout = async () => {
-    console.log('Logout');
+    dispatch(logout());
   };
 
   const handleClose = (event) => {
@@ -248,7 +251,11 @@ const ProfileSection = () => {
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 0}
-                          onClick={(event) => handleListItemClick(event, 0, '#')}
+                          // href="/profile-management/account-settings"
+                          onClick={(event) => {
+                            handleListItemClick(event, 0, '#');
+                            navigate('/profile-management/account-settings');
+                          }}
                         >
                           <ListItemIcon>
                             <IconSettings stroke={1.5} size="1.3rem" />
