@@ -32,7 +32,7 @@ const BoxFeature = styled(Box)(({ theme }) => ({
 const PlanDetails = (props) => {
   // ** Props
   const { data } = props;
-// console.log(plan,'Plans')
+  // console.log(plan,'Plans')
   const renderFeatures = () => {
     return data?.planBenefits.map((item, index) => (
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
