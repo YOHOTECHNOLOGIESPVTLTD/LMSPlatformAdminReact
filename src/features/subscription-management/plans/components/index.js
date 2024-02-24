@@ -1,13 +1,26 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid';
+import { useState } from 'react';
 
 // ** Custom Components Imports
 import PlanDetails from './plan-details';
 import { Button } from '@mui/material';
+import CreatePlan from './createPlan';
 
 const PricingPlans = () => {
   // ** Props
   // const { plan, data } = props
+
+  // create-modal
+  const [open, setOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('');
+  const handleClickOpen = () => setOpen(true);
+  const handleDialogClose = () => setOpen(false);
+
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
 
   const data = [
     {
@@ -86,14 +99,17 @@ const PricingPlans = () => {
   console.log(data, 'pricing');
   return (
     <Grid container spacing={6}>
-      <Grid item xs={12} display='flex' justifyContent='end'>
-        <Button  variant="contained" >Create New Plan +</Button>
+      <Grid item xs={12} display="flex" justifyContent="end">
+        <Button variant="contained" onClick={handleClickOpen}>
+          Create New Plan +
+        </Button>
       </Grid>
       {data?.map((item) => (
         <Grid item xs={12} md={4} key={item.title.toLowerCase()}>
           <PlanDetails data={item} />
         </Grid>
       ))}
+      <CreatePlan handleClose={handleClose} handleDialogClose={handleDialogClose} open={open} selectedValue={selectedValue} />
     </Grid>
   );
 };

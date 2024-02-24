@@ -91,6 +91,7 @@ const SubscriptionFeatures = () => {
               render={({ field: { value, onChange } }) => (
                 <CustomTextField
                   fullWidth
+                  type="number"
                   value={value}
                   label="Number of Users"
                   onChange={onChange}
@@ -133,6 +134,7 @@ const SubscriptionFeatures = () => {
                 <CustomTextField
                   fullWidth
                   value={value}
+                  type="number"
                   label="Number of Admins"
                   onChange={onChange}
                   placeholder="10"
@@ -174,6 +176,7 @@ const SubscriptionFeatures = () => {
                 <CustomTextField
                   fullWidth
                   value={value}
+                  type="number"
                   label="Number of Teachers"
                   onChange={onChange}
                   placeholder="10"
@@ -215,6 +218,7 @@ const SubscriptionFeatures = () => {
                 <CustomTextField
                   fullWidth
                   value={value}
+                  type="number"
                   label="Number of Batches"
                   onChange={onChange}
                   placeholder="10"
@@ -257,6 +261,7 @@ const SubscriptionFeatures = () => {
                 <CustomTextField
                   fullWidth
                   value={value}
+                  type="number"
                   label="Number of Courses"
                   onChange={onChange}
                   placeholder="10"
@@ -299,6 +304,7 @@ const SubscriptionFeatures = () => {
                 <CustomTextField
                   fullWidth
                   value={value}
+                  type="number"
                   label="Number of Classes"
                   onChange={onChange}
                   placeholder="10"
@@ -367,7 +373,7 @@ const SubscriptionFeatures = () => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} display="flex" justifyContent="center">
             <Button type="submit" variant="contained">
               Submit
             </Button>
