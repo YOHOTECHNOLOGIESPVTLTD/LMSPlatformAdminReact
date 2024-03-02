@@ -1,5 +1,3 @@
-// import { createStore } from 'redux';
-// import reducer from './reducer';
 import { configureStore } from '@reduxjs/toolkit';
 import customizationReducer from './customizationReducer';
 import auth from 'features/authentication/authReducer';
@@ -15,6 +13,7 @@ import technicalSupportsReducer from 'features/help-center/technical-support/red
 import chats from 'features/chat/redux/chatSlicees';
 import instituteReducer from 'features/institute-management/redux/instituteSlice';
 import paymentReducer from 'features/payment-management/payments-page/redux/paymentSlice';
+
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({

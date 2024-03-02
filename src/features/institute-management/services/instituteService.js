@@ -1,13 +1,13 @@
 // InstituteService.js
 import axios from 'axios';
 
-const INSTITUTE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/Institute`;
+const INSTITUTE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/institute-management/institutes`;
 
 const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/Institute/search`;
-
+const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/platform-user/user-name-check`;
 export const getAllInstitutes = async () => {
   try {
-    const response = await axios.get(`${INSTITUTE_API_END_POINT}/read-by-branch-id`, {
+    const response = await axios.get(`${INSTITUTE_API_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -51,11 +51,56 @@ export const searchInstitutes = async (searchQuery) => {
   }
 };
 
+export const InstituteGetById = async (data) => {
+  try {
+    const response = await axios.get(`${INSTITUTE_API_END_POINT}/read-by-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+
+    console.log(response);
+
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
+    } else {
+      return { success: false, message: 'Failed to fetch institute' };
+    }
+  } catch (error) {
+    console.error('Error in fetch institute:', error);
+    throw error;
+  }
+};
+export const GetInstituteActivityLog = async (data) => {
+  try {
+    const response = await axios.get(`${INSTITUTE_API_END_POINT}/activity-log`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+
+    console.log(response);
+
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
+    } else {
+      return { success: false, message: 'Failed to fetch Institute Activity Log' };
+    }
+  } catch (error) {
+    console.error('Error in fetch Institute Activity Log:', error);
+    throw error;
+  }
+};
+
 export const addInstitute = async (data) => {
   try {
     const response = await axios.post(`${INSTITUTE_API_END_POINT}/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
@@ -109,6 +154,31 @@ export const updateInstitute = async (data) => {
     }
   } catch (error) {
     console.error('Error in updateInstitute:', error);
+    throw error;
+  }
+};
+
+export const checkUserName = async (userName) => {
+  try {
+    const response = await axios.post(
+      `${USER_API_USER_NAME_CHECK_ENDPOINT}`,
+      { username: userName },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        // params: { username: userName }
+      }
+    );
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'UserName valid' };
+    } else {
+      return { success: false, message: 'UserName Invalid' };
+    }
+  } catch (error) {
+    console.error('Error in CheckUserName:', error);
     throw error;
   }
 };
