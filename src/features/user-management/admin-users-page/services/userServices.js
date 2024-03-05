@@ -180,7 +180,6 @@ export const FilterUsersByStatus = async (status) => {
   }
 };
 
-
 export const getUserById = async (id) => {
   try {
     const response = await axios.get(`${USER_API_ENDPOINT}/query-by-id`, {
@@ -209,6 +208,7 @@ export const userChangePassword = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Password changed successfully' };
@@ -241,4 +241,3 @@ export const updateUser = async (data) => {
     throw error;
   }
 };
-
