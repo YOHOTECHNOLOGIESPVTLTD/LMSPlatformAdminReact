@@ -1,16 +1,17 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, TextField, Typography } from '@mui/material';
-import Box from '@mui/material/Box';
+import { useState } from 'react';
 import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-import Icon from 'components/icon';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
+import { Button, Typography } from '@mui/material';
 import * as yup from 'yup';
-import { addUser, checkUserName } from '../services/userServices';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm, Controller } from 'react-hook-form';
+import Icon from 'components/icon';
+import { TextField } from '@mui/material';
+import toast from 'react-hot-toast';
+import { addUser, checkUserName } from '../../services/userServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -18,18 +19,6 @@ const Header = styled(Box)(({ theme }) => ({
   padding: theme.spacing(6),
   justifyContent: 'space-between'
 }));
-
-// const ITEM_HEIGHT = 48;
-// const ITEM_PADDING_TOP = 8;
-
-// const MenuProps = {
-//   PaperProps: {
-//     style: {
-//       width: 250,
-//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-//     }
-//   }
-// };
 
 const defaultValues = {
   email: '',
@@ -40,12 +29,11 @@ const defaultValues = {
   userName: '',
   role: '',
   contact: Number(''),
-  // branch: []
+  branch: []
 };
 
 const SidebarAddUser = (props) => {
   const { open, toggle, groups, setLoading } = props;
-  // const branches = useSelector((state) => state.auth.branches);
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
@@ -82,8 +70,7 @@ const SidebarAddUser = (props) => {
     confirm_password: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Passwords must match')
-      .required('Password confirmation is required'),
-    // branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
+      .required('Password confirmation is required')
   });
 
   const {
@@ -100,13 +87,8 @@ const SidebarAddUser = (props) => {
   });
 
   const onSubmit = async (data) => {
-    // const filteredBranches = branches?.filter((branch) => data?.branch?.includes(branch.branch_name));
-
     var bodyFormData = new FormData();
 
-    filteredBranches.forEach((branch) => {
-      bodyFormData.append('branch_ids[]', branch.branch_id);
-    });
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('name', data.fullName);
     bodyFormData.append('email', data.email);
@@ -134,6 +116,13 @@ const SidebarAddUser = (props) => {
         reset();
         toast.success('User created successfully');
       } else {
+        let errorMessage = '';
+        Object.values(result.message).forEach((errors) => {
+          errors.forEach((error) => {
+            errorMessage += `${error}\n`; // Concatenate errors with newline
+          });
+        });
+        toast.error(errorMessage.trim());
         // toast.error(result.message);
       }
     }
@@ -217,39 +206,6 @@ const SidebarAddUser = (props) => {
               </ButtonStyled>
             </div>
           </Box>
-
-          {/* <Grid item xs={12} sm={12}>
-            <Controller
-              name="branch"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  sx={{ mb: 4 }}
-                  select
-                  fullWidth
-                  label="Branch"
-                  id="select-multiple-checkbox"
-                  value={value}
-                  onChange={onChange}
-                  SelectProps={{
-                    MenuProps,
-                    multiple: true,
-                    renderValue: (selected) => selected.join(', ')
-                  }}
-                  error={Boolean(errors.branch)}
-                  helperText={errors.branch?.message}
-                >
-                  {branches?.map((item, index) => (
-                    <MenuItem key={index} value={item?.branch_name}>
-                      <Checkbox checked={value.includes(item.branch_name)} />
-                      <ListItemText primary={item.branch_name} />
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid> */}
 
           <Controller
             name="fullName"

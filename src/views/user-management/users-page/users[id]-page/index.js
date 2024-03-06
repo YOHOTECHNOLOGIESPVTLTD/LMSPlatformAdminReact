@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Grid';
 import ViewUserSkeleton from 'components/cards/Skeleton/ViewUserSkeleton';
-import UserViewLeft from 'features/user-management/admin-users-page/components/UserViewLeft';
-import UserViewRight from 'features/user-management/admin-users-page/components/UserViewRight';
-import { getUserById } from 'features/user-management/admin-users-page/services/userServices';
+import UserViewLeft from 'features/user-management/users-page/user-view-page/components/UserViewLeft';
+import UserViewRight from 'features/user-management/users-page/user-view-page/components/UserViewRight';
+import { getUserById } from 'features/user-management/users-page/services/userServices';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -14,20 +14,23 @@ const UserView = () => {
   }, [location]);
 
   const [userId, setUserId] = useState(location?.state?.id);
+  const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState([]);
-  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
-    getUserData();
+    getUserData(userId);
   }, [userId]);
 
-  const getUserData = async () => {
+  const getUserData = async (id) => {
     try {
-      setLoading(true);
-      const result = await getUserById(userId);
+      const data = {
+        id: id
+      };
+      setLoading(false);
+      const result = await getUserById(data);
       if (result.success) {
-        console.log('User Data:', result.data);
-        console.log(result.data);
+        console.log('User:', result.data);
         setUserData(result.data);
         setLoading(false);
       } else {

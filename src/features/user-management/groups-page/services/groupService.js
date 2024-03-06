@@ -1,19 +1,18 @@
 // groupService.js
 import axios from 'axios';
 
-const GROUP_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/group`;
+const GROUP_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role`;
 const PERMISSION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/permission`;
 const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/group/search`;
 
-export const getAllGroups = async (selectedBranchId) => {
-  console.log(selectedBranchId);
+export const getAllGroups = async (data) => {
   try {
-    const response = await axios.get(`${GROUP_API_ENDPOINT}/read-by-branch-id`, {
+    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
     console.log(response);
     // Check if the response status is successful
@@ -83,6 +82,8 @@ export const deleteGroup = async (groupId) => {
       params: { id: groupId }
     });
 
+    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'Group deleted successfully' };
     } else {
@@ -93,7 +94,47 @@ export const deleteGroup = async (groupId) => {
     throw error;
   }
 };
+export const changeStatusGroup = async (data) => {
+  try {
+    const response = await axios.put(`${GROUP_API_ENDPOINT}/status-update`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
 
+    if (response.data.status) {
+      return { success: true, message: 'Group status changed successfully' };
+    } else {
+      return { success: false, message: 'Failed to change group status' };
+    }
+  } catch (error) {
+    console.error('Error in deleteGroup:', error);
+    throw error;
+  }
+};
+
+export const updateStatus = async (data) => {
+  try {
+    const response = await axios.put(`${GROUP_API_ENDPOINT}/status-update`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'Group status updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update group' };
+    }
+  } catch (error) {
+    console.error('Error in updateGroup:', error);
+    throw error;
+  }
+};
 export const updateGroup = async (data) => {
   try {
     const response = await axios.put(`${GROUP_API_ENDPOINT}/update`, data, {
@@ -117,6 +158,8 @@ export const updateGroup = async (data) => {
 
 export const getAllPermissionsByRoleId = async (roleId) => {
   try {
+    console.log('roll id : ', roleId);
+    // const data = { id: roleId };
     const response = await axios.get(`${PERMISSION_API_ENDPOINT}/permissions-by-role-id`, {
       headers: {
         'Content-Type': 'application/json',
@@ -124,8 +167,9 @@ export const getAllPermissionsByRoleId = async (roleId) => {
       },
       params: { id: roleId }
     });
+    console.log(response);
 
-    if (response.data.data) {
+    if (response.data.status) {
       return { success: true, data: response.data.data };
     } else {
       return { success: false, message: 'Failed to fetch permissions' };
@@ -138,12 +182,13 @@ export const getAllPermissionsByRoleId = async (roleId) => {
 
 export const getAllPermissions = async () => {
   try {
-    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-all-permissions`, {
+    const response = await axios.get(`${PERMISSION_API_ENDPOINT}/get-all-permissions`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(response);
 
     if (response.data) {
       return { success: true, data: response?.data?.data, permissionsCount: response.data?.data?.length };
@@ -156,7 +201,7 @@ export const getAllPermissions = async () => {
   }
 };
 
-export const getPermissionsByRoleId = async (roleId) => {
+export const getPermissionsByRole = async (roleId) => {
   try {
     const response = await axios.get(`${PERMISSION_API_ENDPOINT}/permissions-by-role`, {
       headers: {

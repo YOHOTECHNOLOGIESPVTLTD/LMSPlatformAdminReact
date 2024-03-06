@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Button, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -11,51 +11,30 @@ import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import CustomAvatar from 'components/mui/avatar';
-import UserAddDrawer from 'features/user-management/admin-users-page/components/UserAddDrawer';
-import UserTableHeader from 'features/user-management/admin-users-page/components/UserTableHeader';
-import GroupDeleteDialog from 'features/user-management/groups-page/components/GroupDeleteDialog';
-import { setUsers } from 'features/user-management/admin-users-page/redux/userSlices';
-import { getAllUsers } from 'features/user-management/admin-users-page/redux/userThunks';
+import UserAddDrawer from 'features/user-management/users-page/users-overview-page/components/UserAddDrawer';
+import UserTableHeader from 'features/user-management/users-page/users-overview-page/components/UserTableHeader';
+// import GroupDeleteDialog from 'features/user-management/groups-page/components/GroupDeleteDialog';
+import StatusDialog from 'components/modal/DeleteModel';
+import DeleteDialog from 'components/modal/DeleteModel';
+import { setUsers } from 'features/user-management/users-page/redux/userSlices';
+import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
 import {
   FilterUsersByRole,
   FilterUsersByStatus,
+  deleteUser,
   searchUsers,
   updateUserStatus
-} from 'features/user-management/admin-users-page/services/userServices';
+} from 'features/user-management/users-page/services/userServices';
 import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 import toast from 'react-hot-toast';
+import OptionsMenu from 'components/option-menu';
+import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 
 const userStatusObj = {
   1: 'success',
   0: 'error'
-};
-
-const renderClient = (row) => {
-  if (row?.profile_image) {
-    return <CustomAvatar src={row?.profile_image} sx={{ mr: 2.5, width: 38, height: 38 }} />;
-  } else {
-    return (
-      <CustomAvatar
-        skin="light"
-        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
-      >
-        {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
-      </CustomAvatar>
-    );
-  }
-};
-
-const RowOptions = ({ id }) => {
-  return (
-    <>
-      <Link to={`${id}`} state={{ id: id }}>
-        <Button size="small" variant="outlined" color="secondary">
-          View
-        </Button>
-      </Link>
-    </>
-  );
 };
 
 const UserBodySection = ({ groups, users, setLoading }) => {
@@ -64,8 +43,59 @@ const UserBodySection = ({ groups, users, setLoading }) => {
   const [status, setStatus] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const dispatch = useDispatch();
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+
+  const renderClient = (row) => {
+    if (row?.profile_image) {
+      return <CustomAvatar src={row?.profile_image} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+    } else {
+      return (
+        <CustomAvatar
+          skin="light"
+          sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
+        >
+          {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
+        </CustomAvatar>
+      );
+    }
+  };
+
+  console.log(selectedUser);
+
+  const RowOptions = ({ row }) => {
+    return (
+      <OptionsMenu
+        menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+        iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+        options={[
+          {
+            text: 'View',
+            icon: <Icon icon="tabler:eye" fontSize={20} />,
+            menuItemProps: {
+              component: Link,
+              to: `${row?.id}`,
+              state: { id: row?.id }
+            }
+          },
+
+          {
+            text: 'Delete',
+            icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
+            menuItemProps: {
+              onClick: () => {
+                setSelectedUser(row);
+                setDeleteDialogOpen(true);
+              }
+            }
+          }
+        ]}
+      />
+    );
+  };
 
   const handleFilter = useCallback(
     async (val) => {
@@ -125,19 +155,32 @@ const UserBodySection = ({ groups, users, setLoading }) => {
     [dispatch]
   );
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null);
-
   const handleStatus = (event, row) => {
-    setSelectedDeleteMaterial(row);
-    setDeleteDialogOpen(true);
+    setSelectedUser(row);
+    setStatusDialogOpen(true);
   };
-  console.log(selectedDeleteMaterial);
+  const handleDelete = async () => {
+    try {
+      const data = {
+        id: selectedUser?.id
+      };
+      const result = await deleteUser(data);
+
+      if (result.success) {
+        setLoading((reload) => !reload);
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleChangeStatus = async () => {
     try {
       const data = {
-        id: selectedDeleteMaterial.id,
-        status: selectedDeleteMaterial?.is_active === '1' ? '0' : '1'
+        id: selectedUser?.id,
+        status: selectedUser?.is_active === '1' ? '0' : '1'
       };
       const result = await updateUserStatus(data);
 
@@ -188,7 +231,7 @@ const UserBodySection = ({ groups, users, setLoading }) => {
                 {row?.name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.institution_users?.email}
+                {row?.platform_user?.email}
               </Typography>
             </Box>
           </Box>
@@ -203,7 +246,7 @@ const UserBodySection = ({ groups, users, setLoading }) => {
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.institution_users?.mobile}
+            {row?.platform_user?.mobile}
           </Typography>
         );
       }
@@ -224,21 +267,6 @@ const UserBodySection = ({ groups, users, setLoading }) => {
       }
     },
     {
-      flex: 0.15,
-      field: 'designation',
-      minWidth: 170,
-      headerName: 'Designation',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.role_group?.role?.designation}
-            </Typography>
-          </Box>
-        );
-      }
-    },
-    {
       flex: 1.25,
       minWidth: 180,
       field: 'status',
@@ -248,17 +276,17 @@ const UserBodySection = ({ groups, users, setLoading }) => {
           <TextField
             size="small"
             select
-            value={row.is_active}
+            value={row?.is_active}
             label="status"
             id="custom-select"
             sx={{
-              color: userStatusObj[row.is_active]
+              color: userStatusObj[row?.is_active]
             }}
             onChange={(e) => handleStatus(e, row)}
             SelectProps={{
               sx: {
                 borderColor: row.is_active === '1' ? 'success' : 'error',
-                color: userStatusObj[row.is_active]
+                color: userStatusObj[row?.is_active]
               }
             }}
           >
@@ -274,7 +302,7 @@ const UserBodySection = ({ groups, users, setLoading }) => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.id} />
+      renderCell: ({ row }) => <RowOptions row={row} />
     }
   ];
   return (
@@ -334,9 +362,28 @@ const UserBodySection = ({ groups, users, setLoading }) => {
         onPaginationModelChange={setPaginationModel}
       />
       <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups} setLoading={setLoading} />
-      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleChangeStatus} />
+      <StatusDialog
+        open={statusDialogOpen}
+        setOpen={setStatusDialogOpen}
+        handleSubmit={handleChangeStatus}
+        title="Are your sure to change user status"
+        description="If status was InActive use unable to login"
+      />
+      <DeleteDialog
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        handleSubmit={handleDelete}
+        title="Are your sure to delete user"
+        description="If status was InActive use unable to login"
+      />
     </Card>
   );
+};
+
+UserBodySection.propTypes = {
+  groups: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired,
+  setLoading: PropTypes.func.isRequired
 };
 
 export default UserBodySection;

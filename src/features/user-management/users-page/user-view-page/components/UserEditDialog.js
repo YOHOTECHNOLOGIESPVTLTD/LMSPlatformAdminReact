@@ -10,7 +10,9 @@ import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { getAllActiveGroups } from '../services/userServices';
+// import { getAllActiveGroups, updateUser } from '../../../user-view/services/viewUserServices';
+import { getAllActiveGroups,updateUser } from '../../services/userServices';
+import toast from 'react-hot-toast';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -49,7 +51,7 @@ const defaultValues = {
   role: ''
 };
 
-const UserEditDialog = ({ openEdit, handleEditClose }) => {
+const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
   const {
     reset,
     control,
@@ -123,6 +125,26 @@ const UserEditDialog = ({ openEdit, handleEditClose }) => {
     }
   };
 
+  const onSubmit = (data) => {
+    const InputData = new FormData();
+    InputData.append('full_name', data.full_name);
+    InputData.append('user_name', data.user_name);
+    InputData.append('email', data.email);
+    InputData.append('contact', data.contact);
+    InputData.append('designation', data.designation);
+    InputData.append('role', data.role);
+    InputData.append('image', selectedImage);
+    InputData.append('id', userData.id);
+
+    const result = updateUser(InputData);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
+    }
+  };
+
   return (
     <Dialog
       open={openEdit}
@@ -131,7 +153,7 @@ const UserEditDialog = ({ openEdit, handleEditClose }) => {
       aria-describedby="user-view-edit-description"
       sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 750 } }}
     >
-      <form onSubmit={handleSubmit()}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <DialogTitle
           id="user-view-edit"
           sx={{
@@ -173,10 +195,10 @@ const UserEditDialog = ({ openEdit, handleEditClose }) => {
                 name="full_name"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field: { onChange } }) => (
                   <TextField
                     fullWidth
-                    value={value}
+                    defaultValue={userData?.name}
                     label="Full Name"
                     onChange={onChange}
                     placeholder="John Doe"
@@ -191,10 +213,10 @@ const UserEditDialog = ({ openEdit, handleEditClose }) => {
                 name="user_name"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field: { onChange } }) => (
                   <TextField
                     fullWidth
-                    value={value}
+                    defaultValue={userData?.username}
                     label="User Name"
                     onChange={onChange}
                     placeholder="John Doe"
@@ -209,12 +231,12 @@ const UserEditDialog = ({ openEdit, handleEditClose }) => {
                 name="email"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field: { onChange } }) => (
                   <TextField
                     fullWidth
                     type="email"
                     label="Email"
-                    value={value}
+                    defaultValue={userData?.institution_users?.email}
                     onChange={onChange}
                     error={Boolean(errors.email)}
                     placeholder="johndoe@email.com"
@@ -228,11 +250,11 @@ const UserEditDialog = ({ openEdit, handleEditClose }) => {
                 name="contact"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field: { onChange } }) => (
                   <TextField
                     fullWidth
                     type="number"
-                    value={value}
+                    defaultValue={userData?.institution_users?.mobile}
                     label="Contact"
                     onChange={onChange}
                     placeholder="(397) 294-5153"
@@ -248,10 +270,10 @@ const UserEditDialog = ({ openEdit, handleEditClose }) => {
                 name="designation"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field: { onChange } }) => (
                   <TextField
                     fullWidth
-                    value={value}
+                    defaultValue={userData?.institution_users?.designation}
                     label="Designation"
                     onChange={onChange}
                     placeholder="Business Development Executive"
@@ -304,7 +326,7 @@ const UserEditDialog = ({ openEdit, handleEditClose }) => {
           </Button>
         </DialogActions>
       </form>
-    </Dialog>
+    </Dialog >
   );
 };
 

@@ -1,20 +1,11 @@
-// material-ui
-import { Typography } from '@mui/material';
+// Groups pages Import
+import GroupsOverviewPage from './groups-page/groups-overview-page';
+import GroupAddPage from './groups-page/groups-add-page';
+import GroupEditPage from './groups-page/groups-edit-page';
+import GroupViewPage from './groups-page/groups[id]-page';
 
-// project imports
-import MainCard from 'components/cards/MainCard';
+// Admin Users Page Import
+import AdminUsersOverviewPage from './users-page/users-overview-page';
+import AdminUserProfilePage from './users-page/users[id]-page';
 
-// ==============================|| SAMPLE PAGE ||============================== //
-
-const UserManagement = () => (
-  <MainCard title="User Management">
-    <Typography variant="body2">
-      Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-      minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
-      in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate
-      descent molls anim id est labours.
-    </Typography>
-  </MainCard>
-);
-
-export default UserManagement;
+export { GroupsOverviewPage, GroupAddPage, GroupEditPage, GroupViewPage, AdminUsersOverviewPage, AdminUserProfilePage };

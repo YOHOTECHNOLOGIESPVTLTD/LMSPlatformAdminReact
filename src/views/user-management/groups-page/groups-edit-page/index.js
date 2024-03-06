@@ -20,7 +20,7 @@ import {
   Typography
 } from '@mui/material';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
-import { getAllPermissions, getPermissionsByRoleId, updateGroup } from 'features/user-management/groups-page/services/groupService';
+import { getAllPermissions, getPermissionsByRole, updateGroup } from 'features/user-management/groups-page/services/groupService';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -111,7 +111,7 @@ const GroupEditDialog = () => {
   }, []);
 
   useEffect(() => {
-    getAllPermissionsIdByRole();
+    getAllPermissionsIdByRole(groupId);
   }, [groupId]);
 
   const getPermissions = async () => {
@@ -128,9 +128,9 @@ const GroupEditDialog = () => {
       console.log(error);
     }
   };
-  const getAllPermissionsIdByRole = async () => {
+  const getAllPermissionsIdByRole = async (id) => {
     try {
-      const result = await getPermissionsByRoleId(groupId);
+      const result = await getPermissionsByRole(id);
 
       if (result.success) {
         result.data?.forEach((permission) => {

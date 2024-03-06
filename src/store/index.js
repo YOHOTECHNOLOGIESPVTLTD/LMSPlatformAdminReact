@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import customizationReducer from './customizationReducer';
 import auth from 'features/authentication/authReducer';
 import groupReducer from 'features/user-management/groups-page/redux/groupSlice';
-import userReducer from 'features/user-management/admin-users-page/redux/userSlices';
+import userReducer from 'features/user-management/users-page/redux/userSlices';
 import studentNotificationsReducer from 'features/notification-management/student-notifications/redux/studentNotificationSlice';
 import staffNotificationsReducer from 'features/notification-management/teaching-staff-notifications/redux/staffNotificationSlice';
 import allNotificationsReducer from 'features/notification-management/all-notifications/redux/allNotificationSlice';

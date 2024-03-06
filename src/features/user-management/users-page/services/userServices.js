@@ -1,7 +1,7 @@
 // userService.js
 import axios from 'axios';
 
-const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user`;
+const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/platform-user`;
 const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
 
 export const getAllUsers = async (selectedBranchId) => {
@@ -29,7 +29,77 @@ export const getAllUsers = async (selectedBranchId) => {
     throw error;
   }
 };
+export const getUserActivityLog = async (data) => {
+  try {
+    const response = await axios.get(`${USER_API_ENDPOINT}/activity-log-by-user-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch users. Activity Log: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllUsers Activity Log:', error);
 
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+export const getUserById = async (data) => {
+  try {
+    const response = await axios.get(`${USER_API_ENDPOINT}/query-by-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch users. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllUsers:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+
+export const deleteUser = async (data) => {
+  try {
+    const response = await axios.put(`${USER_API_ENDPOINT}/delete`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'User deleted successfully' };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in deleteUser:', error);
+    throw error;
+  }
+};
 export const updateUserStatus = async (data) => {
   try {
     const response = await axios.put(`${USER_API_ENDPOINT}/status-update`, data, {
@@ -42,6 +112,45 @@ export const updateUserStatus = async (data) => {
     console.log(response);
     if (response.data.status) {
       return { success: true, message: 'User status updated successfully' };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in addUser:', error);
+    throw error;
+  }
+};
+export const userChangePassword = async (data) => {
+  try {
+    const response = await axios.put(`${USER_API_ENDPOINT}/status-update`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'User status updated successfully' };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in addUser:', error);
+    throw error;
+  }
+};
+export const updateUser = async (data) => {
+  try {
+    const response = await axios.post(`${USER_API_ENDPOINT}/create`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'User created successfully' };
     } else {
       return { success: false, message: response.data.message };
     }
@@ -176,68 +285,6 @@ export const FilterUsersByStatus = async (status) => {
     }
   } catch (error) {
     console.error('Error in searchUsers:', error);
-    throw error;
-  }
-};
-
-export const getUserById = async (id) => {
-  try {
-    const response = await axios.get(`${USER_API_ENDPOINT}/query-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { id: id }
-    });
-
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchUsers:', error);
-    throw error;
-  }
-};
-export const userChangePassword = async (data) => {
-  try {
-    const response = await axios.put(`${USER_API_ENDPOINT}/password-update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
-
-    if (response.data.status) {
-      return { success: true, message: 'Password changed successfully' };
-    } else {
-      return { success: false, message: 'Failed to update User' };
-    }
-  } catch (error) {
-    console.error('Error in updateUsers:', error);
-    throw error;
-  }
-};
-
-export const updateUser = async (data) => {
-  try {
-    const response = await axios.post('/data_storage/user-management/users/SingleUser.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      data: data
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to update User' };
-    }
-  } catch (error) {
-    console.error('Error in updateUsers:', error);
     throw error;
   }
 };

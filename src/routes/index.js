@@ -15,12 +15,12 @@ const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authent
 
 // User Management
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
-const GroupsPage = Loadable(lazy(() => import('views/user-management/groups-page/group-overview-page')));
-const AddGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/group-add-page')));
-const ViewGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/group[id]-page')));
-const EditGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/group-edit-page')));
-const UsersPage = Loadable(lazy(() => import('views/user-management/admin-users-page/admin-users-overview')));
-const ViewUserPage = Loadable(lazy(() => import('views/user-management/admin-users-page/admin-users[id]-page')));
+const GroupsPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-overview-page')));
+const AddGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-add-page')));
+const ViewGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups[id]-page')));
+const EditGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-edit-page')));
+const UsersPage = Loadable(lazy(() => import('views/user-management/users-page/users-overview-page')));
+const ViewUserPage = Loadable(lazy(() => import('views/user-management/users-page/users[id]-page')));
 //Payment Management
 const Payments = Loadable(lazy(() => import('views/payment-management/payments-page')));
 

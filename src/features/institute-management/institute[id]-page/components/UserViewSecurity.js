@@ -12,7 +12,7 @@ import TextField from '@mui/material/TextField';
 import Icon from 'components/icon';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { userChangePassword } from 'features/user-management/admin-users-page/services/userServices';
+import { userChangePassword } from 'features/user-management/users-page/services/userServices';
 
 const UserViewSecurity = ({ id }) => {
   const [values, setValues] = useState({

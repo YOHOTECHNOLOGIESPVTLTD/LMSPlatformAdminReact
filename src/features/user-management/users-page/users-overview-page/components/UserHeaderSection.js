@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import UserHeaderCard from 'features/user-management/admin-users-page/components/UserHeaderCard';
+import UserHeaderCard from 'features/user-management/users-page/users-overview-page/components/UserHeaderCard';
 const UserHeaderSection = ({ users, groups }) => {
   return (
     <Grid container spacing={2}>

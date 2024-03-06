@@ -28,7 +28,7 @@ const useTimeout = (callback, delay) => {
 const GroupViewPage = () => {
   const [permissions, setPermissions] = useState([]);
   const location = useLocation();
-  const group = location?.state?.group?.role;
+  const group = location?.state?.group;
   const [loading, setLoading] = useState(true);
 
   useTimeout(() => {
@@ -36,13 +36,13 @@ const GroupViewPage = () => {
   }, 1000);
 
   useEffect(() => {
-    getPermissions();
+    getPermissions(group?.id);
   }, [group?.id]);
-  console.log(location);
+  console.log(group);
 
-  const getPermissions = async () => {
+  const getPermissions = async (id) => {
     try {
-      const result = await getAllPermissionsByRoleId(group?.id);
+      const result = await getAllPermissionsByRoleId(id);
       if (result.success) {
         setPermissions(result.data);
         console.log(result.data);

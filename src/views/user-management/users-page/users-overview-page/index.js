@@ -2,10 +2,10 @@ import Grid from '@mui/material/Grid';
 import UserSkeleton from 'components/cards/Skeleton//UserSkeleton';
 import { selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
 import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
-import UserBodySection from 'features/user-management/admin-users-page/components/UserBodySection';
-import UserHeaderSection from 'features/user-management/admin-users-page/components/UserHeaderSection';
-import { selectLoading as selectUserLoading, selectUsers } from 'features/user-management/admin-users-page/redux/userSelectors';
-import { getAllUsers } from 'features/user-management/admin-users-page/redux/userThunks';
+import UserBodySection from 'features/user-management/users-page/users-overview-page/components/UserBodySection';
+import UserHeaderSection from 'features/user-management/users-page/users-overview-page/components/UserHeaderSection';
+import { selectLoading as selectUserLoading, selectUsers } from 'features/user-management/users-page/redux/userSelectors';
+import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,7 +15,7 @@ const UserList = () => {
   const userLoading = useSelector(selectUserLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const groups = useSelector(selectGroups);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     dispatch(getAllGroups(selectedBranchId));
   }, [selectedBranchId]);

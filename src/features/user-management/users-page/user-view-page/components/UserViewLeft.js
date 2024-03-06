@@ -97,7 +97,7 @@ const UserViewLeft = ({ userData, id }) => {
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{userData?.role_group?.role?.name}</Typography>
+                <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{userData?.role_groups?.role?.name}</Typography>
               </Box>
 
               <Box sx={{ display: 'flex' }}>
