@@ -16,9 +16,9 @@ const Header = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between'
 }));
 const Img = styled('img')(({ theme }) => ({
-    height: '15rem',
-    borderRadius: theme.shape.borderRadius
-  }))
+  height: '15rem',
+  borderRadius: theme.shape.borderRadius
+}));
 
 const FeesViewDrawer = (props) => {
   const { open, toggle } = props;
@@ -56,9 +56,12 @@ const FeesViewDrawer = (props) => {
             <Icon icon="tabler:x" fontSize="1.125rem" />
           </IconButton>
         </Header>
-        <Box sx={{my:4}}>
+        <Box sx={{ my: 4 }}>
           <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Img alt="Stumptown Roasters" src="https://images.unsplash.com/photo-1634733988138-bf2c3a2a13fa?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YmlsbHN8ZW58MHx8MHx8fDA%3D" />
+            <Img
+              alt="Stumptown Roasters"
+              src="https://images.unsplash.com/photo-1634733988138-bf2c3a2a13fa?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YmlsbHN8ZW58MHx8MHx8fDA%3D"
+            />
           </CardContent>
         </Box>
         <Grid
