@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
+// import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -98,9 +98,9 @@ const FeesTable = () => {
     console.log('Toggle drawer');
   };
 
-  const handleStatusChange = () => {
-    setDeleteDialogOpen(true);
-  };
+  // const handleStatusChange = () => {
+  //   setDeleteDialogOpen(true);
+  // };
 
   // ** Hooks
   const handleFilter = (val) => {
@@ -192,13 +192,14 @@ const FeesTable = () => {
       minWidth: 150,
       field: 'status',
       headerName: 'Status',
-      renderCell: ({ row }) => {
+      renderCell: () => {
         return (
-          <TextField size="small" select defaultValue="" label="status" id="custom-select" onChange={(e) => handleStatusChange(e, row)}>
-            <MenuItem value={10}>{row.balance}</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </TextField>
+          // <TextField size="small" select defaultValue="" label="status" id="custom-select" onChange={(e) => handleStatusChange(e, row)}>
+          //   <MenuItem value={10}>{row.balance}</MenuItem>
+          //   <MenuItem value={20}>Twenty</MenuItem>
+          //   <MenuItem value={30}>Thirty</MenuItem>
+          // </TextField>
+          <CustomChip size="medium" label='paid' variant='tonal' rounded color='success' skin="light" sx={{width:100}}/>
         );
       }
     }
