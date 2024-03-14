@@ -120,14 +120,17 @@ export const updateUserStatus = async (data) => {
     throw error;
   }
 };
-export const userChangePassword = async (data) => {
+export const userChangePassword = async (data,id) => {
   try {
-    const response = await axios.put(`${USER_API_ENDPOINT}/status-update`, data, {
+    const response = await axios.post(`${USER_API_ENDPOINT}/password-change`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: data
+      params:{
+        data:data,
+        id:id
+      }
     });
     console.log(response);
     if (response.data.status) {

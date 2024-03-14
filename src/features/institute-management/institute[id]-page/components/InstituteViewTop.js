@@ -1,4 +1,5 @@
 // ** MUI Components
+import { useState } from 'react';
 import { MenuItem, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 // import Button from '@mui/material/Button';
@@ -11,6 +12,7 @@ import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { instituteChangeStatus } from 'features/institute-management/services/instituteService';
 import toast from 'react-hot-toast';
+import StatusDialog from 'components/modal/DeleteModel';
 
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 108,
@@ -22,7 +24,14 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }));
 
+
 const UserViewLeft = ({ institute }) => {
+const [statusOpen, setStatusDialogOpen] = useState(false);
+
+
+
+
+
   return (
     <Card sx={{ mb: 3 }}>
       <CardMedia
@@ -78,8 +87,10 @@ const UserViewLeft = ({ institute }) => {
                     status: e.target.value
                   };
                   const result = await instituteChangeStatus(data);
+                  setStatusDialogOpen(true)
                   if (result.success) {
                     toast.success(result.message);
+                  
                   } else {
                     toast.error(result.message);
                   }
@@ -93,6 +104,8 @@ const UserViewLeft = ({ institute }) => {
           <Box component={Link} to={`/branch-management`} target="_blank" variant="contained" sx={{ '& svg': { mr: 2 } }}>
             Go to Dashboard
           </Box>
+          <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" />
+
         </Box>
       </CardContent>
     </Card>

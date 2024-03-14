@@ -157,13 +157,14 @@ export const instituteChangeStatus = async (data) => {
     throw error;
   }
 };
-export const updateInstitute = async (data) => {
+export const updateInstitute = async (InstituteId) => {
   try {
-    const response = await axios.put(`${INSTITUTE_API_END_POINT}/update`, data, {
+    const response = await axios.post(`${INSTITUTE_API_END_POINT}/update`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { id: InstituteId }
     });
 
     console.log(response);
