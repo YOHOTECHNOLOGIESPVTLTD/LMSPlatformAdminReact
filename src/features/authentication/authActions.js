@@ -2,8 +2,8 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/login`;
-const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
+const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/platform-user/login`;
+const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/platform-user/logout`;
 
 export const login = (username, password) => async (dispatch) => {
   let data = {
@@ -25,17 +25,14 @@ export const login = (username, password) => async (dispatch) => {
       localStorage.setItem('isAuthenticated', true);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userData', JSON.stringify(response.data.userData));
-      localStorage.setItem('permissions', JSON.stringify(response.data.permissions));
-      localStorage.setItem('branches', JSON.stringify(response.data.branches));
+      localStorage.setItem('permissions', JSON.stringify(response.data.permission));
       // Dispatch success action
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
           token: response.data.token,
           userData: response.data.userData,
-          permissions: response.data.permissions,
-          branches: response.data.branches,
-          selectedBranchId: response.data.branches[0]?.branch_id
+          permissions: response.data.permission
         }
       });
       window.location.replace('/');
@@ -78,7 +75,6 @@ export const logout = () => async (dispatch) => {
       localStorage.removeItem('userData');
       localStorage.removeItem('permissions');
       localStorage.removeItem('isAuthenticated');
-      localStorage.removeItem('branches');
 
       // Dispatch logout action
       dispatch({
@@ -98,12 +94,3 @@ export const logout = () => async (dispatch) => {
     });
   }
 };
-
-export const updateSelectedBranch = (newBranch) => ({
-  type: 'UPDATE_SELECTED_BRANCH',
-  payload: newBranch
-});
-export const updateAuthBranch = (newBranch) => ({
-  type: 'UPDATE_BRANCH',
-  payload: newBranch
-});

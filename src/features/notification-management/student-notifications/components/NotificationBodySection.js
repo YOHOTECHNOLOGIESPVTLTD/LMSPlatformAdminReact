@@ -12,8 +12,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 // ** Custom Components Imports
 import ImageIcon from '@mui/icons-material/Image';
-import { setUsers } from 'features/user-management/users/redux/userSlices';
-import { searchUsers } from 'features/user-management/users/services/userServices';
+import { setUsers } from 'features/user-management/admin-users-page/redux/userSlices';
+import { searchUsers } from 'features/user-management/admin-users-page/services/userServices';
 import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 import NotificationAddDrawer from './NotificationAddDrawer';

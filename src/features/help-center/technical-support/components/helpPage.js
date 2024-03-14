@@ -16,7 +16,7 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import Icon from 'components/icon';
 import CustomAvatar from 'components/mui/avatar';
-import DeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import DeleteDialog from 'features/user-management/groups-page/components/GroupDeleteDialog';
 import { useState } from 'react';
 import HelpAddModal from './Modal/helpAddModal';
 import HelpEditModal from './Modal/helpEditModal';
