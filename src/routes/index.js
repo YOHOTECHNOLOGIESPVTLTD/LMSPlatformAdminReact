@@ -3,7 +3,7 @@ import { lazy } from 'react';
 // project imports
 import Loadable from 'components/loadable';
 import MinimalLayout from 'layout/MinimalLayout';
-import InstituteMainLayout from 'layout/InstituteMainLayout'
+import InstituteMainLayout from 'layout/InstituteMainLayout';
 import MainLayout from 'layout/MainLayout';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
 
 // User Management
-const SamplePage = Loadable(lazy(() => import('views/sample-page')));
+// const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 const GroupsPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-overview-page')));
 const AddGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-add-page')));
 const ViewGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups[id]-page')));
@@ -27,9 +27,7 @@ const Payments = Loadable(lazy(() => import('views/payment-management/payments-p
 //Institute Management
 const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes-overview-page')));
 const InstituteProfile = Loadable(lazy(() => import('views/institute-management/institute[id]-page')));
-const AddNewInstitutesPage = Loadable(
-  lazy(() => import('views/institute-management/institute-add-page'))
-);
+const AddNewInstitutesPage = Loadable(lazy(() => import('views/institute-management/institute-add-page')));
 
 const HelpsPage = Loadable(lazy(() => import('views/help-center/helps')));
 const TicketsPage = Loadable(lazy(() => import('views/help-center/tickets')));
@@ -55,6 +53,25 @@ const Page500 = Loadable(lazy(() => import('views/error-pages/500-page')));
 // Account
 const AccountSettings = Loadable(lazy(() => import('layout/MainLayout/Header/ProfileSection/AccountSettings')));
 
+//Institute User Management
+const InstituteGroupsOverviewPage = Loadable(
+  lazy(() => import('views/institute-management/institute[id]-page/user-management/groups-page/groups-overview-page'))
+);
+const InstituteGroupsAddPage = Loadable(
+  lazy(() => import('views/institute-management/institute[id]-page/user-management/groups-page/groups-add-page'))
+);
+const InstituteGroupsEditPage = Loadable(
+  lazy(() => import('views/institute-management/institute[id]-page/user-management/groups-page/groups-edit-page'))
+);
+const InstituteGroupsViewPage = Loadable(
+  lazy(() => import('views/institute-management/institute[id]-page/user-management/groups-page/groups[id]-page'))
+);
+const InstituteAdminUserOverviewPage = Loadable(
+  lazy(() => import('views/institute-management/institute[id]-page/user-management/users-page/users-overview-page'))
+);
+const InstituteAdminUserViewPage = Loadable(
+  lazy(() => import('views/institute-management/institute[id]-page/user-management/users-page/users[id]-page'))
+);
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 const Protected = () => {
@@ -82,11 +99,6 @@ const ApplicationRoutes = () => {
   return (
     <Routes>
       <Route element={<Protected />}>
-
-        <Route path="/branch-management" element={<InstituteMainLayout />}>
-          <Route index element={<Navigate to="/branch-management/branches" />} />
-          <Route path="branches" element={<SamplePage />} />
-        </Route>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<DashboardDefault />} />
@@ -119,7 +131,6 @@ const ApplicationRoutes = () => {
           <Route index element={<Navigate to="/institute-management/institutes" />} />
           <Route path="institutes" element={<InstitutesPage />} />
           <Route path="institutes/profile/:id" element={<InstituteProfile />} />
-          <Route path="institutes/profile/:id/institutes" element={<InstitutesPage />} />
           <Route path="institutes/add" element={<AddNewInstitutesPage />} />
         </Route>
 
@@ -161,6 +172,15 @@ const ApplicationRoutes = () => {
         {/* <Route element={<MinimalLayout />}>
           <Route path="/login" element={<Navigate to="/" />} />
         </Route> */}
+        <Route path="/:id/user-management" element={<InstituteMainLayout />}>
+          <Route index element={<Navigate to="/:id/user-management/groups" />} />
+          <Route path="groups" element={<InstituteGroupsOverviewPage />} />
+          <Route path="groups/add" element={<InstituteGroupsAddPage />} />
+          <Route path="groups/edit/:id" element={<InstituteGroupsEditPage />} />
+          <Route path="groups/:id" element={<InstituteGroupsViewPage />} />
+          <Route path="users" element={<InstituteAdminUserOverviewPage />} />
+          <Route path="users/:id" element={<InstituteAdminUserViewPage />} />
+        </Route>
       </Route>
 
       <Route element={<MinimalLayout />}>

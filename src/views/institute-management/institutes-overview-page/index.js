@@ -23,7 +23,7 @@ import { getInitials } from 'utils/get-initials';
 // ** Custom Table Components Imports
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import TableHeader from '../../../features/institute-management/institutes-overview-page/components/TableHeader';
+import TableHeader from 'features/institute-management/institutes-overview-page/components/TableHeader';
 import { selectInstitutes } from 'features/institute-management/redux/instituteSelectors';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllInstitutes } from 'features/institute-management/redux/instituteThunks';

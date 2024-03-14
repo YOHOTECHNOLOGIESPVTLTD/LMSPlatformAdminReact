@@ -137,6 +137,26 @@ export const deleteInstitute = async (InstituteId) => {
   }
 };
 
+export const instituteChangeStatus = async (data) => {
+  try {
+    const response = await axios.post(`${INSTITUTE_API_END_POINT}/status`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'Institute status updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update Institute status' };
+    }
+  } catch (error) {
+    console.error('Error in updateInstitute status:', error);
+    throw error;
+  }
+};
 export const updateInstitute = async (data) => {
   try {
     const response = await axios.put(`${INSTITUTE_API_END_POINT}/update`, data, {

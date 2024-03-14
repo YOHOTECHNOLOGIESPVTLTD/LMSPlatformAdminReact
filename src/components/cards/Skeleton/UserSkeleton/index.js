@@ -7,94 +7,10 @@ import { gridSpacing } from 'store/constant';
 
 const GroupSkeleton = () => (
   <Grid container spacing={2}>
-    <Grid item xs={12} sm={3}>
-      <Card>
-        <CardContent>
-          <Grid container direction="column">
-            <Grid item>
-              <Grid container justifyContent="space-between">
-                <Grid item>
-                  <Skeleton variant="rectangular" width={44} height={44} />
-                </Grid>
-                <Grid item>
-                  <Skeleton variant="rectangular" width={34} height={34} />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Skeleton variant="rectangular" sx={{ mt: 2 }} height={40} />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    </Grid>
-    <Grid item xs={12} sm={3}>
-      <Card>
-        <CardContent>
-          <Grid container direction="column">
-            <Grid item>
-              <Grid container justifyContent="space-between">
-                <Grid item>
-                  <Skeleton variant="rectangular" width={44} height={44} />
-                </Grid>
-                <Grid item>
-                  <Skeleton variant="rectangular" width={34} height={34} />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Skeleton variant="rectangular" sx={{ mt: 2 }} height={40} />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    </Grid>
-    <Grid item xs={12} sm={3}>
-      <Card>
-        <CardContent>
-          <Grid container direction="column">
-            <Grid item>
-              <Grid container justifyContent="space-between">
-                <Grid item>
-                  <Skeleton variant="rectangular" width={44} height={44} />
-                </Grid>
-                <Grid item>
-                  <Skeleton variant="rectangular" width={34} height={34} />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Skeleton variant="rectangular" sx={{ mt: 2 }} height={40} />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    </Grid>
-    <Grid item xs={12} sm={3}>
-      <Card>
-        <CardContent>
-          <Grid container direction="column">
-            <Grid item>
-              <Grid container justifyContent="space-between">
-                <Grid item>
-                  <Skeleton variant="rectangular" width={44} height={44} />
-                </Grid>
-                <Grid item>
-                  <Skeleton variant="rectangular" width={34} height={34} />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Skeleton variant="rectangular" sx={{ mt: 2 }} height={40} />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    </Grid>
     <Grid item xs={12} sm={12}>
-      <Card>
+      <Card sx={{ mt: 2.75, px: 1, ml: 3 }}>
         <CardContent>
-          <Grid container md={12} spacing={gridSpacing}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between" spacing={gridSpacing}>
                 <Grid item xs zeroMinWidth>
@@ -105,9 +21,7 @@ const GroupSkeleton = () => (
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Skeleton variant="rectangular" height={150} />
-            </Grid>
+
             <Grid item xs={12}>
               <Grid container spacing={1}>
                 <Grid item xs={12}>

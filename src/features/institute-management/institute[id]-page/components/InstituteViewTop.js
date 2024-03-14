@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 // ** Icon Imports
 import { Link } from 'react-router-dom';
+import { instituteChangeStatus } from 'features/institute-management/services/instituteService';
+import toast from 'react-hot-toast';
 
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 108,
@@ -65,9 +67,26 @@ const UserViewLeft = ({ institute }) => {
                 {institute?.name}
               </Typography>
 
-              <TextField select label="Status" sx={{ ml: 2 }} value={institute?.is_active}>
-                <MenuItem value={1}>Active</MenuItem>
-                <MenuItem value={0}>Inactive</MenuItem>
+              <TextField
+                select
+                label="Status"
+                sx={{ ml: 2 }}
+                value={institute?.is_active}
+                onChange={async (e) => {
+                  const data = {
+                    id: institute?.id,
+                    status: e.target.value
+                  };
+                  const result = await instituteChangeStatus(data);
+                  if (result.success) {
+                    toast.success(result.message);
+                  } else {
+                    toast.error(result.message);
+                  }
+                }}
+              >
+                <MenuItem value={'1'}>Active</MenuItem>
+                <MenuItem value={'0'}>Inactive</MenuItem>
               </TextField>
             </Box>
           </Box>
