@@ -13,6 +13,8 @@ import technicalSupportsReducer from 'features/help-center/technical-support/red
 import chats from 'features/chat/redux/chatSlicees';
 import instituteReducer from 'features/institute-management/redux/instituteSlice';
 import paymentReducer from 'features/payment-management/payments-page/redux/paymentSlice';
+import faqSlice from 'features/faq-management/faqs/redux/faqSlice';
+import faqCategorySlice from 'features/faq-management/faq-categories/redux/faqCategorySlice';
 
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
@@ -30,7 +32,9 @@ const store = configureStore({
     consumerSupports: customerSupportsReducer,
     technicalSupport: technicalSupportsReducer,
     calendar: calendar,
-    auth: auth
+    auth: auth,
+    faqCategories: faqCategorySlice,
+    faqs: faqSlice
   }
 });
 // configureStore(reducer);
