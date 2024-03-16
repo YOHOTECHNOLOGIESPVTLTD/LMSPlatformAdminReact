@@ -5,7 +5,7 @@ const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/
 
 export const getActiveFaqCategories = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/get-active-faq-modules`, {
+    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/show-active-faq-modules`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -13,7 +13,7 @@ export const getActiveFaqCategories = async (data) => {
       params: data
     });
 
-    // console.log(response);
+    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {

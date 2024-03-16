@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import FaqTableHeader from 'features/faq-management/faqs/components/FaqTableHeader';
 import { getAllFaqs } from 'features/faq-management/faqs/redux/faqThunks';
 import { selectFaqs, selectLoading } from 'features/faq-management/faqs/redux/faqSelectors';
-import { getActiveFaqCategories } from 'features/faq-management/faq-categories/services/faqCategoryServices';
+import { getAllFaqCategorywithFaq } from 'features/faq-management/faq-categories/services/faqCategoryServices';
 import FaqAccordian from 'features/faq-management/faqs/components/FaqAccordian';
 import { updateStatusFaq, deleteFaq } from 'features/faq-management/faqs/services/faqServices';
 import toast from 'react-hot-toast';
@@ -52,7 +52,7 @@ const FaqDataGrid = () => {
   }, [dispatch, refetch]);
 
   const getFaqCategories = async () => {
-    const result = await getActiveFaqCategories();
+    const result = await getAllFaqCategorywithFaq();
     setFaqCategories(result.data.data);
   };
 
@@ -244,7 +244,7 @@ const FaqDataGrid = () => {
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-          <FaqAccordian/>
+          <FaqAccordian faqCategories={faqCategories}/>
         </Grid>
           <Grid item xs={12}>
             <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
