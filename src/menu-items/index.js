@@ -7,11 +7,13 @@ import helpCenter from './help-center';
 // import discountManagement from './discount-management';
 import notificationManagement from './notification-management';
 import subscriptionManagement from "./subscription-management"
+import FaqManagement from './faq-management';
+
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [dashboard, userManagement, instituteManagement,PaymentManagement,subscriptionManagement, helpCenter, notificationManagement]
+  items: [dashboard, userManagement, instituteManagement,PaymentManagement,subscriptionManagement, helpCenter, notificationManagement,FaqManagement]
 };
 
 export default menuItems;
