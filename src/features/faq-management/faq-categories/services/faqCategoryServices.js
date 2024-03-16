@@ -170,7 +170,7 @@ export const updateStatusFaqCategory = async (data) => {
 
 export const updateFaqCategory = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}/update`, data, {
+    const response = await axios.put(`${FAQ_CATEGORY_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

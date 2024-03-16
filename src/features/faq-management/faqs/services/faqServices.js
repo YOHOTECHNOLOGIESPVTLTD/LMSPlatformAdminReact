@@ -128,7 +128,7 @@ export const deleteFaq = async (data) => {
 
 export const updateFaq = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_API_END_POINT}/update`, data, {
+    const response = await axios.put(`${FAQ_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
