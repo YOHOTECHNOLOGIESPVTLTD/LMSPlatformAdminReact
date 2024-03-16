@@ -45,6 +45,10 @@ const DiscountsPage = Loadable(lazy(() => import('views/discount-management/disc
 // Notification Management
 const NotificationsPage = Loadable(lazy(() => import('views/notification-management/notifications')));
 
+//Faq Management
+const FaqCategoriesPage = Loadable(lazy(() => import('views/faq-management/categories')));
+const FaqFaqsPage = Loadable(lazy(() => import('views/faq-management/faqs')));
+
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
 const Page401 = Loadable(lazy(() => import('views/error-pages/401-page')));
@@ -114,6 +118,13 @@ const ApplicationRoutes = () => {
             <Route path="users" element={<UsersPage />} />
             <Route path="users/:id" element={<ViewUserPage />} />
           </Route>
+        </Route>
+        
+        {/* FaqManagement */}
+        <Route path="/faq-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/faq-management/categories" />} />
+          <Route path="categories" element={<FaqCategoriesPage />} />
+          <Route path="faqs" element={<FaqFaqsPage />} />
         </Route>
 
         {/* PaymentManagement */}
