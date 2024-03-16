@@ -48,7 +48,7 @@ const CategoriesDataGrid = () => {
       branch_id: selectedBranchId
     };
     dispatch(getAllFaqCategories(data));
-  }, [dispatch,selectedBranchId, refetch]);
+  }, [dispatch, selectedBranchId, refetch]);
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
@@ -213,13 +213,21 @@ const CategoriesDataGrid = () => {
     },
     [dispatch]
   );
+  if (!faqCategories) {
+    return null;
+  }
 
   return (
     <>
       <Grid container>
         {/* Category filter and header */}
         <Grid item xs={12}>
-          <FaqCategoriesTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
+          <FaqCategoriesTableHeader
+            value={value}
+            handleFilter={handleFilter}
+            toggle={toggleAddUserDrawer}
+            selectedBranchId={selectedBranchId}
+          />
         </Grid>
         {faqCategoryLoading ? (
           <ContentSkeleton />

@@ -122,7 +122,7 @@ export const updateUserStatus = async (data) => {
 };
 export const userChangePassword = async (data,id) => {
   try {
-    const response = await axios.post(`${USER_API_ENDPOINT}/password-change`, data, {
+    const response = await axios.put(`${USER_API_ENDPOINT}/reset-password`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
