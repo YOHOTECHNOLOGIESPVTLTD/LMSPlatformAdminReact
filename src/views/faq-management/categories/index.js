@@ -42,6 +42,7 @@ const CategoriesDataGrid = () => {
   const faqCategories = useSelector(selectFaqCategories);
   const faqCategoryLoading = useSelector(selectLoading);
 
+  console.log(faqCategories);
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId

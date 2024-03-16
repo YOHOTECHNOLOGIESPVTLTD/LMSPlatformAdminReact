@@ -1,7 +1,7 @@
 // groupService.js
 import axios from 'axios';
 
-const FAQ_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/help-center/help-faqs`;
+const FAQ_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/platform-management/platform-faqs`;
 
 const FaqS_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/Faq-management/institute-Faqs/active-s`;
 
@@ -35,7 +35,7 @@ export const getActivesByBranch = async (data) => {
 
 export const getAllFaqs = async (selectedBranchId) => {
   try {
-    const response = await axios.get(`${FAQ_API_END_POINT}/read`, {
+    const response = await axios.get(`${FAQ_API_END_POINT}/show`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
