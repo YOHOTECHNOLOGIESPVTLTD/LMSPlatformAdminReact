@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // ** Icon Imports
 import Icon from 'components/icon';
@@ -66,7 +66,12 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
 const FaqAccordian = ({ faqCategories }) => {
   const [activeTab, setActiveTab] = useState(faqCategories[0]?.id);
 
+  useEffect(() => {
+    setActiveTab(faqCategories[0]?.id);
+  }, [faqCategories]);
+
   const handleChange = (event, newValue) => {
+    console.log(newValue);
     setActiveTab(newValue);
   };
 
@@ -81,7 +86,7 @@ const FaqAccordian = ({ faqCategories }) => {
               </CustomAvatar> */}
               <Box sx={{ ml: 4 }}>
                 <Typography variant="h4">{tab?.title}</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{tab?.subtitle}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{tab?.description}</Typography>
               </Box>
             </Box>
             <Box sx={{ mt: 6 }}>
@@ -125,16 +130,6 @@ const FaqAccordian = ({ faqCategories }) => {
           <TabList orientation="vertical" onChange={handleChange}>
             {renderTabs()}
           </TabList>
-          {/* <Box
-            sx={{
-              mt: 5.5,
-              display: 'flex',
-              justifyContent: 'center',
-              '& img': { maxWidth: '100%', display: { xs: 'none', md: 'block' } }
-            }}
-          >
-            <img src="/images/pages/faq-illustration.png" alt="illustration" width="230" />
-          </Box> */}
         </Box>
         {renderTabContent()}
       </TabContext>

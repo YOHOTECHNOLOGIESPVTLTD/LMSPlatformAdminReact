@@ -150,7 +150,7 @@ export const updateFaq = async (data) => {
 
 export const updateStatusFaq = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_API_END_POINT}/status`, data, {
+    const response = await axios.post(`${FAQ_API_END_POINT}/status-update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
