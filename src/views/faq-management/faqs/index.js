@@ -21,7 +21,7 @@ import FaqTableHeader from 'features/faq-management/faqs/components/FaqTableHead
 import { getAllFaqs } from 'features/faq-management/faqs/redux/faqThunks';
 import { selectFaqs, selectLoading } from 'features/faq-management/faqs/redux/faqSelectors';
 import { getActiveFaqCategories } from 'features/faq-management/faq-categories/services/faqCategoryServices';
-
+import FaqAccordian from 'features/faq-management/faqs/components/FaqAccordian';
 import { updateStatusFaq, deleteFaq } from 'features/faq-management/faqs/services/faqServices';
 import toast from 'react-hot-toast';
 
@@ -243,6 +243,9 @@ const FaqDataGrid = () => {
         <ContentSkeleton />
       ) : (
         <Grid container spacing={2}>
+          <Grid item xs={12}>
+          <FaqAccordian/>
+        </Grid>
           <Grid item xs={12}>
             <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
           </Grid>

@@ -31,6 +31,33 @@ export const getActiveFaqCategories = async (data) => {
   }
 };
 
+export const getAllFaqCategorywithFaq = async () => {
+  try {
+    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/show-all`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch Faq categories. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in get all Faq categories:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    // throw error;
+  }
+};
+
 export const getAllFaqCategories = async () => {
   try {
     const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/show`, {

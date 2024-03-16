@@ -23,6 +23,7 @@ import { selectFaqCategories, selectLoading } from 'features/faq-management/faq-
 import { deleteFaqCategory, updateStatusFaqCategory } from 'features/faq-management/faq-categories/services/faqCategoryServices';
 import toast from 'react-hot-toast';
 
+
 const CategoriesDataGrid = () => {
   const [value, setValue] = useState('');
 
@@ -217,6 +218,7 @@ const CategoriesDataGrid = () => {
   return (
     <>
       <Grid container>
+        
         {/* Category filter and header */}
         <Grid item xs={12}>
           <FaqCategoriesTableHeader
