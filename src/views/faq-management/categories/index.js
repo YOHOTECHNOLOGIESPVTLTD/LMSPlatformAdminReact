@@ -44,10 +44,7 @@ const CategoriesDataGrid = () => {
 
   console.log(faqCategories);
   useEffect(() => {
-    const data = {
-      branch_id: selectedBranchId
-    };
-    dispatch(getAllFaqCategories(data));
+    dispatch(getAllFaqCategories());
   }, [dispatch, selectedBranchId, refetch]);
 
   const handleRowClick = (params) => {

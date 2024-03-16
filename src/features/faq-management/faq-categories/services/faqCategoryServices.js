@@ -31,14 +31,13 @@ export const getActiveFaqCategories = async (data) => {
   }
 };
 
-export const getAllFaqCategories = async (selectedBranchId) => {
+export const getAllFaqCategories = async () => {
   try {
     const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/show`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { branch_id: selectedBranchId }
+      }
     });
 
     console.log(response);

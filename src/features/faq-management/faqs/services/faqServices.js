@@ -33,14 +33,13 @@ export const getActivesByBranch = async (data) => {
   }
 };
 
-export const getAllFaqs = async (selectedBranchId) => {
+export const getAllFaqs = async () => {
   try {
     const response = await axios.get(`${FAQ_API_END_POINT}/show`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { branch_id: selectedBranchId }
+      }
     });
 
     console.log(response);
