@@ -147,9 +147,9 @@ const Institutes = () => {
 
     return (
       <>
-        <Box sx={{ gap: 1 }}>
+        <Box sx={{ gap: 0 }}>
           <OptionsMenu
-            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+            menuProps={{ sx: { '& .MuiMenuItem-root svg': {} } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
               {
@@ -181,7 +181,7 @@ const Institutes = () => {
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
           <MenuItem sx={{ '& svg': { mr: 2 } }} component={Link} to={`profile/${id}`} state={{ id: id }} onClick={handleRowOptionsClose}>
-            <Icon icon="tabler:eye" fontSize={20} />
+            <Icon icon="tabler:eye" fontSize={20}  />
             View
           </MenuItem>
         </Menu>
