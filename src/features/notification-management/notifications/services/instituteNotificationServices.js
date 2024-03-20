@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management/student-notifications`;
 
-export const getAllNotifications = async (selectedBranchId) => {
+export const getAllInstituteNotifications = async (data) => {
   try {
-    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/read-all-notifications`, {
+    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/read--notifications`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
 
     // Check if the response status is successful
