@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import CustomTextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-
+import InstituteSkeleton from 'components/cards/Skeleton/InstituteSkeleton';
 import Icon from 'components/icon';
 
 import InstituteHeaderSection from 'features/institute-management/institutes-overview-page/components/InstituteHeaderSection';
@@ -24,7 +24,7 @@ import { getInitials } from 'utils/get-initials';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import TableHeader from 'features/institute-management/institutes-overview-page/components/TableHeader';
-import { selectInstitutes } from 'features/institute-management/redux/instituteSelectors';
+import { selectInstitutes, selectLoading } from 'features/institute-management/redux/instituteSelectors';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllInstitutes } from 'features/institute-management/redux/instituteThunks';
 import StatusDialog from 'components/modal/DeleteModel';
@@ -44,13 +44,15 @@ const Institutes = () => {
   const [selectedInstitutesStatus, setSelectedInstitutesStatus] = useState(null);
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const dispatch = useDispatch();
   const allInstitutes = useSelector(selectInstitutes);
+  const instituteLoading = useSelector(selectLoading);
 
   useEffect(() => {
     dispatch(getAllInstitutes());
-  }, [dispatch, getAllInstitutes, refetch]);
+  }, [dispatch, getAllInstitutes, selectedBranchId, refetch]);
 
   console.log(allInstitutes);
   const handleFilter = useCallback((val) => {
@@ -253,10 +255,11 @@ const Institutes = () => {
   // ** State
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid container xs={12} spacing={2}>
         <Grid item xs={12}>
           <InstituteHeaderSection users={allInstitutes} groups={allInstitutes} />
         </Grid>
+
         <Grid item xs={12}>
           <Card>
             <CardHeader title="Institutes" />
@@ -318,29 +321,42 @@ const Institutes = () => {
                 </Grid>
               </Grid>
             </CardContent>
-            <Divider sx={{ m: '0 !important' }} />
-            <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-            <DataGrid
-              autoHeight
-              // rowHeight={90}
-              getRowHeight={() => 'auto'}
-              rows={allInstitutes}
-              columns={columns}
-              disableRowSelectionOnClick
-              pageSizeOptions={[10, 25, 50]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
-            />
           </Card>
         </Grid>
+        <Grid item xs={12}>
+          <TableHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
+        </Grid>
 
-        <StatusDialog
-          open={statusOpen}
-          setOpen={setStatusDialogOpen}
-          description="Are you sure you want to Change Status"
-          title="Status"
-          handleSubmit={handleStatusChangeApi}
-        />
+        {instituteLoading ? (
+          <InstituteSkeleton />
+        ) : (
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Card>
+                <Divider sx={{ m: '0 !important' }} />
+                <DataGrid
+                  autoHeight
+                  // rowHeight={90}
+                  getRowHeight={() => 'auto'}
+                  rows={allInstitutes}
+                  columns={columns}
+                  disableRowSelectionOnClick
+                  pageSizeOptions={[10, 25, 50]}
+                  paginationModel={paginationModel}
+                  onPaginationModelChange={setPaginationModel}
+                />
+              </Card>
+            </Grid>
+
+            <StatusDialog
+              open={statusOpen}
+              setOpen={setStatusDialogOpen}
+              description="Are you sure you want to Change Status"
+              title="Status"
+              handleSubmit={handleStatusChangeApi}
+            />
+          </Grid>
+        )}
       </Grid>
     </>
   );
