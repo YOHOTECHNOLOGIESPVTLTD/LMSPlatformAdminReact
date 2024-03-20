@@ -48,7 +48,7 @@ const TableHeader = (props) => {
         Export
       </Button>
       <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <TextField value={searchValue}  placeholder="Search Category" onChange={(e) => handleSearch(e)} />
+        <TextField value={searchValue} placeholder="Search Category" onChange={(e) => handleSearch(e)} />
         <Box component={Link} to={'add'}>
           <Button variant="contained">+ Add Institute</Button>
         </Box>

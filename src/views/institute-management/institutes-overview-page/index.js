@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import InstituteSkeleton from 'components/cards/Skeleton/InstituteSkeleton';
 import Icon from 'components/icon';
+import OptionsMenu from 'components/option-menu';
 
 import InstituteHeaderSection from 'features/institute-management/institutes-overview-page/components/InstituteHeaderSection';
 // ** Utils Import
@@ -91,10 +92,54 @@ const Institutes = () => {
     }
   };
 
+  // const RowOptions = ({ id }) => {
+  //   // ** State
+  //   const [anchorEl, setAnchorEl] = useState(null);
+  //   const rowOptionsOpen = Boolean(anchorEl);
+
+  //   const handleRowOptionsClose = () => {
+  //     setAnchorEl(null);
+  //   };
+
+  //   return (
+  //     <>
+  //       <Link to={`profile/${id}`} state={{ id: id }}>
+  //         <Button size="small" variant="outlined" color="secondary">
+  //           View
+  //         </Button>
+  //       </Link>
+
+  //       <Menu
+  //         keepMounted
+  //         anchorEl={anchorEl}
+  //         open={rowOptionsOpen}
+  //         onClose={handleRowOptionsClose}
+  //         anchorOrigin={{
+  //           vertical: 'bottom',
+  //           horizontal: 'right'
+  //         }}
+  //         transformOrigin={{
+  //           vertical: 'top',
+  //           horizontal: 'right'
+  //         }}
+  //         PaperProps={{ style: { minWidth: '8rem' } }}
+  //       >
+  //         <MenuItem sx={{ '& svg': { mr: 2 } }} href="/apps/user/view/account" onClick={handleRowOptionsClose}>
+  //           <Icon icon="tabler:eye" fontSize={20} />
+  //           View
+  //         </MenuItem>
+  //       </Menu>
+  //     </>
+  //   );
+  // };
+
   const RowOptions = ({ id }) => {
     // ** State
     const [anchorEl, setAnchorEl] = useState(null);
-    const rowOptionsOpen = Boolean(anchorEl);
+
+    const handleRowOptionsOpen = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
 
     const handleRowOptionsClose = () => {
       setAnchorEl(null);
@@ -102,16 +147,28 @@ const Institutes = () => {
 
     return (
       <>
-        <Link to={`profile/${id}`} state={{ id: id }}>
-          <Button size="small" variant="outlined" color="secondary">
-            View
-          </Button>
-        </Link>
+        <Box sx={{ gap: 1 }}>
+          <OptionsMenu
+            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+            iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+            options={[
+              {
+                text: 'View',
+                icon: <Icon icon="tabler:eye" />,
+                menuItemProps: {
+                  component: Link,
+                  to: `profile/${id}`,
+                  state: { id: id }
+                }
+              }
+            ]}
+            onClick={handleRowOptionsOpen}
+          />
+        </Box>
 
         <Menu
-          keepMounted
           anchorEl={anchorEl}
-          open={rowOptionsOpen}
+          open={Boolean(anchorEl)}
           onClose={handleRowOptionsClose}
           anchorOrigin={{
             vertical: 'bottom',
@@ -123,7 +180,7 @@ const Institutes = () => {
           }}
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
-          <MenuItem sx={{ '& svg': { mr: 2 } }} href="/apps/user/view/account" onClick={handleRowOptionsClose}>
+          <MenuItem sx={{ '& svg': { mr: 2 } }} component={Link} to={`profile/${id}`} state={{ id: id }} onClick={handleRowOptionsClose}>
             <Icon icon="tabler:eye" fontSize={20} />
             View
           </MenuItem>
@@ -131,7 +188,6 @@ const Institutes = () => {
       </>
     );
   };
-
   const columns = [
     {
       // flex: 1.5,
