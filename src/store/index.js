@@ -3,9 +3,10 @@ import customizationReducer from './customizationReducer';
 import auth from 'features/authentication/authReducer';
 import groupReducer from 'features/user-management/groups-page/redux/groupSlice';
 import userReducer from 'features/user-management/users-page/redux/userSlices';
-import studentNotificationsReducer from 'features/notification-management/student-notifications/redux/studentNotificationSlice';
-import staffNotificationsReducer from 'features/notification-management/teaching-staff-notifications/redux/staffNotificationSlice';
-import allNotificationsReducer from 'features/notification-management/notifications/redux/instituteNotificationSlice';
+// import studentNotificationsReducer from 'features/notification-management/student-notifications/redux/studentNotificationSlice';
+import instituteNotificationsReducer from 'features/notification-management/notifications/redux/instituteNotificationReducers';
+// import staffNotificationsReducer from 'features/notification-management/teaching-staff-notifications/redux/staffNotificationSlice';
+// import allNotificationsReducer from 'features/notification-management/notifications/redux/instituteNotificationSlice';
 import calendar from 'features/calender/redux/reducers';
 import customerSupportsReducer from 'features/help-center/customer-support/redux/customerSupportSlice';
 import technicalSupportsReducer from 'features/help-center/technical-support/redux/technicalSupportSlice';
@@ -26,9 +27,10 @@ const store = configureStore({
     users: userReducer,
     institutes: instituteReducer,
     payments: paymentReducer,
-    studentNotifications: studentNotificationsReducer,
-    staffNotifications: staffNotificationsReducer,
-    allNotifications: allNotificationsReducer,
+    instituteNotificationsReducer: instituteNotificationsReducer,
+    // studentNotifications: studentNotificationsReducer,
+    // staffNotifications: staffNotificationsReducer,
+    // allNotifications: allNotificationsReducer,
     consumerSupports: customerSupportsReducer,
     technicalSupport: technicalSupportsReducer,
     calendar: calendar,

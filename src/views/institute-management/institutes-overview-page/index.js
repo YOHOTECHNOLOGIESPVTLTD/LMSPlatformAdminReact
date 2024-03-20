@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import CustomChip from '@mui/material/Chip';
+// import CustomChip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Menu from '@mui/material/Menu';
@@ -27,184 +27,30 @@ import TableHeader from 'features/institute-management/institutes-overview-page/
 import { selectInstitutes } from 'features/institute-management/redux/instituteSelectors';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllInstitutes } from 'features/institute-management/redux/instituteThunks';
-const userStatusObj = {
-  1: 'success',
-  0: 'error'
-};
-
-// ** renders client column
-const renderClient = (row) => {
-  if (row?.avatar?.length) {
-    return <CustomAvatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
-  } else {
-    return (
-      <CustomAvatar skin="light" color={row.avatarColor} sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: 10 }}>
-        {getInitials(row?.name ? row.name : 'John Doe')}
-      </CustomAvatar>
-    );
-  }
-};
-
-const RowOptions = ({ id }) => {
-  // ** State
-  const [anchorEl, setAnchorEl] = useState(null);
-  const rowOptionsOpen = Boolean(anchorEl);
-
-  const handleRowOptionsClose = () => {
-    setAnchorEl(null);
-  };
-
-  return (
-    <>
-      <Link to={`profile/${id}`} state={{ id: id }}>
-        <Button size="small" variant="outlined" color="secondary">
-          View
-        </Button>
-      </Link>
-
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={rowOptionsOpen}
-        onClose={handleRowOptionsClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        PaperProps={{ style: { minWidth: '8rem' } }}
-      >
-        <MenuItem sx={{ '& svg': { mr: 2 } }} href="/apps/user/view/account" onClick={handleRowOptionsClose}>
-          <Icon icon="tabler:eye" fontSize={20} />
-          View
-        </MenuItem>
-      </Menu>
-    </>
-  );
-};
-
-const columns = [
-  {
-    // flex: 1.5,
-    minWidth: 200,
-    field: 'id',
-    headerName: 'id',
-    renderCell: ({ row }) => {
-      return (
-        <Typography noWrap sx={{ color: 'text.secondary' }}>
-          {row.institute_id}
-        </Typography>
-      );
-    }
-  },
-  {
-    // flex: 2,
-    minWidth: 300,
-    field: 'institute',
-    headerName: 'Institute',
-    renderCell: ({ row }) => {
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <Typography
-              href="/apps/user/view/account"
-              sx={{
-                fontWeight: 500,
-                textDecoration: 'none',
-                color: 'text.secondary',
-                '&:hover': { color: 'primary.main' }
-              }}
-            >
-              {row?.name}
-            </Typography>
-            <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-              {row?.email}
-            </Typography>
-          </Box>
-        </Box>
-      );
-    }
-  },
-  {
-    // flex: 2,
-    minWidth: 300,
-    headerName: 'Contact & Address',
-    field: 'Contact',
-    renderCell: ({ row }) => {
-      return (
-        <Box
-          sx={{
-            display: 'flex',
-
-            alignItems: 'flex-start',
-            flexDirection: 'column',
-            flexWrap: 1,
-            py: 2
-          }}
-        >
-          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            +91 {row?.phone}
-          </Typography>
-          <div>
-            <Typography
-              sx={{ display: 'flex', color: 'text.secondary', textTransform: 'capitalize', flexShrink: 1, wordWrap: 'break-word', mt: 1 }}
-            >
-              {row?.address_line_1} {row?.address_line_2} {row?.city} {row?.state} {row?.pin_code}
-            </Typography>
-          </div>
-        </Box>
-      );
-    }
-  },
-
-  {
-    // flex: 1.3,
-    minWidth: 200,
-    field: 'status',
-    headerName: 'Status',
-    renderCell: ({ row }) => {
-      const userStatus = `${row.is_active}` === 1 ? 'Active' : 'Inactive';
-      return (
-        <CustomChip
-          rounded
-          skin="light"
-          size="small"
-          label={userStatus}
-          color={userStatusObj[row.is_active]}
-          sx={{ textTransform: 'capitalize' }}
-        />
-      );
-    }
-  },
-  {
-    // flex: 1,
-    minWidth: 150,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: ({ row }) => <RowOptions id={row.id} />
-  }
-];
+import StatusDialog from 'components/modal/DeleteModel';
+import toast from 'react-hot-toast';
+import { instituteChangeStatus } from 'features/institute-management/services/instituteService';
 
 const Institutes = () => {
   const [role, setRole] = useState('');
   const [plan, setPlan] = useState('');
   const [value, setValue] = useState('');
-  const [status, setStatus] = useState('');
+  // const [status, setStatus] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   // const [allInstitutes, setAllInstitutes] = useState('');
+
+  const [selectedInstitutes, setSelectedInstitutes] = useState(null);
+  const [selectedInstitutesStatus, setSelectedInstitutesStatus] = useState(null);
+  const [statusOpen, setStatusDialogOpen] = useState(false);
+  const [refetch, setRefetch] = useState(false);
 
   const dispatch = useDispatch();
   const allInstitutes = useSelector(selectInstitutes);
 
   useEffect(() => {
     dispatch(getAllInstitutes());
-  }, [dispatch, getAllInstitutes]);
+  }, [dispatch, getAllInstitutes, refetch]);
 
   console.log(allInstitutes);
   const handleFilter = useCallback((val) => {
@@ -219,10 +65,191 @@ const Institutes = () => {
     setPlan(e.target.value);
   }, []);
 
-  const handleStatusChange = useCallback((e) => {
-    setStatus(e.target.value);
-  }, []);
+  // const handleStatusChange = useCallback((e) => {
+  //   setStatus(e.target.value);
+  // }, []);
+
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+
+  const userStatusObj = {
+    1: 'success',
+    0: 'error'
+  };
+
+  // ** renders client column
+  const renderClient = (row) => {
+    if (row?.avatar?.length) {
+      return <CustomAvatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+    } else {
+      return (
+        <CustomAvatar skin="light" color={row.avatarColor} sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: 10 }}>
+          {getInitials(row?.name ? row.name : 'John Doe')}
+        </CustomAvatar>
+      );
+    }
+  };
+
+  const RowOptions = ({ id }) => {
+    // ** State
+    const [anchorEl, setAnchorEl] = useState(null);
+    const rowOptionsOpen = Boolean(anchorEl);
+
+    const handleRowOptionsClose = () => {
+      setAnchorEl(null);
+    };
+
+    return (
+      <>
+        <Link to={`profile/${id}`} state={{ id: id }}>
+          <Button size="small" variant="outlined" color="secondary">
+            View
+          </Button>
+        </Link>
+
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={rowOptionsOpen}
+          onClose={handleRowOptionsClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right'
+          }}
+          PaperProps={{ style: { minWidth: '8rem' } }}
+        >
+          <MenuItem sx={{ '& svg': { mr: 2 } }} href="/apps/user/view/account" onClick={handleRowOptionsClose}>
+            <Icon icon="tabler:eye" fontSize={20} />
+            View
+          </MenuItem>
+        </Menu>
+      </>
+    );
+  };
+
+  const columns = [
+    {
+      // flex: 1.5,
+      minWidth: 200,
+      field: 'id',
+      headerName: 'id',
+      renderCell: ({ row }) => {
+        return (
+          <Typography noWrap sx={{ color: 'text.secondary' }}>
+            {row.institute_id}
+          </Typography>
+        );
+      }
+    },
+    {
+      // flex: 2,
+      minWidth: 300,
+      field: 'institute',
+      headerName: 'Institute',
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(row)}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <Typography
+                href="/apps/user/view/account"
+                sx={{
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  color: 'text.secondary',
+                  '&:hover': { color: 'primary.main' }
+                }}
+              >
+                {row?.name}
+              </Typography>
+              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
+                {row?.email}
+              </Typography>
+            </Box>
+          </Box>
+        );
+      }
+    },
+    {
+      // flex: 2,
+      minWidth: 300,
+      headerName: 'Contact & Address',
+      field: 'Contact',
+      renderCell: ({ row }) => {
+        return (
+          <Box
+            sx={{
+              display: 'flex',
+
+              alignItems: 'flex-start',
+              flexDirection: 'column',
+              flexWrap: 1,
+              py: 2
+            }}
+          >
+            <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
+              +91 {row?.phone}
+            </Typography>
+            <div>
+              <Typography
+                sx={{ display: 'flex', color: 'text.secondary', textTransform: 'capitalize', flexShrink: 1, wordWrap: 'break-word', mt: 1 }}
+              >
+                {row?.address_line_1} {row?.address_line_2} {row?.city} {row?.state} {row?.pin_code}
+              </Typography>
+            </div>
+          </Box>
+        );
+      }
+    },
+
+    {
+      // flex: 1.3,
+      minWidth: 200,
+      field: 'status',
+      headerName: 'Status',
+      renderCell: ({ row }) => {
+        const userStatus = `${row.is_active}` === 1 ? 'Active' : 'Inactive';
+        return (
+          <CustomTextField select value={row.is_active} onChange={(e) => handleStatusChange(e, row)}>
+            <MenuItem value="1">Active</MenuItem>
+            <MenuItem value="0">Inactive</MenuItem>
+          </CustomTextField>
+        );
+      }
+    },
+    {
+      // flex: 1,
+      minWidth: 150,
+      sortable: false,
+      field: 'actions',
+      headerName: 'Actions',
+      renderCell: ({ row }) => <RowOptions id={row.id} />
+    }
+  ];
+
+  const handleStatusChange = (e, row) => {
+    setSelectedInstitutes(row);
+    setSelectedInstitutesStatus(e.target.value);
+    setStatusDialogOpen(true);
+  };
+
+  const handleStatusChangeApi = async () => {
+    const data = {
+      status: selectedInstitutesStatus,
+      id: selectedInstitutes?.id
+    };
+    const response = await instituteChangeStatus(data);
+    if (response.success) {
+      toast.success(response.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
+  };
+
   // ** State
   return (
     <>
@@ -279,8 +306,8 @@ const Institutes = () => {
                     defaultValue="Select Status"
                     SelectProps={{
                       value: status,
-                      displayEmpty: true,
-                      onChange: (e) => handleStatusChange(e)
+                      displayEmpty: true
+                      // onChange: (e) => handleStatusChange(e)
                     }}
                   >
                     <MenuItem value="">Select Status</MenuItem>
@@ -306,6 +333,14 @@ const Institutes = () => {
             />
           </Card>
         </Grid>
+
+        <StatusDialog
+          open={statusOpen}
+          setOpen={setStatusDialogOpen}
+          description="Are you sure you want to Change Status"
+          title="Status"
+          handleSubmit={handleStatusChangeApi}
+        />
       </Grid>
     </>
   );
