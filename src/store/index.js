@@ -14,6 +14,8 @@ import paymentReducer from 'features/payment-management/payments-page/redux/paym
 import faqSlice from 'features/faq-management/faqs/redux/faqSlice';
 import faqCategorySlice from 'features/faq-management/faq-categories/redux/faqCategorySlice';
 import allNotificationSlice from 'features/notification-management/notifications/redux/instituteNotificationSlice';
+import subscriptionPlansReducer from 'features/subscription-management/plans/redux/subscriptionPlansSlice';
+import subscriptionFeaturesReducer from 'features/subscription-management/features/redux/subscriptionFeaturesSlice';
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
@@ -30,7 +32,9 @@ const store = configureStore({
     auth: auth,
     faqCategories: faqCategorySlice,
     faqs: faqSlice,
-    instituteNotifications: allNotificationSlice
+    instituteNotifications: allNotificationSlice,
+    subscriptionPlans: subscriptionPlansReducer,
+    subscriptionFeatures: subscriptionFeaturesReducer
   }
 });
 // configureStore(reducer);
