@@ -151,7 +151,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
               </Box>
             </Box>
             <Box sx={{ mt: 3 }}>
-              {tab?.sub_module[0]?.platformfaqs?.map((item) => {
+              {tab?.sub_module?.platformfaqs?.map((item) => {
                 return (
                   <Accordion
                     sx={{ mt: 1, boxShadow: '0px 2px 6px 0px rgba(47, 43, 61, 0.14);', borderRadius: '6px', border: 'none' }}
@@ -184,7 +184,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
   const renderTabs = () => {
     if (data !== null) {
       return helps?.map((tab, index) => {
-        if (tab?.sub_module[0]?.platformfaqs?.length) {
+        if (tab?.sub_module?.platformfaqs?.length) {
           return <Tab key={index} value={tab.module} label={tab.module} icon={<Icon icon={'tabler:credit-card'} />} />;
         } else {
           return null;

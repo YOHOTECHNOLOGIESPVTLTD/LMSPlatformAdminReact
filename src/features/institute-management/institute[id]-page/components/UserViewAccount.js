@@ -43,7 +43,6 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 
 const statusColors = {
   1: 'success',
-
   0: 'error'
 };
 
@@ -61,6 +60,19 @@ const defaultPersonalValues = {
   alt_phone: '',
   description: ''
 };
+function convertDateFormat(input) {
+  var originalDate = new Date(input);
+
+  // Extract the year, month, and day components
+  var year = originalDate.getFullYear();
+  var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+  var day = ('0' + originalDate.getDate()).slice(-2);
+
+  // Form the yyyy-mm-dd date string
+  var formattedDateString = year + '-' + month + '-' + day;
+
+  return formattedDateString;
+}
 
 const personalSchema = yup.object().shape({
   state: yup.string().required(),
@@ -102,7 +114,7 @@ const UserViewAccount = ({ institute }) => {
     bodyFormData.append('email', data.email);
     bodyFormData.append('phone', data.phone);
     bodyFormData.append('alternate_number', data.alternate_number);
-    bodyFormData.append('registered_date', data.registered_date);
+    bodyFormData.append('registered_date', convertDateFormat(data.registered_date));
     bodyFormData.append('state', data.state);
     bodyFormData.append('address_line_1', data.address_line_1);
     bodyFormData.append('address_line_2', data.address_line_2);
@@ -114,6 +126,7 @@ const UserViewAccount = ({ institute }) => {
     bodyFormData.append('city', data.city);
     bodyFormData.append('pincode', data.pincode);
     bodyFormData.append('description', data.description);
+    bodyFormData.append('id', institute?.id);
 
     // bodyFormData.append('instagram', data.instagram);
     // bodyFormData.append('id', props.initialValues.id);
@@ -376,7 +389,7 @@ const UserViewAccount = ({ institute }) => {
                           name="state"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               // value={value}
@@ -395,7 +408,7 @@ const UserViewAccount = ({ institute }) => {
                           name="city"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               defaultValue={institute?.city}
@@ -413,7 +426,7 @@ const UserViewAccount = ({ institute }) => {
                           name="pin_code"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               defaultValue={institute?.pin_code}
@@ -433,7 +446,7 @@ const UserViewAccount = ({ institute }) => {
                           name="address_line_one"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               defaultValue={institute?.address_line_1}
@@ -452,7 +465,7 @@ const UserViewAccount = ({ institute }) => {
                           name="address_line_two"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               defaultValue={institute?.address_line_2}
@@ -471,7 +484,7 @@ const UserViewAccount = ({ institute }) => {
                           name="phone"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               type="number"
@@ -512,7 +525,7 @@ const UserViewAccount = ({ institute }) => {
                           name="official_email"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {  onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               defaultValue={institute?.user?.institution_users?.email}
@@ -531,7 +544,7 @@ const UserViewAccount = ({ institute }) => {
                           name="official_website"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               defaultValue={institute?.official_website}
@@ -578,7 +591,7 @@ const UserViewAccount = ({ institute }) => {
                           name="description"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               value={institute?.description}
@@ -599,7 +612,7 @@ const UserViewAccount = ({ institute }) => {
                           name="facebook"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               defaultValue={institute?.facebook}
@@ -637,7 +650,7 @@ const UserViewAccount = ({ institute }) => {
                           name="twitter"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {  onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               defaultValue={institute?.twitter}
@@ -656,7 +669,7 @@ const UserViewAccount = ({ institute }) => {
                           name="pinterest"
                           control={personalControl}
                           rules={{ required: true }}
-                          render={({ field: {onChange } }) => (
+                          render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
                               defaultValue={institute?.pinterest}

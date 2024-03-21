@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/platform-user`;
 const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
+const PROFILE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/profile-management`;
 
 export const getAllUsers = async (selectedBranchId) => {
   try {
@@ -122,7 +123,7 @@ export const updateUserStatus = async (data) => {
 };
 export const userChangePassword = async (data,id) => {
   try {
-    const response = await axios.post(`${USER_API_ENDPOINT}/password-change`, data, {
+    const response = await axios.put(`${USER_API_ENDPOINT}/reset-password`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -145,20 +146,20 @@ export const userChangePassword = async (data,id) => {
 };
 export const updateUser = async (data) => {
   try {
-    const response = await axios.post(`${USER_API_ENDPOINT}/create`, data, {
+    const response = await axios.post(`${USER_API_ENDPOINT}/update`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
     console.log(response);
     if (response.data.status) {
-      return { success: true, message: 'User created successfully' };
+      return { success: true, message: 'User updated successfully' };
     } else {
       return { success: false, message: response.data.message };
     }
   } catch (error) {
-    console.error('Error in addUser:', error);
+    console.error('Error in editUser:', error);
     throw error;
   }
 };
@@ -288,6 +289,32 @@ export const FilterUsersByStatus = async (status) => {
     }
   } catch (error) {
     console.error('Error in searchUsers:', error);
+    throw error;
+  }
+};
+
+export const getUserProfileById = async (data) => {
+  try {
+    const response = await axios.get(`${PROFILE_API_ENDPOINT}/get-by-auth-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch users. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllUsers:', error);
+
+    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };

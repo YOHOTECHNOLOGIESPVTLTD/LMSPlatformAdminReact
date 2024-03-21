@@ -221,3 +221,27 @@ export const getPermissionsByRole = async (roleId) => {
     throw error;
   }
 };
+
+export const getAllActiveGroups = async () => {
+  try {
+    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-active-roles`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    // Check if the response status is successful
+    if (response.data) {
+      return { success: true, data: response.data.data };
+    } else {
+      return { success: false, message: 'Failed to fetch Groups' };
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllGroups:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};

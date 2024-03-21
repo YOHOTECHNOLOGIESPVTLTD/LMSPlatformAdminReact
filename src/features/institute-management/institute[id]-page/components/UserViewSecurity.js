@@ -45,7 +45,7 @@ const UserViewSecurity = ({ id }) => {
     if (values.newPassword === values.confirmNewPassword && values.newPassword !== '' && values.confirmNewPassword !== '') {
       try {
         let data = {
-          user_id: id,
+          id: id,
           password: values.confirmNewPassword,
           c_password: values.newPassword
         };
