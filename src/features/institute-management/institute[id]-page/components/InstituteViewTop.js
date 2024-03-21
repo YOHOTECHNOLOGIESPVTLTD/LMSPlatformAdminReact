@@ -19,7 +19,7 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   height: 108,
   borderRadius: theme.shape.borderRadius,
   border: `4px solid ${theme.palette.common.white}`,
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down('md')]: { 
     marginBottom: theme.spacing(4)
   }
 }));
@@ -27,10 +27,6 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 
 const UserViewLeft = ({ institute }) => {
 const [statusOpen, setStatusDialogOpen] = useState(false);
-
-
-
-
 
   return (
     <Card sx={{ mb: 3 }}>
