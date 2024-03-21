@@ -51,7 +51,7 @@ const defaultValues = {
   contact: Number('')
 };
 
-const FeesEditDrawer = (props) => {
+const PaymentEditDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
   const [inputValue, setInputValue] = useState('');
@@ -322,4 +322,4 @@ const FeesEditDrawer = (props) => {
   );
 };
 
-export default FeesEditDrawer;
+export default PaymentEditDrawer;

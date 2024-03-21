@@ -1,11 +1,13 @@
 // PaymentService.js
 import axios from 'axios';
 
-const PAYMENT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/payment-management/student-fees`;
+const PAYMENT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}api/platform/admin/subscription-management/institute-subscriptions`;
+
+const Subscription_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/subscription-plans`;
 
 export const getAllPayments = async () => {
   try {
-    const response = await axios.get(`${PAYMENT_API_ENDPOINT}/read-by-branch-id`, {
+    const response = await axios.get(`${PAYMENT_API_ENDPOINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -109,6 +111,33 @@ export const updatePayment = async (data) => {
     }
   } catch (error) {
     console.error('Error in updatePayment:', error);
+    throw error;
+  }
+};
+
+export const getAllPaymentSubscription = async () => {
+  try {
+    const response = await axios.get(`${Subscription_API_ENDPOINT}/show`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch Payments. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllPayments:', error);
+
+    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };

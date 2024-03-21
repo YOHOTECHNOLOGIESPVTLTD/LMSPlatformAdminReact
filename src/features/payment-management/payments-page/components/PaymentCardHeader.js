@@ -5,7 +5,7 @@ import Icon from 'components/icon';
 // ** Custom Component Import
 import { TextField } from '@mui/material';
 
-const FeesCardHeader = (props) => {
+const PaymentCardHeader = (props) => {
   const { value, handleFilter, toggle } = props;
   return (
     <>
@@ -40,4 +40,4 @@ const FeesCardHeader = (props) => {
   );
 };
 
-export default FeesCardHeader;
+export default PaymentCardHeader;
