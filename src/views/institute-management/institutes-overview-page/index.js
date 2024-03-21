@@ -56,6 +56,7 @@ const Institutes = () => {
   }, [dispatch, getAllInstitutes, selectedBranchId, refetch]);
 
   console.log(allInstitutes);
+  
   // const handleFilter = useCallback((val) => {
   //   setValue(val);
   // }, []);
