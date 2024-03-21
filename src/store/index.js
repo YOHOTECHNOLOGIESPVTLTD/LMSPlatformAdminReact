@@ -3,10 +3,7 @@ import customizationReducer from './customizationReducer';
 import auth from 'features/authentication/authReducer';
 import groupReducer from 'features/user-management/groups-page/redux/groupSlice';
 import userReducer from 'features/user-management/users-page/redux/userSlices';
-// import studentNotificationsReducer from 'features/notification-management/student-notifications/redux/studentNotificationSlice';
-import instituteNotificationsReducer from 'features/notification-management/notifications/redux/instituteNotificationReducers';
-// import staffNotificationsReducer from 'features/notification-management/teaching-staff-notifications/redux/staffNotificationSlice';
-// import allNotificationsReducer from 'features/notification-management/notifications/redux/instituteNotificationSlice';
+
 import calendar from 'features/calender/redux/reducers';
 import customerSupportsReducer from 'features/help-center/customer-support/redux/customerSupportSlice';
 import technicalSupportsReducer from 'features/help-center/technical-support/redux/technicalSupportSlice';
@@ -17,6 +14,8 @@ import paymentReducer from 'features/payment-management/payments-page/redux/paym
 import faqSlice from 'features/faq-management/faqs/redux/faqSlice';
 import faqCategorySlice from 'features/faq-management/faq-categories/redux/faqCategorySlice';
 import allNotificationSlice from 'features/notification-management/notifications/redux/instituteNotificationSlice';
+import subscriptionPlansReducer from 'features/subscription-management/plans/redux/subscriptionPlansSlice';
+import subscriptionFeaturesReducer from 'features/subscription-management/features/redux/subscriptionFeaturesSlice';
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
@@ -27,17 +26,15 @@ const store = configureStore({
     users: userReducer,
     institutes: instituteReducer,
     payments: paymentReducer,
-    instituteNotificationsReducer: instituteNotificationsReducer,
-    // studentNotifications: studentNotificationsReducer,
-    // staffNotifications: staffNotificationsReducer,
-    // allNotifications: allNotificationsReducer,
     consumerSupports: customerSupportsReducer,
     technicalSupport: technicalSupportsReducer,
     calendar: calendar,
     auth: auth,
     faqCategories: faqCategorySlice,
     faqs: faqSlice,
-    instituteNotifications: allNotificationSlice
+    instituteNotifications: allNotificationSlice,
+    subscriptionPlans: subscriptionPlansReducer,
+    subscriptionFeatures: subscriptionFeaturesReducer
   }
 });
 // configureStore(reducer);

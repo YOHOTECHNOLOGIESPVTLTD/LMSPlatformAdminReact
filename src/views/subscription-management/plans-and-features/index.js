@@ -9,14 +9,24 @@ import TabContext from '@mui/lab/TabContext';
 import PricingPlans from 'features/subscription-management/plans/components';
 import { Card, Box } from '@mui/material';
 import SubscriptionFeatures from 'features/subscription-management/features/components';
-
+import { getAllSubsciptions } from 'features/subscription-management/features/services/SubscriptionServices';
+import { useDispatch } from 'react-redux';
 const Subscription = () => {
   // ** State
   const [value, setValue] = useState('plans');
-
+  const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllSubsciptions(data));
+  }, [dispatch, selectedBranchId]);
+
+
 
   return (
     <Card>
