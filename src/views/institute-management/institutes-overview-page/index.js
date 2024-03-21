@@ -22,7 +22,7 @@ import InstituteHeaderSection from 'features/institute-management/institutes-ove
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
 // ** Custom Table Components Imports
-import { Button } from '@mui/material';
+// import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import TableHeader from 'features/institute-management/institutes-overview-page/components/TableHeader';
 import { selectInstitutes, selectLoading } from 'features/institute-management/redux/instituteSelectors';
@@ -35,7 +35,7 @@ import { instituteChangeStatus } from 'features/institute-management/services/in
 const Institutes = () => {
   const [role, setRole] = useState('');
   const [plan, setPlan] = useState('');
-  const [value, setValue] = useState('');
+  // const [value, setValue] = useState('');
   // const [status, setStatus] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
@@ -56,9 +56,9 @@ const Institutes = () => {
   }, [dispatch, getAllInstitutes, selectedBranchId, refetch]);
 
   console.log(allInstitutes);
-  const handleFilter = useCallback((val) => {
-    setValue(val);
-  }, []);
+  // const handleFilter = useCallback((val) => {
+  //   setValue(val);
+  // }, []);
 
   const handleRoleChange = useCallback((e) => {
     setRole(e.target.value);
@@ -74,10 +74,10 @@ const Institutes = () => {
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
-  const userStatusObj = {
-    1: 'success',
-    0: 'error'
-  };
+  // const userStatusObj = {
+  //   1: 'success',
+  //   0: 'error'
+  // };
 
   // ** renders client column
   const renderClient = (row) => {
@@ -269,7 +269,7 @@ const Institutes = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
-        const userStatus = `${row.is_active}` === 1 ? 'Active' : 'Inactive';
+        // const userStatus = `${row.is_active}` === 1 ? 'Active' : 'Inactive';
         return (
           <CustomTextField select value={row.is_active} onChange={(e) => handleStatusChange(e, row)}>
             <MenuItem value="1">Active</MenuItem>
