@@ -1,7 +1,7 @@
 // PaymentService.js
 import axios from 'axios';
 
-const PAYMENT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}api/platform/admin/subscription-management/institute-subscriptions`;
+const PAYMENT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/institute-subscriptions`;
 
 const Subscription_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/subscription-plans`;
 
@@ -61,11 +61,11 @@ export const addPayment = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Payment created successfully' };
     } else {
-      return { success: false, message: 'Failed to create Payment' };
+      return { success: false, message: response.data.message };
     }
   } catch (error) {
     console.error('Error in addPayment:', error);
@@ -102,12 +102,13 @@ export const updatePayment = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(response);
 
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'Payment updated successfully' };
     } else {
-      return { success: false, message: 'Failed to update Payment' };
+      return { success: false, message:'Payment update Failed' };
     }
   } catch (error) {
     console.error('Error in updatePayment:', error);
