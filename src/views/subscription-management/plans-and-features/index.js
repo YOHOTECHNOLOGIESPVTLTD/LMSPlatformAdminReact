@@ -10,7 +10,7 @@ import PricingPlans from 'features/subscription-management/plans/components';
 import { Card, Box } from '@mui/material';
 import SubscriptionFeatures from 'features/subscription-management/features/components';
 import { getAllSubscriptionPlans } from 'features/subscription-management/plans/redux/subscriptionPlansThunks';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 const Subscription = () => {
   // ** State
   const [value, setValue] = useState('plans');
