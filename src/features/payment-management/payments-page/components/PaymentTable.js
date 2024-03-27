@@ -45,8 +45,8 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 
 // ** renders client column
 const renderClient = (row) => {
-  if (row?.avatar?.length) {
-    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+  if (row?.institute?.image) {
+    return <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.institute?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
@@ -169,26 +169,19 @@ const FeesTable = () => {
     },
     {
       flex: 1.25,
-      minWidth: 140,
-      field: 'transactionId',
-      headerName: 'Transaction ID',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transaction_id}</Typography>
-    },
-    {
-      flex: 1.25,
       minWidth: 210,
-      field: 'name',
-      headerName: 'Students',
+      field: 'institute_name',
+      headerName: 'Institute Name',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row.students.first_name}
+                {row.institute.name}
               </Typography>
-              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row.students.email}
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 400,fontSize:"12px" ,mt:0.5}}>
+                {row.institute.email}
               </Typography>
             </Box>
           </Box>
@@ -197,27 +190,26 @@ const FeesTable = () => {
     },
     {
       flex: 1.25,
-      minWidth: 120,
-      field: 'total',
-      headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
+      minWidth: 150,
+      field: 'plans',
+      headerName: 'plans',
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.plans?.plan_name}</Typography>
     },
     {
       flex: 1.25,
       minWidth: 150,
       field: 'issuedDate',
       headerName: 'Issued Date',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.payment_date}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.start_date} / {row.end_date}</Typography>
     },
     {
       flex: 1.25,
-      minWidth: 150,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: ({ row }) => {
-        return <Typography>{row.status}</Typography>;
-      }
-    }
+      minWidth: 120,
+      field: 'total',
+      headerName: 'Amount Paid',
+      renderCell: ({ row }) =>
+       <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
+    },
   ];
 
   const columns = [

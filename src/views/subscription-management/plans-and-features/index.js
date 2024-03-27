@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // ** MUI Imports
 import Tab from '@mui/material/Tab';
@@ -9,14 +9,18 @@ import TabContext from '@mui/lab/TabContext';
 import PricingPlans from 'features/subscription-management/plans/components';
 import { Card, Box } from '@mui/material';
 import SubscriptionFeatures from 'features/subscription-management/features/components';
-// import { getAllSubscriptions } from 'features/subscription-management/features/services/SubscriptionServices';
-// import { useDispatch } from 'react-redux';
+import { getAllSubscriptionPlans } from 'features/subscription-management/plans/redux/subscriptionPlansThunks';
+import { useDispatch } from 'react-redux';
 const Subscription = () => {
   // ** State
   const [value, setValue] = useState('plans');
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    dispatch(getAllSubscriptionPlans());
+  }, [dispatch]);
 
   return (
     <Card>
