@@ -1,11 +1,11 @@
 // SubscriptionPlanService.js
 import axios from 'axios';
 
-const SUBSCRIPTION_PLAN_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/SubscriptionPlan-management/student-fees`;
+const SUBSCRIPTION_PLAN_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/subscription-plans`;
 
 export const getAllSubscriptionPlans = async () => {
   try {
-    const response = await axios.get(`${SUBSCRIPTION_PLAN_END_POINT}/read-by-branch-id`, {
+    const response = await axios.get(`${SUBSCRIPTION_PLAN_END_POINT}/show`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

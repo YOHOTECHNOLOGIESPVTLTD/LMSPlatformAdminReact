@@ -93,7 +93,7 @@ const SubscriptionFeatures = () => {
                   fullWidth
                   type="number"
                   value={value}
-                  label="Number of Users"
+                  label="Number of Students"
                   onChange={onChange}
                   placeholder="10"
                   error={Boolean(errors.users)}

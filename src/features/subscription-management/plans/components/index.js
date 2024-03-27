@@ -1,12 +1,17 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid';
 import { useState } from 'react';
+import { useEffect } from 'react';
 
 // ** Custom Components Imports
 import PlanDetails from './plan-details';
 import { Button } from '@mui/material';
 import CreatePlan from './createPlan';
-
+// import { getAllSubscriptionPlans } from 'features/subscription-management/plans/services/subscriptionPlansServices';
+// import { getAllSubscriptionPlans } from '../services/subscriptionPlansServices';
+import { getAllSubscriptionPlans } from '../redux/subscriptionPlansThunks';
+import { useDispatch,useSelector } from 'react-redux';
+import { selectSubscriptionPlans } from '../redux/subscriptionPlansSelectors';
 const PricingPlans = () => {
   // ** Props
   // const { plan, data } = props
@@ -16,11 +21,23 @@ const PricingPlans = () => {
   const [selectedValue, setSelectedValue] = useState('');
   const handleClickOpen = () => setOpen(true);
   const handleDialogClose = () => setOpen(false);
+  const dispatch = useDispatch()
+  const plans = useSelector(selectSubscriptionPlans)
 
   const handleClose = (value) => {
     setOpen(false);
     setSelectedValue(value);
   };
+  // const dispatch = useDispatch();
+ 
+
+  useEffect(() => {
+   dispatch(getAllSubscriptionPlans())
+  }, []);
+
+
+  console.log('plans', plans);
+
 
   const data = [
     {
@@ -104,11 +121,12 @@ const PricingPlans = () => {
           Create New Plan +
         </Button>
       </Grid>
-      {data?.map((item) => (
-        <Grid item xs={12} md={4} key={item.title.toLowerCase()}>
-          <PlanDetails data={item} />
-        </Grid>
-      ))}
+      {plans && plans?.map((item,i) => (
+  <Grid item xs={12} md={4} key={i}>
+    <PlanDetails plans={item} />
+  </Grid>
+))}
+
       <CreatePlan handleClose={handleClose} handleDialogClose={handleDialogClose} open={open} selectedValue={selectedValue} />
     </Grid>
   );

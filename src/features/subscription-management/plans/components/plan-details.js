@@ -11,7 +11,8 @@ import Icon from 'components/icon';
 import { hexToRGBA } from 'utils/hex-to-rgba';
 
 // ** Custom Components Imports
-import CustomChip from 'components/mui/chip';
+// import CustomChip from 'components/mui/chip';
+import { useTheme } from '@mui/material/styles';
 
 // ** Styled Component for the wrapper of whole component
 const BoxWrapper = styled(Box)(({ theme }) => ({
@@ -31,27 +32,43 @@ const BoxFeature = styled(Box)(({ theme }) => ({
 
 const PlanDetails = (props) => {
   // ** Props
-  const { data } = props;
-  // console.log(plan,'Plans')
+  const { plans } = props;
+  const theme = useTheme()
+  console.log(plans,'Plansxxx')
   const renderFeatures = () => {
-    return data?.planBenefits.map((item, index) => (
-      <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
+    return plans?.features?.map((features,index) => (
+      <Box  key={index}>
+        <Box sx={{ display:'flex', alignItems: 'center' }}>
         <Box component="span" sx={{ display: 'inline-flex', color: 'text.secondary', mr: 2.5 }}>
-          <Icon icon="tabler:circle" fontSize="0.875rem" />
+          <Icon icon="tabler:circle" fontSize="0.875rem"/>
         </Box>
-        <Typography sx={{ color: 'text.secondary' }}>{item}</Typography>
+        <Typography sx={{ color: 'text.secondary' }}>{features?.category}: {features?.limitations}</Typography>
       </Box>
+      <Box sx={{ display:'flex', alignItems: 'center' }}>
+        <Box component="span" sx={{ display: 'inline-flex', color: 'text.secondary', mr: 2.5 }}>
+          <Icon icon="tabler:circle" fontSize="0.875rem"/>
+        </Box>
+        <Typography sx={{ color: 'text.secondary' }}>{features?.category}: {features?.feature_name}</Typography>
+      </Box>
+      </Box>
+      
     ));
   };
 
   return (
     <BoxWrapper
+      // sx={{
+      //   border: (theme) =>
+      //     !data?.popularPlan ? `1px solid ${theme.palette.divider}` : `1px solid ${hexToRGBA(theme.palette.primary.main, 0.5)}`
+      // }}
+
       sx={{
-        border: (theme) =>
-          !data?.popularPlan ? `1px solid ${theme.palette.divider}` : `1px solid ${hexToRGBA(theme.palette.primary.main, 0.5)}`
+        border: `1px solid ${hexToRGBA(theme.palette.primary.main, 0.5)}`
       }}
+
+
     >
-      {data?.popularPlan ? (
+      {/* {plans?.premium ? (
         <CustomChip
           rounded
           size="small"
@@ -69,27 +86,27 @@ const PlanDetails = (props) => {
             }
           }}
         />
-      ) : null}
+      ) : null} */}
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
         <img
-          width={data?.imgWidth}
-          src={`${data?.imgSrc}`}
-          height={data?.imgHeight}
-          alt={`${data?.title.toLowerCase().replace(' ', '-')}-plan-img`}
+          width={50}
+          src={`${plans?.imgSrc}`}
+          height={plans?.imgHeight}
+          alt={`${plans?.title}-plan-img`}
         />
       </Box>
       <Box sx={{ textAlign: 'center' }}>
-        <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem' }}>{data?.title}</Typography>
-        <Typography sx={{ color: 'text.secondary' }}>{data?.subtitle}</Typography>
+        <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem' }}>{plans?.plan_name}</Typography>
+        <Typography sx={{ color: 'text.secondary' }}>{plans?.description}</Typography>
         <Box sx={{ my: 7, position: 'relative' }}>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Typography sx={{ mt: 2.5, mr: 0.5, fontWeight: 500, color: 'primary.main', alignSelf: 'flex-start' }}>$</Typography>
             <Typography variant="h1" sx={{ color: 'primary.main', fontSize: '3rem', lineHeight: 1.4168 }}>
-              {/* {plan === 'monthly' ? data?.monthlyPrice : data?.yearlyPlan.perMonth} */}
+              {/* {plan === 'monthly' ? plans?.monthlyPrice : plans?.yearlyPlan.perMonth} */}
             </Typography>
             <Typography sx={{ mb: 1.5, alignSelf: 'flex-end', color: 'text.disabled' }}>/month</Typography>
           </Box>
-          {/* {plan !== 'monthly' && data?.monthlyPrice !== 0 ? (
+          {/* {plan !== 'monthly' && plans?.monthlyPrice !== 0 ? (
             <Typography
               variant="body2"
               sx={{
@@ -100,13 +117,13 @@ const PlanDetails = (props) => {
                 color: 'text.disabled',
                 transform: 'translateX(-50%)'
               }}
-            >{`USD ${data?.yearlyPlan.totalAnnual}/year`}</Typography>
+            >{`USD ${plans?.yearlyPlan.totalAnnual}/year`}</Typography>
           ) : null} */}
         </Box>
       </Box>
       <BoxFeature>{renderFeatures()}</BoxFeature>
-      <Button fullWidth color={data?.currentPlan ? 'success' : 'primary'} variant={data?.popularPlan ? 'contained' : 'tonal'}>
-        {data?.currentPlan ? 'Your Current Plan' : 'Upgrade'}
+      <Button fullWidth color={plans?.currentPlan ? 'success' : 'primary'} variant={plans?.popularPlan ? 'contained' : 'tonal'}>
+        {plans?.currentPlan ? 'Your Current Plan' : 'Upgrade'}
       </Button>
     </BoxWrapper>
   );
