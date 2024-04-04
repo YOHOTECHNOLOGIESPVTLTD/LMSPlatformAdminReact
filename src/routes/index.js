@@ -119,7 +119,7 @@ const ApplicationRoutes = () => {
             <Route path="users/:id" element={<ViewUserPage />} />
           </Route>
         </Route>
-        
+
         {/* FaqManagement */}
         <Route path="/faq-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/faq-management/categories" />} />
