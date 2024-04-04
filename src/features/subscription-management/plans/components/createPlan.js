@@ -13,17 +13,13 @@ import CustomTextField from 'components/mui/text-field';
 import { Controller, useForm } from 'react-hook-form';
 import { DialogActions } from '@mui/material';
 import { Fragment } from 'react';
+import MenuItem from '@mui/material/MenuItem';
+// import { addSubscriptionPlan } from '../services/subscriptionPlansServices';
 
 const CreatePlan = ({ handleDialogClose, open }) => {
-  // ** States
-  //   const theme = useTheme();
-  //   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-  //   imageupload
   const [inputValue, setInputValue] = useState('');
-  const image = require('assets/images/avatar/1.png');
   const [selectedImage, setSelectedImage] = useState('');
-  const [imgSrc, setImgSrc] = useState(image);
+  const [imgSrc, setImgSrc] = useState('https://www.charitycomms.org.uk/wp-content/uploads/2019/02/placeholder-image-square.jpg');
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -52,15 +48,10 @@ const CreatePlan = ({ handleDialogClose, open }) => {
   };
 
   const defaultValues = {
-    dob: null,
-    email: '',
-    radio: '',
-    select: '',
-    lastName: '',
-    password: '',
-    textarea: '',
-    firstName: '',
-    checkbox: false
+    plan_name:'',
+    plan_description:'',
+    plan_duration:'',
+
   };
 
   const {
@@ -70,7 +61,7 @@ const CreatePlan = ({ handleDialogClose, open }) => {
   } = useForm({ defaultValues });
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log('subData',data);
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
     console.log(bodyFormData);
@@ -78,15 +69,12 @@ const CreatePlan = ({ handleDialogClose, open }) => {
 
   return (
     <Fragment>
-      {/* <Typography variant="subtitle1" sx={{ mb: 2 }}>
-        Selected: {selectedValue}
-      </Typography> */}
-      <Dialog onClose={handleDialogClose} fullWidth aria-labelledby="responsive-dialog-title" open={open}>
+      <Dialog onClose={handleDialogClose} aria-labelledby="responsive-dialog-title" open={open}>
         {/* <DialogTitle id="simple-dialog-title">Add New Plan</DialogTitle> */}
         <DialogContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container xs={12} spacing={3}>
-              <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+              <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <ImgStyled src={imgSrc} alt="Profile Pic" />
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -104,7 +92,7 @@ const CreatePlan = ({ handleDialogClose, open }) => {
               </Grid>
               <Grid item xs={12} sm={12}>
                 <Controller
-                  name="name_of_plan"
+                  name="plan_name"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -123,7 +111,7 @@ const CreatePlan = ({ handleDialogClose, open }) => {
               </Grid>
               <Grid item xs={12}>
                 <Controller
-                  name="description"
+                  name="plan_description"
                   control={control}
                   rules={{ required: true }}
                   render={({ field }) => (
@@ -132,7 +120,7 @@ const CreatePlan = ({ handleDialogClose, open }) => {
                       fullWidth
                       multiline
                       {...field}
-                      label="About Plan"
+                      label="Plan Description"
                       error={Boolean(errors.textarea)}
                       aria-describedby="validation-basic-textarea"
                       {...(errors.textarea && { helperText: 'This field is required' })}
@@ -142,9 +130,10 @@ const CreatePlan = ({ handleDialogClose, open }) => {
               </Grid>
               <Grid item xs={12}>
                 <Controller
-                  name="duration"
+                  name="plan_duration"
                   control={control}
                   rules={{ required: true }}
+                
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -160,14 +149,41 @@ const CreatePlan = ({ handleDialogClose, open }) => {
                   )}
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+            <Controller
+              name="Duration Type"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <CustomTextField
+                  select
+                  fullWidth
+                  defaultValue="days"
+                  label="Duration Type"
+                  SelectProps={{
+                    value: value,
+                    onChange: (e) => onChange(e)
+                  }}
+                  id="validation-basic-select"
+                  error={Boolean(errors.select)}
+                  aria-describedby="validation-basic-select"
+                  {...(errors.select && { helperText: 'This field is required' })}
+                >
+                  <MenuItem value="days">Days</MenuItem>
+                  <MenuItem value="months">Months</MenuItem>
+                  <MenuItem value="year">Year</MenuItem>
+                </CustomTextField>
+              )}
+            />
+          </Grid>
             </Grid>
           </form>
         </DialogContent>
-        <DialogActions className="dialog-actions-dense" >
-          <Button variant="contained" color="error" onClick={handleDialogClose}>
+        <DialogActions className="dialog-actions-dense" sx={{ justifyContent: 'center', display: 'flex' }}>
+          <Button variant="tonal" color="error" onClick={handleDialogClose} sx={{ mx: 2 }}>
             Cancel
           </Button>
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
+          <Button variant="contained" color="primary" type="submit" onClick={handleSubmit} sx={{ mx: 2 }}>
             Submit
           </Button>
         </DialogActions>

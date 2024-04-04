@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 const Subscription = () => {
   // ** State
   const dispatch = useDispatch()
-  const [value, setValue] = useState('plans');
+  const [value, setValue] = useState('1');
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -28,13 +28,13 @@ const Subscription = () => {
       <Box sx={{ p: 2, justifyContent: 'end', display: 'flex' }}></Box>
       <TabContext value={value}>
         <TabList variant="" onChange={handleChange} aria-label="full width tabs example">
-          <Tab value="plans" label="Plans" />
-          <Tab value="features" label="Features" />
+          <Tab value="1" label="Plans" />
+          <Tab value="2" label=" + Create New Plans" />
         </TabList>
-        <TabPanel value="plans">
+        <TabPanel value="1">
           <PricingPlans/>
         </TabPanel>
-        <TabPanel value="features">
+        <TabPanel value="2">
           <SubscriptionFeatures />
         </TabPanel>
       </TabContext>
