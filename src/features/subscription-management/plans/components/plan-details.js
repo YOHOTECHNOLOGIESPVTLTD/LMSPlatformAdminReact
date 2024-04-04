@@ -18,17 +18,17 @@ import { useTheme } from '@mui/material/styles';
 const BoxWrapper = styled(Box)(({ theme }) => ({
   position: 'relative',
   padding: theme.spacing(6),
-  paddingTop: theme.spacing(16),
+  paddingTop: theme.spacing(6),
   borderRadius: theme.shape.borderRadius
 }));
 
 // ** Styled Component for the wrapper of all the features of a plan
-const BoxFeature = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-  '& > :not(:last-child)': {
-    marginBottom: theme.spacing(2.5)
-  }
-}));
+// const BoxFeature = styled(Box)(({ theme }) => ({
+//   // marginBottom: theme.spacing(2.5),
+//   // '& > :not(:last-child)': {
+//   //   marginBottom: theme.spacing(2.5)
+//   // }
+// }));
 
 const PlanDetails = (props) => {
   // ** Props
@@ -108,16 +108,16 @@ const PlanDetails = (props) => {
         <Typography sx={{ color: 'text.secondary' }}>{plans?.description}</Typography>
         <Box sx={{ my: 7, position: 'relative' }}>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Typography sx={{ mt: 2.5, mr: 0.5, fontWeight: 500, color: 'primary.main', alignSelf: 'flex-start' }}>$</Typography>
-            <Typography variant="h1" sx={{ color: 'primary.main', fontSize: '3rem', lineHeight: 1.4168 }}>
+            <Typography sx={{ mr: 0.5, fontWeight: 500, color: 'primary.main', alignSelf: 'flex-start' }}>$</Typography>
+            <Typography variant="h1" sx={{ color: 'primary.main', fontSize: '3rem', lineHeight:0.5 }}>
               {plans?.plan_price}
             </Typography>
-            <Typography sx={{ mb: 1.5, alignSelf: 'flex-end', color: 'text.disabled' }}>/month</Typography>
+            <Typography sx={{  alignSelf: 'flex-end', color: 'text.disabled' }}>/month</Typography>
           </Box>
           
         </Box>
       </Box>
-      <BoxFeature>{renderFeatures()}</BoxFeature>
+      {renderFeatures()}
       <Button fullWidth color='primary' variant={plans?.popularPlan ? 'contained' : 'tonal'}>
         Edit Subscription
       </Button>
