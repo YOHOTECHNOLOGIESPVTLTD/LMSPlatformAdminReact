@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 // import FormLabel from '@mui/material/FormLabel';
 // import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
+// import FormHelperText from '@mui/material/FormHelperText';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Box } from '@mui/material';
 import styled from '@emotion/styled';
@@ -26,9 +26,10 @@ import { useState } from 'react';
 // ** Icon Imports
 
 const defaultValues = {
-  plan_type: null,
-  users: '',
-  users_checkbox: false,
+  plan_name:'',
+  support_level: null,
+  students: '',
+  students_checkbox: false,
   admins: '',
   admins_checkbox: false,
   teachers: '',
@@ -58,6 +59,13 @@ const SubscriptionFeatures = () => {
   const [batchesInputBoxChecked, setBatchesInputBoxChecked] = useState(false);
   const [coursesInputBoxChecked, setCoursesInputBoxChecked] = useState(false);
   const [classesInputBoxChecked, setClassesInputBoxChecked] = useState(false);
+  //errorState
+  const [studentError, setStudentError] = useState(false);
+  const [adminError, setAdminError] = useState('');
+  const [teachersError, setTeachersError] = useState('');
+  const [batchesError, setBatchesError] = useState('');
+  const [coursesError, setCoursesError] = useState('');
+  const [classesError, setClassesError] = useState('');
 
   // const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
@@ -90,8 +98,26 @@ const SubscriptionFeatures = () => {
       marginTop: theme.spacing(2)
     }
   }));
-  const onSubmit = (data) => {
-    console.log('subData', data);
+  const onSubmit = () => {
+    if (studentInputBoxChecked === false && studentInputChecked === false) {
+      setStudentError(true);
+    }
+    if (adminInputBoxChecked === false && adminInputChecked === false) {
+      setAdminError(true);
+    }
+    if (teachersInputBoxChecked === false && teachersInputChecked === false) {
+      setTeachersError(true);
+    }
+    if (batchesInputBoxChecked === false && batchesInputChecked === false) {
+      setBatchesError(true);
+    }
+    if (coursesInputBoxChecked === false && coursesInputChecked === false) {
+      setCoursesError(true);
+    }
+    if (classesInputBoxChecked === false && classesInputChecked === false) {
+      setClassesError(true);
+    }
+    // console.log('subData', data);
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
     console.log(bodyFormData);
@@ -125,8 +151,8 @@ const SubscriptionFeatures = () => {
     <Box p={1}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={5}>
-          <Grid item xs={12} sm={12} >
-            <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'center' }}>
+          <Grid item xs={12} sm={12}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <ImgStyled src={imgSrc} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -160,9 +186,9 @@ const SubscriptionFeatures = () => {
                   label="Plan Name"
                   onChange={onChange}
                   placeholder="Basic Plan"
-                  error={Boolean(errors.firstName)}
+                  error={Boolean(errors.plan_name)}
                   aria-describedby="validation-basic-first-name"
-                  {...(errors.firstName && { helperText: 'This field is required' })}
+                  {...(errors.plan_name && { helperText: 'This field is required' })}
                 />
               )}
             />
@@ -170,14 +196,14 @@ const SubscriptionFeatures = () => {
 
           <Grid item xs={12} sm={6}>
             <Controller
-              name="support-level"
+              name="support_level"
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <CustomTextField
                   select
                   fullWidth
-                  defaultValue="days"
+                  defaultValue="basic"
                   label="Support Level"
                   SelectProps={{
                     value: value,
@@ -188,7 +214,7 @@ const SubscriptionFeatures = () => {
                   aria-describedby="validation-basic-select"
                   {...(errors.select && { helperText: 'This field is required' })}
                 >
-                  <MenuItem value="days">Basic</MenuItem>
+                  <MenuItem value="basic">Basic</MenuItem>
                   <MenuItem value="months">Medium</MenuItem>
                   <MenuItem value="year">Advanced</MenuItem>
                 </CustomTextField>
@@ -227,16 +253,16 @@ const SubscriptionFeatures = () => {
                   label="Duration"
                   onChange={onChange}
                   placeholder="120"
-                  error={Boolean(errors.firstName)}
+                  error={Boolean(errors.plan_duration)}
                   aria-describedby="validation-basic-first-name"
-                  {...(errors.firstName && { helperText: 'This field is required' })}
+                  {...(errors.plan_duration && { helperText: 'This field is required' })}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="Duration Type"
+              name="duration_type"
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
@@ -265,7 +291,7 @@ const SubscriptionFeatures = () => {
             <Controller
               name="students"
               control={control}
-              rules={{ required: true }}
+              // rules={{ required: true }}
               render={({ field: { value } }) => (
                 <CustomTextField
                   fullWidth
@@ -276,6 +302,7 @@ const SubscriptionFeatures = () => {
                     setValue('students', e.target.value);
                     if (e.target.value !== '') {
                       setStudentInputBoxChecked(true);
+                      setStudentError(false);
                     } else {
                       setStudentInputBoxChecked(false);
                     }
@@ -284,7 +311,7 @@ const SubscriptionFeatures = () => {
                   error={Boolean(errors.users)}
                   aria-describedby="validation-basic-first-name"
                   disabled={studentInputChecked}
-                  {...(errors.students && { helperText: 'This field is required' })}
+                  // {...(errors.students && { helperText: 'This field is required' })}
                 />
               )}
             />
@@ -292,7 +319,7 @@ const SubscriptionFeatures = () => {
               <Controller
                 name="students_checkbox"
                 control={control}
-                rules={{ required: true }}
+                // rules={{ required: true }}
                 render={({ field }) => (
                   <FormControlLabel
                     label="Check for unlimited users"
@@ -302,20 +329,28 @@ const SubscriptionFeatures = () => {
                         {...field}
                         name="validation-basic-checkbox"
                         sx={errors.checkbox ? { color: 'error.main' } : null}
-                        onChange={() => setStudentInputChecked((state) => !state)}
+                        onChange={() => {
+                          setStudentError(false);
+                          setStudentInputChecked((state) => !state);
+                        }}
                         disabled={studentInputBoxChecked}
                       />
                     }
                   />
                 )}
               />
-              {errors.checkbox && (
+              {/* {errors.checkbox && (
                 <FormHelperText
                   id="validation-basic-checkbox"
                   sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
                 >
                   This field is required
                 </FormHelperText>
+              )} */}
+              {studentError && (
+                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
+                  Student data cannot be empty
+                </Typography>
               )}
             </FormControl>
           </Grid>
@@ -323,7 +358,7 @@ const SubscriptionFeatures = () => {
             <Controller
               name="admins"
               control={control}
-              rules={{ required: true }}
+              // rules={{ required: true }}
               render={({ field: { value } }) => (
                 <CustomTextField
                   fullWidth
@@ -334,15 +369,16 @@ const SubscriptionFeatures = () => {
                     setValue('admins', e.target.value);
                     if (e.target.value !== '') {
                       setAdminInputBoxChecked(true);
+                      setAdminError(false);
                     } else {
                       setAdminInputBoxChecked(false);
                     }
                   }}
                   placeholder="10"
-                  error={Boolean(errors.admins)}
+                  // error={Boolean(errors.admins)}
                   aria-describedby="validation-basic-first-name"
                   disabled={adminInputChecked}
-                  {...(errors.admins && { helperText: 'This field is required' })}
+                  // {...(errors.admins && { helperText: 'This field is required' })}
                 />
               )}
             />
@@ -350,7 +386,7 @@ const SubscriptionFeatures = () => {
               <Controller
                 name="admins_checkbox"
                 control={control}
-                rules={{ required: true }}
+                // rules={{ required: true }}
                 render={({ field }) => (
                   <FormControlLabel
                     label="Check for unlimited admins"
@@ -359,7 +395,10 @@ const SubscriptionFeatures = () => {
                     control={
                       <Checkbox
                         {...field}
-                        onChange={() => setAdminInputChecked((state) => !state)}
+                        onChange={() => {
+                          setAdminError(false);
+                          setAdminInputChecked((state) => !state);
+                        }}
                         name="validation-basic-checkbox"
                         sx={errors.checkbox ? { color: 'error.main' } : null}
                       />
@@ -367,13 +406,18 @@ const SubscriptionFeatures = () => {
                   />
                 )}
               />
-              {errors.checkbox && (
+              {/* {errors.checkbox && (
                 <FormHelperText
                   id="validation-basic-checkbox"
                   sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
                 >
                   This field is required
                 </FormHelperText>
+              )} */}
+              {adminError && (
+                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
+                  Admin data cannot be empty
+                </Typography>
               )}
             </FormControl>
           </Grid>
@@ -381,7 +425,7 @@ const SubscriptionFeatures = () => {
             <Controller
               name="teachers"
               control={control}
-              rules={{ required: true }}
+              // rules={{ required: true }}
               render={({ field: { value } }) => (
                 <CustomTextField
                   fullWidth
@@ -392,6 +436,7 @@ const SubscriptionFeatures = () => {
                     setValue('teachers', e.target.value);
                     if (e.target.value !== '') {
                       setTeachersInputBoxChecked(true);
+                      setTeachersError(false);
                     } else {
                       setTeachersInputBoxChecked(false);
                     }
@@ -400,7 +445,7 @@ const SubscriptionFeatures = () => {
                   placeholder="10"
                   error={Boolean(errors.teachers)}
                   aria-describedby="validation-basic-first-name"
-                  {...(errors.teachers && { helperText: 'This field is required' })}
+                  // {...(errors.teachers && { helperText: 'This field is required' })}
                 />
               )}
             />
@@ -408,7 +453,7 @@ const SubscriptionFeatures = () => {
               <Controller
                 name="teachers_checkbox"
                 control={control}
-                rules={{ required: true }}
+                // rules={{ required: true }}
                 render={({ field }) => (
                   <FormControlLabel
                     label="Check for unlimited teachers"
@@ -417,7 +462,10 @@ const SubscriptionFeatures = () => {
                       <Checkbox
                         {...field}
                         name="validation-basic-checkbox"
-                        onChange={() => setTeachersInputChecked((state) => !state)}
+                        onChange={() => {
+                          setTeachersError(false);
+                          setTeachersInputChecked((state) => !state);
+                        }}
                         disabled={teachersInputBoxChecked}
                         sx={errors.checkbox ? { color: 'error.main' } : null}
                       />
@@ -425,13 +473,18 @@ const SubscriptionFeatures = () => {
                   />
                 )}
               />
-              {errors.checkbox && (
+              {/* {errors.checkbox && (
                 <FormHelperText
                   id="validation-basic-checkbox"
                   sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
                 >
                   This field is required
                 </FormHelperText>
+              )} */}
+              {teachersError && (
+                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
+                  Teacher data cannot be empty
+                </Typography>
               )}
             </FormControl>
           </Grid>
@@ -439,7 +492,7 @@ const SubscriptionFeatures = () => {
             <Controller
               name="batches"
               control={control}
-              rules={{ required: true }}
+              // rules={{ required: true }}
               render={({ field: { value } }) => (
                 <CustomTextField
                   fullWidth
@@ -450,15 +503,16 @@ const SubscriptionFeatures = () => {
                     setValue('batches', e.target.value);
                     if (e.target.value !== '') {
                       setBatchesInputBoxChecked(true);
+                      setBatchesError(false);
                     } else {
                       setBatchesInputBoxChecked(false);
                     }
                   }}
                   disabled={batchesInputChecked}
                   placeholder="10"
-                  error={Boolean(errors.batches)}
+                  // error={Boolean(errors.batches)}
                   aria-describedby="validation-basic-first-name"
-                  {...(errors.batches && { helperText: 'This field is required' })}
+                  // {...(errors.batches && { helperText: 'This field is required' })}
                 />
               )}
             />
@@ -466,7 +520,7 @@ const SubscriptionFeatures = () => {
               <Controller
                 name="batches_checkbox"
                 control={control}
-                rules={{ required: true }}
+                // rules={{ required: true }}
                 render={({ field }) => (
                   <FormControlLabel
                     label="Check for unlimited batches"
@@ -476,20 +530,28 @@ const SubscriptionFeatures = () => {
                         {...field}
                         name="validation-basic-checkbox"
                         sx={errors.checkbox ? { color: 'error.main' } : null}
-                        onChange={() => setBatchesInputChecked((state) => !state)}
+                        onChange={() => {
+                          setBatchesError(false);
+                          setBatchesInputChecked((state) => !state);
+                        }}
                         disabled={batchesInputBoxChecked}
                       />
                     }
                   />
                 )}
               />
-              {errors.checkbox && (
+              {/* {errors.checkbox && (
                 <FormHelperText
                   id="validation-basic-checkbox"
                   sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
                 >
                   This field is required
                 </FormHelperText>
+              )} */}
+              {batchesError && (
+                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
+                  Teacher data cannot be empty
+                </Typography>
               )}
             </FormControl>
           </Grid>
@@ -498,7 +560,7 @@ const SubscriptionFeatures = () => {
             <Controller
               name="courses"
               control={control}
-              rules={{ required: true }}
+              // rules={{ required: true }}
               render={({ field: { value } }) => (
                 <CustomTextField
                   fullWidth
@@ -509,15 +571,16 @@ const SubscriptionFeatures = () => {
                     setValue('courses', e.target.value);
                     if (e.target.value !== '') {
                       setCoursesInputBoxChecked(true);
+                      setCoursesError(false);
                     } else {
                       setCoursesInputBoxChecked(false);
                     }
                   }}
                   disabled={coursesInputChecked}
                   placeholder="10"
-                  error={Boolean(errors.courses)}
+                  // error={Boolean(errors.courses)}
                   aria-describedby="validation-basic-first-name"
-                  {...(errors.courses && { helperText: 'This field is required' })}
+                  // {...(errors.courses && { helperText: 'This field is required' })}
                 />
               )}
             />
@@ -525,7 +588,7 @@ const SubscriptionFeatures = () => {
               <Controller
                 name="courses_checkbox"
                 control={control}
-                rules={{ required: true }}
+                // rules={{ required: true }}
                 render={({ field }) => (
                   <FormControlLabel
                     label="Check for unlimited courses"
@@ -535,20 +598,28 @@ const SubscriptionFeatures = () => {
                         {...field}
                         name="validation-basic-checkbox"
                         sx={errors.checkbox ? { color: 'error.main' } : null}
-                        onChange={() => setCoursesInputChecked((state) => !state)}
+                        onChange={() => {
+                          setCoursesInputChecked((state) => !state);
+                          setCoursesError(false);
+                        }}
                         disabled={coursesInputBoxChecked}
                       />
                     }
                   />
                 )}
               />
-              {errors.checkbox && (
+              {/* {errors.checkbox && (
                 <FormHelperText
                   id="validation-basic-checkbox"
                   sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
                 >
                   This field is required
                 </FormHelperText>
+              )} */}
+              {coursesError && (
+                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
+                  Course data cannot be empty
+                </Typography>
               )}
             </FormControl>
           </Grid>
@@ -557,7 +628,7 @@ const SubscriptionFeatures = () => {
             <Controller
               name="classes"
               control={control}
-              rules={{ required: true }}
+              // rules={{ required: true }}
               render={({ field: { value } }) => (
                 <CustomTextField
                   fullWidth
@@ -568,15 +639,16 @@ const SubscriptionFeatures = () => {
                     setValue('classes', e.target.value);
                     if (e.target.value !== '') {
                       setClassesInputBoxChecked(true);
+                      setClassesError(false);
                     } else {
                       setClassesInputBoxChecked(false);
                     }
                   }}
                   disabled={classesInputChecked}
                   placeholder="10"
-                  error={Boolean(errors.classes)}
+                  // error={Boolean(errors.classes)}
                   aria-describedby="validation-basic-first-name"
-                  {...(errors.classes && { helperText: 'This field is required' })}
+                  // {...(errors.classes && { helperText: 'This field is required' })}
                 />
               )}
             />
@@ -584,7 +656,7 @@ const SubscriptionFeatures = () => {
               <Controller
                 name="courses_checkbox"
                 control={control}
-                rules={{ required: true }}
+                // rules={{ required: true }}
                 render={({ field }) => (
                   <FormControlLabel
                     label="Check for unlimited classes"
@@ -594,20 +666,28 @@ const SubscriptionFeatures = () => {
                         {...field}
                         name="validation-basic-checkbox"
                         sx={errors.checkbox ? { color: 'error.main' } : null}
-                        onChange={() => setClassesInputChecked((state) => !state)}
+                        onChange={() => {
+                          setClassesInputChecked((state) => !state);
+                          setClassesError(false);
+                        }}
                         disabled={classesInputBoxChecked}
                       />
                     }
                   />
                 )}
               />
-              {errors.checkbox && (
+              {/* {errors.checkbox && (
                 <FormHelperText
                   id="validation-basic-checkbox"
                   sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
                 >
                   This field is required
                 </FormHelperText>
+              )} */}
+              {classesError && (
+                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
+                  Class data cannot be empty
+                </Typography>
               )}
             </FormControl>
           </Grid>
