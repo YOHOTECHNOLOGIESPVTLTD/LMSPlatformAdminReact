@@ -49,6 +49,9 @@ const NotificationsPage = Loadable(lazy(() => import('views/notification-managem
 const FaqCategoriesPage = Loadable(lazy(() => import('views/faq-management/categories')));
 const FaqFaqsPage = Loadable(lazy(() => import('views/faq-management/faqs')));
 
+// Ticket Management
+const YourTicketPage = Loadable(lazy(() => import('views/ticket-management/your-tickets-page')));
+
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
 const Page401 = Loadable(lazy(() => import('views/error-pages/401-page')));
@@ -125,6 +128,12 @@ const ApplicationRoutes = () => {
           <Route index element={<Navigate to="/faq-management/categories" />} />
           <Route path="categories" element={<FaqCategoriesPage />} />
           <Route path="faqs" element={<FaqFaqsPage />} />
+        </Route>
+
+        {/* Ticket Management Routes */}
+        <Route path="/ticket-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/ticket-management/your-ticket" />} />
+          <Route path="your-ticket" element={<YourTicketPage />} />
         </Route>
 
         {/* PaymentManagement */}

@@ -1,12 +1,12 @@
 // groupService.js
 import axios from 'axios';
 
-const TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/-ticket`;
-const _TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/-ticket`;
+const TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/ticket-management/ticket`;
+const _TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/ticket-management/ticket`;
 
 export const getAllTickets = async (data) => {
   try {
-    const response = await axios.get(`${TICKET_END_POINT}/get-by-type`, {
+    const response = await axios.get(`${TICKET_END_POINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -32,7 +32,7 @@ export const getAllTickets = async (data) => {
 
 export const updateTicket = async (data) => {
   try {
-    const response = await axios.put(`${_TICKET_UPDATE_API_END_POINT}/update`, data, {
+    const response = await axios.post(`${_TICKET_UPDATE_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
