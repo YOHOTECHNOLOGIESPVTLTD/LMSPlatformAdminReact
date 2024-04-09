@@ -1,7 +1,7 @@
 // SubscriptionFeatureService.js
 import axios from 'axios';
 
-const SUBSCRIPTION_FEATURE_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/SubscriptionFeature-management/student-fees`;
+const SUBSCRIPTION_FEATURE_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/subscription-plans`;
 
 export const getAllSubscriptionFeatures = async () => {
   try {
@@ -11,7 +11,7 @@ export const getAllSubscriptionFeatures = async () => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+    
     console.log(response);
 
     // Check if the response status is successful
@@ -55,11 +55,11 @@ export const addSubscriptionFeature = async (data) => {
   try {
     const response = await axios.post(`${SUBSCRIPTION_FEATURE_END_POINT}/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+    console.log('add-subscription:',response)
     if (response.data.status) {
       return { success: true, message: 'SubscriptionFeature created successfully' };
     } else {

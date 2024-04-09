@@ -22,7 +22,8 @@ import CustomTextField from 'components/mui/text-field';
 import toast from 'react-hot-toast';
 import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
-import { addSubscriptionFeature } from '../services/subscriptionFeaturesServices';
+import { useLocation } from 'react-router';
+// import { addSubscriptionFeature } from '../services/subscriptionFeaturesServices';
 
 // ** Icon Imports
 
@@ -48,7 +49,13 @@ const defaultValues = {
   //   checkbox: false
 };
 
-const SubscriptionFeatures = () => {
+const EditPlan = () => {
+
+  const location = useLocation();
+  const planId = location.state.id
+  const planData = location.state.plans
+  console.log('plans:',planData);
+  console.log('planId:',planId)
   // ** StatesforInput
   const [studentInputChecked, setStudentInputChecked] = useState(false);
   const [adminInputChecked, setAdminInputChecked] = useState(false);
@@ -217,10 +224,11 @@ console.log(studentInputChecked)
               name="plan_name"
               control={control}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: {onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  value={value}
+                  // value={value}
+                  defaultValue={planData?.plan_name}
                   label="Plan Name"
                   onChange={onChange}
                   placeholder=""
@@ -236,10 +244,11 @@ console.log(studentInputChecked)
               name="plan_price"
               control={control}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  value={value}
+                  defaultValue = {planData?.plan_price}
+                  // value={value}
                   label="Plan Price"
                   onChange={onChange}
                   error={Boolean(errors.plan_price)}
@@ -258,7 +267,8 @@ console.log(studentInputChecked)
                 <CustomTextField
                   select
                   fullWidth
-                  defaultValue="months"
+                  defaultValue='premium'
+                  // defaultValue={planData?.support_level?.toString()}
                   label="Support Level"
                   SelectProps={{
                     value: value,
@@ -280,12 +290,17 @@ console.log(studentInputChecked)
               name="description"
               control={control}
               rules={{ required: true }}
-              render={({ field }) => (
+              render={(
+              //   {
+              //    field
+              //  }
+               ) => (
                 <CustomTextField
                   rows={4}
                   fullWidth
                   multiline
-                  {...field}
+                  defaultValue={planData?.description}
+                  // {...field}
                   label="Plan Description"
                   error={Boolean(errors.textarea)}
                   aria-describedby="validation-basic-textarea"
@@ -299,11 +314,12 @@ console.log(studentInputChecked)
               name="plan_duration"
               control={control}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: {  onChange } }) => (
                 <CustomTextField
                   fullWidth
                   type="number"
-                  value={value}
+                  // value={value}
+                  defaultValue={planData?.plan_duration}
                   label="Duration"
                   onChange={onChange}
                   placeholder="120"
@@ -319,17 +335,18 @@ console.log(studentInputChecked)
               name="plan_duration_type"
               control={control}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: {onChange } }) => (
                 <CustomTextField
                   select
                   fullWidth
-                  defaultValue="days"
+     
                   label="Duration Type"
                   SelectProps={{
-                    value: value,
+                    // value: value,
                     onChange: (e) => onChange(e)
                   }}
                   id="validation-basic-select"
+                  defaultValue={planData?.features?.plan_duration_type}
                   error={Boolean(errors.select)}
                   aria-describedby="validation-basic-select"
                   {...(errors.select && { helperText: 'This field is required' })}
@@ -376,11 +393,11 @@ console.log(studentInputChecked)
                 // rules={{ required: true }}
                 render={({ field }) => (
                   <FormControlLabel
-                    label="Check for unlimited users"
+                    label="Check for unlimited students"
                     sx={errors.checkbox ? { color: 'error.main' } : null}
                     control={
                       <Checkbox
-                        {...field}
+                        {...field} 
                         name="validation-basic-checkbox"
                         sx={errors.checkbox ? { color: 'error.main' } : null}
                         onChange={() => {
@@ -388,6 +405,7 @@ console.log(studentInputChecked)
                           setStudentInputChecked((state) => !state);
                         }}
                         disabled={studentInputBoxChecked}
+                        checked={planData?.student_is_unlimited !==null}
                       />
                     }
                   />
@@ -455,6 +473,7 @@ console.log(studentInputChecked)
                         }}
                         name="validation-basic-checkbox"
                         sx={errors.checkbox ? { color: 'error.main' } : null}
+                        checked={planData?.features?.admin_is_unlimited!== null}
                       />
                     }
                   />
@@ -522,6 +541,7 @@ console.log(studentInputChecked)
                         }}
                         disabled={teachersInputBoxChecked}
                         sx={errors.checkbox ? { color: 'error.main' } : null}
+                        checked={planData?.features?.teacher_is_unlimited!==null}
                       />
                     }
                   />
@@ -589,6 +609,7 @@ console.log(studentInputChecked)
                           setBatchesInputChecked((state) => !state);
                         }}
                         disabled={batchesInputBoxChecked}
+                        checked={planData?.features?.batches_is_unlimited!==null}
                       />
                     }
                   />
@@ -635,6 +656,7 @@ console.log(studentInputChecked)
                   // error={Boolean(errors.courses)}
                   aria-describedby="validation-basic-first-name"
                   // {...(errors.courses && { helperText: 'This field is required' })}
+                 
                 />
               )}
             />
@@ -657,6 +679,7 @@ console.log(studentInputChecked)
                           setCoursesError(false);
                         }}
                         disabled={coursesInputBoxChecked}
+                        checked={planData?.features?.course_is_unlimited !== null ? planData.features.course_is_unlimited : false}
                       />
                     }
                   />
@@ -708,7 +731,7 @@ console.log(studentInputChecked)
             />
             <FormControl>
               <Controller
-                name="courses_checkbox"
+                name="classes_checkbox"
                 control={control}
                 // rules={{ required: true }}
                 render={({ field }) => (
@@ -725,6 +748,7 @@ console.log(studentInputChecked)
                           setClassesError(false);
                         }}
                         disabled={classesInputBoxChecked}
+                        checked={planData?.features?.class_is_unlimited!==null}
                       />
                     }
                   />
@@ -757,4 +781,4 @@ console.log(studentInputChecked)
   );
 };
 
-export default SubscriptionFeatures;
+export default EditPlan;

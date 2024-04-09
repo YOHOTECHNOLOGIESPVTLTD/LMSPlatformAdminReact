@@ -44,7 +44,7 @@ const DeleteDialog = (props) => {
               alignItems: 'center',
               flexDirection: 'column',
               justifyContent: 'center',
-              '& svg': { mb: 5, color: 'warning.main' }
+              '& svg': { mb: 5, color: 'error.main' }
             }}
           >
             <Icon icon="tabler:alert-circle" fontSize="5.5rem" />
@@ -69,9 +69,9 @@ const DeleteDialog = (props) => {
               handleConfirmation('yes');
             }}
           >
-            Yes, {title}!
+            Change {title}
           </Button>
-          <Button variant="tonal" color="secondary" onClick={() => handleConfirmation('cancel')}>
+          <Button variant="tonal" color="primary" onClick={() => handleConfirmation('cancel')}>
             Cancel
           </Button>
         </DialogActions>
@@ -101,9 +101,9 @@ const DeleteDialog = (props) => {
           >
             <Icon fontSize="5.5rem" icon={userInput === 'yes' ? 'tabler:circle-check' : 'tabler:circle-x'} />
             <Typography variant="h4" sx={{ mb: 3 }}>
-              {userInput === 'yes' ? 'Rejected!' : 'Cancelled'}
+              {userInput === 'yes' ? 'Status Changed' : 'Cancelled'}
             </Typography>
-            <Typography>{userInput === 'yes' ? successDescription : `${failureDescription} :)`}</Typography>
+            <Typography>{userInput === 'yes' ? successDescription : `${failureDescription}`}</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', mb: 3 }}>

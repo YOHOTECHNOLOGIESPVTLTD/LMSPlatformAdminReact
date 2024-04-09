@@ -112,3 +112,24 @@ export const updateSubscriptionPlan = async (data) => {
     throw error;
   }
 };
+
+export const changeSubscriptionPlanStatus = async (data) => {
+  try {
+    const response = await axios.post(`${SUBSCRIPTION_PLAN_END_POINT}/status`,data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      // params: data
+    });
+
+    if (response.data.status) {
+      return { success: true, message: 'Plan status changed successfully' };
+    } else {
+      return { success: false, message: 'Failed to change Plan status' };
+    }
+  } catch (error) {
+    console.error('Error in plan status change:', error);
+    throw error;
+  }
+};

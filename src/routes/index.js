@@ -35,6 +35,7 @@ const ChatSupport = Loadable(lazy(() => import('views/help-center/chat-support')
 
 //SubscriptionManagement
 const Subscription = Loadable(lazy(() => import('views/subscription-management/plans-and-features')));
+const SubscriptionEdit = Loadable(lazy(() => import('views/subscription-management/plans-and-features/EditPlan')));
 
 // Tax Management
 const TaxesPage = Loadable(lazy(() => import('views/tax-management/taxes')));
@@ -148,6 +149,7 @@ const ApplicationRoutes = () => {
         {/* SubscriptionManagement */}
         <Route path="/subscription-management" element={<MainLayout />}>
           <Route path="plans-and-features" element={<Subscription />} />
+          <Route path="plans-and-features/edit/:id" element={<SubscriptionEdit />} />
         </Route>
 
         {/* </ Tax Route> */}
