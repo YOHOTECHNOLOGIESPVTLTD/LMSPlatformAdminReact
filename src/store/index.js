@@ -16,6 +16,8 @@ import faqCategorySlice from 'features/faq-management/faq-categories/redux/faqCa
 import allNotificationSlice from 'features/notification-management/notifications/redux/instituteNotificationSlice';
 import subscriptionPlansReducer from 'features/subscription-management/plans/redux/subscriptionPlansSlice';
 import subscriptionFeaturesReducer from 'features/subscription-management/features/redux/subscriptionFeaturesSlice';
+import openTicketSlice from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketSlice';
+import closedTicketSlice from 'features/ticket-management/your-tickets/redux/closed-tickets/yourClosedTicketSlice';
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
@@ -34,7 +36,9 @@ const store = configureStore({
     faqs: faqSlice,
     instituteNotifications: allNotificationSlice,
     subscriptionPlans: subscriptionPlansReducer,
-    subscriptionFeatures: subscriptionFeaturesReducer
+    subscriptionFeatures: subscriptionFeaturesReducer,
+    openTickets: openTicketSlice,
+    closedTickets: closedTicketSlice
   }
 });
 // configureStore(reducer);
