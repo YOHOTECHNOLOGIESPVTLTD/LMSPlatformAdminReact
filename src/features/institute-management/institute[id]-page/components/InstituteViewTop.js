@@ -73,7 +73,17 @@ const UserViewLeft = ({ institute }) => {
               {institute?.name}
             </Typography>
 
-            <Typography variant="h5" sx={{ mr: 4, mt: 1, maxWidth: 400, overflow: 'hidden' }}>
+            <Typography
+              variant="h5"
+              sx={{
+                mr: 4,
+                mt: 1,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: 300
+              }}
+            >
               {institute?.description}
             </Typography>
           </Box>

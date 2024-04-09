@@ -1,4 +1,4 @@
-import { forwardRef, useState,useEffect } from 'react';
+import { forwardRef, useState, useEffect } from 'react';
 // ** MUI Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import Box from '@mui/material/Box';
@@ -89,7 +89,9 @@ const personalSchema = yup.object().shape({
   description: yup.string().required(),
   official_email: yup.string().required(),
   email: yup.string().required(),
-  official_website: yup.string().required()
+  official_website: yup.string().required(),
+  instagram: yup.string().required(),
+  facebook: yup.string().required()
   // subscription: yup.string().required()
 });
 
@@ -114,8 +116,6 @@ const UserViewAccount = ({ institute }) => {
     resolver: yupResolver(personalSchema)
   });
 
-
-
   useEffect(() => {
     if (institute) {
       setValue('name', institute?.name || '');
@@ -130,15 +130,13 @@ const UserViewAccount = ({ institute }) => {
       setValue('official_email', institute?.user?.institution_users?.email || '');
       setValue('official_website', institute?.official_website || '');
       setValue('description', institute?.description || '');
+      setValue('instagram', institute?.instagram || '');
       setValue('facebook', institute?.facebook || '');
       setValue('email', institute?.email || '');
       setValue('linkedin', institute?.linkedin || '');
       setValue('twitter', institute?.twitter || '');
-      setValue('pinterest', institute?.pinterest || '');
     }
   }, [institute, setValue]);
-
-
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
@@ -151,6 +149,7 @@ const UserViewAccount = ({ institute }) => {
     bodyFormData.append('address_line_1', data.address_line_1);
     bodyFormData.append('address_line_2', data.address_line_2);
     bodyFormData.append('official_website', data.official_website);
+    bodyFormData.append('instagram', data.instagram);
     bodyFormData.append('facebook', data.facebook);
     bodyFormData.append('linkedin', data.linkedin);
     bodyFormData.append('twitter', data.twitter);
@@ -182,7 +181,7 @@ const UserViewAccount = ({ institute }) => {
   if (data) {
     return (
       <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: 'auto' } }}>
-        <Grid container>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Card sx={{ mt: 3 }}>
               <CardContent>
@@ -244,7 +243,7 @@ const UserViewAccount = ({ institute }) => {
                       </Box>
                     </CardContent>
                   </Grid>
-                  <Grid item md={5}>
+                  <Grid item md={4}>
                     <CardContent sx={{ pb: 4 }}>
                       <Typography variant="h4" sx={{ textTransform: 'uppercase' }}>
                         Social Links
@@ -294,7 +293,7 @@ const UserViewAccount = ({ institute }) => {
                       </Box>{' '}
                     </CardContent>
                   </Grid>
-                  <Grid item md={3}>
+                  <Grid item md={4}>
                     <CardContent sx={{ pb: 4 }}>
                       <Typography variant="h4" sx={{ textTransform: 'uppercase' }}>
                         Admin Details
@@ -641,6 +640,25 @@ const UserViewAccount = ({ institute }) => {
                               error={Boolean(personalErrors['description'])}
                               aria-describedby="stepper-linear-personal-description"
                               {...(personalErrors['description'] && { helperText: 'This field is required' })}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="instagram"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.instagram}
+                              label="Insta"
+                              onChange={onChange}
+                              placeholder="INSTA"
+                              error={Boolean(personalErrors['instagram'])}
+                              aria-describedby="stepper-linear-personal-instagram"
+                              {...(personalErrors['instagram'] && { helperText: 'This field is required' })}
                             />
                           )}
                         />
