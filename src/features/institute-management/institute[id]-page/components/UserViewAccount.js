@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef, useState,useEffect } from 'react';
 // ** MUI Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import Box from '@mui/material/Box';
@@ -20,6 +20,7 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 import { updateInstitute } from 'features/institute-management/services/instituteService';
+import toast from 'react-hot-toast';
 
 const data = {
   id: 1,
@@ -50,14 +51,15 @@ const defaultPersonalValues = {
   state: '',
   city: '',
   pin_code: '',
-  address_line_one: '',
-  address_line_two: '',
-  registered_date: '',
-  institute_name: '',
+  address_line_1: '',
+  address_line_2: '',
+  registered_date: new Date(),
+  name: '',
   official_email: '',
+  email: '',
   official_website: '',
   phone: '',
-  alt_phone: '',
+  alternate_number: '',
   description: ''
 };
 function convertDateFormat(input) {
@@ -78,14 +80,15 @@ const personalSchema = yup.object().shape({
   state: yup.string().required(),
   city: yup.string().required(),
   pin_code: yup.number().required(),
-  address_line_one: yup.string().required(),
-  address_line_two: yup.string().required(),
-  registered_date: yup.string().required(),
-  institute_name: yup.string().required(),
+  address_line_1: yup.string().required(),
+  address_line_2: yup.string().required(),
+  registered_date: yup.date().nullable().required(),
+  name: yup.string().required(),
   phone: yup.number().required(),
-  alt_phone: yup.number().required(),
+  alternate_number: yup.number().required(),
   description: yup.string().required(),
   official_email: yup.string().required(),
+  email: yup.string().required(),
   official_website: yup.string().required()
   // subscription: yup.string().required()
 });
@@ -100,13 +103,42 @@ const UserViewAccount = ({ institute }) => {
   const handleEditClose = () => setOpenEdit(false);
 
   const {
+    // reset,
     control: personalControl,
+    setValue,
     handleSubmit: handlePersonalSubmit,
     formState: { errors: personalErrors }
   } = useForm({
     defaultValues: defaultPersonalValues,
+    mode: 'onChange',
     resolver: yupResolver(personalSchema)
   });
+
+
+
+  useEffect(() => {
+    if (institute) {
+      setValue('name', institute?.name || '');
+      setValue('registered_date', new Date(institute?.registered_date) || new Date());
+      setValue('state', institute?.state || '');
+      setValue('city', institute?.city || '');
+      setValue('pin_code', institute?.pin_code || '');
+      setValue('address_line_1', institute?.address_line_1 || '');
+      setValue('address_line_2', institute?.address_line_2 || '');
+      setValue('phone', institute?.phone || '');
+      setValue('alternate_number', institute?.alternate_number || '');
+      setValue('official_email', institute?.user?.institution_users?.email || '');
+      setValue('official_website', institute?.official_website || '');
+      setValue('description', institute?.description || '');
+      setValue('facebook', institute?.facebook || '');
+      setValue('email', institute?.email || '');
+      setValue('linkedin', institute?.linkedin || '');
+      setValue('twitter', institute?.twitter || '');
+      setValue('pinterest', institute?.pinterest || '');
+    }
+  }, [institute, setValue]);
+
+
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
@@ -136,6 +168,7 @@ const UserViewAccount = ({ institute }) => {
 
     if (result.success) {
       toast.success(result.message);
+      handleEditClose();
     } else {
       let errorMessage = '';
       toast.error(errorMessage.trim());
@@ -221,9 +254,14 @@ const UserViewAccount = ({ institute }) => {
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Official Website:</Typography>
                           <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.official_website}</Typography>
                         </Box>
+
                         <Box sx={{ mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Facebook:</Typography>
                           <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.facebook}</Typography>
+                        </Box>
+                        <Box sx={{ mb: 3 }}>
+                          <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Twitter:</Typography>
+                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.twitter}</Typography>
                         </Box>
                         <Box sx={{ mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>LinkedIn:</Typography>
@@ -341,7 +379,7 @@ const UserViewAccount = ({ institute }) => {
                     <Grid container spacing={4}>
                       <Grid item xs={12} sm={6}>
                         <Controller
-                          name="institute_name"
+                          name="name"
                           control={personalControl}
                           rules={{ required: true }}
                           render={({ field: { onChange } }) => (
@@ -352,9 +390,9 @@ const UserViewAccount = ({ institute }) => {
                               label="Institute Name"
                               onChange={onChange}
                               placeholder="Leonard"
-                              error={Boolean(personalErrors['institute_name'])}
-                              aria-describedby="stepper-linear-personal-institute_name"
-                              {...(personalErrors['institute_name'] && { helperText: 'This field is required' })}
+                              error={Boolean(personalErrors['name'])}
+                              aria-describedby="stepper-linear-personal-name"
+                              {...(personalErrors['name'] && { helperText: 'This field is required' })}
                             />
                           )}
                         />
@@ -443,7 +481,7 @@ const UserViewAccount = ({ institute }) => {
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <Controller
-                          name="address_line_one"
+                          name="address_line_1"
                           control={personalControl}
                           rules={{ required: true }}
                           render={({ field: { onChange } }) => (
@@ -453,16 +491,16 @@ const UserViewAccount = ({ institute }) => {
                               label="Address Line One"
                               onChange={onChange}
                               placeholder="Carter"
-                              error={Boolean(personalErrors['address_line_one'])}
-                              aria-describedby="stepper-linear-personal-address_line_one"
-                              {...(personalErrors['address_line_one'] && { helperText: 'This field is required' })}
+                              error={Boolean(personalErrors['address_line_1'])}
+                              aria-describedby="stepper-linear-personal-address_line_1"
+                              {...(personalErrors['address_line_1'] && { helperText: 'This field is required' })}
                             />
                           )}
                         />
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <Controller
-                          name="address_line_two"
+                          name="address_line_2"
                           control={personalControl}
                           rules={{ required: true }}
                           render={({ field: { onChange } }) => (
@@ -472,9 +510,9 @@ const UserViewAccount = ({ institute }) => {
                               label="Address Line Two"
                               onChange={onChange}
                               placeholder="Carter"
-                              error={Boolean(personalErrors['address_line_two'])}
-                              aria-describedby="stepper-linear-personal-address_line_two"
-                              {...(personalErrors['address_line_two'] && { helperText: 'This field is required' })}
+                              error={Boolean(personalErrors['address_line_2'])}
+                              aria-describedby="stepper-linear-personal-address_line_2"
+                              {...(personalErrors['address_line_2'] && { helperText: 'This field is required' })}
                             />
                           )}
                         />
@@ -501,7 +539,7 @@ const UserViewAccount = ({ institute }) => {
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <Controller
-                          name="alt_phone"
+                          name="alternate_number"
                           control={personalControl}
                           rules={{ required: true }}
                           render={({ field: { onChange } }) => (
@@ -512,9 +550,9 @@ const UserViewAccount = ({ institute }) => {
                               label="Alt Phone Number"
                               onChange={onChange}
                               placeholder="Carter"
-                              error={Boolean(personalErrors['alt_phone'])}
-                              aria-describedby="stepper-linear-personal-alt_phone"
-                              {...(personalErrors['alt_phone'] && { helperText: 'This field is required' })}
+                              error={Boolean(personalErrors['alternate_number'])}
+                              aria-describedby="stepper-linear-personal-alternate_number"
+                              {...(personalErrors['alternate_number'] && { helperText: 'This field is required' })}
                             />
                           )}
                         />
@@ -594,10 +632,10 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              value={institute?.description}
                               multiline
                               rows={3}
-                              label="Description"
+                              defaultValue={institute?.description}
+                              label="description"
                               onChange={onChange}
                               placeholder="Carter"
                               error={Boolean(personalErrors['description'])}
@@ -626,6 +664,26 @@ const UserViewAccount = ({ institute }) => {
                           )}
                         />
                       </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="email"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.email}
+                              label="Email"
+                              onChange={onChange}
+                              placeholder="Carter"
+                              error={Boolean(personalErrors['email'])}
+                              aria-describedby="stepper-linear-personal-email"
+                              {...(personalErrors['email'] && { helperText: 'This field is required' })}
+                            />
+                          )}
+                        />
+                      </Grid>
                       <Grid item xs={12} sm={6}>
                         <Controller
                           name="linkedin"
@@ -634,7 +692,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              value={institute?.linkedin}
+                              defaultValue={institute?.linkedin}
                               label="LinkedIn"
                               onChange={onChange}
                               placeholder="Carter"
