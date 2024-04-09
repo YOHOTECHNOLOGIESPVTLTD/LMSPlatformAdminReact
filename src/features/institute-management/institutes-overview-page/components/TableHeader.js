@@ -1,5 +1,5 @@
 // ** MUI Imports
-import { TextField } from '@mui/material';
+import { TextField, Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 // ** Icon Imports
@@ -32,28 +32,33 @@ const TableHeader = (props) => {
   );
 
   return (
-    <Box
-      sx={{
-        py: 4,
-        px: 6,
-        rowGap: 2,
-        columnGap: 4,
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }}
-    >
-      <Button color="secondary" variant="tonal" startIcon={<Icon icon="tabler:upload" />}>
-        Export
-      </Button>
-      <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <TextField value={searchValue} placeholder="Search Category" onChange={(e) => handleSearch(e)} />
-        <Box component={Link} to={'add'}>
-          <Button variant="contained">+ Add Institute</Button>
-        </Box>
-      </Box>
-    </Box>
+    <>
+      <Grid container xs={12}>
+        <Grid
+          item
+          xs={12}
+          sx={{
+            py: 4,
+            rowGap: 2,
+            columnGap: 4,
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Button color="secondary" variant="tonal" startIcon={<Icon icon="tabler:upload" />}>
+            Export
+          </Button>
+          <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+            <TextField value={searchValue} placeholder="Search Category" onChange={(e) => handleSearch(e)} />
+            <Box component={Link} to={'add'}>
+              <Button variant="contained">+ Add Institute</Button>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+    </>
   );
 };
 
