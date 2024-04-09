@@ -92,7 +92,7 @@ const UserViewLeft = ({ institute }) => {
             select
             label="Status"
             sx={{ ml: 3 }}
-            value={institute?.is_active}
+            defaultValue={institute?.is_active}
             onChange={async (e) => {
               const data = {
                 id: institute?.id,

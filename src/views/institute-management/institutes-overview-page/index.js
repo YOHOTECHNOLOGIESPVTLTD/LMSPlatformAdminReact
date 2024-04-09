@@ -56,7 +56,7 @@ const Institutes = () => {
   }, [dispatch, getAllInstitutes, selectedBranchId, refetch]);
 
   console.log(allInstitutes);
-  
+
   // const handleFilter = useCallback((val) => {
   //   setValue(val);
   // }, []);
@@ -182,7 +182,7 @@ const Institutes = () => {
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
           <MenuItem sx={{ '& svg': { mr: 2 } }} component={Link} to={`profile/${id}`} state={{ id: id }} onClick={handleRowOptionsClose}>
-            <Icon icon="tabler:eye" fontSize={20}  />
+            <Icon icon="tabler:eye" fontSize={20} />
             View
           </MenuItem>
         </Menu>
@@ -312,11 +312,13 @@ const Institutes = () => {
   // ** State
   return (
     <>
-      <Grid container xs={12} spacing={2}>
+      <Grid container spacing={3}>
+        {/* User Header Section */}
         <Grid item xs={12}>
           <InstituteHeaderSection users={allInstitutes} groups={allInstitutes} />
         </Grid>
 
+        {/* User Filter Card */}
         <Grid item xs={12}>
           <Card>
             <CardHeader title="Institutes" />
@@ -380,40 +382,41 @@ const Institutes = () => {
             </CardContent>
           </Card>
         </Grid>
+
         <Grid item xs={12}>
           <TableHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
 
+        {/* Display Skeleton or User Body Section based on loading state */}
         {instituteLoading ? (
           <InstituteSkeleton />
         ) : (
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Card>
-                <Divider sx={{ m: '0 !important' }} />
-                <DataGrid
-                  autoHeight
-                  // rowHeight={90}
-                  getRowHeight={() => 'auto'}
-                  rows={allInstitutes}
-                  columns={columns}
-                  disableRowSelectionOnClick
-                  pageSizeOptions={[10, 25, 50]}
-                  paginationModel={paginationModel}
-                  onPaginationModelChange={setPaginationModel}
-                />
-              </Card>
-            </Grid>
-
-            <StatusDialog
-              open={statusOpen}
-              setOpen={setStatusDialogOpen}
-              description="Are you sure you want to Change Status"
-              title="Status"
-              handleSubmit={handleStatusChangeApi}
-            />
+          <Grid item xs={12}>
+            <Card>
+              <Divider sx={{ m: '0 !important' }} />
+              <DataGrid
+                autoHeight
+                // rowHeight={90}
+                getRowHeight={() => 'auto'}
+                rows={allInstitutes}
+                columns={columns}
+                disableRowSelectionOnClick
+                pageSizeOptions={[10, 25, 50]}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+              />
+            </Card>
           </Grid>
         )}
+
+        {/* StatusDialog Drawer */}
+        <StatusDialog
+          open={statusOpen}
+          setOpen={setStatusDialogOpen}
+          description="Are you sure you want to Change Status"
+          title="Status"
+          handleSubmit={handleStatusChangeApi}
+        />
       </Grid>
     </>
   );
