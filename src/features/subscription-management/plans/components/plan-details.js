@@ -166,7 +166,7 @@ const PlanDetails = (props) => {
             <span style={{ marginLeft: '5px' }}>
               {plans?.features?.no_of_students
                 ? `${plans?.features?.no_of_students}`
-                : `${plans?.features?.students_is_unlimited == '1' ? 'unlimited' : ''}`}
+                : `${plans?.features?.student_is_unlimited == '1' ? 'unlimited' : ''}`}
             </span>
           </Typography>
         </Grid>
@@ -211,7 +211,7 @@ const PlanDetails = (props) => {
           select
           width={100}
           label="Status"
-          SelectProps={{ value: plans?.features?.is_active, onChange: (e) => handleStatusValue(e, plans?.features) }}
+          SelectProps={{ value: plans?.is_active, onChange: (e) => handleStatusValue(e, plans) }}
         >
           <MenuItem value="1">Active</MenuItem>
           <MenuItem value="0">Inactive</MenuItem>

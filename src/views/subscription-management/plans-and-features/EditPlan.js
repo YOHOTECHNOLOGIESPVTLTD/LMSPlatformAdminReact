@@ -23,6 +23,8 @@ import toast from 'react-hot-toast';
 import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
+import { useEffect } from 'react';
+import { updateSubscriptionFeature } from 'features/subscription-management/features/services/subscriptionFeaturesServices';
 // import { addSubscriptionFeature } from '../services/subscriptionFeaturesServices';
 
 // ** Icon Imports
@@ -50,12 +52,11 @@ const defaultValues = {
 };
 
 const EditPlan = () => {
-
   const location = useLocation();
-  const planId = location.state.id
-  const planData = location.state.plans
-  console.log('plans:',planData);
-  console.log('planId:',planId)
+  const planId = location.state.id;
+  const planData = location.state.plans;
+  console.log('plans:', planData);
+  console.log('planId:', planId);
   // ** StatesforInput
   const [studentInputChecked, setStudentInputChecked] = useState(false);
   const [adminInputChecked, setAdminInputChecked] = useState(false);
@@ -77,6 +78,59 @@ const EditPlan = () => {
   const [batchesError, setBatchesError] = useState('');
   const [coursesError, setCoursesError] = useState('');
   const [classesError, setClassesError] = useState('');
+
+  useEffect(() => {
+    if (planData) {
+      setValue('plan_duration_type', planData?.plan_duration_type);
+      setValue('plan_name', planData?.plan_name);
+      setValue('plan_price', planData?.plan_price);
+      setValue('support_level', planData?.support_level);
+      setValue('plan_duration', planData?.plan_duration);
+      setValue('students', planData?.features?.no_of_students);
+      setValue('admins', planData?.features?.no_of_admins);
+      // setValue('staffs', planData?.features?.no_of_staffs);
+      setValue('teachers', planData?.features?.no_of_teachers);
+      setValue('batches', planData?.features?.no_of_batches);
+      setValue('courses', planData?.features?.no_of_courses);
+      setValue('classes', planData?.features?.no_of_classes);
+      if (planData?.features?.no_of_students) {
+        setStudentInputBoxChecked(true);
+      }
+      if (planData?.features?.no_of_teachers) {
+        setTeachersInputBoxChecked(true);
+      }
+      if (planData?.features?.no_of_classes) {
+        setClassesInputBoxChecked(true);
+      }
+      if (planData?.features?.no_of_courses) {
+        setCoursesInputBoxChecked(true);
+      }
+      if (planData?.features?.no_of_admins) {
+        setAdminInputBoxChecked(true);
+      }
+      if (planData?.features?.no_of_batches) {
+        setBatchesInputBoxChecked(true);
+      }
+    }
+    if (planData?.features?.student_is_unlimited) {
+      setStudentInputChecked(true);
+    }
+    if (planData?.features?.teacher_is_unlimited) {
+      setTeachersInputChecked(true);
+    }
+    if (planData?.features?.class_is_unlimited) {
+      setClassesInputChecked(true);
+    }
+    if (planData?.features?.admin_is_unlimited) {
+      setAdminInputChecked(true);
+    }
+    if (planData?.features?.batches_is_unlimited) {
+      setBatchesInputChecked(true);
+    }
+    if (planData?.features?.course_is_unlimited) {
+      setCoursesInputChecked(true);
+    }
+  }, [planData]);
 
   // const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
@@ -110,6 +164,7 @@ const EditPlan = () => {
     }
   }));
   const onSubmit = async (data) => {
+  
     if (studentInputBoxChecked === false && studentInputChecked === false) {
       setStudentError(true);
     }
@@ -128,8 +183,6 @@ const EditPlan = () => {
     if (classesInputBoxChecked === false && classesInputChecked === false) {
       setClassesError(true);
     }
-    const log = studentInputChecked === true ?'1':''
-    console.log('subData', log);
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('plan_name', data?.plan_name);
@@ -145,16 +198,16 @@ const EditPlan = () => {
     bodyFormData.append('no_of_batches', data?.batches);
     bodyFormData.append('no_of_courses', data?.courses);
     bodyFormData.append('no_of_classes', data?.classes);
-    bodyFormData.append('student_is_unlimited',studentInputChecked === true ?'1':'');
-    bodyFormData.append('teacher_is_unlimited',teachersInputChecked  === true?'1':'');
-    bodyFormData.append('admin_is_unlimited',adminInputChecked  === true?'1':'');
-    bodyFormData.append('course_is_unlimited',coursesInputChecked  === true?'1':'');
-    bodyFormData.append('batches_is_unlimited',batchesInputChecked  === true?'1':'');
-    bodyFormData.append('class_is_unlimited',classesInputChecked  === true?'1':'');
-    bodyFormData.append('staff_is_unlimited',classesInputChecked  === true?'1':'');
+    bodyFormData.append('student_is_unlimited', studentInputChecked === true ? '1' : '');
+    bodyFormData.append('teacher_is_unlimited', teachersInputChecked === true ? '1' : '');
+    bodyFormData.append('admin_is_unlimited', adminInputChecked === true ? '1' : '');
+    bodyFormData.append('course_is_unlimited', coursesInputChecked === true ? '1' : '');
+    bodyFormData.append('batches_is_unlimited', batchesInputChecked === true ? '1' : '');
+    bodyFormData.append('class_is_unlimited', classesInputChecked === true ? '1' : '');
+    // bodyFormData.append('staff_is_unlimited', classesInputChecked === true ? '1' : '');
 
     try {
-      const result = await addSubscriptionFeature(bodyFormData);
+      const result = await updateSubscriptionFeature(bodyFormData);
       if (result.success) {
         toast.success(result.message);
         navigate(-1);
@@ -164,10 +217,8 @@ const EditPlan = () => {
     } catch (error) {
       console.log(error);
     }
-    console.log('bodyFromdata:', bodyFormData);
-    
+    console.log('bodyFormdata:', bodyFormData);
   };
-
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -180,7 +231,7 @@ const EditPlan = () => {
       // }
     }
   };
-console.log(studentInputChecked)
+  // console.log(studentInputChecked);  
   // ** Hooks
   const {
     control,
@@ -197,7 +248,13 @@ console.log(studentInputChecked)
         <Grid container spacing={5}>
           <Grid item xs={12} sm={6}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <ImgStyled src={imgSrc} alt="Profile Pic" />
+              {!selectedImage && (
+                <ImgStyled
+                  src={planData?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${planData?.image}` : imgSrc}
+                  alt="Profile Pic"
+                />
+              )}
+              {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                   Upload Profile picture
@@ -224,7 +281,7 @@ console.log(studentInputChecked)
               name="plan_name"
               control={control}
               rules={{ required: true }}
-              render={({ field: {onChange } }) => (
+              render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
                   // value={value}
@@ -247,7 +304,7 @@ console.log(studentInputChecked)
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue = {planData?.plan_price}
+                  defaultValue={planData?.plan_price}
                   // value={value}
                   label="Plan Price"
                   onChange={onChange}
@@ -263,15 +320,15 @@ console.log(studentInputChecked)
               name="support_level"
               control={control}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { onChange } }) => (
                 <CustomTextField
                   select
                   fullWidth
-                  defaultValue='premium'
-                  // defaultValue={planData?.support_level?.toString()}
+                  // defaultValue="premium"
+                  defaultValue={planData?.support_level}
                   label="Support Level"
                   SelectProps={{
-                    value: value,
+                    // value: value,
                     onChange: (e) => onChange(e)
                   }}
                   id="validation-basic-select"
@@ -290,11 +347,10 @@ console.log(studentInputChecked)
               name="description"
               control={control}
               rules={{ required: true }}
-              render={(
-              //   {
-              //    field
-              //  }
-               ) => (
+              render={() => (
+                //   {
+                //    field
+                //  }
                 <CustomTextField
                   rows={4}
                   fullWidth
@@ -314,7 +370,7 @@ console.log(studentInputChecked)
               name="plan_duration"
               control={control}
               rules={{ required: true }}
-              render={({ field: {  onChange } }) => (
+              render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
                   type="number"
@@ -335,21 +391,21 @@ console.log(studentInputChecked)
               name="plan_duration_type"
               control={control}
               rules={{ required: true }}
-              render={({ field: {onChange } }) => (
+              render={({ field: { onChange } }) => (
                 <CustomTextField
                   select
                   fullWidth
-     
+                  defaultValue={planData?.plan_duration_type}
                   label="Duration Type"
                   SelectProps={{
                     // value: value,
                     onChange: (e) => onChange(e)
                   }}
                   id="validation-basic-select"
-                  defaultValue={planData?.features?.plan_duration_type}
-                  error={Boolean(errors.select)}
+                  // defaultValue={planData?.features?.plan_duration_type}
+                  error={Boolean(errors.plan_duration_type)}
                   aria-describedby="validation-basic-select"
-                  {...(errors.select && { helperText: 'This field is required' })}
+                  {...(errors.plan_duration_type && { helperText: 'This field is required' })}
                 >
                   <MenuItem value="day">Days</MenuItem>
                   <MenuItem value="month">Months</MenuItem>
@@ -397,7 +453,7 @@ console.log(studentInputChecked)
                     sx={errors.checkbox ? { color: 'error.main' } : null}
                     control={
                       <Checkbox
-                        {...field} 
+                        {...field}
                         name="validation-basic-checkbox"
                         sx={errors.checkbox ? { color: 'error.main' } : null}
                         onChange={() => {
@@ -405,7 +461,7 @@ console.log(studentInputChecked)
                           setStudentInputChecked((state) => !state);
                         }}
                         disabled={studentInputBoxChecked}
-                        checked={planData?.student_is_unlimited !==null}
+                        checked={studentInputChecked}
                       />
                     }
                   />
@@ -450,6 +506,7 @@ console.log(studentInputChecked)
                   // error={Boolean(errors.admins)}
                   aria-describedby="validation-basic-first-name"
                   disabled={adminInputChecked}
+
                   // {...(errors.admins && { helperText: 'This field is required' })}
                 />
               )}
@@ -473,7 +530,8 @@ console.log(studentInputChecked)
                         }}
                         name="validation-basic-checkbox"
                         sx={errors.checkbox ? { color: 'error.main' } : null}
-                        checked={planData?.features?.admin_is_unlimited!== null}
+                        // checked={planData?.features?.admin_is_unlimited!== null}
+                        checked={adminInputChecked}
                       />
                     }
                   />
@@ -541,7 +599,7 @@ console.log(studentInputChecked)
                         }}
                         disabled={teachersInputBoxChecked}
                         sx={errors.checkbox ? { color: 'error.main' } : null}
-                        checked={planData?.features?.teacher_is_unlimited!==null}
+                        // checked={planData?.features?.teacher_is_unlimited!==null}
                       />
                     }
                   />
@@ -609,7 +667,8 @@ console.log(studentInputChecked)
                           setBatchesInputChecked((state) => !state);
                         }}
                         disabled={batchesInputBoxChecked}
-                        checked={planData?.features?.batches_is_unlimited!==null}
+                        // checked={planData?.features?.batches_is_unlimited!==null}
+                        checked={batchesInputChecked}
                       />
                     }
                   />
@@ -656,7 +715,6 @@ console.log(studentInputChecked)
                   // error={Boolean(errors.courses)}
                   aria-describedby="validation-basic-first-name"
                   // {...(errors.courses && { helperText: 'This field is required' })}
-                 
                 />
               )}
             />
@@ -679,7 +737,8 @@ console.log(studentInputChecked)
                           setCoursesError(false);
                         }}
                         disabled={coursesInputBoxChecked}
-                        checked={planData?.features?.course_is_unlimited !== null ? planData.features.course_is_unlimited : false}
+                        // checked={planData?.features?.course_is_unlimited !== null ? planData.features.course_is_unlimited : false}
+                        checked={coursesInputChecked}
                       />
                     }
                   />
@@ -748,7 +807,8 @@ console.log(studentInputChecked)
                           setClassesError(false);
                         }}
                         disabled={classesInputBoxChecked}
-                        checked={planData?.features?.class_is_unlimited!==null}
+                        // checked={planData?.features?.class_is_unlimited!==null}
+                        checked={classesInputChecked}
                       />
                     }
                   />

@@ -94,15 +94,15 @@ export const deleteSubscriptionFeature = async (SubscriptionFeatureId) => {
 
 export const updateSubscriptionFeature = async (data) => {
   try {
-    const response = await axios.put(`${SUBSCRIPTION_FEATURE_END_POINT}/update`, data, {
+    const response = await axios.post(`${SUBSCRIPTION_FEATURE_END_POINT}/update`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
 
     if (response.data.status) {
-      console.log(response);
+      console.log('response:',response);
       return { success: true, message: 'SubscriptionFeature updated successfully' };
     } else {
       return { success: false, message: 'Failed to update SubscriptionFeature' };

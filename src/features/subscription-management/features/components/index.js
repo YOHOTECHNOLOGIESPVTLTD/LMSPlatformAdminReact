@@ -223,6 +223,7 @@ console.log(studentInputChecked)
                   value={value}
                   label="Plan Name"
                   onChange={onChange}
+                  inputProps={{ maxLength: 18 }} 
                   placeholder=""
                   error={Boolean(errors.plan_name)}
                   aria-describedby="validation-basic-first-name"
@@ -284,6 +285,7 @@ console.log(studentInputChecked)
                 <CustomTextField
                   rows={4}
                   fullWidth
+                  inputProps={{ maxLength: 35 }} 
                   multiline
                   {...field}
                   label="Plan Description"
