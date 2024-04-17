@@ -134,7 +134,7 @@ const Institutes = () => {
   //   );
   // };
 
-  const RowOptions = ({ id }) => {
+  const RowOptions = ({ row }) => {
     // ** State
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -158,8 +158,8 @@ const Institutes = () => {
                 icon: <Icon icon="tabler:eye" />,
                 menuItemProps: {
                   component: Link,
-                  to: `profile/${id}`,
-                  state: { id: id }
+                  to: `${row?.name}`,
+                  state: { id: row?.id}
                 }
               }
             ]}
@@ -181,7 +181,13 @@ const Institutes = () => {
           }}
           PaperProps={{ style: { minWidth: '8rem' } }}
         >
-          <MenuItem sx={{ '& svg': { mr: 2 } }} component={Link} to={`profile/${id}`} state={{ id: id }} onClick={handleRowOptionsClose}>
+          <MenuItem
+            sx={{ '& svg': { mr: 2 } }}
+            component={Link}
+            to={`${row?.name}`}
+            state={{ id: row?.id }}
+            onClick={handleRowOptionsClose}
+          >
             <Icon icon="tabler:eye" fontSize={20} />
             View
           </MenuItem>
@@ -285,7 +291,7 @@ const Institutes = () => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row.id} />
+      renderCell: ({ row }) => <RowOptions row={row} />
     }
   ];
 

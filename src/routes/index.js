@@ -151,7 +151,7 @@ const ApplicationRoutes = () => {
         <Route path="/institute-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/institute-management/institutes" />} />
           <Route path="institutes" element={<InstitutesPage />} />
-          <Route path="institutes/profile/:id" element={<InstituteProfile />} />
+          <Route path="institutes/:id" element={<InstituteProfile />} />
           <Route path="institutes/add" element={<AddNewInstitutesPage />} />
         </Route>
 
@@ -185,6 +185,16 @@ const ApplicationRoutes = () => {
           <Route path="chatSupport" element={<ChatSupport />} />
         </Route>
 
+        <Route path="/institute-management/institutes/:id/user-management" element={<InstituteMainLayout />}>
+          <Route index element={<Navigate to="groups" />} />
+          <Route path="groups" element={<InstituteGroupsOverviewPage />} />
+          <Route path="groups/add" element={<InstituteGroupsAddPage />} />
+          <Route path="groups/edit/:id" element={<InstituteGroupsEditPage />} />
+          <Route path="groups/:id" element={<InstituteGroupsViewPage />} />
+          <Route path="users" element={<InstituteAdminUserOverviewPage />} />
+          <Route path="users/:id" element={<InstituteAdminUserViewPage />} />
+        </Route>
+
         <Route element={<MinimalLayout />}>
           <Route path="*" element={<Page404 />} />
         </Route>
@@ -194,15 +204,6 @@ const ApplicationRoutes = () => {
         {/* <Route element={<MinimalLayout />}>
           <Route path="/login" element={<Navigate to="/" />} />
         </Route> */}
-        <Route path="/:id/user-management" element={<InstituteMainLayout />}>
-          <Route index element={<Navigate to="/:id/user-management/groups" />} />
-          <Route path="groups" element={<InstituteGroupsOverviewPage />} />
-          <Route path="groups/add" element={<InstituteGroupsAddPage />} />
-          <Route path="groups/edit/:id" element={<InstituteGroupsEditPage />} />
-          <Route path="groups/:id" element={<InstituteGroupsViewPage />} />
-          <Route path="users" element={<InstituteAdminUserOverviewPage />} />
-          <Route path="users/:id" element={<InstituteAdminUserViewPage />} />
-        </Route>
       </Route>
 
       <Route element={<MinimalLayout />}>

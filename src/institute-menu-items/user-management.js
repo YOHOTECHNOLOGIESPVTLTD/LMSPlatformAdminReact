@@ -27,7 +27,7 @@ const pages = {
           id: 'groups',
           title: 'Groups',
           type: 'item',
-          url: '/patron/user-management/groups',
+          url: '/institute-management/institutes/:id/user-management/groups',
           icon: icons.IconUsers,
           target: false,
           breadcrumbs: false
@@ -37,7 +37,7 @@ const pages = {
           title: 'Users',
           icon: IconUser,
           type: 'item',
-          url: '/patron/user-management/users',
+          url: '/institute-management/institutes/:id/user-management/users',
           target: false,
 
           breadcrumbs: false

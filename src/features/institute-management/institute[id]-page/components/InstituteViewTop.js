@@ -111,7 +111,7 @@ const UserViewLeft = ({ institute }) => {
             <MenuItem value={'0'}>Inactive</MenuItem>
           </TextField>
 
-          <Box component={Link} to={`/branch-management`} target="_blank" variant="contained" sx={{ '& svg': { mr: 2 } }}>
+          <Box component={Link} to={`user-management`} target="_blank" variant="contained" sx={{ '& svg': { mr: 2 } }}>
             Go to Dashboard
           </Box>
           <StatusDialog
