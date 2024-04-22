@@ -204,13 +204,18 @@ const AddInstitutePage = () => {
     return formattedDateString;
   }
 
+
+
   const onSubmit = async () => {
     const accountData = accountControl?._formValues;
     const personalData = personalControl?._formValues;
+    console.log('personalData:',personalData)
+    console.log('FormData:',FormData)
     const socialData = socialControl?._formValues;
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       let data = new FormData();
+      
       data.append('institutename', personalData?.institute_name);
       data.append('email', personalData?.official_email);
       data.append('description', personalData?.description);
@@ -230,16 +235,16 @@ const AddInstitutePage = () => {
       data.append('registered_date', convertDateFormat(personalData?.registered_date));
       data.append('logo', logo);
       galleryImages.forEach((file) => {
-        bodyFormData.append('gallery[]', file);
+        data.append('gallery[]', file);
       });
       data.append('image', instituteImage);
       data.append('user_email', accountData?.email);
       data.append('user_mobile', accountData?.contact);
       data.append('user_name', accountData?.username);
       data.append('branch_name', accountData?.branch_name);
-
+     
       const isUserNameTaken = await checkUserName(accountData.username);
-
+   
       if (!isUserNameTaken.success) {
         setError('username', {
           type: 'manual',
@@ -255,6 +260,8 @@ const AddInstitutePage = () => {
       }
     }
   };
+ 
+
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
