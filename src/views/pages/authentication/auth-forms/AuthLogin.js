@@ -31,6 +31,9 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { login } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
+import { useAtom } from 'jotai';
+import { stepsAtomWithPersistence } from 'store/atoms/authorized-atom';
+import { otp_step } from 'lib/constants';
 
 // import Google from 'assets/images/icons/social-google.svg';
 
@@ -41,6 +44,7 @@ const FirebaseLogin = ({ ...others }) => {
   const scriptedRef = useScriptRef();
   const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();
+  const [,setStep] = useAtom(stepsAtomWithPersistence)
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -54,8 +58,8 @@ const FirebaseLogin = ({ ...others }) => {
   return (
     <Formik
       initialValues={{
-        email: 'masteradmin',
-        password: 'Thasthakir@01', //kVgfd3fk
+        email: 'mernstackdev.yoho@gmail.com',
+        password: 'Wecandoit@2024', //kVgfd3fk
         submit: null
       }}
       validationSchema={Yup.object().shape({
@@ -65,7 +69,11 @@ const FirebaseLogin = ({ ...others }) => {
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
           if (scriptedRef.current) {
-            dispatch(login(values.email, values.password));
+           const response = await  dispatch(login(values.email, values.password));
+           console.log(response,"response in")
+           if(response.otp_status){
+              setStep(otp_step)
+           }
             setStatus({ success: true });
             setSubmitting(false);
           }
@@ -90,6 +98,7 @@ const FirebaseLogin = ({ ...others }) => {
               onBlur={handleBlur}
               onChange={handleChange}
               label="Username"
+              sx={{ borderColor: "#D1D5DB", ":focus":{ borderColor : "#002B38" }}}
               inputProps={{}}
             />
             {touched.email && errors.email && (
@@ -153,7 +162,7 @@ const FirebaseLogin = ({ ...others }) => {
 
           <Box sx={{ mt: 2 }}>
             <AnimateButton>
-              <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
+              <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" sx={{ backgroundColor : "#002B38",":hover":{backgroundColor:"#4D6E78"}}}>
                 Sign in
               </Button>
             </AnimateButton>

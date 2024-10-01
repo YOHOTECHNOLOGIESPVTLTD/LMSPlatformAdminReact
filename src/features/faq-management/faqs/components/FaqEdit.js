@@ -73,7 +73,7 @@ const FaqEdit = (props) => {
   }, [open, reset, props.initialValues]);
 
   const onSubmit = async (data) => {
-    const inputData = { title: data.title, description: data.description, id: props.initialValues.id };
+    const inputData = { identity: data.title, description: data.description, id: props.initialValues.id };
     const result = await updateFaq(inputData);
     if (result.success) {
       toast.success(result.message);
@@ -90,7 +90,7 @@ const FaqEdit = (props) => {
     toggle();
     reset();
   };
-
+  console.log(props,defaultValues)
   return (
     <Drawer
       open={open}

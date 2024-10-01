@@ -1,13 +1,15 @@
 // authActions.js
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import client from "../../api/index"
+import Cookies from 'js-cookie';
 
-const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/platform-user/login`;
+const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}api/auth/login`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/platform-user/logout`;
 
 export const login = (username, password) => async (dispatch) => {
   let data = {
-    username: username,
+    email: username,
     password: password
   };
   try {
@@ -17,43 +19,77 @@ export const login = (username, password) => async (dispatch) => {
         'Content-Type': 'application/json'
       }
     });
-
-    console.log(response);
-
-    if (response.data.status) {
-      // Store token and user ID in localStorage
-      localStorage.setItem('isAuthenticated', true);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userData', JSON.stringify(response.data.userData));
-      localStorage.setItem('permissions', JSON.stringify(response.data.permission));
-      // Dispatch success action
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: {
-          token: response.data.token,
-          userData: response.data.userData,
-          permissions: response.data.permission
-        }
-      });
-      window.location.replace('/');
-      toast.success('Login Successful');
-      return { success: true, message: 'Login successfully' };
-    } else {
-      dispatch({
-        type: 'LOGIN_FAILURE',
-        payload: response.data.message
-      });
-      toast.error(response.data.message);
-      return { success: false, message: 'Failed to delete group' };
+    console.log(response,"response")
+    console.log(response,"response");
+   
+    if(response?.data?.data?.otp_status){
+      const otp_data = { email: response?.data.data.email, token : response?.data?.data?.token}
+      const expires = new Date(new Date().getTime + 10 * 60 * 1000)
+      Cookies.set("otp_data",JSON.stringify(otp_data),{expires: expires })
+      return { otp_status: response?.data?.data?.otp_status}
     }
+    // Store token and user data in localStorage
+    localStorage.setItem('isAuthenticated', true);
+    localStorage.setItem('token', response.data.data.token);
+    localStorage.setItem('userData', JSON.stringify(response.data.data.user));
+    localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
+    
+    // Dispatch success action
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      payload: {
+        token: response.data.data.token,
+        userData: response.data.data.user,
+        permissions: response.data.data.permissions
+      }
+    });
+    
+    window.location.replace('/');
+    toast.success('Login Successful');
+    return { success: true, message: 'Login successfully' };
   } catch (error) {
-    // Dispatch error action
+    // Dispatch failure action
+    console.log(error, "error");
     dispatch({
       type: 'LOGIN_FAILURE',
-      payload: error.response.data.message
+      payload: error.response ? error.response.data.message : 'Failed to login'
     });
+    toast.error(error?.response?.data?.message?error?.response?.data?.message:'Failed to login');
+    return { success: false, message: 'Failed to login' };
   }
 };
+
+export const verifyOtp = (data) => async (dispatch) => {
+   try {
+    const otp_data = { otp: data.otp, email: data.email, token: data.token}
+
+    const response = await client.auth.verify_otp(otp_data)
+    
+    localStorage.setItem('isAuthenticated', true);
+    localStorage.setItem('token', response.data.data.token);
+    localStorage.setItem('userData', JSON.stringify(response.data.data.user));
+    localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
+    Cookies.remove("step")
+    Cookies.remove("otp_data")
+    
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      payload: {
+        token: response.data.data.token,
+        userData: response.data.data.user,
+        permissions: response.data.data.permissions
+      }
+    });
+    
+    window.location.replace('/');
+    toast.success('Login Successful');
+    return { success: true, message: 'Login successfully' };
+   } catch (error) {
+     const message = error?.response?.data?.message ?? error.message
+     throw new Error(message)
+   }
+}
+
 
 export const logout = () => async (dispatch) => {
   try {
@@ -87,6 +123,7 @@ export const logout = () => async (dispatch) => {
       toast.success('Logout Successful');
     }
   } catch (error) {
+    console.log(error,"error")
     // Dispatch error action
     dispatch({
       type: 'LOGOUT_FAILURE',

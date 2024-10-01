@@ -2,6 +2,8 @@
 import axios from 'axios';
 
 const SUBSCRIPTION_FEATURE_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/subscription-plans`;
+import Client from 'api/index';
+import { getErrorMessage } from 'utils/error-handler';
 
 export const getAllSubscriptionFeatures = async () => {
   try {
@@ -53,21 +55,11 @@ export const searchSubscriptionFeatures = async (searchQuery) => {
 
 export const addSubscriptionFeature = async (data) => {
   try {
-    const response = await axios.post(`${SUBSCRIPTION_FEATURE_END_POINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log('add-subscription:',response)
-    if (response.data.status) {
-      return { success: true, message: 'SubscriptionFeature created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create SubscriptionFeature' };
-    }
+    await Client.subscription.create(data)
+    return { success: true, message: 'SubscriptionFeature created successfully' }
   } catch (error) {
-    console.error('Error in addSubscriptionFeature:', error);
-    throw error;
+    const error_message = getErrorMessage(error)
+    throw new Error(error_message)
   }
 };
 

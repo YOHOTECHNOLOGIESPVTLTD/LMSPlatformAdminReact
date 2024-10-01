@@ -71,12 +71,11 @@ const FaqAccordian = ({ faqCategories }) => {
   }, [faqCategories]);
 
   const handleChange = (event, newValue) => {
-    console.log(newValue);
     setActiveTab(newValue);
   };
 
   const renderTabContent = () => {
-    return faqCategories?.map((tab) => {
+    return faqCategories?.data?.map((tab) => {
       return (
         <TabPanel key={tab?.id} value={tab?.id} sx={{ p: 6.5, pt: 0, width: '100%' }}>
           <Box key={tab?.id}>
@@ -85,7 +84,7 @@ const FaqAccordian = ({ faqCategories }) => {
                 <Icon icon={tab?.icon} fontSize="2.25rem" />
               </CustomAvatar> */}
               <Box sx={{ ml: 4 }}>
-                <Typography variant="h4">{tab?.title}</Typography>
+                <Typography variant="h4">{tab?.identity}</Typography>
                 <Typography sx={{ color: 'text.secondary' }}>{tab?.description}</Typography>
               </Box>
             </Box>
@@ -111,9 +110,9 @@ const FaqAccordian = ({ faqCategories }) => {
 
   const renderTabs = () => {
     if (faqCategories !== null) {
-      return faqCategories?.map((tab) => {
+      return faqCategories?.data?.map((tab) => {
         if (tab) {
-          return <Tab key={tab?.id} value={tab?.id} label={tab?.title} icon={<Icon icon={tab?.icon} />} />;
+          return <Tab key={tab?.id} value={tab?.id} label={tab?.identity} icon={<Icon icon={tab?.icon} />} />;
         } else {
           return null;
         }

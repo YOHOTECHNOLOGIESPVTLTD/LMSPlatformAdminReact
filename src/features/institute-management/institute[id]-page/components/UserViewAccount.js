@@ -43,8 +43,8 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 });
 
 const statusColors = {
-  1: 'success',
-  0: 'error'
+  true: 'success',
+  false: 'error'
 };
 
 const defaultPersonalValues = {
@@ -118,23 +118,23 @@ const UserViewAccount = ({ institute }) => {
 
   useEffect(() => {
     if (institute) {
-      setValue('name', institute?.name || '');
+      setValue('name', institute?.institute_name || '');
       setValue('registered_date', new Date(institute?.registered_date) || new Date());
-      setValue('state', institute?.state || '');
-      setValue('city', institute?.city || '');
-      setValue('pin_code', institute?.pin_code || '');
-      setValue('address_line_1', institute?.address_line_1 || '');
-      setValue('address_line_2', institute?.address_line_2 || '');
-      setValue('phone', institute?.phone || '');
-      setValue('alternate_number', institute?.alternate_number || '');
-      setValue('official_email', institute?.user?.institution_users?.email || '');
+      setValue('state', institute?.contact_info.address.state || '');
+      setValue('city', institute?.contact_info.address.city || '');
+      setValue('pin_code', institute?.contact_info.address.pin_code || '');
+      setValue('address_line_1', institute?.contact_info.address.address1 || '');
+      setValue('address_line_2', institute?.contact_info.address.address2 || '');
+      setValue('phone', institute?.contact_info.phone_no || '');
+      setValue('alternate_number', institute?.contact_info.alternate_no || '');
+      setValue('official_email', institute?.admin?.email || '');
       setValue('official_website', institute?.official_website || '');
       setValue('description', institute?.description || '');
-      setValue('instagram', institute?.instagram || '');
-      setValue('facebook', institute?.facebook || '');
+      setValue('instagram', institute?.contact_info.instagram_id || '');
+      setValue('facebook', institute?.contact_info.facebook_id || '');
       setValue('email', institute?.email || '');
-      setValue('linkedin', institute?.linkedin || '');
-      setValue('twitter', institute?.twitter || '');
+      setValue('linkedin', institute?.contact_info.linkedin_id || '');
+      setValue('twitter', institute?.contact_info.twitter_id || '');
     }
   }, [institute, setValue]);
 
@@ -177,7 +177,7 @@ const UserViewAccount = ({ institute }) => {
   // const onSubmit = (data) => {
   //   // console.log(data);
   // };
-
+  console.log(institute,"institute ")
   if (data) {
     return (
       <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: 'auto' } }}>
@@ -202,7 +202,7 @@ const UserViewAccount = ({ institute }) => {
                         </Box>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Institute Name:</Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>{institute?.name}</Typography>
+                          <Typography sx={{ color: 'text.secondary' }}>{institute?.institute_name}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Official Email:</Typography>
@@ -214,7 +214,7 @@ const UserViewAccount = ({ institute }) => {
                             rounded
                             skin="light"
                             size="small"
-                            label={institute?.is_active === '1' ? 'Active' : 'Inactive'}
+                            label={institute?.is_active? 'Active' : 'Inactive'}
                             color={statusColors[institute?.is_active]}
                             sx={{
                               textTransform: 'capitalize'
@@ -223,11 +223,11 @@ const UserViewAccount = ({ institute }) => {
                         </Box>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>+91 {institute?.phone}</Typography>
+                          <Typography sx={{ color: 'text.secondary' }}>+91 {institute?.contact_info.phone_no}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alternate Number:</Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>+91 {institute?.alternate_number}</Typography>
+                          <Typography sx={{ color: 'text.secondary' }}>+91 {institute?.contact_info.alternate_no}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Registered date: </Typography>
@@ -236,8 +236,8 @@ const UserViewAccount = ({ institute }) => {
                         <Box sx={{ display: 'flex' }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                           <Typography sx={{ color: 'text.secondary' }}>
-                            {institute?.address_line_1}, {institute?.address_line_2},{institute?.state}, {institute?.city},{' '}
-                            {institute?.pin_code}
+                            {institute?.contact_info.address.address1}, {institute?.contact_info.address.address2},{institute?.contact_info.address.state}, {institute?.contact_info.address.city},{' '}
+                            {institute?.contact_info.address.pincode}
                           </Typography>
                         </Box>
                       </Box>
@@ -256,23 +256,23 @@ const UserViewAccount = ({ institute }) => {
 
                         <Box sx={{ mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Facebook:</Typography>
-                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.facebook}</Typography>
+                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.social_media?.facebook_id}</Typography>
                         </Box>
                         <Box sx={{ mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Twitter:</Typography>
-                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.twitter}</Typography>
+                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.social_media?.twitter_id}</Typography>
                         </Box>
                         <Box sx={{ mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>LinkedIn:</Typography>
-                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.linkedin}</Typography>
+                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.social_media?.linkedin_id}</Typography>
                         </Box>
                         <Box sx={{ mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Instagram:</Typography>
-                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.instagram}</Typography>
+                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.social_media?.instagram_id}</Typography>
                         </Box>
                         <Box sx={{ mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Pinterest:</Typography>
-                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.pinterest}</Typography>
+                          <Typography sx={{ color: 'text.secondary', mt: 1 }}>{institute?.social_media?.pinterest_id}</Typography>
                         </Box>
                       </Box>
                       <Typography variant="h4" sx={{ textTransform: 'uppercase', mt: 4 }}>
@@ -281,7 +281,7 @@ const UserViewAccount = ({ institute }) => {
                       <Box sx={{ pt: 4 }}>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Branch Name:</Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>{institute?.branch?.branch_name}</Typography>
+                          <Typography sx={{ color: 'text.secondary' }}>{institute?.primary_branch?.branch_identity}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Location:</Typography>
@@ -301,15 +301,15 @@ const UserViewAccount = ({ institute }) => {
                       <Box sx={{ pt: 4 }}>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Fullname:</Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>{institute?.user?.name}</Typography>
+                          <Typography sx={{ color: 'text.secondary' }}>{institute?.admin?.first_name+institute?.admin?.last_name}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>{institute?.user?.username}</Typography>
+                          <Typography sx={{ color: 'text.secondary' }}>{institute?.admin?.first_name+institute?.admin?.last_name}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>{institute?.user?.institution_users?.email}</Typography>
+                          <Typography sx={{ color: 'text.secondary' }}>{institute?.admin?.email}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
@@ -321,8 +321,8 @@ const UserViewAccount = ({ institute }) => {
                             rounded
                             skin="light"
                             size="small"
-                            label={institute?.user?.is_active === '1' ? 'Active' : 'Inactive'}
-                            color={statusColors[institute?.user?.is_active]}
+                            label={institute?.admin?.is_active? 'Active' : 'Inactive'}
+                            color={statusColors[institute?.admin?.is_active]}
                             sx={{
                               textTransform: 'capitalize'
                             }}
@@ -331,7 +331,7 @@ const UserViewAccount = ({ institute }) => {
 
                         <Box sx={{ display: 'flex', mb: 3 }}>
                           <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>+91 {institute?.user?.institution_users?.mobile}</Typography>
+                          <Typography sx={{ color: 'text.secondary' }}>+91 {institute?.admin?.phone_number}</Typography>
                         </Box>
                       </Box>
                     </CardContent>
@@ -385,7 +385,7 @@ const UserViewAccount = ({ institute }) => {
                             <TextField
                               fullWidth
                               // value={value}
-                              defaultValue={institute?.name}
+                              defaultValue={institute?.institute_name}
                               label="Institute Name"
                               onChange={onChange}
                               placeholder="Leonard"
@@ -430,7 +430,7 @@ const UserViewAccount = ({ institute }) => {
                             <TextField
                               fullWidth
                               // value={value}
-                              defaultValue={institute?.state}
+                              defaultValue={institute?.contact_info.address.state}
                               label="State"
                               onChange={onChange}
                               error={Boolean(personalErrors.state)}
@@ -448,7 +448,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.city}
+                              defaultValue={institute?.contact_info.address.city}
                               label="City"
                               onChange={onChange}
                               error={Boolean(personalErrors.city)}
@@ -466,7 +466,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.pin_code}
+                              defaultValue={institute?.contact_info.address.pincode}
                               label="Pin Code"
                               type="number"
                               onChange={onChange}
@@ -486,7 +486,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.address_line_1}
+                              defaultValue={institute?.contact_info.address.address1}
                               label="Address Line One"
                               onChange={onChange}
                               placeholder="Carter"
@@ -505,7 +505,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.address_line_2}
+                              defaultValue={institute?.contact_info.address.address2}
                               label="Address Line Two"
                               onChange={onChange}
                               placeholder="Carter"
@@ -525,7 +525,7 @@ const UserViewAccount = ({ institute }) => {
                             <TextField
                               fullWidth
                               type="number"
-                              defaultValue={institute?.phone}
+                              defaultValue={institute?.contact_info.phone_no}
                               label="Phone Number"
                               onChange={onChange}
                               placeholder="Carter"
@@ -544,7 +544,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.alternate_number}
+                              defaultValue={institute?.contact_info.alternate_no}
                               type="number"
                               label="Alt Phone Number"
                               onChange={onChange}
@@ -565,7 +565,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.user?.institution_users?.email}
+                              defaultValue={institute?.admin?.email}
                               label="Official Email"
                               onChange={onChange}
                               placeholder="Carter"
@@ -652,7 +652,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.instagram}
+                              defaultValue={institute?.social_media?.instagram_id}
                               label="Insta"
                               onChange={onChange}
                               placeholder="INSTA"
@@ -671,7 +671,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.facebook}
+                              defaultValue={institute?.social_media?.facebook_id}
                               label="Facebook URL"
                               onChange={onChange}
                               placeholder="FbLink"
@@ -710,7 +710,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.linkedin}
+                              defaultValue={institute?.social_media?.linkedin_id}
                               label="LinkedIn"
                               onChange={onChange}
                               placeholder="Carter"
@@ -729,7 +729,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.twitter}
+                              defaultValue={institute?.social_media?.twitter_id}
                               label="Twitter URL"
                               onChange={onChange}
                               placeholder="Carter"
@@ -748,7 +748,7 @@ const UserViewAccount = ({ institute }) => {
                           render={({ field: { onChange } }) => (
                             <TextField
                               fullWidth
-                              defaultValue={institute?.pinterest}
+                              defaultValue={institute?.social_media?.pinterest_id}
                               label="Pinterest URL"
                               onChange={onChange}
                               placeholder="Carter"

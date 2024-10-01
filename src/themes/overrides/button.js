@@ -204,6 +204,7 @@ const Button = () => {
         contained: ({ theme }) => ({
           boxShadow: theme.shadows[2],
           // padding: theme.spacing(2.5, 5),
+          backgroundColor : '#002B38',
           '&:hover': {
             boxShadow: theme.shadows[2]
           }

@@ -32,7 +32,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from 'components/cards/MainCard';
 import Transitions from 'components/extended/Transitions';
-import UpgradePlanCard from './UpgradePlanCard';
+// import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
 // import { Link } from 'react-router-dom';
 import { logout } from 'features/authentication/authActions';
@@ -126,7 +126,7 @@ const ProfileSection = () => {
             color="inherit"
           />
         }
-        label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
+        // label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
         variant="outlined"
         ref={anchorRef}
         aria-controls={open ? 'menu-list-grow' : undefined}
@@ -168,7 +168,7 @@ const ProfileSection = () => {
                       <Typography variant="subtitle2">Project Admin</Typography>
                     </Stack>
                     <OutlinedInput
-                      sx={{ width: '100%', pr: 1, pl: 2, my: 2 }}
+                      sx={{ width: '100%', pr: 1, pl: 2, my: 2, display: "none" }}
                       id="input-search-profile"
                       value={value}
                       onChange={(e) => setValue(e.target.value)}
@@ -183,15 +183,16 @@ const ProfileSection = () => {
                         'aria-label': 'weight'
                       }}
                     />
-                    <Divider />
+                    {/* <Divider /> */}
                   </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>
-                      <UpgradePlanCard />
-                      <Divider />
+                      {/* <UpgradePlanCard /> */}
+                      {/* <Divider /> */}
                       <Card
                         sx={{
                           bgcolor: theme.palette.primary.light,
+                          display: "none",
                           my: 2
                         }}
                       >

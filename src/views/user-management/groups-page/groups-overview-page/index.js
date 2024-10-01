@@ -102,7 +102,7 @@ const GroupManagement = () => {
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography variant="h4" sx={{ mb: 1 }}>
-                {item?.role?.name}
+                {item?.identity}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
@@ -111,7 +111,7 @@ const GroupManagement = () => {
                 select
                 width={100}
                 label="Status"
-                SelectProps={{ value: item?.role?.is_active, onChange: (e) => handleStatusValue(e, item.role) }}
+                SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item.identity) }}
               >
                 <MenuItem value="1">Active</MenuItem>
                 <MenuItem value="0">Inactive</MenuItem>
@@ -143,8 +143,8 @@ const GroupManagement = () => {
                     text: 'Edit',
                     menuItemProps: {
                       component: Link,
-                      to: `edit/${item.role.id}`,
-                      state: { id: item.role.id, name: item.role.name }
+                      to: `edit/${item.id}`,
+                      state: { id: item.id, name: item.identity }
                     }
                   }
                 ]}

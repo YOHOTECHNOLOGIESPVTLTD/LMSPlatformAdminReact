@@ -1,63 +1,141 @@
-// ** MUI Imports
-// import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Grid } from '@mui/material';
-import { TextField, MenuItem } from '@mui/material';
+import { Grid, MenuItem, TextField } from '@mui/material';
 import OptionsMenu from 'components/option-menu';
-// import deGroupDeleteDialog from 'features/user-management/groups-page/components/GroupDeleteDialog';
 import { default as StatusChangeDialog } from 'components/modal/DeleteModel';
 import { default as DeleteModal } from 'components/modal/DeleteModel';
-import { deleteSubscriptionPlan } from '../services/subscriptionPlansServices';
-import { changeSubscriptionPlanStatus } from '../services/subscriptionPlansServices';
+import { deleteSubscriptionPlan, changeSubscriptionPlanStatus } from '../services/subscriptionPlansServices';
 import { useDispatch } from 'react-redux';
-// ** Icon Imports
-import Icon from 'components/icon';
-
-// ** Util Import
-import { hexToRGBA } from 'utils/hex-to-rgba';
-
-// ** Custom Components Imports
-// import CustomChip from 'components/mui/chip';
-import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { getAllSubscriptionPlans } from '../redux/subscriptionPlansThunks';
 import toast from 'react-hot-toast';
-// ** Styled Component for the wrapper of whole component
-const BoxWrapper = styled(Box)(({ theme }) => ({
+import { motion } from 'framer-motion';
+import CheckIcon from "../../../../assets/images/subscription/check.png"
+
+// Styled component for the plan card wrapper
+const BoxWrapper = styled(motion(Box))(({ theme }) => ({
   position: 'relative',
   padding: theme.spacing(3),
-  paddingTop: theme.spacing(3),
-  borderRadius: theme.shape.borderRadius
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: "0 0 6px rgba(0, 0, 0, 0.3)",
+  backgroundColor: '#fff',
+  overflow: 'hidden',
+  transition: 'box-shadow 0.3s ease, transform 0.3s ease',
+  transform: 'translateY(0)',
+  '&:hover': {
+    boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.2)',
+    transform: 'scale(1.02) translateY(-10px)', // slight scale and lift
+    background: 'linear-gradient(135deg, #f0f4f8 30%, #d1e3ff 90%)',
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    // background: 'linear-gradient(135deg, #0CCE7F 0%, #bdc8f0 100%)',
+    opacity: 0.4,
+    transition: 'opacity 0.3s ease',
+  },
+  '&:hover::before': {
+    opacity: 0.2, // subtle background fade
+  }
 }));
 
-// ** Styled Component for the wrapper of all the features of a plan
-// const BoxFeature = styled(Box)(({ theme }) => ({
-//   // marginBottom: theme.spacing(2.5),
-//   // '& > :not(:last-child)': {
-//   //   marginBottom: theme.spacing(2.5)
-//   // }
-// }));
+// Framer Motion animation variants for initial fade-in
+const fadeInVariants = {
+  hidden: { opacity: 0, y: 20 },  // start slightly below and faded
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeInOut' } }
+};
 
+// Custom styles for the dropdown
+const CustomTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiInputBase-root': {
+    borderRadius: '8px',
+    backgroundColor: '#f0f4f8',
+    transition: 'background-color 0.3s ease',
+    '&:hover': {
+      backgroundColor: '#e0e7ff',
+    },
+    '&.Mui-focused': {
+      backgroundColor: '#d0d8ff',
+    },
+  },
+  '& .MuiSelect-icon': {
+    color: theme.palette.primary.main,
+  }
+}));
+
+// Custom styles for the price section with animations
+const PriceBox = styled(motion.div)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'baseline',
+  marginTop: theme.spacing(2),
+  '& .currency': {
+    fontWeight: 600,
+    color: theme.palette.primary.main,
+    marginRight: '4px',
+    fontSize: '1.5rem',
+  },
+  '& .price': {
+    fontWeight: 700,
+    fontSize: '3.5rem',
+    lineHeight: 1,
+    color: theme.palette.primary.main,
+    textShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // subtle shadow
+    transition: 'transform 0.3s ease', // smooth scaling animation
+    '&:hover': {
+      transform: 'scale(1.1)', // scale up slightly on hover
+    }
+  },
+  '& .month': {
+    fontWeight: 500,
+    color: theme.palette.grey[600],
+    marginLeft: '4px',
+    fontSize: '1.125rem',
+  }
+}));
+
+// Feature list container with fade-in animation
+const FeatureGrid = styled(motion(Grid))(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  marginBottom: theme.spacing(2),
+  gap: "10px",
+  marginLeft: "20%",
+  opacity: 0,
+  transition: 'opacity 0.5s ease-in-out',
+}));
+
+// Framer Motion animation variants
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5 } },
+};
+
+// Styled component for feature icons
+const FeatureIcon = styled("img")(({ theme }) => ({
+  marginRight: theme.spacing(1)
+}));
+
+// Updated PlanDetails component
 const PlanDetails = (props) => {
   const dispatch = useDispatch();
-  // ** Props
   const { plans } = props;
-  const theme = useTheme();
-  console.log('Plansxxx', plans);
-  console.log('planID:', plans?.id);
+  
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState('');
   const [statusValue, setStatusValue] = useState('');
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
 
-  //handleDelete
-  const handleDletePlan = async () => {
+  // Handle delete plan
+  const handleDeletePlan = async () => {
     try {
       const result = await deleteSubscriptionPlan(selectedPlanId);
-
       if (result.success) {
         toast.success(result.message);
         dispatch(getAllSubscriptionPlans());
@@ -69,7 +147,7 @@ const PlanDetails = (props) => {
     }
   };
 
-  //handleStatusChange
+  // Handle status change
   const handleStatusChangeApi = async () => {
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
@@ -78,7 +156,7 @@ const PlanDetails = (props) => {
     const response = await changeSubscriptionPlanStatus(data);
     if (response.success) {
       toast.success(response.message);
-      dispatch(getAllSubscriptionPlans(selectedPlanId));
+      dispatch(getAllSubscriptionPlans());
     } else {
       toast.error(response.message);
     }
@@ -89,133 +167,86 @@ const PlanDetails = (props) => {
     setStatusValue(plans);
   };
 
+  // Render feature list with icons and animations
   const renderFeatures = () => {
-    return (
-      <Grid>
-        <Grid sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <span style={{ display: 'inline-flex', color: 'text.secondary', marginRight: '8px' }}>
-            <Icon icon="tabler:circle" fontSize="0.875rem" />
-          </span>
-          <Typography style={{ color: 'text.secondary' }}>
-            Admins{' '}
-            <span style={{ marginLeft: '15px' }}>
-              {plans?.features?.no_of_admins
-                ? `${plans?.features?.no_of_admins}`
-                : `${plans?.features?.admin_is_unlimited == '1' ? 'unlimited' : ''}`}
-            </span>
-          </Typography>
-        </Grid>
-        <Grid sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <span style={{ display: 'inline-flex', color: 'text.secondary', marginRight: '8px', mb: 1 }}>
-            <Icon icon="tabler:circle" fontSize="0.875rem" />
-          </span>
-          <Typography style={{ color: 'text.secondary' }}>
-            Batches{' '}
-            <span style={{ marginLeft: '9px' }}>
-              {plans?.features?.no_of_batches
-                ? `${plans?.features?.no_of_batches}`
-                : `${plans?.features?.batches_is_unlimited == '1' ? 'unlimited' : ''}`}
-            </span>
-          </Typography>
-        </Grid>
-        <Grid sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <span style={{ display: 'inline-flex', color: 'text.secondary', marginRight: '8px' }}>
-            <Icon icon="tabler:circle" fontSize="0.875rem" />
-          </span>
-          <Typography style={{ color: 'text.secondary' }}>
-            Classes{' '}
-            <span style={{ marginLeft: '12px' }}>
-              {plans?.features?.no_of_classes
-                ? `${plans?.features?.no_of_classes}`
-                : `${plans?.features?.class_is_unlimited == '1' ? 'unlimited' : ''}`}
-            </span>
-          </Typography>
-        </Grid>
-        <Grid sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <span style={{ display: 'inline-flex', color: 'text.secondary', marginRight: '8px' }}>
-            <Icon icon="tabler:circle" fontSize="0.875rem" />
-          </span>
-          <Typography style={{ color: 'text.secondary' }}>
-            Courses{' '}
-            <span style={{ marginLeft: '10px' }}>
-              {plans?.features?.no_of_courses
-                ? `${plans?.features?.no_of_courses}`
-                : `${plans?.features?.course_is_unlimited == '1' ? 'unlimited' : ''}`}
-            </span>
-          </Typography>
-        </Grid>
-        <Grid sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <span style={{ display: 'inline-flex', color: 'text.secondary', marginRight: '8px' }}>
-            <Icon icon="tabler:circle" fontSize="0.875rem" />
-          </span>
-          <Typography style={{ color: 'text.secondary' }}>
-            Staffs{' '}
-            <span style={{ marginLeft: '22px' }}>
-              {plans?.features?.no_of_staffs
-                ? `${plans?.features?.no_of_staffs}`
-                : `${plans?.features?.staff_is_unlimited == '1' ? 'unlimited' : ''}`}
-            </span>
-          </Typography>
-        </Grid>
-        <Grid sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <span style={{ display: 'inline-flex', color: 'text.secondary', marginRight: '8px' }}>
-            <Icon icon="tabler:circle" fontSize="0.875rem" />
-          </span>
-          <Typography style={{ color: 'text.secondary' }}>
-            Students{' '}
-            <span style={{ marginLeft: '5px' }}>
-              {plans?.features?.no_of_students
-                ? `${plans?.features?.no_of_students}`
-                : `${plans?.features?.student_is_unlimited == '1' ? 'unlimited' : ''}`}
-            </span>
-          </Typography>
-        </Grid>
-      </Grid>
-    );
+    const featureList = [
+      { label: 'Admins', count: plans?.features[1]?.count || (plans?.features?.admin_is_unlimited === '1' ? 'Unlimited' : '0') },
+      { label: 'Batches', count: plans?.features[2]?.count || (plans?.features?.batches_is_unlimited === '1' ? 'Unlimited' : '0') },
+      { label: 'Classes', count: plans?.features?.no_of_classes || (plans?.features?.class_is_unlimited === '1' ? 'Unlimited' : '0') },
+      { label: 'Courses', count: plans?.features[7]?.count || (plans?.features?.course_is_unlimited === '1' ? 'Unlimited' : '0') },
+      { label: 'Staffs', count: plans?.features[6]?.count || (plans?.features?.staff_is_unlimited === '1' ? 'Unlimited' : '0') },
+      { label: 'Students', count: plans?.features[0]?.count || (plans?.features?.student_is_unlimited === '1' ? 'Unlimited' : '0') }
+    ];
+
+    return featureList.map((feature, index) => (
+      <FeatureGrid key={index} variants={fadeIn}  initial="hidden" animate="visible">
+        <FeatureIcon src={CheckIcon} />
+        <Typography style={{ color: '#333', fontSize: '1rem' }}>
+          {feature.label}: <strong>{feature.count}</strong>
+        </Typography>
+      </FeatureGrid>
+    ));
   };
 
   const placeholderUrl = 'https://www.charitycomms.org.uk/wp-content/uploads/2019/02/placeholder-image-square.jpg';
 
   return (
     <BoxWrapper
-      sx={{
-        border: `1px solid ${hexToRGBA(theme.palette.primary.main, 0.5)}`
-      }}
+    initial="hidden"
+    animate="visible"
+    variants={fadeInVariants}
     >
-      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
-        {/* <img width={50} src={`${plans?.imgSrc}`} height={plans?.imgHeight} alt={`${plans?.title}-plan-img`} /> */}
+      <Box
+        sx={{
+          mb: 4,
+          display: 'flex',
+          justifyContent: 'center',
+          backgroundSize: 'cover',
+          mx: '-24px',
+          mt: '-24px',
+          p: 2,
+          borderRadius: '15px 15px 0 0' // Rounded top corners for the card
+        }}
+      >
         <img
-          src={plans?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${plans?.image}` : placeholderUrl}
-          alt="sub-img"
+          src={plans?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}${plans?.image}` : placeholderUrl}
+          alt="subscription-plan-img"
           height={100}
           style={{ borderRadius: '0.5rem' }}
         />
       </Box>
-      <Box sx={{ textAlign: 'center' }}>
-        <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem' }}>{plans?.plan_name}</Typography>
+      
+      
+      <Box sx={{ textAlign: 'center', my: "5px" }}>
+        <Typography sx={{ mb: 1.5, fontWeight: 600, lineHeight: 1.385, fontSize: '1.625rem' }}>
+          {plans?.identity}
+        </Typography>
         <Typography sx={{ color: 'text.secondary' }}>{plans?.description}</Typography>
-        <Box sx={{ my: 7, position: 'relative' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Typography sx={{ mr: 0.5, fontWeight: 500, color: 'primary.main', alignSelf: 'flex-start' }}>$</Typography>
-            <Typography variant="h1" sx={{ color: 'primary.main', fontSize: '3rem', lineHeight: 0.5 }}>
-              {plans?.plan_price}
-            </Typography>
-            <Typography sx={{ alignSelf: 'flex-end', color: 'text.disabled' }}>/month</Typography>
-          </Box>
-        </Box>
+        
+        {/* Price Section */}
+        <PriceBox initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
+          <Typography className="currency">$</Typography>
+          <Typography className="price">{plans?.price}</Typography>
+          <Typography className="month">month</Typography>
+        </PriceBox>
       </Box>
+      
+      {/* Render Features */}
       {renderFeatures()}
+
+      {/* Status and Options */}
       <Grid sx={{ display: 'flex', justifyContent: 'space-between' }} mt={3}>
-        <TextField
+        <CustomTextField
           size="small"
           select
-          width={100}
           label="Status"
-          SelectProps={{ value: plans?.is_active, onChange: (e) => handleStatusValue(e, plans) }}
+          value={plans?.is_active}
+          onChange={(e) => handleStatusValue(e, plans)}
+
         >
-          <MenuItem value="1">Active</MenuItem>
-          <MenuItem value="0">Inactive</MenuItem>
-        </TextField>
+          <MenuItem value="true">Active</MenuItem>
+          <MenuItem value="false">Inactive</MenuItem>
+        </CustomTextField>
 
         <OptionsMenu
           menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
@@ -225,16 +256,15 @@ const PlanDetails = (props) => {
               text: 'Edit',
               menuItemProps: {
                 component: Link,
-                to: `edit/${plans?.id}`,
-                state: { id: plans?.id, plans: plans }
+                to: `edit/${plans?.uuid}`,
+                state: { id: plans?.uuid, plans: plans }
               }
             },
             {
               text: 'Delete',
-
               menuItemProps: {
                 onClick: () => {
-                  setSelectedPlanId(plans?.id);
+                  setSelectedPlanId(plans?.uuid);
                   setDeleteDialogOpen(true);
                 }
               }
@@ -242,25 +272,19 @@ const PlanDetails = (props) => {
           ]}
         />
 
-        {/* <Box component={Link} to={`edit/${plans?.id}`} state={{id:plans?.id,plans:plans}}>
-          <Button fullWidth color="primary" variant="contained">
-            Edit Plan
-          </Button>
-        </Box> */}
         <DeleteModal
           open={deleteDialogOpen}
           setOpen={setDeleteDialogOpen}
-          description="Are you sure want to delete this plan"
-          failureDescription="Alright you want to keep this Plan?"
-          handleSubmit={handleDletePlan}
+          description="Are you sure want to delete this plan?"
+          failureDescription="Alright, you want to keep this Plan?"
+          handleSubmit={handleDeletePlan}
         />
 
         <StatusChangeDialog
           open={statusChangeDialogOpen}
           setOpen={setStatusChangeDialogOpen}
-          description="Are you sure you want to Change Status ?"
-          failureDescription="Do you want to keep the status ?"
-          title="Status"
+          description="Are you sure you want to change the status?"
+          failureDescription="Do you want to keep the current status?"
           handleSubmit={handleStatusChangeApi}
         />
       </Grid>

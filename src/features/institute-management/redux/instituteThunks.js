@@ -5,7 +5,8 @@ import { setInstitutes, setLoading } from './instituteSlice';
 export const getAllInstitutes = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const response = await fetchAllInstitutes(); // Implement this function in your services
+    const response = await fetchAllInstitutes(); 
+    console.log(response,"response")
     dispatch(setInstitutes(response?.data.data));
   } catch (error) {
     console.error(error);

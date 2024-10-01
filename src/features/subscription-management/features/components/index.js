@@ -1,30 +1,25 @@
-// ** React Imports
-
-// ** MUI Imports
 import Grid from '@mui/material/Grid';
-// import Radio from '@mui/material/Radio';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
-// import FormLabel from '@mui/material/FormLabel';
-// import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
-// import FormHelperText from '@mui/material/FormHelperText';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Box } from '@mui/material';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
+import { imagePlaceholder } from 'lib/placeholders';
+import { useNavigate } from 'react-router';
+// import * as yup from "yup"
 
-// ** Custom Component Import
 import CustomTextField from 'components/mui/text-field';
 
-// ** Third Party Imports
 import toast from 'react-hot-toast';
 import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
 import { addSubscriptionFeature } from '../services/subscriptionFeaturesServices';
-
-// ** Icon Imports
+import { handleFileUpload } from 'features/fileUpload';
+// import { yupResolver } from '@hookform/resolvers/yup';
+import { useSpinner } from 'context/spinnerContext';
 
 const defaultValues = {
   plan_name: '',
@@ -47,6 +42,16 @@ const defaultValues = {
   classes_checkbox: false
   //   checkbox: false
 };
+
+// const new_plan_schema = yup.object().shape({
+//   plan_name : yup.string().required("plan name is required"),
+//   price : yup.number().required("plan price is required"),
+//   support_level : yup.string().required("support is required"),
+//   description : yup.string().required("description is required"),
+//   duration : yup.number().required("duration is required"),
+  
+
+// })
 
 const SubscriptionFeatures = () => {
   // ** StatesforInput
@@ -71,13 +76,14 @@ const SubscriptionFeatures = () => {
   const [coursesError, setCoursesError] = useState('');
   const [classesError, setClassesError] = useState('');
 
-  // const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
-  const [imgSrc, setImgSrc] = useState('https://www.charitycomms.org.uk/wp-content/uploads/2019/02/placeholder-image-square.jpg');
+  const [imgSrc, setImgSrc] = useState('');
+  const { show, hide } = useSpinner()
+  const navigate = useNavigate()
 
   const handleInputImageReset = () => {
     setSelectedImage('');
-    setImgSrc('https://www.charitycomms.org.uk/wp-content/uploads/2019/02/placeholder-image-square.jpg');
+    setImgSrc('');
   };
 
   const ImgStyled = styled('img')(({ theme }) => ({
@@ -121,68 +127,63 @@ const SubscriptionFeatures = () => {
     if (classesInputBoxChecked === false && classesInputChecked === false) {
       setClassesError(true);
     }
+    const subscription_data = {
+      identity : data?.plan_name,
+      image : selectedImage,
+      description : data?.description,
+      features : [
+        {feature : "Admins",count : data?.admins },
+        {feature : "Students", count : data?.students },
+        {feature : "Teachers", count : data?.teachers },
+        { feature : "Batches", count : data?.batches },
+        { feature : "Courses", count : data?.courses }
+      ],
+      duration : {value:data?.plan_duration,unit:data?.plan_duration_type},
+      price : data.plan_price
+    }
     const log = studentInputChecked === true ?'1':''
     console.log('subData', log);
-    var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('plan_name', data?.plan_name);
-    bodyFormData.append('plan_price', data?.plan_price);
-    bodyFormData.append('support_level', data?.support_level);
-    bodyFormData.append('plan_duration', data?.plan_duration);
-    bodyFormData.append('plan_duration_type', data?.plan_duration_type);
-    bodyFormData.append('description', data?.description);
-    bodyFormData.append('no_of_students', data?.students);
-    bodyFormData.append('no_of_admins', data?.admins);
-    bodyFormData.append('no_of_staffs', data?.teachers);
-    bodyFormData.append('no_of_teachers', data?.teachers);
-    bodyFormData.append('no_of_batches', data?.batches);
-    bodyFormData.append('no_of_courses', data?.courses);
-    bodyFormData.append('no_of_classes', data?.classes);
-    bodyFormData.append('student_is_unlimited',studentInputChecked === true ?'1':'');
-    bodyFormData.append('teacher_is_unlimited',teachersInputChecked  === true?'1':'');
-    bodyFormData.append('admin_is_unlimited',adminInputChecked  === true?'1':'');
-    bodyFormData.append('course_is_unlimited',coursesInputChecked  === true?'1':'');
-    bodyFormData.append('batches_is_unlimited',batchesInputChecked  === true?'1':'');
-    bodyFormData.append('class_is_unlimited',classesInputChecked  === true?'1':'');
-    bodyFormData.append('staff_is_unlimited',classesInputChecked  === true?'1':'');
-
+   
     try {
-      const result = await addSubscriptionFeature(bodyFormData);
-      if (result.success) {
-        toast.success(result.message);
-        navigate(-1);
-      } else {
-        toast.error(result.message);
-      }
+      show()
+      const result = await addSubscriptionFeature(subscription_data);
+      toast.success(result.message);
+      navigate(-1);
     } catch (error) {
       console.log(error);
-    }
-    console.log('bodyFromdata:', bodyFormData);
-    
+      toast.error(error?.message)
+    }finally{
+      hide()
+    }    
   };
 
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
-    const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      // if (reader.result !== null) {
-      //   setInputValue(reader.result);
-      // }
+  const handleInputImageChange = async (file) => {
+    try {
+      show()
+      const { files } = file.target;
+      const data = new FormData()
+      data.append("file",files[0])
+      const response = await handleFileUpload(data)
+      setSelectedImage(response.data.data.file)
+      setImgSrc(response.data.data.file)
+      toast.success("Subscription image uploaded successfully")
+    } catch (error) {
+      toast.error(error?.message)
+    }finally{
+      hide()
     }
+   
   };
-console.log(studentInputChecked)
+
   // ** Hooks
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors }
-  } = useForm({ defaultValues });
-
-  // const onSubmit = () => toast.success('Form Submitted');
+  } = useForm({ defaultValues: defaultValues,
+    //  resolver : yupResolver(new_plan_schema) 
+    });
 
   return (
     <Box p={1}>
@@ -190,7 +191,7 @@ console.log(studentInputChecked)
         <Grid container spacing={5}>
           <Grid item xs={12} sm={6}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <ImgStyled src={imgSrc} alt="Profile Pic" />
+              <ImgStyled  src={imgSrc?process.env.REACT_APP_PUBLIC_API_URL+imgSrc:imagePlaceholder} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                   Upload Profile picture
@@ -213,24 +214,45 @@ console.log(studentInputChecked)
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Controller
-              name="plan_name"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <CustomTextField
-                  fullWidth
-                  value={value}
-                  label="Plan Name"
-                  onChange={onChange}
-                  inputProps={{ maxLength: 18 }} 
-                  placeholder=""
-                  error={Boolean(errors.plan_name)}
-                  aria-describedby="validation-basic-first-name"
-                  {...(errors.plan_name && { helperText: 'This field is required' })}
-                />
-              )}
-            />
+          <Controller
+            name="plan_name"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <CustomTextField
+                fullWidth
+                value={value}
+                label="Plan Name"
+                sx={{
+                  "& .MuiInputBase-input": {
+                    border: "2px solid #a9a9a9", 
+                    borderRadius: "4px",
+                    padding: "10px",
+                     
+                    color: "#000", 
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "#333", 
+                  },
+                  "& .MuiInputBase-input::placeholder": {
+                    color: "#9e9e9e", 
+                  },
+                  "& .MuiFormHelperText-root": {
+                    color: "#d32f2f",
+                  },
+                  "& .MuiFormControl-root": {
+                    marginTop: "10px", 
+                  },
+                }}
+                onChange={onChange}
+                inputProps={{ maxLength: 18, placeholder: "Enter plan name here" }} 
+                error={Boolean(errors.plan_name)}
+                aria-describedby="validation-basic-first-name"
+                {...(errors.plan_name && { helperText: 'This field is required' })}
+              />
+            )}
+          />
+
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
@@ -243,6 +265,27 @@ console.log(studentInputChecked)
                   value={value}
                   label="Plan Price"
                   onChange={onChange}
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px", 
+                      padding: "10px",
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
+                  }}
                   error={Boolean(errors.plan_price)}
                   aria-describedby="validation-basic-first-name"
                   {...(errors.plan_price && { helperText: 'This field is required' })}
@@ -264,6 +307,27 @@ console.log(studentInputChecked)
                   SelectProps={{
                     value: value,
                     onChange: (e) => onChange(e)
+                  }}
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px",
+                      padding: "10px",
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
                   }}
                   id="validation-basic-select"
                   error={Boolean(errors.select)}
@@ -289,6 +353,33 @@ console.log(studentInputChecked)
                   multiline
                   {...field}
                   label="Plan Description"
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px",
+                      padding: "10px", 
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputBase-root.Mui-focused" : {
+                          boxShadow : "none",
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    ":focus": {
+                      boxShadow: "none"
+                    }
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
+                  }}
                   error={Boolean(errors.textarea)}
                   aria-describedby="validation-basic-textarea"
                   {...(errors.textarea && { helperText: 'This field is required' })}
@@ -309,6 +400,27 @@ console.log(studentInputChecked)
                   label="Duration"
                   onChange={onChange}
                   placeholder="120"
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px", 
+                      padding: "10px",
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
+                  }}
                   error={Boolean(errors.plan_duration)}
                   aria-describedby="validation-basic-first-name"
                   {...(errors.plan_duration && { helperText: 'This field is required' })}
@@ -331,23 +443,43 @@ console.log(studentInputChecked)
                     value: value,
                     onChange: (e) => onChange(e)
                   }}
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px", 
+                      padding: "10px",
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
+                  }}
                   id="validation-basic-select"
                   error={Boolean(errors.select)}
                   aria-describedby="validation-basic-select"
                   {...(errors.select && { helperText: 'This field is required' })}
                 >
                   <MenuItem value="day">Days</MenuItem>
-                  <MenuItem value="month">Months</MenuItem>
-                  <MenuItem value="year">Year</MenuItem>
+                  <MenuItem value="monthly">Months</MenuItem>
+                  <MenuItem value="yearly">Year</MenuItem>
                 </CustomTextField>
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Controller
+          <Controller
               name="students"
               control={control}
-              // rules={{ required: true }}
               render={({ field: { value } }) => (
                 <CustomTextField
                   fullWidth
@@ -363,11 +495,32 @@ console.log(studentInputChecked)
                       setStudentInputBoxChecked(false);
                     }
                   }}
-                  placeholder="79"
-                  error={Boolean(errors.users)}
-                  aria-describedby="validation-basic-first-name"
-                  disabled={studentInputChecked}
-                  // {...(errors.students && { helperText: 'This field is required' })}
+                  placeholder="Enter number of students"
+                  inputProps={{ maxLength: 5, min: 0 }}
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px",
+                      padding: "10px",
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
+                  }}
+                  error={Boolean(errors.students)}
+                  aria-describedby="validation-students"
+                  disabled={studentInputBoxChecked}
                 />
               )}
             />
@@ -386,8 +539,9 @@ console.log(studentInputChecked)
                         name="validation-basic-checkbox"
                         sx={errors.checkbox ? { color: 'error.main' } : null}
                         onChange={() => {
-                          setStudentError(false);
-                          setStudentInputChecked((state) => !state);
+                          // setStudentError(false);
+                          // setStudentInputChecked((state) => !state);
+                          console.log(setStudentInputChecked)
                         }}
                         disabled={studentInputBoxChecked}
                       />
@@ -395,14 +549,7 @@ console.log(studentInputChecked)
                   />
                 )}
               />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
+             
               {studentError && (
                 <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
                   Student data cannot be empty
@@ -430,7 +577,29 @@ console.log(studentInputChecked)
                       setAdminInputBoxChecked(false);
                     }
                   }}
-                  placeholder="10"
+                  placeholder="Enter number of admins"
+                  inputProps={{ maxLength: 5, min: 0 }}
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px", // Rounded corners
+                      padding: "10px", // Custom padding
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
+                  }}
                   // error={Boolean(errors.admins)}
                   aria-describedby="validation-basic-first-name"
                   disabled={adminInputChecked}
@@ -456,20 +625,12 @@ console.log(studentInputChecked)
                           setAdminInputChecked((state) => !state);
                         }}
                         name="validation-basic-checkbox"
-                        sx={errors.checkbox ? { color: 'error.main' } : null}
+                        sx={ { color: errors.checkbox ? 'error.main'  : null, "& .MuiButtonBase-root-MuiCheckbox-root" : { color: "black"} }}
                       />
                     }
                   />
                 )}
               />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
               {adminError && (
                 <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
                   Admin data cannot be empty
@@ -498,7 +659,29 @@ console.log(studentInputChecked)
                     }
                   }}
                   disabled={teachersInputChecked}
-                  placeholder="10"
+                  placeholder="Enter number of teachers"
+                  inputProps={{ maxLength: 5, min: 0 }}
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px", // Rounded corners
+                      padding: "10px", // Custom padding
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
+                  }}
                   error={Boolean(errors.teachers)}
                   aria-describedby="validation-basic-first-name"
                   // {...(errors.teachers && { helperText: 'This field is required' })}
@@ -517,26 +700,20 @@ console.log(studentInputChecked)
                     control={
                       <Checkbox
                         {...field}
+
                         name="validation-basic-checkbox"
                         onChange={() => {
                           setTeachersError(false);
                           setTeachersInputChecked((state) => !state);
                         }}
                         disabled={teachersInputBoxChecked}
-                        sx={errors.checkbox ? { color: 'error.main' } : null}
+                        sx={{"& .MuiCheckbox-root.Mui-checked":{border: "1px solid #a9a9a9"}}}
                       />
                     }
                   />
                 )}
               />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
+             
               {teachersError && (
                 <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
                   Teacher data cannot be empty
@@ -565,7 +742,30 @@ console.log(studentInputChecked)
                     }
                   }}
                   disabled={batchesInputChecked}
-                  placeholder="10"
+                  placeholder="Enter number of batches"
+                  inputProps={{ maxLength: 5, min: 0 }}
+
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px", // Rounded corners
+                      padding: "10px", // Custom padding
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
+                  }}
                   // error={Boolean(errors.batches)}
                   aria-describedby="validation-basic-first-name"
                   // {...(errors.batches && { helperText: 'This field is required' })}
@@ -596,14 +796,7 @@ console.log(studentInputChecked)
                   />
                 )}
               />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
+              
               {batchesError && (
                 <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
                   Teacher data cannot be empty
@@ -633,7 +826,29 @@ console.log(studentInputChecked)
                     }
                   }}
                   disabled={coursesInputChecked}
-                  placeholder="10"
+                  placeholder="Enter number of courses"
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px", // Rounded corners
+                      padding: "10px", // Custom padding
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
+                  }}
+                  inputProps={{ maxLength: 5, min: 0 }}
                   // error={Boolean(errors.courses)}
                   aria-describedby="validation-basic-first-name"
                   // {...(errors.courses && { helperText: 'This field is required' })}
@@ -664,14 +879,6 @@ console.log(studentInputChecked)
                   />
                 )}
               />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
               {coursesError && (
                 <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
                   Course data cannot be empty
@@ -691,6 +898,29 @@ console.log(studentInputChecked)
                   value={value}
                   type="number"
                   label="Number of Classes"
+                  placeholder="Enter number of classes"
+                  sx={{
+                    "& .MuiInputBase-input": {
+                      border: "2px solid #a9a9a9", 
+                      borderRadius: "4px", // Rounded corners
+                      padding: "10px", // Custom padding
+                       
+                      color: "#000", 
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#333", 
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "#9e9e9e", 
+                    },
+                    "& .MuiFormHelperText-root": {
+                      color: "#d32f2f",
+                    },
+                    "& .MuiFormControl-root": {
+                      marginTop: "10px", 
+                    },
+                  }}
+                  inputProps={{ maxLength: 5, min: 0 }}
                   onChange={(e) => {
                     setValue('classes', e.target.value);
                     if (e.target.value !== '') {
@@ -701,7 +931,6 @@ console.log(studentInputChecked)
                     }
                   }}
                   disabled={classesInputChecked}
-                  placeholder="10"
                   // error={Boolean(errors.classes)}
                   aria-describedby="validation-basic-first-name"
                   // {...(errors.classes && { helperText: 'This field is required' })}
@@ -732,14 +961,6 @@ console.log(studentInputChecked)
                   />
                 )}
               />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
               {classesError && (
                 <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
                   Class data cannot be empty

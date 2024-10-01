@@ -270,7 +270,17 @@ export default function componentStyleOverrides(theme) {
             borderRadius: `${theme?.customization?.borderRadius}px`
           }
         }
-      }
+      },
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            // color: 'rgba(243, 244, 246, 0.78)', // rgba(#F3F4F6, 0.78)
+            backgroundColor: '#F4F6F9',
+            // fontSize: '0.875rem',
+            // fontFamily: 'Roboto, sans-serif',
+          },
+        },
+      },
     },
     chip,
     list,

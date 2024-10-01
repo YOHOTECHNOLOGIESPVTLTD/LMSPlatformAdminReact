@@ -13,6 +13,8 @@ import { Link } from 'react-router-dom';
 import { instituteChangeStatus } from 'features/institute-management/services/instituteService';
 import toast from 'react-hot-toast';
 import StatusDialog from 'components/modal/DeleteModel';
+import { imagePlaceholder } from 'lib/placeholders';
+import { getImageUrl } from 'themes/imageUtlis';
 
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 108,
@@ -48,7 +50,7 @@ const UserViewLeft = ({ institute }) => {
           justifyContent: 'space-between'
         }}
       >
-        <ProfilePicture src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${institute?.logo}`} alt="profile-picture" />
+        <ProfilePicture src={`${institute?.logo?getImageUrl(institute?.logo):imagePlaceholder}`} alt="profile-picture" />
         <Box
           sx={{
             width: '100%',
@@ -70,7 +72,7 @@ const UserViewLeft = ({ institute }) => {
             }}
           >
             <Typography variant="h3" sx={{ mr: 4, mt: 5 }}>
-              {institute?.name}
+              {institute?.institute_name}
             </Typography>
 
             <Typography
@@ -95,7 +97,7 @@ const UserViewLeft = ({ institute }) => {
             defaultValue={institute?.is_active}
             onChange={async (e) => {
               const data = {
-                id: institute?.id,
+                id: institute?.uuid,
                 status: e.target.value
               };
               const result = await instituteChangeStatus(data);
@@ -107,8 +109,8 @@ const UserViewLeft = ({ institute }) => {
               }
             }}
           >
-            <MenuItem value={'1'}>Active</MenuItem>
-            <MenuItem value={'0'}>Inactive</MenuItem>
+            <MenuItem value={'true'}>Active</MenuItem>
+            <MenuItem value={'false'}>Inactive</MenuItem>
           </TextField>
 
           <Box component={Link} to={`user-management`} target="_blank" variant="contained" sx={{ '& svg': { mr: 2 } }}>

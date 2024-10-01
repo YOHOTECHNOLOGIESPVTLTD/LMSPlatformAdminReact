@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 
 // material-ui
@@ -17,7 +17,7 @@ import { IconChevronDown, IconChevronUp } from '@tabler/icons';
 // ==============================|| SIDEBAR MENU LIST COLLAPSE ITEMS ||============================== //
 
 const NavCollapse = ({ menu, level }) => {
-  const customization = useSelector((state) => state.customization);
+  // const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -95,7 +95,7 @@ const NavCollapse = ({ menu, level }) => {
     <>
       <ListItemButton
         sx={{
-          borderRadius: `${customization.borderRadius}px`,
+          borderRadius: `0px 50px 50px 0px`,
           mb: 0.5,
           alignItems: 'flex-start',
           backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
@@ -108,7 +108,7 @@ const NavCollapse = ({ menu, level }) => {
         <ListItemIcon sx={{ my: 'auto', minWidth: !menu.icon ? 18 : 36 }}>{menuIcon}</ListItemIcon>
         <ListItemText
           primary={
-            <Typography variant={selected === menu.id ? 'h5' : 'body1'} color="inherit" sx={{ my: 'auto' }}>
+            <Typography variant={selected === menu.id ? 'h5' : 'body1'} sx={{ my: 'auto', fontSize: "16px", fontWeight: 600 , color: selected === menu.id ? "white" : "#002B38" }}>
               {menu.title}
             </Typography>
           }
@@ -121,9 +121,9 @@ const NavCollapse = ({ menu, level }) => {
           }
         />
         {open ? (
-          <IconChevronUp stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
+          <IconChevronUp stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto', color : selected === menu.id ? "white" : "#002B38" }} />
         ) : (
-          <IconChevronDown stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
+          <IconChevronDown stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto', color: selected === menu.id ? "white" : "#002B38" }} />
         )}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>

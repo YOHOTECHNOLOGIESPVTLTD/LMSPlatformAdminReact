@@ -93,21 +93,22 @@ const DefaultPalette = () => {
   const skin = 'default';
   const mode = isDarkMode ? 'dark' : 'light';
   const whiteColor = '#FFF';
-  const lightColor = '47, 43, 61';
-  const darkColor = '208, 212, 241';
+  const lightColor = '#F3F4F6';
+  const darkColor = '#D0D4F1';
   const darkPaperBgColor = '#2F3349';
   const mainColor = mode === 'light' ? lightColor : darkColor;
 
-  const primary = generatePrimaryObject('#D80032');
+  const primary = generatePrimaryObject('#FF5500');
   const secondary = generatePrimaryObject('#F79BD3');
+  const themeColor = generatePrimaryObject('#002B38')
   const defaultBgColor = () => {
     if (skin === 'bordered' && mode === 'light') {
       return whiteColor;
     } else if (skin === 'bordered' && mode === 'dark') {
       return darkPaperBgColor;
     } else if (mode === 'light') {
-      return '#F8F7FA';
-    } else return '#25293C';
+      return '#002B38';
+    } else return '#002B38';
   };
 
   return {
@@ -115,6 +116,7 @@ const DefaultPalette = () => {
       dark: darkColor,
       main: mainColor,
       light: lightColor,
+      nav : "#F8F7FA" ,
       lightPaperBg: whiteColor,
       darkPaperBg: darkPaperBgColor,
       bodyBg: mode === 'light' ? '#F8F7FA' : '#25293C',
@@ -128,6 +130,7 @@ const DefaultPalette = () => {
       white: whiteColor
     },
     primary: primary,
+    themeColor:themeColor,
     // primary: {
     //   light: '#e3e1fc',
     //   main: '#7367F0',

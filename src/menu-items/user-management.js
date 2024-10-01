@@ -6,7 +6,7 @@ const icons = {
   IconKey,
   IconShieldLock,
   IconUser,
-  IconUsers
+  IconUsers,
 };
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //

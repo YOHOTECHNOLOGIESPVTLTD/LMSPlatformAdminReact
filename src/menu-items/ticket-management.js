@@ -26,6 +26,15 @@ const pages = {
       icon: icons.IconTicket,
 
       children: [
+        // {
+        //   id: "institute-tickets",
+        //   title : "Institute Tickets",
+        //   type: "item",
+        //   url: "/ticket-management/institute-tickets",
+        //   icon : icons.IconTicket,
+        //   target: false,
+        //   breadcrumbs: false
+        // },
         {
           id: 'your-ticket',
           title: 'Your-Ticket',
@@ -35,7 +44,7 @@ const pages = {
           target: false,
           breadcrumbs: false
           // visible: hasPermission('inst_perm_student_ticket_view')
-        }
+        },
       ]
     }
   ]

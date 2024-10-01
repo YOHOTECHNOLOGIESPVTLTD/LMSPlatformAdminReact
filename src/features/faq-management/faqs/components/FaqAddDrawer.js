@@ -58,9 +58,9 @@ const FaqAddDrawer = (props) => {
     console.log(data);
 
     const inputData = {
-      title: data.name,
+      identity: data.name,
       description: data.description,
-      faq_module_id: data.category.faq_module_id
+      category: data.category.uuid
     };
     const result = await addFaq(inputData);
     if (result.success) {
@@ -77,7 +77,7 @@ const FaqAddDrawer = (props) => {
     toggle();
     reset();
   };
-
+  console.log(faqCategories,"faqCategories")
   return (
     <DatePickerWrapper>
       <Drawer
@@ -153,7 +153,7 @@ const FaqAddDrawer = (props) => {
                   <Autocomplete
                     fullWidth
                     sx={{ mb: 2 }}
-                    getOptionLabel={(option) => option.title}
+                    getOptionLabel={(option) => option.identity}
                     onChange={(e, newValue) => {
                       onChange(newValue);
                     }}

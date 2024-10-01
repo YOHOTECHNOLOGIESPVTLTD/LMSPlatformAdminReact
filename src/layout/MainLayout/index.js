@@ -9,7 +9,6 @@ import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material'
 import Breadcrumbs from 'components/extended/Breadcrumbs';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import Customization from '../Customization';
 import navigation from 'menu-items';
 import { drawerWidth } from 'store/constant';
 import { SET_MENU } from 'store/actions';
@@ -22,6 +21,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
   ...theme.typography.mainContent,
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
+  marginTop: "112px",
   transition: theme.transitions.create(
     'margin',
     open
@@ -64,7 +64,7 @@ const MainLayout = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex'}}>
       <CssBaseline />
       {/* header */}
       <AppBar
@@ -73,7 +73,12 @@ const MainLayout = () => {
         color="inherit"
         elevation={0}
         sx={{
-          bgcolor: theme.palette.background.default,
+          bgcolor: "#FFFFFF",
+          width: "calc( 100% - 312px )",
+          margin: "1rem",
+          borderRadius: "15px",
+          boxShadow: 1,
+          zIndex : 1000,
           transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
         }}
       >
@@ -91,7 +96,7 @@ const MainLayout = () => {
         <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
         <Outlet />
       </Main>
-      <Customization />
+      {/* <Customization /> */}
     </Box>
   );
 };

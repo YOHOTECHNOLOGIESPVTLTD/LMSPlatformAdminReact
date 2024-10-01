@@ -22,8 +22,8 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
 
   const drawer = (
     <>
-      <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-        <Box sx={{ display: 'flex', p: 2, mx: 'auto' }}>
+      <Box sx={{ display: { xs: 'block' } }}>
+        <Box sx={{ display: 'flex', p: 2, mx: 'auto', justifyContent: "center" }}>
           <LogoSection />
         </Box>
       </Box>
@@ -32,15 +32,12 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
           component="div"
           style={{
             height: !matchUpMd ? 'calc(100vh - 56px)' : 'calc(100vh - 88px)',
-            paddingLeft: '16px',
+            paddingLeft: '0px',
             paddingRight: '16px'
           }}
         >
           <MenuList />
-          <MenuCard />
-          <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
-            <Chip label={process.env.REACT_APP_VERSION} disabled chipcolor="secondary" size="small" sx={{ cursor: 'pointer' }} />
-          </Stack>
+          {/* <MenuCard /> */}
         </PerfectScrollbar>
       </BrowserView>
       <MobileView>
@@ -58,7 +55,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
   const container = window !== undefined ? () => window.document.body : undefined;
 
   return (
-    <Box component="nav" sx={{ flexShrink: { md: 0 }, width: matchUpMd ? drawerWidth : 'auto' }} aria-label="mailbox folders">
+    <Box component="nav" sx={{ flexShrink: { md: 0 }, width: matchUpMd ? drawerWidth : 'auto', boxShadow: 1 }} aria-label="mailbox folders">
       <Drawer
         container={container}
         variant={matchUpMd ? 'persistent' : 'temporary'}
@@ -68,11 +65,11 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
         sx={{
           '& .MuiDrawer-paper': {
             width: drawerWidth,
-            background: theme.palette.background.default,
-            color: theme.palette.text.primary,
+            background: "white",
+            color: "black",
             borderRight: 'none',
             [theme.breakpoints.up('md')]: {
-              top: '88px'
+              top: '0px'
             }
           }
         }}

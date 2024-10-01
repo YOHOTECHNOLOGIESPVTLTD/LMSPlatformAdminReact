@@ -1,30 +1,17 @@
-// ** React Imports
-import { useEffect } from 'react';
-// ** MUI Imports
+import { useEffect, useState } from 'react';
 import { Button, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import { updateFaqCategory } from '../services/faqCategoryServices';
 import toast from 'react-hot-toast';
 
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -35,49 +22,37 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   description: yup.string().required(),
-  title: yup
-    .string()
-    .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-    .required()
+  identity: yup.string().min(3).required()
 });
 
-const defaultValues = {
-  description: '',
-  title: ''
-};
-
 const FaqCategoriesEdit = (props) => {
-  // ** Props
-  const { open, toggle, setRefetch } = props;
-  console.log('StudyMaterialEdit - open:', props.open);
-  console.log('StudyMaterialEdit - toggle:', props.toggle);
-  // ** State
+  const { open, toggle, setRefetch, initialValues } = props;
+
+  const [formValues, setFormValues] = useState(initialValues);
+
+  useEffect(() => {
+    if (open) {
+      setFormValues(initialValues);
+    }
+  }, [open, initialValues]);
 
   const {
-    reset,
     control,
-    setValue,
     handleSubmit,
     formState: { errors }
   } = useForm({
-    defaultValues: props.initialValues || defaultValues,
+    defaultValues: formValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
 
-  useEffect(() => {
-    if (open) {
-      reset(props.initialValues || defaultValues);
-    }
-  }, [open, reset, props.initialValues]);
-
   const onSubmit = async (data) => {
     const inputData = {
-      title: data.title,
+      identity: data.identity,
       description: data.description,
-      id: props.initialValues.id
+      id: initialValues.uuid
     };
-    console.log(inputData);
+
     const result = await updateFaqCategory(inputData);
     if (result.success) {
       toast.success(result.message);
@@ -89,11 +64,9 @@ const FaqCategoriesEdit = (props) => {
   };
 
   const handleClose = () => {
-    setValue('contact', Number(''));
     toggle();
-    reset();
   };
-
+  console.log(formValues,"formValues")
   return (
     <Drawer
       open={open}
@@ -124,7 +97,7 @@ const FaqCategoriesEdit = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
-            name="title"
+            name="identity"
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
@@ -150,7 +123,7 @@ const FaqCategoriesEdit = (props) => {
                 fullWidth
                 value={value}
                 sx={{ mb: 4 }}
-                label="description"
+                label="Description"
                 onChange={onChange}
                 placeholder="Business Development Executive"
                 error={Boolean(errors.description)}

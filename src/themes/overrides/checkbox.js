@@ -21,10 +21,10 @@ const CheckedIcon = () => {
 };
 
 const Icon = () => {
-  const theme = useTheme();
+  // const theme = useTheme();
 
   return (
-    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke={theme.palette.text.disabled}>
+    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke={"black"}>
       <path d="M17.2105 3.5H6.78947C4.69661 3.5 3 5.19661 3 7.28947V17.7105C3 19.8034 4.69661 21.5 6.78947 21.5H17.2105C19.3034 21.5 21 19.8034 21 17.7105V7.28947C21 5.19661 19.3034 3.5 17.2105 3.5Z" />
     </svg>
   );
@@ -34,7 +34,7 @@ const IndeterminateIcon = () => {
   const theme = useTheme();
 
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill={theme.palette.primary.main} xmlns="http://www.w3.org/2000/svg">
+    <svg width="24" height="24"style={{ border: "1px solid black"}} viewBox="0 0 24 24" fill={theme.palette.primary.main} xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"
         clipRule="evenodd"

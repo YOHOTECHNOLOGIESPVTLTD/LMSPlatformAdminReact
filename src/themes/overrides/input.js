@@ -57,7 +57,10 @@ const input = () => {
             borderColor: theme.palette.error.main
           },
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: `rgba(${theme.palette.customColors.main}, 0.2)`
+            borderColor: "#D1D5DB",
+            ":focus": {
+              borderColor : "#002B38"
+            }
           },
           '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.palette.text.disabled

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button, Box, Card, Grid, Typography } from '@mui/material';
 import axios from 'axios';
-import { getInitials } from 'utils/get-initials';
-import CustomAvatar from '../../../components/mui/avatar';
+// import { getInitials } from 'utils/get-initials';
+// import CustomAvatar from '../../../components/mui/avatar';
 import CustomChip from '../../../components/mui/chip';
 import CardStatsHorizontalWithDetails from '../component/HorizontalCard';
 import TableHeader from '../component/TableHeader';
@@ -17,26 +17,26 @@ const userStatusObj = {
   failed: 'secondary',
 };
 
-const renderClient = (row) => {
-  if (row?.image) {
-    return <CustomAvatar src={row?.image} sx={{ mr: 2.5, width: 38, height: 38 }} />;
-  } else {
-    return (
-      <CustomAvatar
-        skin="light"
-        sx={{
-          mr: 2.5,
-          width: 38,
-          height: 38,
-          fontWeight: 500,
-          fontSize: (theme) => theme.typography.body1.fontSize,
-        }}
-      >
-        {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
-      </CustomAvatar>
-    );
-  }
-};
+// const renderClient = (row) => {
+//   if (row?.image) {
+//     return <CustomAvatar src={row?.image} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+//   } else {
+//     return (
+//       <CustomAvatar
+//         skin="light"
+//         sx={{
+//           mr: 2.5,
+//           width: 38,
+//           height: 38,
+//           fontWeight: 500,
+//           fontSize: (theme) => theme.typography.body1.fontSize,
+//         }}
+//       >
+//         {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
+//       </CustomAvatar>
+//     );
+//   }
+// };
 
 const RowOptions = () => (
   <Link to="profile">
@@ -58,17 +58,17 @@ const columns = [
       </Typography>
     ),
   },
-  {
-    flex: 0.1,
-    minWidth: 100,
-    headerName: 'Image',
-    field: 'Image',
-    renderCell: ({ row }) => (
-      <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-        {renderClient({ profile_image: row?.image })}
-      </Typography>
-    ),
-  },
+  // {
+  //   flex: 0.1,
+  //   minWidth: 100,
+  //   headerName: 'Image',
+  //   field: 'Image',
+  //   renderCell: ({ row }) => (
+  //     <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
+  //       {renderClient({ profile_image: row?.image })}
+  //     </Typography>
+  //   ),
+  // },
   {
     flex: 0.12,
     minWidth: 120,
@@ -318,6 +318,24 @@ const Notifications = () => {
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
+  const CustomNoRowsOverlay = () => {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          fontSize: '18px',
+        }}
+      >
+        <Typography variant="body1" color="textSecondary">
+          No data available
+        </Typography>
+      </Box>
+    );
+  };
+
   return (
     <>
       {loading ? (
@@ -327,33 +345,37 @@ const Notifications = () => {
           <Grid item xs={12}>
             {cardStatsData && (
               <Grid container spacing={2}>
-                <Grid item xs={12} md={3} sm={6}>
-                  <CardStatsHorizontalWithDetails title={'Total Users'} stats={users?.length} icon={'tabler:user'} />
+                <Grid item xs={12} md={4} sm={6}>
+                  <CardStatsHorizontalWithDetails title={'Total Notifications'} stats={users?.length ?? 0} icon={'tabler:bell'} sx={{ minHeight: "102px", maxHeight: "102px" }} />
                 </Grid>
-                <Grid item xs={12} md={3} sm={6}>
+                <Grid item xs={12} md={4} sm={6}>
                   <CardStatsHorizontalWithDetails
-                    title={'Total Groups'}
-                    stats={groups?.length}
+                    title={'Seen Notification'}
+                    stats={groups?.length ?? 0}
                     avatarColor={'error'}
-                    icon={'tabler:user-plus'}
+                    icon={'tabler:bell-minus'}
+                    sx={{ minHeight: "102px", maxHeight: "102px" }}
                   />
                 </Grid>
-                <Grid item xs={12} md={3} sm={6}>
+                <Grid item xs={12} md={4} sm={6}>
                   <CardStatsHorizontalWithDetails
-                    title={'Active Users'}
+                    title={'Unseen Notification'}
                     stats={activeUser}
                     avatarColor={'success'}
-                    icon={'tabler:user-check'}
+                    icon={'tabler:bell-ringing'}
+                    sx={{ minHeight: "102px", maxHeight: "102px" }}
                   />
                 </Grid>
-                <Grid item xs={12} md={3} sm={6}>
+                {console.log(inActiveUser,"inActiveUser")}
+                {/* <Grid item xs={12} md={3} sm={6}>
                   <CardStatsHorizontalWithDetails
                     title={'Blocked Users'}
-                    stats={inActiveUser}
+                    stats={inActiveUser ?? 0}
                     avatarColor={'warning'}
                     icon={'tabler:user-exclamation'}
+                    sx={{ minHeight: "102px", maxHeight: "102px" }}
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
             )}
           </Grid>
@@ -361,15 +383,46 @@ const Notifications = () => {
             <Card>
               <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
               <DataGrid
-                sx={{ p: 2 }}
+                sx={{ 
+                  p: 2,
+                  "& .MuiDataGrid-iconButtonContainer" : {
+                    display: "none",
+                    ":hover" : {
+                      display: "none"
+                    }
+                  },
+              "& .MuiDataGrid-row" : {
+                border : "1px solid #e6e5e7",
+                borderLeft: "none",
+                borderRight: "none",
+                ":hover" : {
+                   backgroundColor : "#f5f5f7",
+                   border : "1px solid #e6e5e7",
+                   borderLeft: "none",
+                   borderRight: "none"
+                }
+              },
+              "& .MuiDataGrid-columnHeaders" : {
+                   border : "1px solid #e6e5e7",
+                   borderLeft: "none",
+                   borderRight: "none"
+              }
+                 }}
                 autoHeight
                 rowHeight={62}
                 rows={users}
                 columns={columns}
                 disableRowSelectionOnClick
+                hideFooterPagination
+                hideFooter
                 pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
+                disableColumnFilter={true}
+                disableColumnMenu={true}
+                slots={{
+                  noRowsOverlay: CustomNoRowsOverlay
+                }}
               />
             </Card>
           </Grid>

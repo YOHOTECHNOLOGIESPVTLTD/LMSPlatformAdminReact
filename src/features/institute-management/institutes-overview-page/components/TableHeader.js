@@ -6,7 +6,6 @@ import Button from '@mui/material/Button';
 import { useDispatch } from 'react-redux';
 import { useState, useCallback } from 'react';
 
-import Icon from 'components/icon';
 
 import { Link } from 'react-router-dom';
 import { getAllInstitutes } from 'features/institute-management/redux/instituteThunks';
@@ -47,11 +46,9 @@ const TableHeader = (props) => {
             justifyContent: 'space-between'
           }}
         >
-          <Button color="secondary" variant="tonal" startIcon={<Icon icon="tabler:upload" />}>
-            Export
-          </Button>
+          <TextField value={searchValue} placeholder="Search Category" onChange={(e) => handleSearch(e)} />
+
           <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-            <TextField value={searchValue} placeholder="Search Category" onChange={(e) => handleSearch(e)} />
             <Box component={Link} to={'add'}>
               <Button variant="contained">+ Add Institute</Button>
             </Box>

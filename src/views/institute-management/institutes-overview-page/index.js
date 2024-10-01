@@ -5,7 +5,7 @@ import CustomAvatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
+// import CardHeader from '@mui/material/CardHeader';
 // import CustomChip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
@@ -17,6 +17,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import InstituteSkeleton from 'components/cards/Skeleton/InstituteSkeleton';
 import Icon from 'components/icon';
 import OptionsMenu from 'components/option-menu';
+import { Button } from '@mui/material';
+import InstituteCard from 'features/institute-management/institutes-overview-page/instituteCard';
 
 import InstituteHeaderSection from 'features/institute-management/institutes-overview-page/components/InstituteHeaderSection';
 // ** Utils Import
@@ -33,7 +35,6 @@ import toast from 'react-hot-toast';
 import { instituteChangeStatus } from 'features/institute-management/services/instituteService';
 
 const Institutes = () => {
-  const [role, setRole] = useState('');
   const [plan, setPlan] = useState('');
   // const [value, setValue] = useState('');
   // const [status, setStatus] = useState('');
@@ -60,10 +61,6 @@ const Institutes = () => {
   // const handleFilter = useCallback((val) => {
   //   setValue(val);
   // }, []);
-
-  const handleRoleChange = useCallback((e) => {
-    setRole(e.target.value);
-  }, []);
 
   const handlePlanChange = useCallback((e) => {
     setPlan(e.target.value);
@@ -158,8 +155,8 @@ const Institutes = () => {
                 icon: <Icon icon="tabler:eye" />,
                 menuItemProps: {
                   component: Link,
-                  to: `${row?.name}`,
-                  state: { id: row?.id}
+                  to: `${row?.uuid}`,
+                  state: { id: row?.uuid}
                 }
               }
             ]}
@@ -204,7 +201,7 @@ const Institutes = () => {
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row.institute_id}
+            {row.id}
           </Typography>
         );
       }
@@ -256,7 +253,7 @@ const Institutes = () => {
             }}
           >
             <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-              +91 {row?.phone}
+              +91 {row?.contact_info.phone_no}
             </Typography>
             <div>
               <Typography
@@ -279,8 +276,8 @@ const Institutes = () => {
         // const userStatus = `${row.is_active}` === 1 ? 'Active' : 'Inactive';
         return (
           <CustomTextField select value={row.is_active} onChange={(e) => handleStatusChange(e, row)}>
-            <MenuItem value="1">Active</MenuItem>
-            <MenuItem value="0">Inactive</MenuItem>
+            <MenuItem value="true">Active</MenuItem>
+            <MenuItem value="false">Inactive</MenuItem>
           </CustomTextField>
         );
       }
@@ -314,7 +311,7 @@ const Institutes = () => {
       toast.error(response.message);
     }
   };
-
+  console.log(allInstitutes,"allInstitutes")
   // ** State
   return (
     <>
@@ -326,29 +323,10 @@ const Institutes = () => {
 
         {/* User Filter Card */}
         <Grid item xs={12}>
-          <Card>
-            <CardHeader title="Institutes" />
+          <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
+            {/* <CardHeader title="Institutes" /> */}
             <CardContent>
               <Grid container spacing={3}>
-                <Grid item sm={4} xs={12}>
-                  <CustomTextField
-                    select
-                    fullWidth
-                    defaultValue="Select Role"
-                    SelectProps={{
-                      value: role,
-                      displayEmpty: true,
-                      onChange: (e) => handleRoleChange(e)
-                    }}
-                  >
-                    <MenuItem value="">Select Role</MenuItem>
-                    <MenuItem value="admin">Admin</MenuItem>
-                    <MenuItem value="author">Author</MenuItem>
-                    <MenuItem value="editor">Editor</MenuItem>
-                    <MenuItem value="maintainer">Maintainer</MenuItem>
-                    <MenuItem value="subscriber">Subscriber</MenuItem>
-                  </CustomTextField>
-                </Grid>
                 <Grid item sm={4} xs={12}>
                   <CustomTextField
                     select
@@ -384,6 +362,11 @@ const Institutes = () => {
                     <MenuItem value="inactive">Inactive</MenuItem>
                   </CustomTextField>
                 </Grid>
+                <Grid item sm={4} xs={12}>
+                <Button color="secondary" variant="tonal" startIcon={<Icon icon="tabler:upload" />}>
+                  Export
+                 </Button>
+                </Grid>
               </Grid>
             </CardContent>
           </Card>
@@ -394,10 +377,17 @@ const Institutes = () => {
         </Grid>
 
         {/* Display Skeleton or User Body Section based on loading state */}
+        <Grid container spacing={3} sx={{ paddingLeft: "24px"}} >
+            {
+              allInstitutes?.map((institute, index) => 
+                <InstituteCard institute={institute} key={institute?._id} index={index} />
+              )
+            }
+        </Grid>
         {instituteLoading ? (
           <InstituteSkeleton />
         ) : (
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{ display: "none"}} >
             <Card>
               <Divider sx={{ m: '0 !important' }} />
               <DataGrid

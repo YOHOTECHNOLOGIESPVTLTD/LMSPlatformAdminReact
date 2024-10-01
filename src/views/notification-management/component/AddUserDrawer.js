@@ -9,6 +9,12 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
+import { getAllInstitutes } from 'features/institute-management/redux/instituteThunks';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectInstitutes } from 'features/institute-management/redux/instituteSelectors';
+import { useSpinner } from 'context/spinnerContext';
+import toast from 'react-hot-toast';
+import { getInstituteBrancheswithId } from 'features/notification-management/notifications/services/instituteNotificationServices';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -33,7 +39,7 @@ const schema = yup.object().shape({
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required(),
   body: yup.string().required('Body field is required'),
-  institutes: yup.array().min(1, 'Select at least one institute').required('Institutes field is required')
+  institutes: yup.array().min(1, 'Select at least one institute').required('instituteList field is required')
 });
 
 const defaultValues = {
@@ -44,37 +50,19 @@ const defaultValues = {
 
 const SidebarAddUser = (props) => {
   const { open, toggle } = props;
-  const [inputValue, setInputValue] = useState('');
-  const image = require('../../../assets/images/avatar/1.png');
-  const [imgSrc, setImgSrc] = useState(image);
+  const [branchList,setBranchList] = useState([])
+  // const [inputValue, setInputValue] = useState('');
+  // const image = require('../../../assets/images/avatar/1.png');
+  // const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-  const [groups, setGroups] = useState([]);
+  const dispatch = useDispatch()
+  const instituteList = useSelector(selectInstitutes)
+  const { show , hide } = useSpinner()
 
   useEffect(() => {
-    getAllGroups();
-  }, []);
+    dispatch(getAllInstitutes())
+  }, [dispatch]);
 
-  const getAllGroups = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/institute-management/institutes/read`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    };
-
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Groups : ', response.data);
-        setGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
 
   const {
     reset,
@@ -119,40 +107,40 @@ const SidebarAddUser = (props) => {
     toggle();
     reset();
   };
+  console.log(instituteList,"instituteList",setSelectedImage)
+  // const ImgStyled = styled('img')(({ theme }) => ({
+  //   width: 100,
+  //   height: 100,
+  //   marginRight: theme.spacing(2),
+  //   borderRadius: theme.shape.borderRadius
+  // }));
 
-  const ImgStyled = styled('img')(({ theme }) => ({
-    width: 100,
-    height: 100,
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
-  }));
+  // const ButtonStyled = styled(Button)(({ theme }) => ({
+  //   [theme.breakpoints.down('sm')]: {
+  //     width: '100%',
+  //     textAlign: 'center'
+  //   }
+  // }));
 
-  const ButtonStyled = styled(Button)(({ theme }) => ({
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      textAlign: 'center'
-    }
-  }));
-
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
-    const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
-    }
-  };
+  // const handleInputImageChange = (file) => {
+  //   const reader = new FileReader();
+  //   const { files } = file.target;
+  //   if (files && files.length !== 0) {
+  //     reader.onload = () => setImgSrc(reader.result);
+  //     setSelectedImage(files[0]);
+  //     reader.readAsDataURL(files[0]);
+  //     if (reader.result !== null) {
+  //       setInputValue(reader.result);
+  //     }
+  //   }
+  // };
 
   const handleClose = () => {
     setValue('contact', Number(''));
     toggle();
     reset();
   };
-
+  
   return (
     <Drawer
       open={open}
@@ -163,7 +151,7 @@ const SidebarAddUser = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <Header>
-        <Typography variant="h5">Add User</Typography>
+        <Typography variant="h3">Add Notification</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -173,7 +161,9 @@ const SidebarAddUser = (props) => {
             color: 'text.primary',
             backgroundColor: 'action.selected',
             '&:hover': {
-              backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
+              backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`,
+              rotate: "90deg",
+              transition: "roatate 0.3s ease-in"
             }
           }}
         >
@@ -182,8 +172,8 @@ const SidebarAddUser = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-            <ImgStyled src={imgSrc} alt="Profile Pic" />
+          {/* <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+            <ImgStyled src={getImageUrl(imagePlaceholder)} alt="Profile Pic" />
             <div>
               <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                 Upload
@@ -197,7 +187,142 @@ const SidebarAddUser = (props) => {
                 />
               </ButtonStyled>
             </div>
-          </Box>
+          </Box> */}
+           <Grid>
+            <Controller
+              name="institutes"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <Autocomplete
+                  multiple
+                  id="select-multiple-chip"
+                  sx={{ mb: 4 }}
+                  options={instituteList}
+                  getOptionLabel={(option) => option.institute_name}
+                  value={value}
+                  onChange={async (e, newValue) => {
+                    if (newValue && newValue.some((option) => option.id === 'selectAll')) {
+                      onChange(instituteList.filter((option) => option.id !== 'selectAll'));
+                    } else {
+                      try {
+                        show()
+                        onChange(newValue);
+                        const data = { institute : newValue?.uuid}
+                        const response = await getInstituteBrancheswithId(data)
+                        console.log(response,"response")
+                        setBranchList(response?.data)
+                      } catch (error) {
+                        toast.error(error?.message)
+                      }finally{
+                        hide()
+                      }
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      label="instituteList"
+                      error={Boolean(errors.institutes)}
+                      {...(errors.institutes && { helperText: errors.institutes.message })}
+                    />
+                  )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.institute_name}
+                    </li>
+                  )}
+                  renderTags={(value) =>
+                    value.map((option, index) => (
+                      <CustomChip
+                        key={option._id}
+                        label={option.institute_name}
+                        onDelete={() => {
+                          const updatedValue = [...value];
+                          updatedValue.splice(index, 1);
+                          onChange(updatedValue);
+                        }}
+                        color="primary"
+                        sx={{ m: 0.75 }}
+                      />
+                    ))
+                  }
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                  selectAllText="Select All"
+                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                />
+              )}
+            />
+          </Grid>
+          <Grid>
+            <Controller
+              name="Branches"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <Autocomplete
+                  multiple
+                  id="select-multiple-chip"
+                  sx={{ mb: 4 }}
+                  options={branchList}
+                  getOptionLabel={(option) => option.branch_identity}
+                  value={value}
+                  onChange={(e, newValue) => {
+                    if (newValue && newValue.some((option) => option.id === 'selectAll')) {
+                      onChange(instituteList.filter((option) => option.id !== 'selectAll'));
+                    } else {
+                      onChange(newValue);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      label="instituteList"
+                      error={Boolean(errors.institutes)}
+                      {...(errors.institutes && { helperText: errors.institutes.message })}
+                    />
+                  )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.branch_identity}
+                    </li>
+                  )}
+                  renderTags={(value) =>
+                    value.map((option, index) => (
+                      <CustomChip
+                        key={option.id}
+                        label={option.branch_identity}
+                        onDelete={() => {
+                          const updatedValue = [...value];
+                          updatedValue.splice(index, 1);
+                          onChange(updatedValue);
+                        }}
+                        color="primary"
+                        sx={{ m: 0.75 }}
+                      />
+                    ))
+                  }
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                  selectAllText="Select All"
+                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                />
+              )}
+            />
+          </Grid>
           <Grid>
             <Controller
               name="title"
@@ -235,68 +360,6 @@ const SidebarAddUser = (props) => {
                   label="Body"
                   error={Boolean(errors.body)}
                   {...(errors.body && { helperText: errors.body.message })}
-                />
-              )}
-            />
-          </Grid>
-          <Grid>
-            <Controller
-              name="institutes"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <Autocomplete
-                  multiple
-                  id="select-multiple-chip"
-                  sx={{ mb: 4 }}
-                  options={groups}
-                  getOptionLabel={(option) => option.name}
-                  value={value}
-                  onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.id === 'selectAll')) {
-                      onChange(groups.filter((option) => option.id !== 'selectAll'));
-                    } else {
-                      onChange(newValue);
-                    }
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      fullWidth
-                      label="Institutes"
-                      error={Boolean(errors.institutes)}
-                      {...(errors.institutes && { helperText: errors.institutes.message })}
-                    />
-                  )}
-                  renderOption={(props, option, { selected }) => (
-                    <li {...props}>
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option.name}
-                    </li>
-                  )}
-                  renderTags={(value) =>
-                    value.map((option, index) => (
-                      <CustomChip
-                        key={option.id}
-                        label={option.name}
-                        onDelete={() => {
-                          const updatedValue = [...value];
-                          updatedValue.splice(index, 1);
-                          onChange(updatedValue);
-                        }}
-                        color="primary"
-                        sx={{ m: 0.75 }}
-                      />
-                    ))
-                  }
-                  isOptionEqualToValue={(option, value) => option.id === value.id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               )}
             />

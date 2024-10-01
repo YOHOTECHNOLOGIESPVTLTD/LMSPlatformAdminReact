@@ -1,18 +1,13 @@
 // InstituteService.js
 import axios from 'axios';
-
+import Client from "../../../api/index"
 const INSTITUTE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/institute-management/institutes`;
 
 const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/Institute/search`;
 const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/platform-user/user-name-check`;
 export const getAllInstitutes = async () => {
   try {
-    const response = await axios.get(`${INSTITUTE_API_END_POINT}/read`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await Client.institute.all()
     console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
@@ -53,13 +48,7 @@ export const searchInstitutes = async (searchQuery) => {
 
 export const InstituteGetById = async (data) => {
   try {
-    const response = await axios.get(`${INSTITUTE_API_END_POINT}/read-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await Client.institute.getWithId(data)
 
     console.log(response);
 
@@ -98,12 +87,7 @@ export const GetInstituteActivityLog = async (data) => {
 
 export const addInstitute = async (data) => {
   try {
-    const response = await axios.post(`${INSTITUTE_API_END_POINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await Client.institute.create(data)
     console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Institute created successfully' };

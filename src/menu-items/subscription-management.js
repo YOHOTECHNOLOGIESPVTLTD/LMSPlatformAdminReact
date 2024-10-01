@@ -17,21 +17,23 @@ const pages = {
   children: [
     {
       id: 'authentication',
-      title: 'Subscription Management',
-      type: 'collapse',
+      title: 'Subscriptions',
+      type: "item",
       icon: icons.IconShieldLock,
-
-      children: [
-        {
-          id: 'plans-and-features',
-          title: 'Plans and Features',
-          type: 'item',
-          url: '/subscription-management/plans-and-features',
-          icon: icons.IconUsers,
-          target: false,
-          breadcrumbs: false
-        }
-      ]
+      url: '/subscription-management/plans-and-features',
+      target: false,
+      breadcrumbs: false,
+      // children: [
+      //   {
+      //     id: 'plans-and-features',
+      //     title: 'Plans and Features',
+      //     type: 'item',
+      //     url: '/subscription-management/plans-and-features',
+      //     icon: icons.IconUsers,
+      //     target: false,
+      //     breadcrumbs: false
+      //   }
+      // ]
     }
   ]
 };

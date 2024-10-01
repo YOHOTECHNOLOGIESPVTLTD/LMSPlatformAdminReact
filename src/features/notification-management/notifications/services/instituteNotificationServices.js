@@ -1,5 +1,7 @@
 // Notificationservice.js
 import axios from 'axios';
+import { getErrorMessage } from 'utils/error-handler';
+import Client from "../../../../api/index"
 
 const NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management/student-notifications`;
 
@@ -111,3 +113,13 @@ export const updateNotification = async (data) => {
     throw error;
   }
 };
+
+export const getInstituteBrancheswithId = async (data) => {
+   try {
+    const response = await Client.branch.get_all(data)
+    return response
+   } catch (error) {
+     const error_message = getErrorMessage(error)
+     throw new Error(error_message)
+   }
+}

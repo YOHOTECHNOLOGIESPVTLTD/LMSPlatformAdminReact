@@ -1,11 +1,12 @@
 // ** MUI Imports
-import { Grid, TextField } from '@mui/material';
+import { Grid, TextField, InputAdornment } from '@mui/material';
 import Button from '@mui/material/Button';
 // ** Icon Imports
 import Icon from 'components/icon';
 import { useDispatch } from 'react-redux';
 import { useState, useCallback } from 'react';
 import { getAllFaqCategories } from '../redux/faqCategoryThunks';
+import { SearchOutlined } from "@mui/icons-material";
 
 const FaqCategoriesTableHeader = (props) => {
   // ** Props
@@ -25,31 +26,69 @@ const FaqCategoriesTableHeader = (props) => {
       setSearchValue(searchInput);
       // Dispatch action to fetch branches with search input
     },
-    [dispatch]
+    [dispatch, selectedBranchId]
   );
 
   return (
-    <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
-      <Grid item xs={12} sx={{ my: 3 }}>
-        <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Grid item sm={5} xs={12}>
-            <TextField
-              value={searchValue}
-              sx={{
-                width: 400
-              }}
-              placeholder="Search Category"
-              onChange={(e) => handleSearch(e)}
-            />
-          </Grid>
+    <Grid container spacing={2} sx={{
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: "white",
+      borderRadius: "8px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      p: 2,
+      mb: 3
+    }}>
+      <Grid item xs={12} sm={6} md={4}>
+        <TextField
+          value={searchValue}
+          fullWidth
+          sx={{
+            '& .MuiInputBase-root': {
+              borderRadius: '8px',
+              backgroundColor: '#f5f5f5',
+              '& input': {
+                padding: '10px 12px',
+              },
+            },
+            '& .MuiInputAdornment-root': {
+              pr: 1,
+            },
+          }}
+          placeholder="Search Category"
+          onChange={(e) => handleSearch(e)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <SearchOutlined />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Grid>
 
-          <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
-            <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
-              <Icon fontSize="1.125rem" icon="tabler:plus" />
-              Add Faq Categories
-            </Button>
-          </Grid>
-        </Grid>
+      <Grid item xs={12} sm={6} md={3}>
+        <Button
+          fullWidth
+          onClick={toggle}
+          variant="contained"
+          sx={{
+            borderRadius: '8px',
+            padding: '10px 20px',
+            textTransform: 'none',
+            fontWeight: 'bold',
+            // backgroundColor: '#0CCE7F',
+            '&:hover': {
+              backgroundColor: '#0A9B77',
+            },
+            '& svg': {
+              mr: 1,
+            },
+          }}
+        >
+          <Icon fontSize="1.125rem" icon="tabler:plus" />
+          Add Faq Categories
+        </Button>
       </Grid>
     </Grid>
   );

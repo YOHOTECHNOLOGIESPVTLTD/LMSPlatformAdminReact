@@ -1,10 +1,7 @@
-// ** React Imports
 // ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, Modal, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import { styled } from '@mui/material/styles';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,17 +9,10 @@ import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addFaqCategory } from '../services/faqCategoryServices';
 import toast from 'react-hot-toast';
-// import { addStudentFee } from '../services/studentFeeServices';
 
-const Header = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(6),
-  justifyContent: 'space-between'
-}));
+
 
 const schema = yup.object().shape({
   name: yup.string().required('Category Name is required'),
@@ -36,7 +26,7 @@ const defaultValues = {
 
 const FaqCategoriesAddDrawer = (props) => {
   // ** Props
-  const { open, toggle, setRefetch } = props;
+  const { open = false, toggle, setRefetch } = props; // Ensure 'open' has a default value
   // ** State
 
   const {
@@ -53,7 +43,7 @@ const FaqCategoriesAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     const InputData = {
-      title: data.name,
+      identity: data.name,
       description: data.description
     };
     const result = await addFaqCategory(InputData);
@@ -73,40 +63,58 @@ const FaqCategoriesAddDrawer = (props) => {
   };
 
   return (
-    <DatePickerWrapper>
-      <Drawer
-        open={open}
-        anchor="right"
-        variant="temporary"
-        onClose={handleClose}
-        ModalProps={{ keepMounted: true }}
-        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="add-faq-category-modal"
+      aria-describedby="modal-to-add-faq-category"
+     
+    >
+      <Box
+        sx={{
+          width: { xs: '100%', sm: 500 },
+          bgcolor: 'background.paper',
+          borderRadius: '8px',
+          boxShadow: 24,
+          p: 8,
+          mx: 'auto',
+          mt: { xs: '20vh', sm: '15vh' } 
+        }}
       >
-        <Header>
-          <Typography variant="h5">Add Faq Categories</Typography>
-          <IconButton
+        <Box sx={{ display: "flex", justifyContent: "flex-end"}}>
+        <IconButton
             size="small"
             onClick={handleClose}
             sx={{
               p: '0.438rem',
+              position: "absolute",
+              top: "125px",
+              marginLeft: "-40px",
               borderRadius: 1,
               color: 'text.primary',
               backgroundColor: 'action.selected',
+              transition: 'rotate .2s ease-in-out', 
+              rotate: '0deg', 
               '&:hover': {
-                backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
-              }
+                // backgroundColor: (theme) => theme.palette.secondary.main,
+                rotate: '-90deg', 
+              },
             }}
           >
-            <Icon icon="tabler:x" fontSize="1.125rem" />
+
+
+            <Icon icon="tabler:x" fontSize="1.125rem"  />
           </IconButton>
-        </Header>
-        <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
+        </Box>
+        <Box sx={{ pb: "16px", textAlign: "center"}}>
+        <Typography variant="h3">Add Faq Categories</Typography>
+        </Box>
+        <Box sx={{ p: (theme) => theme.spacing(0, 0, 0) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={12} sm={12}>
               <Controller
                 name="name"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -115,7 +123,7 @@ const FaqCategoriesAddDrawer = (props) => {
                     label="Title"
                     onChange={onChange}
                     error={Boolean(errors.name)}
-                    {...(errors.name && { helperText: errors.name.message })}
+                    helperText={errors.name?.message}
                   />
                 )}
               />
@@ -124,33 +132,32 @@ const FaqCategoriesAddDrawer = (props) => {
               <Controller
                 name="description"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
                     value={value}
                     sx={{ mb: 2 }}
-                    label="description"
+                    label="Description"
                     onChange={onChange}
                     error={Boolean(errors.description)}
-                    {...(errors.description && { helperText: errors.description.message })}
+                    helperText={errors.description?.message}
                   />
                 )}
               />
             </Grid>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                 Submit
               </Button>
-              <Button variant="tonal" color="secondary" onClick={handleClose}>
+              <Button variant="outlined" size="medium" sx={{ color: "#6d788d", border: "1px solid #6d788d", backgroundColor: "transparent"}} onClick={handleClose}>
                 Cancel
               </Button>
             </Box>
           </form>
         </Box>
-      </Drawer>
-    </DatePickerWrapper>
+      </Box>
+    </Modal>
   );
 };
 

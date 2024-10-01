@@ -10,8 +10,8 @@ import { useLocation } from 'react-router';
 const InstituteViewPage = () => {
   const location = useLocation();
   const [institute, setInstitute] = useState(null);
-  const instituteId = location.state.id;
-
+  const instituteId = location.state?.id;
+ console.log(location,location.state?.id,location.state)
   useEffect(() => {
     const data = { id: instituteId };
     getInstituteById(data);
@@ -24,7 +24,7 @@ const InstituteViewPage = () => {
     }
   };
 
-  console.log(institute);
+  console.log(institute,"institute");
 
   return (
     <Grid container spacing={2}>

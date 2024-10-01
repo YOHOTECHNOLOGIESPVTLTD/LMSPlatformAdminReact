@@ -1,0 +1,1 @@
+export { default as imagePlaceholder} from "../assets/placeholders/imagePlaceholders.svg"

@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
-import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
+import { AppBar, Box, Toolbar, useMediaQuery } from '@mui/material';
 
 // project imports
 import Breadcrumbs from 'components/extended/Breadcrumbs';
@@ -65,7 +65,7 @@ const MainLayout = () => {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       {/* header */}
       <AppBar
         enableColorOnDark
@@ -73,7 +73,8 @@ const MainLayout = () => {
         color="inherit"
         elevation={0}
         sx={{
-          bgcolor: theme.palette.background.default,
+          bgcolor: "white",
+
           transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
         }}
       >

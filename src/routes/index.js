@@ -10,7 +10,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 // view imports
 
-const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
+// const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
 
 // User Management
@@ -80,6 +80,10 @@ const InstituteAdminUserOverviewPage = Loadable(
 const InstituteAdminUserViewPage = Loadable(
   lazy(() => import('views/institute-management/institute[id]-page/user-management/users-page/users[id]-page'))
 );
+
+const Dashboard2 = Loadable(lazy(() => import("views/dashboard/Default/dashboard2")))
+
+const InstituteTicketsViewPage = Loadable(lazy(() => import("views/ticket-management/institute-tickets-page/index")))
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 const Protected = () => {
@@ -95,9 +99,9 @@ const Protected = () => {
   }
 };
 const AdminRoute = () => {
-  const isAdmin = useSelector((state) => state.auth.userData?.is_admin);
+  const isAdmin = useSelector((state) => state.auth.userData?.is_super_user);
 
-  if (isAdmin === '1') {
+  if (isAdmin) {
     return <Outlet />;
   }
   return <Navigate to="/un-authorized" />;
@@ -109,7 +113,7 @@ const ApplicationRoutes = () => {
       <Route element={<Protected />}>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" />} />
-          <Route path="dashboard" element={<DashboardDefault />} />
+          <Route path="dashboard" element={<Dashboard2 />} />
         </Route>
 
         <Route element={<AdminRoute />}>
@@ -135,6 +139,7 @@ const ApplicationRoutes = () => {
         <Route path="/ticket-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/ticket-management/your-ticket" />} />
           <Route path="your-ticket" element={<YourTicketPage />} />
+          <Route path="institute-tickets" element={<InstituteTicketsViewPage />} />
         </Route>
 
         {/* PaymentManagement */}

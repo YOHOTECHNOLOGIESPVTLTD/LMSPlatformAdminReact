@@ -1,18 +1,11 @@
 // ** MUI Imports
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import Icon from 'components/icon';
 import { useEffect } from 'react';
 // ** Custom Components Imports
-import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
 import DeleteDialog from 'components/modal/DeleteModel';
 import StatusDialog from 'components/modal/DeleteModel';
-import CustomTextField from 'components/mui/text-field';
-import OptionsMenu from 'components/option-menu';
 import FaqAddDrawer from 'features/faq-management/faqs/components/FaqAddDrawer';
 import FaqEdit from 'features/faq-management/faqs/components/FaqEdit';
 import { useCallback, useState } from 'react';
@@ -21,14 +14,17 @@ import FaqTableHeader from 'features/faq-management/faqs/components/FaqTableHead
 import { getAllFaqs } from 'features/faq-management/faqs/redux/faqThunks';
 import { selectFaqs, selectLoading } from 'features/faq-management/faqs/redux/faqSelectors';
 import { getAllFaqCategorywithFaq } from 'features/faq-management/faq-categories/services/faqCategoryServices';
-import FaqAccordian from 'features/faq-management/faqs/components/FaqAccordian';
+// import FaqAccordian from 'features/faq-management/faqs/components/FaqAccordian';
 import { updateStatusFaq, deleteFaq } from 'features/faq-management/faqs/services/faqServices';
 import toast from 'react-hot-toast';
+import { IconButton, Paper, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip , Pagination} from '@mui/material';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');
 
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -56,13 +52,13 @@ const FaqDataGrid = () => {
     setFaqCategories(result.data.data);
   };
 
-  console.log(deletingItemId);
+  console.log(deletingItemId,faqCategories);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const handleDelete = (itemId) => {
     console.log('Delete clicked for item ID:', itemId);
-    setDeletingItemId(itemId?.id);
+    setDeletingItemId(itemId?.uuid);
     setDeleteDialogOpen(true);
   };
 
@@ -87,8 +83,8 @@ const FaqDataGrid = () => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: selectedFaqStatus,
-      id: selectedFaq?.id
+      is_active: selectedFaqStatus,
+      id: selectedFaq?.uuid
     };
     const response = await updateStatusFaq(data);
     if (response.success) {
@@ -106,114 +102,6 @@ const FaqDataGrid = () => {
 
   // ** Hooks
 
-  const columns = [
-    {
-      flex: 0.5,
-      headerName: 'Id',
-      field: 'employee_id',
-      renderCell: ({ row }) => {
-        return (
-          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.id}
-          </Typography>
-        );
-      }
-    },
-    {
-      flex: 2.2,
-      field: 'title',
-      headerName: 'Faq Name',
-      renderCell: ({ row }) => {
-        return (
-          <Box>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography
-                noWrap
-                sx={{
-                  textAlign: 'justify',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' }
-                }}
-              >
-                {row?.title}
-              </Typography>
-              <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
-                {row?.description}
-              </Typography>
-            </Box>
-          </Box>
-        );
-      }
-    },
-    {
-      flex: 1.5,
-      field: 'Category',
-      headerName: 'Category',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.institute_faq_module?.title}
-            </Typography>
-          </Box>
-        );
-      }
-    },
-    {
-      flex: 1,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: ({ row }) => {
-        return (
-          <div>
-            <CustomTextField select value={row.is_active} onChange={(e) => handleStatusChange(e, row)}>
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
-            </CustomTextField>
-          </div>
-        );
-      }
-    },
-    {
-      flex: 1,
-      sortable: false,
-      field: 'actions',
-      headerName: 'Actions',
-      renderCell: ({ row }) => (
-        <Box sx={{ gap: 1 }}>
-          <OptionsMenu
-            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-            iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-            options={[
-              {
-                // to: `/apps/invoice/edit/${row.id}`,
-                text: 'Edit',
-                icon: <Icon icon="tabler:edit" />,
-                menuItemProps: {
-                  onClick: () => {
-                    toggleEditUserDrawer();
-                  }
-                }
-              },
-              {
-                // to: `/apps/invoice/delete/${row.id}`,
-                text: 'Delete',
-                icon: <Icon icon="mdi:delete-outline" />,
-                menuItemProps: {
-                  onClick: () => {
-                    handleDelete(row);
-                  }
-                }
-              }
-            ]}
-          />
-        </Box>
-      )
-    }
-  ];
 
   const handleFilter = useCallback(
     async (val) => {
@@ -233,36 +121,82 @@ const FaqDataGrid = () => {
     [dispatch]
   );
 
-  const handleRowClick = (params) => {
-    setSelectedRow(params.row);
-  };
 
   return (
     <>
-      {faqLoading ? (
+      {faqLoading || !faqs ? (
         <ContentSkeleton />
       ) : (
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
           <FaqAccordian faqCategories={faqCategories}/>
-        </Grid>
+        </Grid> */}
           <Grid item xs={12}>
             <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
           </Grid>
+         
           <Grid item xs={12}>
-            <Card>
-              <DataGrid
-                autoHeight
-                rowHeight={80}
-                rows={faqs}
-                columns={columns}
-                disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
-                onRowClick={handleRowClick}
-              />
-            </Card>
+            {/* Display categories */}
+            <TableContainer component={Paper} sx={{ "& .MuiTableCell-root": { color: "#474747", borderBottom: '1px solid #ddd' } }} >
+               <Table size="medium">
+                 <TableHead sx={{ backgroundColor: "#FAFAFA"}} >
+                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "600" } }} >
+                     <TableCell>FAQ Name</TableCell>
+                     <TableCell>Category</TableCell>
+                     <TableCell>Status</TableCell>
+                     <TableCell>Action</TableCell>
+                   </TableRow>
+                 </TableHead>
+                 <TableBody>
+                   {
+                    faqs?.data?.map((faq) => (
+                      <TableRow
+                      key={faq._id}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        <TableCell>{faq?.identity}</TableCell>
+                        <TableCell>{faq?.category?.identity}</TableCell>
+                        <TableCell>
+                          <Switch value={!faq?.is_active} checked={faq?.is_active} onChange={(e) => handleStatusChange(e,faq)} />
+                        </TableCell>
+                        <TableCell sx={{ display: 'flex', gap: "5px"}}>
+                          <Tooltip title={"Edit"} >
+                           <IconButton sx={{ backgroundColor: "#5f71fa33", width: "36px", height: "36px",borderRadius: "18px", ":hover": {  backgroundColor: "#5f71fa80", transition: ".2s ease-in-out",transform: "scale(1.2)"}}} onClick={()=>{
+                             setSelectedRow(setSelectedRow({
+                              id: faq.uuid, 
+                              title: faq.identity, 
+                              description: faq.description 
+                            }))
+                            toggleEditUserDrawer();
+                           }} >
+                             <EditOutlinedIcon sx={{ width: "18px", height: "18px",color:"#5f71fa"}} />
+                           </IconButton>
+                          </Tooltip>
+                          <Tooltip title={"Delete"} >
+                           <IconButton onClick={() => handleDelete(faq?.uuid)} sx={{ backgroundColor: "#ff462633", width: "36px", height: "36px", borderRadius: "18px", ":hover" : { backgroundColor: "#ff462680", transform: "scale(1.2)", transition: "transform 0.3s ease background-color 0.3s ease"  } }} >
+                             <DeleteIcon sx={{ width: "23px", height: "23px",color: "#ff4626"}} />
+                           </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                   }
+                 </TableBody>
+               </Table>
+            </TableContainer>
+            {
+             faqs?.last_page !==1 &&  <Box sx={{ display: "flex", justifyContent: "flex-end", my: 1}} >
+                <Pagination
+                  count={faqs?.last_page}
+                  onChange={async(e,page) => {
+                    const data = {
+                      page : page 
+                    }
+                    dispatch(getAllFaqs(data))
+                  }}
+                />  
+              </Box>
+            }
           </Grid>
           <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories} setRefetch={setRefetch} />
           <FaqEdit

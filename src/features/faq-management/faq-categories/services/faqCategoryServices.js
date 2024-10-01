@@ -1,5 +1,6 @@
 // groupService.js
 import axios from 'axios';
+import Client from "api/index"
 
 const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/platform-management/platform-faq-modules`;
 
@@ -33,17 +34,12 @@ export const getActiveFaqCategories = async (data) => {
 
 export const getAllFaqCategorywithFaq = async () => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/show-all`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await Client.faq_category.get()
 
     console.log(response);
 
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.data.success) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -58,19 +54,14 @@ export const getAllFaqCategorywithFaq = async () => {
   }
 };
 
-export const getAllFaqCategories = async () => {
+export const getAllFaqCategories = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/show`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await Client.faq_category.get(data)
 
     console.log(response);
 
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.data.success) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -108,12 +99,7 @@ export const searchFaqCategories = async (searchQuery) => {
 
 export const addFaqCategory = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}/create`, data, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await Client.faq_category.create(data)
     console.log(response);
 
     if (response.data.status) {
@@ -129,13 +115,7 @@ export const addFaqCategory = async (data) => {
 
 export const deleteFaqCategory = async (data) => {
   try {
-    const response = await axios.delete(`${FAQ_CATEGORY_API_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await Client.faq_category.delete(data)
 
     if (response.data.status) {
       return { success: true, message: 'FaqCategory deleted successfully' };
@@ -149,13 +129,7 @@ export const deleteFaqCategory = async (data) => {
 };
 export const updateStatusFaqCategory = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}/status-update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await Client.faq_category.update(data)
 
     if (response.data.status) {
       return { success: true, message: 'FaqCategory status updated successfully' };
@@ -170,12 +144,7 @@ export const updateStatusFaqCategory = async (data) => {
 
 export const updateFaqCategory = async (data) => {
   try {
-    const response = await axios.put(`${FAQ_CATEGORY_API_END_POINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await Client.faq_category.update(data)
 
     if (response.data.status) {
       console.log(response);

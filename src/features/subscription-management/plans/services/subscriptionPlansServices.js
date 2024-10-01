@@ -2,15 +2,11 @@
 import axios from 'axios';
 
 const SUBSCRIPTION_PLAN_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/subscription-plans`;
+import Client from "../../../../api/index"
 
-export const getAllSubscriptionPlans = async () => {
+export const getAllSubscriptionPlans = async (data) => {
   try {
-    const response = await axios.get(`${SUBSCRIPTION_PLAN_END_POINT}/show`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await  Client.subscription.all(data)
 
     console.log(response);
 

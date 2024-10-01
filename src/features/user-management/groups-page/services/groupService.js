@@ -1,16 +1,16 @@
 // groupService.js
 import axios from 'axios';
 
-const GROUP_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role`;
+const GROUP_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}api/lms/platform/roles`;
 const PERMISSION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/permission`;
 const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/group/search`;
 
 export const getAllGroups = async (data) => {
   try {
-    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-all`, {
+    const response = await axios.get(`${GROUP_API_ENDPOINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });

@@ -26,7 +26,7 @@ import { useLocation } from 'react-router';
 import { useEffect } from 'react';
 import { updateSubscriptionFeature } from 'features/subscription-management/features/services/subscriptionFeaturesServices';
 // import { addSubscriptionFeature } from '../services/subscriptionFeaturesServices';
-
+import { imagePlaceholder } from 'lib/placeholders';
 // ** Icon Imports
 
 const defaultValues = {
@@ -81,11 +81,11 @@ const EditPlan = () => {
 
   useEffect(() => {
     if (planData) {
-      setValue('plan_duration_type', planData?.plan_duration_type);
-      setValue('plan_name', planData?.plan_name);
-      setValue('plan_price', planData?.plan_price);
+      setValue('plan_duration_type', planData?.duration.unit);
+      setValue('plan_name', planData?.identity);
+      setValue('plan_price', planData?.price);
       setValue('support_level', planData?.support_level);
-      setValue('plan_duration', planData?.plan_duration);
+      setValue('plan_duration', planData?.duration?.value);
       setValue('students', planData?.features?.no_of_students);
       setValue('admins', planData?.features?.no_of_admins);
       // setValue('staffs', planData?.features?.no_of_staffs);
@@ -250,7 +250,7 @@ const EditPlan = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {!selectedImage && (
                 <ImgStyled
-                  src={planData?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${planData?.image}` : imgSrc}
+                  src={planData?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}${planData?.image}` : imagePlaceholder}
                   alt="Profile Pic"
                 />
               )}
@@ -285,7 +285,7 @@ const EditPlan = () => {
                 <CustomTextField
                   fullWidth
                   // value={value}
-                  defaultValue={planData?.plan_name}
+                  defaultValue={planData?.identity}
                   label="Plan Name"
                   onChange={onChange}
                   placeholder=""
@@ -304,7 +304,7 @@ const EditPlan = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={planData?.plan_price}
+                  defaultValue={planData?.price}
                   // value={value}
                   label="Plan Price"
                   onChange={onChange}
@@ -375,7 +375,7 @@ const EditPlan = () => {
                   fullWidth
                   type="number"
                   // value={value}
-                  defaultValue={planData?.plan_duration}
+                  defaultValue={planData?.duration.value}
                   label="Duration"
                   onChange={onChange}
                   placeholder="120"
@@ -395,7 +395,7 @@ const EditPlan = () => {
                 <CustomTextField
                   select
                   fullWidth
-                  defaultValue={planData?.plan_duration_type}
+                  defaultValue={planData?.duration.unit}
                   label="Duration Type"
                   SelectProps={{
                     // value: value,
@@ -408,8 +408,8 @@ const EditPlan = () => {
                   {...(errors.plan_duration_type && { helperText: 'This field is required' })}
                 >
                   <MenuItem value="day">Days</MenuItem>
-                  <MenuItem value="month">Months</MenuItem>
-                  <MenuItem value="year">Year</MenuItem>
+                  <MenuItem value="monthly">Months</MenuItem>
+                  <MenuItem value="yearly">Year</MenuItem>
                 </CustomTextField>
               )}
             />
@@ -619,6 +619,7 @@ const EditPlan = () => {
                 </Typography>
               )}
             </FormControl>
+
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller

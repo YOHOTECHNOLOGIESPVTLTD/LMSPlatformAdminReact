@@ -2,16 +2,20 @@ import { Box, Button } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
+import { handleMultipleFiles } from 'features/fileUpload';
 
 const ImageUploader = ({ galleryImages, setGalleryImages }) => {
-  const handleImageChange = (event) => {
+  const handleImageChange = async (event) => {
     const files = event.target.files;
 
-    // Convert FileList to an array
-    const filesArray = Array.from(files);
-
-    // Update galleryImages state with the new files
-    setGalleryImages([...galleryImages, ...filesArray]);
+    const data = new FormData()
+    for(const file of files){
+     data.append("files",file)
+    }
+    const response = await handleMultipleFiles(data)
+    console.log(response)
+    const gallery = response.data.data
+    setGalleryImages([...galleryImages, ...gallery]);
   };
 
   const handleRemoveImage = (index) => {
@@ -57,7 +61,7 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
       <div style={{ marginTop: '20px', marginBottom: '20px' }}>
         {galleryImages?.map((image, index) => (
           <Box key={index} style={{ display: 'inline-block', marginRight: '30px', marginTop: '20px', marginBottom: '20px' }}>
-            <img src={URL.createObjectURL(image)} alt={`preview-${index}`} style={{ maxWidth: '100px', maxHeight: '100px' }} />
+            <img src={process.env.REACT_APP_PUBLIC_API_URL+image.file} alt={`preview-${index}`} style={{ maxWidth: '100px', maxHeight: '100px' }} />
             <CustomCloseButton variant="contained" color="error" size="small" onClick={() => handleRemoveImage(index)}>
               <Icon icon="tabler:x" fontSize="1.25rem" />
             </CustomCloseButton>
