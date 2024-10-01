@@ -293,6 +293,8 @@ const AddInstitutePage = () => {
   const onSubmit = async () => {
     const accountData = accountControl?._formValues;
     const personalData = personalControl?._formValues;
+    console.log('personalData:',personalData)
+    console.log('FormData:',FormData)
     const socialData = socialControl?._formValues;
     const docsData = docControl?._formValues
     const institute = {
