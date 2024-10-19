@@ -2,6 +2,9 @@ import { Button, Grid, Typography, Box, Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
 import CardBg from "../../../assets/images/dashboard/institute_card.svg";
 import { getImageUrl } from "themes/imageUtlis";
+import LocationOnIcon from "@mui/icons-material/LocationOn"; // Icon for address
+import BusinessIcon from "@mui/icons-material/Business"; // Icon for branches
+import { imagePlaceholder } from "lib/placeholders";
 
 const backgroundColors = [
   "#4A24E3",
@@ -38,16 +41,23 @@ const InstituteCard = ({ institute, index }) => {
         sx={{
           position: "relative",
           borderRadius: "16px",
-          padding: "26px ",
+          padding: "26px",
           minWidth: "300px",
           minHeight: "200px",
           color: "white",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          overflow: "hidden", 
+          overflow: "hidden",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+          transition: "transform 0.3s ease, box-shadow 0.3s ease", // Smooth hover effect
+          "&:hover": {
+            transform: "translateY(-10px)", // Lift effect on hover
+            boxShadow: "0 8px 30px rgba(0, 0, 0, 0.2)", // Increased shadow on hover
+          },
         }}
       >
+        {/* Background color */}
         <Box
           sx={{
             background: backgroundColor,
@@ -57,11 +67,11 @@ const InstituteCard = ({ institute, index }) => {
             right: 0,
             bottom: 0,
             zIndex: 1,
-            opacity: 0.8, 
+            opacity: 0.9, // Higher opacity for clarity
           }}
         />
 
-        
+        {/* Background image */}
         <Box
           sx={{
             backgroundImage: `url(${CardBg})`,
@@ -73,68 +83,105 @@ const InstituteCard = ({ institute, index }) => {
             right: 0,
             bottom: 0,
             zIndex: 2,
-            opacity: 0.8, 
+            opacity: 0.6, // Softer image overlay
           }}
         />
 
         <Box sx={{ position: "relative", zIndex: 3 }}>
           <Box>
-            <Grid container spacing={2} alignItems="center">
+            <Grid container spacing={2} alignItems="flex-start">
               <Grid item xs={4}>
-                <Box sx={{ width: "93px", height: "43px" }}>
-                  {/* <img
-                    src={ institute?.image ? getImageUrl(institute?.image) : imagePlaceholder }
-                    alt={institute?.institute_name}
-                    width={"93px"}
-                    height={"43px"}
-                  /> */}
-                  {
-                    institute?.image ?
-                    <Avatar 
-                    src={ getImageUrl(institute?.image)}
-                    alt={institute?.institute_name}
-                    width={"93px"}
-                    height={"43px"}
-                  />
-                  :
-                  <Avatar 
-                    width={"93px"}
-                    height={"43px"}
-                  >
-
-                  </Avatar>
-                  }
+                {/* Avatar or image */}
+                <Box sx={{ width: "93px", height: "43px", borderRadius: "8px", overflow: "hidden",marginTop: "8px" }}>
+                  {institute?.image ? (
+                    <Avatar
+                      src={getImageUrl(institute?.image)}
+                      alt={institute?.institute_name}
+                      sx={{ width: "100%", height: "100%", borderRadius: "0px" }}
+                    />
+                  ) : (
+                    <Avatar src={imagePlaceholder} sx={{ width: "100%", height: "100%", borderRadius: "0px" }} />
+                  )}
                 </Box>
               </Grid>
-              <Grid item xs={8} sx={{ display: "flex", gap: "15px", flexDirection : "column"}} >
-                <Typography variant="body1" sx={{ fontWeight: 700, fontSize: "20px", wordWrap: "break-word", color: "white"}} >
+
+              <Grid item xs={8} sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
+                {/* Institute Name */}
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: "20px",
+                    wordWrap: "break-word",
+                    color: "white",
+                    textShadow: "1px 1px 5px rgba(0,0,0,0.3)", // Slight text shadow for readability
+                  }}
+                >
                   {institute?.institute_name}
                 </Typography>
-                <Typography variant="body2">123 Main St, City</Typography>
-                <Typography variant="body2">Branches: 5</Typography>
+
+                {/* Address */}
+                <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                  <LocationOnIcon fontSize="small" sx={{ color: "rgba(255, 255, 255, 0.7)" }} />
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+                  >
+                    123 Main St, City
+                  </Typography>
+                </Box>
+
+                {/* Branches */}
+                <Box sx={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                  <BusinessIcon fontSize="small" sx={{ color: "rgba(255, 255, 255, 0.7)" }} />
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+                  >
+                    Branches: 5
+                  </Typography>
+                </Box>
               </Grid>
             </Grid>
           </Box>
 
+          {/* Plan and Button */}
           <Box
             sx={{
               mt: 2,
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              position: "relative",
+              zIndex: 3,
             }}
           >
-            <Typography variant="subtitle1">{institute?.subscription?.identity} - Plan</Typography>
+            {/* Subscription Plan */}
+            <Typography
+              variant="subtitle1"
+              sx={{ color: "rgba(255, 255, 255, 0.85)", fontWeight: "bold" }}
+            >
+              {institute?.subscription?.identity} Plan
+            </Typography>
+
+            {/* View Button */}
             <Button
               component={Link}
               to={`/institute-management/institutes/${institute?.uuid}`}
               state={{ id: institute?.uuid }}
               sx={{
                 mt: 1,
-                padding : "6px 16px",
+                padding: "6px 16px",
+                display: "none",
                 backgroundColor: "white",
-                color: "blueviolet",
+                color: "#4A24E3", // Accent color for button
                 fontWeight: "bold",
+                borderRadius: "12px",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", // Soft shadow
+                "&:hover": {
+                  backgroundColor: "#f0f0f0",
+                },
+                transition: "background-color 0.3s ease",
               }}
             >
               View

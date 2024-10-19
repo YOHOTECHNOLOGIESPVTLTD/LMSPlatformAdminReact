@@ -4,7 +4,7 @@ import { forwardRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
+// import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -17,10 +17,10 @@ import DatePicker from 'react-datepicker';
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
 // ** Custom Components Imports
-import { TextField } from '@mui/material';
+import { TextField, Tooltip, IconButton } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import DeleteDialog from 'components/modal/DeleteModel';
-import OptionsMenu from 'components/option-menu';
+// import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
 import PaymentAddDrawer from './PaymentAddDrawer';
 import PaymentCardHeader from './PaymentCardHeader';
@@ -33,8 +33,10 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
-import { selectPayments } from '../redux/paymentSelectors';
+import { selectPayments,selectLoading } from '../redux/paymentSelectors';
 import { getAllPayments } from '../redux/paymentThunks';
+import { getImageUrl } from 'themes/imageUtlis';
+import { formateDate } from 'utils';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -43,10 +45,28 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: `${theme.palette.primary.main} !important`
 }));
 
+const CustomNoRowsOverlay = () => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        fontSize: '18px',
+      }}
+    >
+      <Typography variant="body1" color="textSecondary">
+        No data available
+      </Typography>
+    </Box>
+  );
+};
+
 // ** renders client column
 const renderClient = (row) => {
   if (row?.institute?.image) {
-    return <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.institute?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+    return <Avatar src={getImageUrl(row?.institute?.image)} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
@@ -54,7 +74,7 @@ const renderClient = (row) => {
         color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row?.name || 'John Doe')}
+        {getInitials(row?.institute?.institute_name.toUpperCase() || 'John Doe')}
       </Avatar>
     );
   }
@@ -99,11 +119,6 @@ const FeesTable = () => {
     return formattedDateString;
   }
 
-  console.log(convertDateFormat(startDateRange));
-  console.log(endDateRange);
-
-  console.log(setRefetch);
-  console.log(selectedRows);
 
   const dispatch = useDispatch();
   const payments = useSelector(selectPayments);
@@ -169,7 +184,7 @@ const FeesTable = () => {
     },
     {
       flex: 1.25,
-      minWidth: 210,
+      minWidth: 200,
       field: 'institute_name',
       headerName: 'Institute Name',
       renderCell: ({ row }) => {
@@ -178,7 +193,7 @@ const FeesTable = () => {
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row.institute.name}
+                {row.institute.institute_name}
               </Typography>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 400,fontSize:"12px" ,mt:0.5}}>
                 {row.institute.email}
@@ -192,19 +207,19 @@ const FeesTable = () => {
       flex: 1.25,
       minWidth: 150,
       field: 'plans',
-      headerName: 'plans',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.plans?.plan_name}</Typography>
+      headerName: ' current plan',
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.currentSubscriptionPlan?.planId?.identity}</Typography>
     },
     {
       flex: 1.25,
       minWidth: 150,
       field: 'issuedDate',
       headerName: 'Issued Date',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.start_date} / {row.end_date}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{ formateDate(row?.currentSubscriptionPlan?.startDate)} - {formateDate(row?.currentSubscriptionPlan?.endDate)}</Typography>
     },
     {
       flex: 1.25,
-      minWidth: 120,
+      minWidth: 100,
       field: 'total',
       headerName: 'Amount Paid',
       renderCell: ({ row }) =>
@@ -216,18 +231,28 @@ const FeesTable = () => {
     ...defaultColumns,
     {
       flex: 0.1,
-      minWidth: 120,
+      minWidth: 150,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {/* <Tooltip title="View">
-            <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
+          <Tooltip title="View">
+            <IconButton component={Link} state={{ id : row?.institute?.uuid }} size="small" sx={{ color: 'text.secondary' }} to={`/payment-management/payments/${row.uuid}/view`}>
               <Icon icon="tabler:eye" />
             </IconButton>
+          </Tooltip>
+          {/* <Tooltip title="Edit" >
+            <IconButton component={Link} size='small' sx={{ color: "text.secondary"}} to={`/apps/invoice/edit/${row.id}`} >
+              <Icon icon="tabler:edit" fontSize={20} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Download" >
+            <IconButton  size='small' sx={{ color: "text.secondary"}} >
+              <Icon icon="tabler:download" fontSize={20} />
+            </IconButton>
           </Tooltip> */}
-          <OptionsMenu
+          {/* <OptionsMenu
             menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
@@ -255,27 +280,23 @@ const FeesTable = () => {
                 icon: <Icon icon="tabler:download" fontSize={20} />
               }
             ]}
-          />
+          /> */}
         </Box>
       )
     }
   ];
 
-  const [loading, setLoading] = useState(true);
-  // Simulate loading delay with useEffect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const loading = useSelector(selectLoading)
 
   return (
     <DatePickerWrapper>
-      <CardHeader title="Fee" />
+      {/* <CardHeader title="Fee" sx={{ 
+        "&.MuiCardHeader-title" : {
+          fontSize: "20px"
+        }
+      }} titleTypographyProps={true} /> */}
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{ display: "none"}}>
           <Card>
             <CardContent>
               <Grid container spacing={2}>
@@ -328,7 +349,7 @@ const FeesTable = () => {
           </Card>
         </Grid>
         <Grid item xs={12}>
-          <PaymentCardHeader selectedBranchId={selectedBranchId}  selectedRows={selectedRows}  toggle={toggleAddUserDrawer} />
+          {!loading && <PaymentCardHeader selectedBranchId={selectedBranchId}  selectedRows={selectedRows}  toggle={toggleAddUserDrawer} /> }
         </Grid>
         <Grid item xs={12}>
           <Card>
@@ -336,18 +357,41 @@ const FeesTable = () => {
               <FeesTableSkeleton />
             ) : (
               <DataGrid
-                sx={{ p: 2 }}
+                sx={{ 
+              "& .MuiDataGrid-row" : {
+                border : "1px solid #e6e5e7",
+                borderLeft: "none",
+                borderRight: "none",
+                ":hover" : {
+                   backgroundColor : "#f5f5f7",
+                   border : "1px solid #e6e5e7",
+                   borderLeft: "none",
+                   borderRight: "none"
+                }
+              },
+              "& .MuiDataGrid-columnHeaders" : {
+                   border : "1px solid #e6e5e7",
+                   borderLeft: "none",
+                   borderRight: "none"
+              }
+                }}
                 autoHeight
                 pagination
                 rowHeight={62}
                 // rows={StudentFees}
-                rows={payments}
+                rows={payments?.data ?? []}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
+                hideFooter={true}
+                hideFooterPagination={true}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+                slots={{
+                  noRowsOverlay : CustomNoRowsOverlay
+                }}
+                disableColumnMenu={true}
+                disableColumnFilter={true}
               />
             )}
           </Card>

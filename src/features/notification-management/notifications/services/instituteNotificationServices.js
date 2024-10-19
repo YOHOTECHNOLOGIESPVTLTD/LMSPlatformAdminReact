@@ -5,31 +5,6 @@ import Client from "../../../../api/index"
 
 const NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management/student-notifications`;
 
-export const getAllInstituteNotifications = async (data) => {
-  try {
-    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/read--notifications`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StaffNotifications. Status: ${response.status}`);
-    }
-  } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllStaffNotifications:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
-};
 
 export const searchNotifications = async (searchQuery) => {
   try {
@@ -117,9 +92,32 @@ export const updateNotification = async (data) => {
 export const getInstituteBrancheswithId = async (data) => {
    try {
     const response = await Client.branch.get_all(data)
+    console.log(response,"response")
+    return response
+   } catch (error) {
+    console.log(error,"error")
+     const error_message = getErrorMessage(error)
+     throw new Error(error_message)
+   }
+}
+
+export const createInstituteNotification = async (data) => {
+   try {
+    const response = await Client.notification.create(data)
     return response
    } catch (error) {
      const error_message = getErrorMessage(error)
      throw new Error(error_message)
    }
+}
+
+
+export const getAllInstituteNotifications = async(data) => {
+  try{
+   const response = await Client.notification.get_all(data)
+   return response
+  }catch(error){
+    const error_message = getErrorMessage(error)
+    throw new Error(error_message) 
+  }
 }

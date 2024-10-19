@@ -6,16 +6,16 @@ import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Button,
-  Checkbox,
+  // Checkbox,
   FormControl,
-  FormControlLabel,
+  // FormControlLabel,
   FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
   OutlinedInput,
-  Stack,
-  Typography
+  // Stack,
+  // Typography
 } from '@mui/material';
 
 // third party
@@ -34,6 +34,7 @@ import { useDispatch } from 'react-redux';
 import { useAtom } from 'jotai';
 import { stepsAtomWithPersistence } from 'store/atoms/authorized-atom';
 import { otp_step } from 'lib/constants';
+import { useSpinner } from 'context/spinnerContext';
 
 // import Google from 'assets/images/icons/social-google.svg';
 
@@ -42,9 +43,10 @@ import { otp_step } from 'lib/constants';
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
   const scriptedRef = useScriptRef();
-  const [checked, setChecked] = useState(true);
+  // const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();
   const [,setStep] = useAtom(stepsAtomWithPersistence)
+  const { showSpinnerFn,hideSpinnerFn} = useSpinner()
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -68,6 +70,7 @@ const FirebaseLogin = ({ ...others }) => {
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
+          showSpinnerFn()
           if (scriptedRef.current) {
            const response = await  dispatch(login(values.email, values.password));
            console.log(response,"response in")
@@ -84,6 +87,8 @@ const FirebaseLogin = ({ ...others }) => {
             setErrors({ submit: err.message });
             setSubmitting(false);
           }
+        }finally{
+          hideSpinnerFn()
         }
       }}
     >
@@ -139,7 +144,7 @@ const FirebaseLogin = ({ ...others }) => {
               </FormHelperText>
             )}
           </FormControl>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+          {/* <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
             <FormControlLabel
               control={<Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />}
               label="Remember me"
@@ -153,7 +158,7 @@ const FirebaseLogin = ({ ...others }) => {
             >
               Forgot Password?
             </Typography>
-          </Stack>
+          </Stack> */}
           {errors.submit && (
             <Box sx={{ mt: 3 }}>
               <FormHelperText error>{errors.submit}</FormHelperText>

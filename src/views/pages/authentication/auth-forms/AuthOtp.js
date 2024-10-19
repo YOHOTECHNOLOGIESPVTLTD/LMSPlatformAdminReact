@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { verifyOtp } from "features/authentication/authActions";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
+import { useSpinner } from "context/spinnerContext";
 
 const InputElement = styled("input")(
   ({ theme }) => `
@@ -250,6 +251,7 @@ const AuthOtpForm = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch()
+  const { showSpinnerFn , hideSpinnerFn } = useSpinner()
 
   useEffect(() => {
     if (timeLeft === 0) return;
@@ -275,14 +277,17 @@ const AuthOtpForm = () => {
     console.log(otp_data,JSON.parse(otp_data))
     setError("");
     try {
+      showSpinnerFn()
       const data = { otp: otp, email : otp_data2.email, token : otp_data2?.token}
       await dispatch(verifyOtp(data))
       navigate("/student/home");
     } catch (error) {
       setError("Invalid OTP. Please try again.");
+    }finally{
+      hideSpinnerFn()
     }
   };
-
+  
   return (
     <Box
       sx={{

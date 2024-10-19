@@ -1,5 +1,6 @@
 // ** React Imports
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 // ** MUI Imports
 import { Card, Box, Grid, Button, Typography } from '@mui/material';
@@ -9,50 +10,55 @@ import { getAllSubscriptionPlans } from 'features/subscription-management/plans/
 import { useDispatch } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { selectLoading, selectSubscriptionPlans } from 'features/subscription-management/plans/redux/subscriptionPlansSelectors';
+import SubscriptionSkelton from 'components/cards/Skeleton/SubscriptionSkelton';
 
 
 const Subscription = () => {
   const [ page,setpage] = useState(1)
   const dispatch = useDispatch();
   const [isCreatingPlan, setIsCreatingPlan] = useState(false);
+  const loading = useSelector(selectLoading)
+  const plans = useSelector(selectSubscriptionPlans)
 
   useEffect(() => {
     const data = { perPage : 3, page : page}
     dispatch(getAllSubscriptionPlans(data));
-  }, [dispatch]);
+  }, [dispatch,page]);
 
-  // Toggle between views (Pricing Plans and Create New Plan)
+
   const handleToggleView = () => {
     setIsCreatingPlan(!isCreatingPlan);
   };
-
+  
   return (
-    <Box sx={{ p: 4, minHeight: '100vh' }}>
-      {/* Header Section */}
+    <>
+    {
+      loading ?
+        <SubscriptionSkelton setpage={setpage} />
+      : 
+    <Box sx={{  minHeight: '100vh' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        
-        {/* Left Side Text Styling */}
         <Typography
           variant="h5"
           component="h1"
-          sx={{ fontSize: '24px', fontWeight: 'bold', color: '#333' }} // Customize font size and color here
+          sx={{ fontSize: '24px', fontWeight: 'bold', color: '#333' }}
         >
           {isCreatingPlan ? 'Create New Subscription Plan' : 'Subscription Plans'}
         </Typography>
         
-        {/* Toggle button between Pricing Plans and Create New Plan */}
         <Button
           variant="contained"
           startIcon={isCreatingPlan ? <ArrowBackIcon /> : <AddIcon />}
           onClick={handleToggleView}
           sx={{
-            backgroundColor: '#1976d2', // Customize button background color here
-            '&:hover': { backgroundColor: '#115293' }, // Customize button hover color
-            textTransform: 'none', // Remove uppercase transformation
-            fontSize: '16px', // Button font size
-            fontWeight: 'bold', // Button font weight
-            padding: '8px 16px', // Padding for button
-            borderRadius: '8px' // Rounded button corners
+            backgroundColor: '#1976d2',
+            '&:hover': { backgroundColor: '#115293' },
+            textTransform: 'none',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            padding: '8px 16px', 
+            borderRadius: '8px' 
           }}
         >
           {isCreatingPlan ? 'Back to Plans' : 'Create New Plan'}
@@ -72,12 +78,14 @@ const Subscription = () => {
           // Pricing Plans View
           <Grid item xs={12}>
             <Card sx={{ p: 3 }}>
-              <PricingPlans page={page} setpage={setpage}  />
+              <PricingPlans page={page} setpage={setpage} plans={plans}  />
             </Card>
           </Grid>
         )}
       </Grid>
     </Box>
+   }
+    </>
   );
 };
 

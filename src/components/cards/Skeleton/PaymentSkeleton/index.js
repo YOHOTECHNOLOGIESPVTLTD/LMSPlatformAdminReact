@@ -1,187 +1,73 @@
-import { Skeleton } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
+import { Table, TableRow,TableBody, TableCell ,Card, Box} from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { gridSpacing } from 'store/constant';
+import CustomSkeleton from '..';
 
 const PaymentSkeleton = () => {
   return (
-    <>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title={<Skeleton height={25} width={200} />} />
-            <CardContent sx={{ pt: 0 }}>
-              <Grid container spacing={4}>
-                <Grid item xs={12} sm={4}>
-                  <Skeleton variant="rectangular" height={56} animation="wave" />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Skeleton variant="rectangular" height={56} animation="wave" />
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Skeleton variant="rectangular" height={56} animation="wave" />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
+  <>
+  <Grid item xs={12} >
+     <Box sx={{ 
+          px: 1,
+          pb: 1,
+          pt: 3,
+          width: '100%',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: "space-between",
+          p: 2
+     }} >
+        <Box>
+          <CustomSkeleton width={62} height={37}  />
+        </Box>
+        <Box>
+          <CustomSkeleton width={143} height={36} />
+        </Box>
+     </Box>
+  </Grid>
+  <Grid item xs={12}>
+    <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={12}>
+          <Table sx={{ "& .MuiTableCell-body:not(.MuiTableCell-sizeSmall):not(.MuiTableCell-paddingCheckbox):not(.MuiTableCell-paddingNone)": {  py: 2 } }}>
+            <TableRow sx={{  height: "56px", borderBottom: "1px solid #e6e5e7", backgroundColor: "#F6F6F7", }}>
+               <TableCell sx={{ width: "120px"}} ><CustomSkeleton width={100} height={36}  animation="wave"  /></TableCell>
+               <TableCell sx={{ width: "140px"}}> <CustomSkeleton width={100} height={36}  animation="wave" /> </TableCell>
+               <TableCell sx={{ width: "180px"}} > <CustomSkeleton width={160} height={36} animation="wave"  /> </TableCell>
+               <TableCell sx={{ width: "200px" }}> <CustomSkeleton width={140} height={36} animation="wave"  /> </TableCell>
+             </TableRow>
+            <TableBody>
+            <TableRow sx={{ borderBottom: "1px solid #e6e5e7"}}>
+               <TableCell> <CustomSkeleton width={80} height={23}  animation="wave" /> </TableCell>
+               <TableCell> <CustomSkeleton width={80} height={23}  animation="wave" /> </TableCell>
+               <TableCell> <CustomSkeleton width={93} height={23}  animation="wave" /> </TableCell>
+               <TableCell> <CustomSkeleton width={120} height={23} animation="wave"  /> </TableCell>
+             </TableRow>
+             <TableRow sx={{ borderBottom: "1px solid #e6e5e7"}} >
+               <TableCell> <CustomSkeleton width={80} height={23}  animation="wave"  /></TableCell>
+               <TableCell> <CustomSkeleton width={80} height={23}  animation="wave" /> </TableCell>
+               <TableCell> <CustomSkeleton width={93} height={23}  animation="wave" /> </TableCell>
+               <TableCell> <CustomSkeleton width={120} height={23} animation="wave"  /> </TableCell>
+             </TableRow>
+             <TableRow sx={{ borderBottom: "1px solid #e6e5e7"}}>
+               <TableCell> <CustomSkeleton width={80} height={23}  animation="wave"  /></TableCell>
+               <TableCell> <CustomSkeleton width={80} height={23}  animation="wave" /> </TableCell>
+               <TableCell> <CustomSkeleton width={93} height={23}  animation="wave" /> </TableCell>
+               <TableCell> <CustomSkeleton width={120} height={23} animation="wave"  /> </TableCell>
+             </TableRow>
+             <TableRow sx={{ borderBottom: "1px solid #e6e5e7"}}>
+               <TableCell> <CustomSkeleton width={80} height={23}  animation="wave"    /></TableCell>
+               <TableCell> <CustomSkeleton width={80} height={23}  animation="wave" /> </TableCell>
+               <TableCell> <CustomSkeleton width={93} height={23}  animation="wave" /> </TableCell>
+               <TableCell> <CustomSkeleton width={120} height={23} animation="wave"  /> </TableCell>
+             </TableRow>
+           </TableBody>
+          </Table>
         </Grid>
       </Grid>
-
-      <Grid item xs={12} sm={12} sx={{ mt: 3 }}>
-        <Card>
-          <CardContent sx={{ pt: 3 }}>
-            <Grid container spacing={4}>
-              <Grid item xs={12} sm={6}>
-                <Skeleton variant="rectangular" height={56} width={250} animation="wave" />
-              </Grid>
-              <Grid container justifyContent="flex-end" mt={3} xs={12} sm={6}>
-                <Skeleton variant="rectangular" height={50} width={100} animation="wave" />
-              </Grid>
-            </Grid>
-          </CardContent>
-          <CardContent>
-            <Grid container md={12} spacing={gridSpacing}>
-              <Grid item xs={12}>
-                <Grid container alignItems="center" justifyContent="space-between" spacing={gridSpacing}>
-                  <Grid item xs zeroMinWidth>
-                    <Skeleton variant="rectangular" height={20} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" height={20} width={20} />
-                  </Grid>
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12}>
-                <Grid container spacing={1}>
-                  <Grid item xs={12}>
-                    <Grid container alignItems="center" spacing={gridSpacing} justifyContent="space-between">
-                      <Grid item xs={6}>
-                        <Skeleton variant="rectangular" height={20} />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Grid container alignItems="center" spacing={gridSpacing} justifyContent="space-between">
-                          <Grid item xs zeroMinWidth>
-                            <Skeleton variant="rectangular" height={20} />
-                          </Grid>
-                          <Grid item>
-                            <Skeleton variant="rectangular" height={16} width={16} />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Skeleton variant="rectangular" height={20} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <Grid container spacing={1}>
-                  <Grid item xs={12}>
-                    <Grid container alignItems="center" spacing={gridSpacing} justifyContent="space-between">
-                      <Grid item xs={6}>
-                        <Skeleton variant="rectangular" height={20} />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Grid container alignItems="center" spacing={gridSpacing} justifyContent="space-between">
-                          <Grid item xs zeroMinWidth>
-                            <Skeleton variant="rectangular" height={20} />
-                          </Grid>
-                          <Grid item>
-                            <Skeleton variant="rectangular" height={16} width={16} />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Skeleton variant="rectangular" height={20} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <Grid container spacing={1}>
-                  <Grid item xs={12}>
-                    <Grid container alignItems="center" spacing={gridSpacing} justifyContent="space-between">
-                      <Grid item xs={6}>
-                        <Skeleton variant="rectangular" height={20} />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Grid container alignItems="center" spacing={gridSpacing} justifyContent="space-between">
-                          <Grid item xs zeroMinWidth>
-                            <Skeleton variant="rectangular" height={20} />
-                          </Grid>
-                          <Grid item>
-                            <Skeleton variant="rectangular" height={16} width={16} />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Skeleton variant="rectangular" height={20} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <Grid container spacing={1}>
-                  <Grid item xs={12}>
-                    <Grid container alignItems="center" spacing={gridSpacing} justifyContent="space-between">
-                      <Grid item xs={6}>
-                        <Skeleton variant="rectangular" height={20} />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Grid container alignItems="center" spacing={gridSpacing} justifyContent="space-between">
-                          <Grid item xs zeroMinWidth>
-                            <Skeleton variant="rectangular" height={20} />
-                          </Grid>
-                          <Grid item>
-                            <Skeleton variant="rectangular" height={16} width={16} />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Skeleton variant="rectangular" height={20} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <Grid container spacing={1}>
-                  <Grid item xs={12}>
-                    <Grid container alignItems="center" spacing={gridSpacing} justifyContent="space-between">
-                      <Grid item xs={6}>
-                        <Skeleton variant="rectangular" height={20} />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Grid container alignItems="center" spacing={gridSpacing} justifyContent="space-between">
-                          <Grid item xs zeroMinWidth>
-                            <Skeleton variant="rectangular" height={20} />
-                          </Grid>
-                          <Grid item>
-                            <Skeleton variant="rectangular" height={16} width={16} />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Skeleton variant="rectangular" height={20} />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </CardContent>
-          <CardContent sx={{ p: 1.25, display: 'flex', pt: 0, justifyContent: 'center' }}>
-            <Skeleton variant="rectangular" height={25} width={75} />
-          </CardContent>
-        </Card>
-      </Grid>
-    </>
+    </Card>
+  </Grid>
+  </>
   );
 };
 

@@ -1,34 +1,19 @@
 // PaymentService.js
 import axios from 'axios';
+import client from "api/index"
+import { getErrorMessage } from 'utils/error-handler';
 
 const PAYMENT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/institute-subscriptions`;
 
 const Subscription_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/subscription-plans`;
 
-export const getAllPayments = async () => {
+export const getAllPayments = async (querys) => {
   try {
-    const response = await axios.get(`${PAYMENT_API_ENDPOINT}/get-all`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-
-    console.log(response);
-
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Payments. Status: ${response.status}`);
-    }
+    const response = await client.payments.get_all(querys)
+    return response;
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllPayments:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    const error_message = getErrorMessage(error)
+    throw new Error(error_message)
   }
 };
 

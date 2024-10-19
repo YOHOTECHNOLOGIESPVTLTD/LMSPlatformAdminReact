@@ -78,7 +78,7 @@ const SubscriptionFeatures = () => {
 
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState('');
-  const { show, hide } = useSpinner()
+  const { showSpinnerFn, hideSpinnerFn } = useSpinner()
   const navigate = useNavigate()
 
   const handleInputImageReset = () => {
@@ -145,7 +145,7 @@ const SubscriptionFeatures = () => {
     console.log('subData', log);
    
     try {
-      show()
+      showSpinnerFn()
       const result = await addSubscriptionFeature(subscription_data);
       toast.success(result.message);
       navigate(-1);
@@ -153,13 +153,13 @@ const SubscriptionFeatures = () => {
       console.log(error);
       toast.error(error?.message)
     }finally{
-      hide()
+      hideSpinnerFn()
     }    
   };
 
   const handleInputImageChange = async (file) => {
     try {
-      show()
+      showSpinnerFn()
       const { files } = file.target;
       const data = new FormData()
       data.append("file",files[0])
@@ -170,7 +170,7 @@ const SubscriptionFeatures = () => {
     } catch (error) {
       toast.error(error?.message)
     }finally{
-      hide()
+      hideSpinnerFn()
     }
    
   };

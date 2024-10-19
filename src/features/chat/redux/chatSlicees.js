@@ -44,8 +44,8 @@ export const sendMsg = createAsyncThunk('appChat/sendMsg', async (obj, { dispatc
 
   return response.data;
 });
-const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
-const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2);
+// const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+// const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2);
 
 export const appChatSlice = createSlice({
   name: 'chats',
@@ -148,7 +148,7 @@ export const appChatSlice = createSlice({
           },
           {
             message: 'I will purchase it for sure. 👍',
-            time: previousDay,
+            time: 'Mon Dec 10 2018 07:46:53 GMT+0000 (GMT)',
             senderId: 1,
             feedback: {
               isSent: true,
@@ -215,7 +215,7 @@ export const appChatSlice = createSlice({
           },
           {
             message: 'If it takes long you can mail me at my mail address.',
-            time: dayBeforePreviousDay,
+            time: 'Mon Dec 10 2018 07:46:53 GMT+0000 (GMT)',
             senderId: 11,
             feedback: {
               isSent: true,
@@ -430,7 +430,7 @@ export const appChatSlice = createSlice({
         },
         {
           message: 'I will purchase it for sure. 👍',
-          time: previousDay,
+          time: 'Mon Dec 10 2018 07:46:53 GMT+0000 (GMT)',
           senderId: 1,
           feedback: {
             isSent: true,

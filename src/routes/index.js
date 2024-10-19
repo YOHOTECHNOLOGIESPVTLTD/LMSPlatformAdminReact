@@ -23,6 +23,7 @@ const UsersPage = Loadable(lazy(() => import('views/user-management/users-page/u
 const ViewUserPage = Loadable(lazy(() => import('views/user-management/users-page/users[id]-page')));
 //Payment Management
 const Payments = Loadable(lazy(() => import('views/payment-management/payments-page')));
+const PaymentsViewPage = Loadable(lazy(() => import("views/payment-management/payment-[id]-page/index")))
 
 //Institute Management
 const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes-overview-page')));
@@ -112,8 +113,14 @@ const ApplicationRoutes = () => {
     <Routes>
       <Route element={<Protected />}>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Navigate to="/dashboard" />} />
+          {/* <Route index element={<Navigate to="/dashboard" />} /> */}
           <Route path="dashboard" element={<Dashboard2 />} />
+        </Route>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Navigate to="/institute-management/institutes" />} />
+          <Route path="/institute-management/institutes" element={<InstitutesPage />} />
+          <Route path="/institute-management/institutes/:id" element={<InstituteProfile />} />
+          <Route path="/institute-management/institutes/add" element={<AddNewInstitutesPage />} />
         </Route>
 
         <Route element={<AdminRoute />}>
@@ -146,18 +153,12 @@ const ApplicationRoutes = () => {
         <Route path="/payment-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/payment-management/payments" />} />
           <Route path="payments" element={<Payments />} />
+          <Route path='payments/:id/view' element={<PaymentsViewPage />} />
         </Route>
         {/* Profile */}
         <Route path="/profile-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/account-settings" />} />
           <Route path="account-settings" element={<AccountSettings />} />
-        </Route>
-
-        <Route path="/institute-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/institute-management/institutes" />} />
-          <Route path="institutes" element={<InstitutesPage />} />
-          <Route path="institutes/:id" element={<InstituteProfile />} />
-          <Route path="institutes/add" element={<AddNewInstitutesPage />} />
         </Route>
 
         {/* SubscriptionManagement */}

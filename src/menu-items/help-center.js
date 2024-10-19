@@ -22,15 +22,15 @@ const pages = {
       icon: icons.IconHelp,
 
       children: [
-        // {
-        //   id: 'helps',
-        //   title: 'Faqs',
-        //   icon: icons.IconHelp,
-        //   type: 'item',
-        //   url: '/help-center/helps',
-        //   target: false,
-        //   breadcrumbs: false
-        // },
+        {
+          id: 'helps',
+          title: 'Faqs',
+          icon: icons.IconHelp,
+          type: 'item',
+          url: '/help-center/helps',
+          target: false,
+          breadcrumbs: false
+        },
         {
           id: 'tickets',
           title: 'Tickets',
@@ -40,15 +40,15 @@ const pages = {
           icon: icons.IconTicket,
           breadcrumbs: false
         },
-        // {
-        //   id: 'chatsupport',
-        //   title: 'Chat Support',
-        //   type: 'item',
-        //   url: '/help-center/ChatSupport',
-        //   target: false,
-        //   icon: icons.IconTicket,
-        //   breadcrumbs: false
-        // }
+        {
+          id: 'chatsupport',
+          title: 'Chat Support',
+          type: 'item',
+          url: '/help-center/ChatSupport',
+          target: false,
+          icon: icons.IconTicket,
+          breadcrumbs: false
+        }
       ]
     }
   ]

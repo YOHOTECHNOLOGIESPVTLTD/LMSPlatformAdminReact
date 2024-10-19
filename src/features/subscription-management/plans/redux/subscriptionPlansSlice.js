@@ -5,11 +5,15 @@ const subscriptionPlanSlice = createSlice({
   name: 'subscriptionPlans',
   initialState: {
     data: [],
-    loading: true
+    all : [],
+    loading: false
   },
   reducers: {
     setSubscriptionPlans: (state, action) => {
       state.data = action.payload;
+    },
+    setAllPlans : (state,action) => {
+      state.all = action.payload
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
@@ -17,5 +21,5 @@ const subscriptionPlanSlice = createSlice({
   }
 });
 
-export const { setSubscriptionPlans, setLoading } = subscriptionPlanSlice.actions;
+export const { setSubscriptionPlans, setLoading, setAllPlans } = subscriptionPlanSlice.actions;
 export default subscriptionPlanSlice.reducer;

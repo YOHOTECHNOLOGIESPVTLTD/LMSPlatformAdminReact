@@ -31,8 +31,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import StepperWrapper from 'styles/mui/stepper';
 import { addInstitute} from 'features/institute-management/services/instituteService';
 import { useSelector,useDispatch } from 'react-redux';
-import { getAllSubscriptionPlans } from 'features/subscription-management/plans/redux/subscriptionPlansThunks';
-import { selectSubscriptionPlans } from 'features/subscription-management/plans/redux/subscriptionPlansSelectors';
+import { getSubscriptionList } from 'features/subscription-management/plans/redux/subscriptionPlansThunks';
+import {  selectPlans } from 'features/subscription-management/plans/redux/subscriptionPlansSelectors';
 import { handleFileUpload } from 'features/fileUpload';
 
 import FormStep1PersonalInfo from 'features/institute-management/institute-add-page/steps/step1';
@@ -190,8 +190,9 @@ const gallerySchema = yup.object().shape({});
 const AddInstitutePage = () => {
   // ** States
   const [activeStep, setActiveStep] = useState(0);
-  const plans = useSelector(selectSubscriptionPlans)
+  const plans = useSelector(selectPlans)
   const dispatch = useDispatch()
+  // const loading = useSelector(selectLoading)
   // ** Hooks
   const {
     reset: accountReset,
@@ -246,7 +247,7 @@ const AddInstitutePage = () => {
   
   
   useEffect(()=>{
-   dispatch(getAllSubscriptionPlans())
+   dispatch(getSubscriptionList())
   },[])
 
   const handleBack = () => {

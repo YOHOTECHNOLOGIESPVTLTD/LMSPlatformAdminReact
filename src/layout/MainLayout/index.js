@@ -68,24 +68,23 @@ const MainLayout = () => {
       <CssBaseline />
       {/* header */}
       <AppBar
-        enableColorOnDark
+        // enableColorOnDark
         position="fixed"
         color="inherit"
         elevation={0}
         sx={{
-          bgcolor: "#FFFFFF",
-          width: "calc( 100% - 312px )",
-          margin: "1rem",
-          borderRadius: "15px",
-          boxShadow: 1,
+          backgroundColor: 'rgba(255, 255, 255, 0.01)',
+          backdropFilter: 'blur(10px)', 
+          width: "calc( 100% - 280px )",
           zIndex : 1000,
           transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ borderRadius: "15px", boxShadow: 1, margin: "1rem", backgroundColor: "white"}} >
           <Header handleLeftDrawerToggle={handleLeftDrawerToggle} />
         </Toolbar>
       </AppBar>
+
 
       {/* drawer */}
       <Sidebar drawerOpen={!matchDownMd ? leftDrawerOpened : !leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />

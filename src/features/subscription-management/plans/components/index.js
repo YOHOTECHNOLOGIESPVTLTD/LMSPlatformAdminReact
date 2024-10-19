@@ -1,38 +1,38 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { Box } from '@mui/material';
 
 // ** Custom Components Imports
 import PlanDetails from './plan-details';
-import { getAllSubscriptionPlans } from '../redux/subscriptionPlansThunks';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectSubscriptionPlans } from '../redux/subscriptionPlansSelectors';
+// import { getAllSubscriptionPlans } from '../redux/subscriptionPlansThunks';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { selectSubscriptionPlans } from '../redux/subscriptionPlansSelectors';
 import { Pagination } from '@mui/material';
-import { useSpinner } from 'context/spinnerContext';
+// import { useSpinner } from 'context/spinnerContext';
 
-const PricingPlans = ({page,setpage}) => {
-  const {show,hide} = useSpinner()
+const PricingPlans = ({page,setpage,plans}) => {
+
   // ** Props
 
   // create-modal
-  const dispatch = useDispatch();
-  const plans = useSelector(selectSubscriptionPlans);
 
-  useEffect(() => {
-    try {
-      show()
-      let data = { perPage : 3,page:page}
-      dispatch(getAllSubscriptionPlans(data));
-    } catch (error) {
-      hide()
-    }finally{
-      hide()
-    }
+
+  // useEffect(() => {
+  //   try {
+  //     showSpinnerFn()
+  //     let data = { perPage : 3,page:page}
+  //     dispatch(getAllSubscriptionPlans(data));
+  //     console.log("running",data)
+  //   } catch (error) {
+  //     hideSpinnerFn()
+  //   }finally{
+  //     hideSpinnerFn()
+  //   }
     
-  }, [page]);
+  // }, []);
 
-  console.log('plans', plans);
+
   return (
     <Grid container spacing={6}>
       {plans &&
