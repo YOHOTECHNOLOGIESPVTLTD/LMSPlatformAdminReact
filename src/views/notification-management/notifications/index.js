@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button, Box, Card, Grid, Typography } from '@mui/material';
-import axios from 'axios';
 // import { getInitials } from 'utils/get-initials';
 // import CustomAvatar from '../../../components/mui/avatar';
 import CustomChip from '../../../components/mui/chip';
@@ -10,12 +8,30 @@ import CardStatsHorizontalWithDetails from '../component/HorizontalCard';
 import TableHeader from '../component/TableHeader';
 import AddUserDrawer from '../component/AddUserDrawer';
 import UserSkeleton from 'components/cards/Skeleton/UserSkeleton';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectInstituteNotifications, selectLoading } from 'features/notification-management/notifications/redux/instituteNotificationSelectors';
+import { getAllInstituteNotifications } from 'features/notification-management/notifications/redux/instituteNotificationThunks';
+import client from "api/index"
+import toast from 'react-hot-toast';
+import { getErrorMessage } from 'utils/error-handler';
 
 const userStatusObj = {
   send: 'success',
   pending: 'warning',
   failed: 'secondary',
 };
+
+const handleResendNotification = async (data) => {
+  try {
+    console.log(data,"data")
+    const payload = { notification_id : data?._id , institute_id: data?.instituteId?._id,branch_id: data?.branch}
+    await client.notification.resend(payload)
+    toast.success("notification resend successfully")
+  } catch (error) {
+    const error_message = getErrorMessage(error)
+    toast.error(error_message)
+  }
+}
 
 // const renderClient = (row) => {
 //   if (row?.image) {
@@ -38,26 +54,24 @@ const userStatusObj = {
 //   }
 // };
 
-const RowOptions = () => (
-  <Link to="profile">
-    <Button size="small" variant="outlined" color="secondary">
+const RowOptions = ({data}) => (
+    <Button size="small" variant="outlined" onClick={() => handleResendNotification(data)} color="secondary">
       Resend
     </Button>
-  </Link>
 );
 
 const columns = [
-  {
-    flex: 0.1,
-    minWidth: 100,
-    headerName: 'Id',
-    field: 'employee_id',
-    renderCell: ({ row }) => (
-      <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-        {row?.institute_id}
-      </Typography>
-    ),
-  },
+  // {
+  //   flex: 0.1,
+  //   minWidth: 100,
+  //   headerName: 'Id',
+  //   field: 'employee_id',
+  //   renderCell: ({ row }) => (
+  //     <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
+  //       {row?.id}
+  //     </Typography>
+  //   ),
+  // },
   // {
   //   flex: 0.1,
   //   minWidth: 100,
@@ -87,7 +101,7 @@ const columns = [
     headerName: 'Body',
     renderCell: ({ row }) => (
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+        <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize', textWrap: "now-wrap",textOverflow: "ellipsis" }}>
           {row?.body}
         </Typography>
       </Box>
@@ -97,14 +111,12 @@ const columns = [
     flex: 0.2,
     field: ' institutes',
     minWidth: 190,
-    headerName: ' institutes',
+    headerName: ' institute',
     renderCell: ({ row }) => (
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        {row?.institute?.map((item, index) => (
-          <Typography key={index} noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-            {item?.name}
+          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+            {row?.instituteId?.institute_name}
           </Typography>
-        ))}
       </Box>
     ),
   },
@@ -130,52 +142,19 @@ const columns = [
     sortable: false,
     field: 'actions',
     headerName: 'Actions',
-    renderCell: ({ row }) => <RowOptions id={row?.id} />,
+    renderCell: ({ row }) => <RowOptions id={row?.id} data={row} />,
   },
 ];
 
 const Notifications = () => {
-  const [users, setUsers] = useState([]);
-  const [groups, setGroups] = useState([]);
-  const [activeUser, setActiveUser] = useState('');
   const [value, setValue] = useState('');
-  const [inActiveUser, setInActiveUser] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const loading = useSelector(selectLoading)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-
-  const getAllGroups = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/notification/get-all`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      setGroups(response.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getAllUsers = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/notification/get-all`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      setUsers(response.data.Data);
-      setActiveUser(response.data.active);
-      setInActiveUser(response.data.inActive);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  const dispath = useDispatch()
+  const notifications_list = useSelector(selectInstituteNotifications)
+  console.log(notifications_list,"notification list")
+ 
   const cardStatsData = {
     statsSquare: [
       {
@@ -304,13 +283,13 @@ const Notifications = () => {
     ]
   };
 
-  useEffect(() => {
-    getAllUsers();
-  }, []);
+  const getList = async () => {
+    dispath(getAllInstituteNotifications())
+  }
 
   useEffect(() => {
-    getAllGroups();
-  }, []);
+    getList()
+  },[dispath])
 
   const handleFilter = useCallback((val) => {
     setValue(val);
@@ -335,10 +314,10 @@ const Notifications = () => {
       </Box>
     );
   };
-
+  console.log(notifications_list,"notification_list")
   return (
     <>
-      {loading ? (
+      {loading  ? (
         <UserSkeleton />
       ) : (
         <Grid container spacing={3}>
@@ -346,12 +325,12 @@ const Notifications = () => {
             {cardStatsData && (
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4} sm={6}>
-                  <CardStatsHorizontalWithDetails title={'Total Notifications'} stats={users?.length ?? 0} icon={'tabler:bell'} sx={{ minHeight: "102px", maxHeight: "102px" }} />
+                  <CardStatsHorizontalWithDetails title={'Total Notifications'} stats={notifications_list?.report?.total ?? 0} icon={'tabler:bell'} sx={{ minHeight: "102px", maxHeight: "102px" }} />
                 </Grid>
                 <Grid item xs={12} md={4} sm={6}>
                   <CardStatsHorizontalWithDetails
                     title={'Seen Notification'}
-                    stats={groups?.length ?? 0}
+                    stats={notifications_list?.report?.read ?? 0}
                     avatarColor={'error'}
                     icon={'tabler:bell-minus'}
                     sx={{ minHeight: "102px", maxHeight: "102px" }}
@@ -360,13 +339,12 @@ const Notifications = () => {
                 <Grid item xs={12} md={4} sm={6}>
                   <CardStatsHorizontalWithDetails
                     title={'Unseen Notification'}
-                    stats={activeUser}
+                    stats={notifications_list?.report?.unread ?? 0}
                     avatarColor={'success'}
                     icon={'tabler:bell-ringing'}
                     sx={{ minHeight: "102px", maxHeight: "102px" }}
                   />
                 </Grid>
-                {console.log(inActiveUser,"inActiveUser")}
                 {/* <Grid item xs={12} md={3} sm={6}>
                   <CardStatsHorizontalWithDetails
                     title={'Blocked Users'}
@@ -410,7 +388,7 @@ const Notifications = () => {
                  }}
                 autoHeight
                 rowHeight={62}
-                rows={users}
+                rows={notifications_list?.data ?? []}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination

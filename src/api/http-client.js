@@ -23,6 +23,7 @@ Axios.interceptors.response.use((response)=>response,
        localStorage.removeItem("permissions")
        localStorage.removeItem("token")
        localStorage.removeItem("userData")
+       window.location.href = "/"
     }
     return Promise.reject(error)
 }

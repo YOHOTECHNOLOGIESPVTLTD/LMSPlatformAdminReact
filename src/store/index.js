@@ -1,4 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { FLUSH, REGISTER, REHYDRATE, PAUSE, PERSIST, PURGE } from "redux-persist"
 import customizationReducer from './customizationReducer';
 import auth from 'features/authentication/authReducer';
 import groupReducer from 'features/user-management/groups-page/redux/groupSlice';
@@ -39,7 +40,13 @@ const store = configureStore({
     subscriptionFeatures: subscriptionFeaturesReducer,
     openTickets: openTicketSlice,
     closedTickets: closedTicketSlice
-  }
+  },
+  middleware:  getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: ['subscriptionPlans/setSubscriptionPlans', 'subscriptionPlans/setLoading',FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      ignoredPaths: ['chat.chats'],
+    },
+  }),
 });
 // configureStore(reducer);
 const persister = 'Free';

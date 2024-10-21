@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Box, Button, Drawer, IconButton, Typography, styled, Checkbox, Grid, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -14,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectInstitutes } from 'features/institute-management/redux/instituteSelectors';
 import { useSpinner } from 'context/spinnerContext';
 import toast from 'react-hot-toast';
-import { getInstituteBrancheswithId } from 'features/notification-management/notifications/services/instituteNotificationServices';
+import { createInstituteNotification, getInstituteBrancheswithId } from 'features/notification-management/notifications/services/instituteNotificationServices';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -39,13 +38,17 @@ const schema = yup.object().shape({
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required(),
   body: yup.string().required('Body field is required'),
-  institutes: yup.array().min(1, 'Select at least one institute').required('instituteList field is required')
+  institutes: yup.object().required('instituteList field is required'),
+  branches : yup.array().min(1,"Select at least one branches").required("branch is required"),
+  link : yup.string().optional()
 });
 
 const defaultValues = {
   title: '',
-  institutes: [],
-  body: ''
+  institutes: {},
+  branches : [],
+  body: '',
+  link:''
 };
 
 const SidebarAddUser = (props) => {
@@ -54,10 +57,10 @@ const SidebarAddUser = (props) => {
   // const [inputValue, setInputValue] = useState('');
   // const image = require('../../../assets/images/avatar/1.png');
   // const [imgSrc, setImgSrc] = useState(image);
-  const [selectedImage, setSelectedImage] = useState('');
+  // const [selectedImage, setSelectedImage] = useState('');
   const dispatch = useDispatch()
   const instituteList = useSelector(selectInstitutes)
-  const { show , hide } = useSpinner()
+  const { showSpinnerFn , hideSpinnerFn } = useSpinner()
 
   useEffect(() => {
     dispatch(getAllInstitutes())
@@ -78,36 +81,29 @@ const SidebarAddUser = (props) => {
   });
 
   const onSubmit = async (data) => {
-    const filtered = data.institutes?.map((e) => e.id.toString());
-    console.log(filtered);
-    var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('body', data.body);
-    bodyFormData.append('institute_id', filtered);
-    console.log(bodyFormData);
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/notification/send`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      data: bodyFormData
-    };
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Create User : ', response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    setError('');
-    toggle();
-    reset();
+    
+    try {
+      showSpinnerFn()
+      const filterbranches = data.branches?.map((e) => e.uuid)
+      console.log(filterbranches,data);
+      const new_notification = {
+      title : data.title,
+      body : data.body,
+      link : data.link,
+      institute_id : data?.institutes?._id,
+      branches : filterbranches
+    }
+    await createInstituteNotification(new_notification)
+      setError('');
+      toggle();
+      reset();
+    } catch (error) {
+      toast.error(error?.message)
+    }finally{
+     hideSpinnerFn()
+    }
   };
-  console.log(instituteList,"instituteList",setSelectedImage)
+  console.log(instituteList,"instituteList",errors,control)
   // const ImgStyled = styled('img')(({ theme }) => ({
   //   width: 100,
   //   height: 100,
@@ -148,7 +144,7 @@ const SidebarAddUser = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
         <Typography variant="h3">Add Notification</Typography>
@@ -195,35 +191,33 @@ const SidebarAddUser = (props) => {
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <Autocomplete
-                  multiple
+                  // multiple
                   id="select-multiple-chip"
                   sx={{ mb: 4 }}
                   options={instituteList}
                   getOptionLabel={(option) => option.institute_name}
                   value={value}
                   onChange={async (e, newValue) => {
-                    if (newValue && newValue.some((option) => option.id === 'selectAll')) {
-                      onChange(instituteList.filter((option) => option.id !== 'selectAll'));
-                    } else {
+                    console.log(newValue)
                       try {
-                        show()
+                        showSpinnerFn()
                         onChange(newValue);
                         const data = { institute : newValue?.uuid}
+                        console.log(data,newValue,"data and new value")
                         const response = await getInstituteBrancheswithId(data)
                         console.log(response,"response")
-                        setBranchList(response?.data)
+                        setBranchList(response?.data?.data)
                       } catch (error) {
                         toast.error(error?.message)
                       }finally{
-                        hide()
+                        hideSpinnerFn()
                       }
-                    }
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       fullWidth
-                      label="instituteList"
+                      label="institute list"
                       error={Boolean(errors.institutes)}
                       {...(errors.institutes && { helperText: errors.institutes.message })}
                     />
@@ -263,7 +257,7 @@ const SidebarAddUser = (props) => {
           </Grid>
           <Grid>
             <Controller
-              name="Branches"
+              name="branches"
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
@@ -285,9 +279,9 @@ const SidebarAddUser = (props) => {
                     <TextField
                       {...params}
                       fullWidth
-                      label="instituteList"
-                      error={Boolean(errors.institutes)}
-                      {...(errors.institutes && { helperText: errors.institutes.message })}
+                      label="branch list"
+                      error={Boolean(errors.branches)}
+                      {...(errors.branches && { helperText: errors.branches.message })}
                     />
                   )}
                   renderOption={(props, option, { selected }) => (
@@ -362,6 +356,25 @@ const SidebarAddUser = (props) => {
                   {...(errors.body && { helperText: errors.body.message })}
                 />
               )}
+            />
+          </Grid>
+          <Grid>
+            <Controller 
+             name="link"
+             control={control}
+             rules={{ required: false }}
+             render={({ field : { value, onChange}}) => (
+              <TextField
+               fullWidth
+               sx={{ mb: 4}}
+               label="Link"
+               placeholder='https://www.{some_notification_related_links}.com'
+               onChange={onChange}
+               value={value}
+               error={Boolean(errors?.link)}
+               {...(errors?.link) && { helperText: errors?.link?.message} }
+              />
+             )}
             />
           </Grid>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>

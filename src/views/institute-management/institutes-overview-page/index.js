@@ -1,10 +1,10 @@
 // import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 // ** MUI Imports
 import CustomAvatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+// import CardContent from '@mui/material/CardContent';
 // import CardHeader from '@mui/material/CardHeader';
 // import CustomChip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
@@ -17,7 +17,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import InstituteSkeleton from 'components/cards/Skeleton/InstituteSkeleton';
 import Icon from 'components/icon';
 import OptionsMenu from 'components/option-menu';
-import { Button } from '@mui/material';
+// import { Button } from '@mui/material';
 import InstituteCard from 'features/institute-management/institutes-overview-page/instituteCard';
 
 import InstituteHeaderSection from 'features/institute-management/institutes-overview-page/components/InstituteHeaderSection';
@@ -33,9 +33,10 @@ import { getAllInstitutes } from 'features/institute-management/redux/instituteT
 import StatusDialog from 'components/modal/DeleteModel';
 import toast from 'react-hot-toast';
 import { instituteChangeStatus } from 'features/institute-management/services/instituteService';
+import { useSpinner } from 'context/spinnerContext';
 
 const Institutes = () => {
-  const [plan, setPlan] = useState('');
+  // const [plan, setPlan] = useState('');
   // const [value, setValue] = useState('');
   // const [status, setStatus] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -47,6 +48,7 @@ const Institutes = () => {
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { showSpinnerFn, hideSpinnerFn } = useSpinner()
 
   const dispatch = useDispatch();
   const allInstitutes = useSelector(selectInstitutes);
@@ -62,9 +64,9 @@ const Institutes = () => {
   //   setValue(val);
   // }, []);
 
-  const handlePlanChange = useCallback((e) => {
-    setPlan(e.target.value);
-  }, []);
+  // const handlePlanChange = useCallback((e) => {
+  //   setPlan(e.target.value);
+  // }, []);
 
   // const handleStatusChange = useCallback((e) => {
   //   setStatus(e.target.value);
@@ -299,6 +301,7 @@ const Institutes = () => {
   };
 
   const handleStatusChangeApi = async () => {
+    showSpinnerFn()
     const data = {
       status: selectedInstitutesStatus,
       id: selectedInstitutes?.id
@@ -309,6 +312,7 @@ const Institutes = () => {
       setRefetch((state) => !state);
     } else {
       toast.error(response.message);
+      hideSpinnerFn()
     }
   };
   console.log(allInstitutes,"allInstitutes")
@@ -322,9 +326,8 @@ const Institutes = () => {
         </Grid>
 
         {/* User Filter Card */}
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
-            {/* <CardHeader title="Institutes" /> */}
             <CardContent>
               <Grid container spacing={3}>
                 <Grid item sm={4} xs={12}>
@@ -370,7 +373,7 @@ const Institutes = () => {
               </Grid>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12}>
           <TableHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />

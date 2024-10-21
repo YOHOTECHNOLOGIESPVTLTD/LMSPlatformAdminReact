@@ -9,7 +9,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 // ** Icon Imports
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { instituteChangeStatus } from 'features/institute-management/services/instituteService';
 import toast from 'react-hot-toast';
 import StatusDialog from 'components/modal/DeleteModel';
@@ -113,9 +113,9 @@ const UserViewLeft = ({ institute }) => {
             <MenuItem value={'false'}>Inactive</MenuItem>
           </TextField>
 
-          <Box component={Link} to={`user-management`} target="_blank" variant="contained" sx={{ '& svg': { mr: 2 } }}>
+          {/* <Box component={Link} to={`user-management`} target="_blank" variant="contained" sx={{ '& svg': { mr: 2 } }}>
             Go to Dashboard
-          </Box>
+          </Box> */}
           <StatusDialog
             open={statusOpen}
             setOpen={setStatusDialogOpen}

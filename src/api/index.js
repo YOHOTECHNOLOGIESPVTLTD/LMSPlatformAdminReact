@@ -16,7 +16,17 @@ class Client {
    }
    subscription = {
     all : (params) => httpClient.get(API_END_POINTS.subscription.all,params),
-    create : (data) => httpClient.post(API_END_POINTS.subscription.create,data)
+    create : (data) => httpClient.post(API_END_POINTS.subscription.create,data),
+    get_all : (data) => httpClient.get(API_END_POINTS.subscription.get_all,data)
+   }
+   notification = {
+      create : (data) => httpClient.post(API_END_POINTS.notification.create,data),
+      get_all : (params) => httpClient.get(API_END_POINTS.notification.get_all,params),
+      resend : (querys) => httpClient.get(API_END_POINTS.notification.resend,querys)
+   }
+   payments = {
+      get_all : (params) => httpClient.get(API_END_POINTS.payments.getAll,params),
+      getWidId : (params) => httpClient.get(API_END_POINTS.payments.getWithId + params?.institute)
    }
    file ={
    upload : (data) => httpClient.uploadFile(API_END_POINTS.fileUpload,data),

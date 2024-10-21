@@ -1,6 +1,4 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
+import { useEffect } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -15,10 +13,15 @@ import * as yup from 'yup';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
-import { getAllInstitutes } from 'features/institute-management/services/instituteService';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { addPayment, getAllPaymentSubscription } from '../services/paymentServices';
+import { addPayment } from '../services/paymentServices';
+import { getAllInstitutes } from 'features/institute-management/redux/instituteThunks';
+import { selectInstitutes } from 'features/institute-management/redux/instituteSelectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSpinner } from 'context/spinnerContext';
+import { getSubscriptionList } from 'features/subscription-management/plans/redux/subscriptionPlansThunks';
+import { selectPlans } from 'features/subscription-management/plans/redux/subscriptionPlansSelectors';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -44,28 +47,38 @@ const PaymentAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
 
-  const [activeInstitutes, setActiveInstitutes] = useState([]);
+  const Institute_List = useSelector(selectInstitutes)
+  const Subscription_List = useSelector(selectPlans)
+  
+  const { showSpinnerFn,hideSpinnerFn} = useSpinner()
+  const dispatch = useDispatch()
 
-  const [activePlans, setActivePlans] = useState([]);
+  const getActiveInstitutes = () => {
+    try {
+      showSpinnerFn()
+      dispatch(getAllInstitutes()) 
+    } catch (error) {
+       toast.error(error?.message)
+    }finally{
+      hideSpinnerFn()
+    }
+  }
+
+  const getActiveSubscriptionPlans = () => {
+    try {
+     showSpinnerFn() 
+     dispatch(getSubscriptionList())
+    } catch (error) {
+      toast.error(error?.message)
+    }finally{
+      hideSpinnerFn()
+    }
+  }
 
   useEffect(() => {
-    getActiveInstitutes();
-    getActiveSubscriptions();
+    getActiveInstitutes()
+    getActiveSubscriptionPlans()
   }, []);
-
-  const getActiveInstitutes = async () => {
-    const result = await getAllInstitutes();
-
-    console.log('active Institues : ', result.data);
-    setActiveInstitutes(result.data.data);
-  };
-
-  const getActiveSubscriptions = async () => {
-    const result = await getAllPaymentSubscription();
-
-    console.log('active Subsciptions : ', result.data);
-    setActivePlans(result.data.data);
-  };
 
   const {
     handleSubmit,
@@ -109,7 +122,7 @@ const PaymentAddDrawer = (props) => {
     toggle();
     reset();
   };
-
+  console.log( Institute_List,"institute list")
   return (
     <DatePickerWrapper>
       <Drawer
@@ -148,13 +161,13 @@ const PaymentAddDrawer = (props) => {
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
-                    options={activeInstitutes}
-                    getOptionLabel={(institutes) => institutes.name}
+                    options={Institute_List}
+                    getOptionLabel={(institutes) => institutes?.institute_name}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.institute_id);
-                      getActiveInstitutes(newValue?.institute_id);
+                      onChange(newValue?._id);
+                      getActiveInstitutes(newValue?._id);
                     }}
-                    value={activeInstitutes.find((institutes) => institutes.institute_id === value) || null}
+                    value={Institute_List.find((institutes) => institutes._id === value) || null}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -180,7 +193,7 @@ const PaymentAddDrawer = (props) => {
                     onChange={(event, newValue) => {
                       onChange(newValue);
                     }}
-                    options={['Net Banking', 'Upi', 'Year']}
+                    options={['Net Banking', 'Upi', 'Cash']}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -202,13 +215,13 @@ const PaymentAddDrawer = (props) => {
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
-                    options={activePlans}
-                    getOptionLabel={(subscriptions) => subscriptions.plan_name}
+                    options={Subscription_List}
+                    getOptionLabel={(subscriptions) => subscriptions.identity}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.id);
+                      onChange(newValue);
                       // getActivesubscriptions(newValue?.id);
                     }}
-                    value={activePlans.find((subscriptions) => subscriptions.id === value) || null}
+                    value={Subscription_List.find((subscriptions) => subscriptions._id === value?._id) || null}
                     renderInput={(params) => (
                       <TextField
                         {...params}

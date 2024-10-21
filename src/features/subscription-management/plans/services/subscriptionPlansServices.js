@@ -7,10 +7,6 @@ import Client from "../../../../api/index"
 export const getAllSubscriptionPlans = async (data) => {
   try {
     const response = await  Client.subscription.all(data)
-
-    console.log(response);
-
-    // Check if the response status is successful
     if (response.data.status) {
       return response;
     } else {
@@ -18,13 +14,26 @@ export const getAllSubscriptionPlans = async (data) => {
       throw new Error(`Failed to fetch SubscriptionPlans. Status: ${response.status}`);
     }
   } catch (error) {
-    // Log the error for debugging purposes
     console.error('Error in getAllSubscriptionPlans:', error);
 
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
+
+export const getSubscriptionsPlansallList = async (data) => {
+  try {
+    const response = await  Client.subscription.get_all(data)
+    if (response.data.status) {
+      return response;
+    } else {
+      throw new Error(`Failed to fetch SubscriptionPlans. Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error in getAllSubscriptionPlans:', error);
+
+    throw error;
+  }
+}
 
 export const searchSubscriptionPlans = async (searchQuery) => {
   try {
