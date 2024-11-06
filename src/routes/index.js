@@ -82,6 +82,12 @@ const InstituteAdminUserViewPage = Loadable(
   lazy(() => import('views/institute-management/institute[id]-page/user-management/users-page/users[id]-page'))
 );
 
+//Institute Course Management
+const InstituteCourseOverviewPage = Loadable(
+  lazy(() => import('views/institute-management/institute[id]-page/institute-software-pages/course-management/courses-page/course-overview-page'))
+);
+
+
 const Dashboard2 = Loadable(lazy(() => import("views/dashboard/Default/dashboard2")))
 
 const InstituteTicketsViewPage = Loadable(lazy(() => import("views/ticket-management/institute-tickets-page/index")))
@@ -131,7 +137,7 @@ const ApplicationRoutes = () => {
             <Route path="groups/view" element={<ViewGroupPage />} />
             <Route path="groups/edit/:id" element={<EditGroupPage />} />
             <Route path="users" element={<UsersPage />} />
-            <Route path="users/:id" element={<ViewUserPage />} />
+            <Route path="users/:id" element={<ViewUserPage />} />;
           </Route>
         </Route>
 
@@ -168,6 +174,7 @@ const ApplicationRoutes = () => {
         </Route>
 
         {/* </ Tax Route> */}
+        
         <Route path="/tax-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/tax-management/taxes" />} />
           <Route path="taxes" element={<TaxesPage />} />
@@ -199,6 +206,11 @@ const ApplicationRoutes = () => {
           <Route path="groups/:id" element={<InstituteGroupsViewPage />} />
           <Route path="users" element={<InstituteAdminUserOverviewPage />} />
           <Route path="users/:id" element={<InstituteAdminUserViewPage />} />
+        </Route>
+
+        <Route path="/courseview/" element={<MainLayout />}>
+          <Route index element={<Navigate to="/course" />} />
+          <Route path="course-overview/:id" element={<InstituteCourseOverviewPage />} />
         </Route>
 
         <Route element={<MinimalLayout />}>
