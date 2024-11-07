@@ -12,7 +12,7 @@ export const getuserDetails = () => {
     }
     return null
 }
-
+console.log("called")
 export const priorityColors = {
     Low: '#00FF00',      
     Medium: '#FFFF00',   
