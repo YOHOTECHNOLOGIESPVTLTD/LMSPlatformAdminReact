@@ -3,7 +3,7 @@ import axios from 'axios';
 import client from "api/index"
 import { getErrorMessage } from 'utils/error-handler';
 
-const PAYMENT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/institute-subscriptions`;
+const PAYMENT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/lms/platform/payments/subscription-management/new-payment/`;
 
 const Subscription_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/subscription-plans`;
 
@@ -40,7 +40,7 @@ export const searchPayments = async (searchQuery) => {
 
 export const addPayment = async (data) => {
   try {
-    const response = await axios.post(`${PAYMENT_API_ENDPOINT}/create`, data, {
+    const response = await axios.post(`${PAYMENT_API_ENDPOINT}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

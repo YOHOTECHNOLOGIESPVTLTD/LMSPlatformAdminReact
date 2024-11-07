@@ -1,38 +1,41 @@
 import React, { useState } from 'react';
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import Icon from 'components/icon';
 import { default as DeleteDialog,} from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
-const CourseCard = (props) => {
-    const { sx } = props;
+const CourseCard = ({sx,mod}) => {
+    
 
-    // Dummy course data
-    const course = {
-        image: null,
-        class_type: "online",
-        category: { category_name: "Science" },
-        course_name: "Advanced Physics and Quantum Mechanics",
-        coursemodules: Array(5).fill({ name: "Module 1" }), // 5 dummy modules
-        price: "1200",
-        current_price: null,
-        is_active: "true",
-        uuid: "123-abc-456"
-    };
+    // // Dummy course data
+    // const course = {
+    //     image: null,
+    //     class_type: "online",
+    //     category: { category_name: "Science" },
+    //     course_name: "Advanced Physics and Quantum Mechanics",
+    //     coursemodules: Array(5).fill({ name: "Module 1" }), // 5 dummy modules
+    //     Test: "3 Mock Test",
+    //     class: 'Module 1 - 30 classes',
+    //     is_active: "true",
+    //     uuid: "123-abc-456"
+    // };
 
-    const imageUrl = course.image
-        ? `${process.env.REACT_APP_PUBLIC_API_URL}/${course.image}`
-        : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1UftbVrlc1qcsJiUIghbXPXRGYHPLHWfVJQ&s';
+    // const imageUrl = mod.image
+    //     ? `${process.env.REACT_APP_PUBLIC_API_URL}/${mod.image}`
+    //     : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1UftbVrlc1qcsJiUIghbXPXRGYHPLHWfVJQ&s';
 
     
     const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    const maxCharacters = 100;
+    // const maxCharacters = 100;
 
   
- 
+
+console.log(mod, "mod")
+  
+   
 
     return (
         <Grid item xs={12} sm={6} md={4}>
@@ -57,7 +60,7 @@ const CourseCard = (props) => {
                             overflow: 'hidden',
                             objectFit: 'cover'
                         }}
-                        image={imageUrl}>
+                        image={mod.image}>
                         <CustomChip
                             sx={{
                                 position: 'absolute',
@@ -69,7 +72,7 @@ const CourseCard = (props) => {
                                 borderRadius: '0px 6px 0px 10px',
                                 height: '2rem'
                             }}
-                            label={'Day'}
+                            label={`Day`}
                             size="small"
                             variant="filled"
                         />
@@ -79,12 +82,12 @@ const CourseCard = (props) => {
                     <Box>
                         <CustomChip
                             sx={{ px: 1, py: 0.5, backgroundColor: "#e0f7fa", color: "#00796b" }}
-                            label={course.category.category_name}
+                            label={mod?.category?.category_name}
                             size="small"
                             variant="filled"
                         />
                     </Box>
-                    <Box sx={{ mr: 2, mt: 1, display: 'flex', flexDirection: 'column', height: '50px' }}>
+                    <Box sx={{ mr: 2, mt: 1, display: 'flex', flexDirection: 'row', height: '50px',justifyContent:'space-between' }}>
                         <Typography
                             variant="h5"
                             sx={{
@@ -98,8 +101,23 @@ const CourseCard = (props) => {
                                 textOverflow: 'ellipsis'
                             }}
                         >
-                            {course.course_name.length > maxCharacters ? course.course_name.slice(0, maxCharacters) + '...' : course.course_name}
+                            {mod.course_name}
                         </Typography>
+                        <Box>
+                            
+                                <Grid
+                                    
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        '& svg': { color: '#ff4081', mr: 0.5 }
+                                    }}
+                                >
+                                    <Icon icon="tabler:augmented-reality" fontSize={20} />
+                                    <Typography sx={{ color: 'text.secondary' }}>{mod.coursemodules.length} Modules</Typography>
+                                </Grid>
+                            
+                        </Box>
                     </Box>
                     <Box
                         sx={{
@@ -110,42 +128,18 @@ const CourseCard = (props) => {
                             alignItems: 'center'
                         }}
                     >
-                        <Grid
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                '& svg': { color: '#ff4081', mr: 0.5 }
-                            }}
-                        >
-                            <Icon icon="tabler:augmented-reality" fontSize={20} />
-                            <Typography sx={{ color: 'text.secondary' }}>{course.coursemodules.length} Modules</Typography>
+                        <Grid>
+                            <Typography variant="h4" sx={{ color: '#37474f', mr: 1, fontWeight: 500 }}>
+                                {mod?.class}
+                            </Typography>
                         </Grid>
                         <Grid>
                             <Typography variant="h4" sx={{ color: '#37474f', mr: 1, fontWeight: 500 }}>
-                                ₹ {course.price ? course.price : course.current_price}
+                                {mod?.Test}
                             </Typography>
                         </Grid>
                     </Box>
                 </CardContent>
-                <CardActions sx={{ pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Button
-                        component={Link}
-                        to="courses/view"
-                        state={{ id: course.uuid }}
-                        size="medium"
-                        variant="contained"
-                        sx={{
-                            mt: 0.4,
-                            py: 0.8,
-                            width: 100,
-                            backgroundColor: "#0CCE7F",
-                            ":hover": { backgroundColor: "#0AA865" },
-                            boxShadow: "0 0.25rem 0.5rem rgba(12,206,127,0.3)"
-                        }}
-                    >
-                        View
-                    </Button>
-                </CardActions>
             </Card>
 
             {/* Delete Dialog */}
@@ -161,6 +155,8 @@ const CourseCard = (props) => {
 
 CourseCard.propTypes = {
     course: PropTypes.any,
+    details: PropTypes.any,
+    mod: PropTypes.any,
     sx: PropTypes.any,
 };
 

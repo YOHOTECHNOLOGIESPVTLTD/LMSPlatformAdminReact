@@ -6,11 +6,15 @@ import OnlineIcon from '@mui/icons-material/Wifi';
 import PeopleIcon from '@mui/icons-material/People';
 import CourseCard from 'features/institute-management/institute[id]-page/components/Course/CourseCard';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
+import TeacherView from 'features/institute-management/institute[id]-page/components/Course/TeacherView';
+import StudentView from 'features/institute-management/institute[id]-page/components/Course/StudentView';
 
 const CourseOverview = () => {
     // State for course and modules
     const [course, setCourse] = useState(null);
     const [modules, setModules] = useState([]);
+    const [view, setView] = useState('courseOverview');
+    
    
 
     useEffect(() => {
@@ -28,19 +32,77 @@ const CourseOverview = () => {
         });
 
         setModules([
-            { id: 1, title: "Java Fundamentals", details: "Module 1 - 7 classes & 3 Mock Test" },
-            { id: 2, title: "Java Fundamentals", details: "Module 1 - 7 classes & 3 Mock Test" },
-            { id: 3, title: "Java Fundamentals", details: "Module 1 - 7 classes & 3 Mock Test" },
-            { id: 4, title: "Java Fundamentals", details: "Module 1 - 7 classes & 3 Mock Test" },
-            { id: 5, title: "Java Fundamentals", details: "Module 1 - 7 classes & 3 Mock Test" },
-            { id: 6, title: "Java Fundamentals", details: "Module 1 - 7 classes & 3 Mock Test" },
-            // ... more modules as needed
+            {
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrZLsXFl2zGeUAc5tBdhiS7Nm8Yex0qvONUA&s',
+                class_type: "online",
+                category: { category_name: "Science" },
+                course_name: "Advanced Physics and Quantum Mechanics",
+                coursemodules: Array(5).fill({ name: "Module 1" }), // 5 dummy modules
+                Test: "3 Mock Test",
+                class: 'Module 1 - 30 classes',
+                is_active: "true",
+                uuid: "123-abc-456"
+            },
+            {
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBr7P8JEJtNZsln9yrOH55gZImXB6vfxG_Bw&s',
+                class_type: "offline",
+                category: { category_name: "Mathematics" },
+                course_name: "Calculus and Linear Algebra",
+                coursemodules: Array(3).fill({ name: "Module 1" }), // 3 dummy modules
+                Test: "2 Mock Test",
+                class: 'Module 1 - 20 classes',
+                is_active: "true",
+                uuid: "789-def-123"
+            },
+            {
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPlJOcE6korun5XqaKZIX9mlXJ5p2ZCxX96w&s',
+                class_type: "hybrid",
+                category: { category_name: "Computer Science" },
+                course_name: "Data Structures and Algorithms",
+                coursemodules: Array(4).fill({ name: "Module 1" }), // 4 dummy modules
+                Test: "4 Mock Test",
+                class: 'Module 1 - 25 classes',
+                is_active: "true",
+                uuid: "456-ghi-789"
+            },
+            {
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCroApG3FqMehV5CtgM2DtJgYQqAiC1vTFuQ&s',
+                class_type: "online",
+                category: { category_name: "Physics" },
+                course_name: "Quantum Field Theory",
+                coursemodules: Array(6).fill({ name: "Module 1" }), // 6 dummy modules
+                Test: "5 Mock Test",
+                class: 'Module 1 - 40 classes',
+                is_active: "true",
+                uuid: "012-jkl-345"
+            },
+            {
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwbP00O855W6aOK6K3zf-WDTdno9pwl4BiqA&s',
+                class_type: "offline",
+                category: { category_name: "Biology" },
+                course_name: "Genetics and Evolutionary Biology",
+                coursemodules: Array(2).fill({ name: "Module 1" }), // 2 dummy modules
+                Test: "1 Mock Test",
+                class: 'Module 1 - 15 classes',
+                is_active: "true",
+                uuid: "234-mno-567"
+            }
         ]);
     }, []);
 
     if (!course) {
         return <Typography>Loading...</Typography>;
     }
+
+    if (view === 'teacherView') {
+        return <TeacherView onBack={() => setView('courseOverview')} />;
+    }
+
+    if (view === 'studentView') {
+        return <StudentView onBack={() => setView('courseOverview')} />;
+    }
+
+    console.log(modules,"modules")
 
     return (
         <Box p={3} sx={{  margin: 'auto' }}>
@@ -141,8 +203,20 @@ const CourseOverview = () => {
                             </Typography>
                         </Typography>
                         <Box mt={2}>
-                            <Button variant="outlined" sx={{ mr: 1, color: "#002B38", borderradius: '8px', border: '1px solid #002B38', background: 'rgba(61, 106, 119, 0.12)' }}>View Teacher</Button>
-                            <Button variant="outlined" sx={{ mr: 1, color: "#002B38", borderradius: '8px', border: '1px solid #002B38', background: 'rgba(61, 106, 119, 0.12)' }}>View Student</Button>
+                            <Button
+                                variant="outlined"
+                                sx={{ mr: 1, color: "#002B38", borderRadius: '8px', border: '1px solid #002B38', background: 'rgba(61, 106, 119, 0.12)' }}
+                                onClick={() => setView('teacherView')}
+                            >
+                                View Teacher
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                sx={{ mr: 1, color: "#002B38", borderRadius: '8px', border: '1px solid #002B38', background: 'rgba(61, 106, 119, 0.12)' }}
+                                onClick={() => setView('studentView')} 
+                            >
+                                View Student
+                            </Button>
                         </Box>
                     </Box>
                 </Grid>
@@ -152,11 +226,12 @@ const CourseOverview = () => {
                 {course.modulesDescription}
             </Typography>
             <Grid container spacing={2}>
-                {modules.map((module, index) => (
-                    <CourseCard key={index} course={course} sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} />
+                {modules?.map((module,index) => (
+                    <CourseCard key={index} course={course} mod={module}  sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} />
                 ))}
+            
             </Grid>                      
-           
+            
         </Box>
     );
 };
