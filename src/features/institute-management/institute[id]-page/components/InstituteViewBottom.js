@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 
 // import Icon from 'components/icon';
 
-import UserViewAccount from './UserViewAccount';
+// import UserViewAccount from './UserViewAccount';
 // import UserViewConnection from './InstituteActivityLog';
 // import UserViewSecurity from './UserViewSecurity';
 
@@ -48,7 +48,7 @@ import UserViewAccount from './UserViewAccount';
 //   }
 // }));
 
-const UserViewRight = ({ institute }) => {
+const UserViewRight = () => {
   // ** State
   // const [activeTab, setActiveTab] = useState('account');
   // const handleChange = (event, value) => {
@@ -83,7 +83,7 @@ const UserViewRight = ({ institute }) => {
     //   </Box>
     // </TabContext>
       <Box sx={{ mt: 4 }}>
-          <UserViewAccount institute={institute} />
+          {/* <UserViewAccount institute={institute} /> */}
       </Box>
   );
 };

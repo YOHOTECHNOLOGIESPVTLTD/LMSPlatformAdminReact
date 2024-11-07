@@ -175,7 +175,7 @@ const InstituteCard = ({ institute, index }) => {
               sx={{
                 mt: 1,
                 padding: "6px 16px",
-                display: "none",
+               
                 backgroundColor: "white",
                 color: "#4A24E3", // Accent color for button
                 fontWeight: "bold",
