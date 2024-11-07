@@ -141,10 +141,10 @@ const FaqDataGrid = () => {
                <Table size="medium">
                  <TableHead sx={{ backgroundColor: "#FAFAFA"}} >
                    <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "600" } }} >
-                     <TableCell>FAQ Name</TableCell>
-                     <TableCell>Category</TableCell>
-                     <TableCell>Status</TableCell>
-                     <TableCell>Action</TableCell>
+                     <TableCell sx={{fontFamily:"poppins"}}>FAQ Name</TableCell>
+                     <TableCell sx={{fontFamily:"poppins"}}>Category</TableCell>
+                      <TableCell sx={{ fontFamily: "poppins" }}>Status</TableCell>
+                      <TableCell sx={{ fontFamily: "poppins" }}>Action</TableCell>
                    </TableRow>
                  </TableHead>
                  <TableBody>
@@ -154,8 +154,8 @@ const FaqDataGrid = () => {
                       key={faq._id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
-                        <TableCell>{faq?.identity}</TableCell>
-                        <TableCell>{faq?.category?.identity}</TableCell>
+                        <TableCell sx={{fontSize:"16px", fontFamily: "poppins" }}>{faq?.identity}</TableCell>
+                        <TableCell sx={{ fontSize: "16px", fontFamily: "poppins" }}>{faq?.category?.identity}</TableCell>
                         <TableCell>
                           <Switch value={!faq?.is_active} checked={faq?.is_active} onChange={(e) => handleStatusChange(e,faq)} />
                         </TableCell>

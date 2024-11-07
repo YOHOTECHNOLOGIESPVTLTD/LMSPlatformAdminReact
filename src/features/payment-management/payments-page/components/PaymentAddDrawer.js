@@ -49,6 +49,7 @@ const PaymentAddDrawer = (props) => {
 
   const Institute_List = useSelector(selectInstitutes)
   const Subscription_List = useSelector(selectPlans)
+
   
   const { showSpinnerFn,hideSpinnerFn} = useSpinner()
   const dispatch = useDispatch()
@@ -218,10 +219,11 @@ const PaymentAddDrawer = (props) => {
                     options={Subscription_List}
                     getOptionLabel={(subscriptions) => subscriptions.identity}
                     onChange={(event, newValue) => {
-                      onChange(newValue);
-                      // getActivesubscriptions(newValue?.id);
+                      onChange(newValue ? newValue._id : '');  // Set value to the identifier
                     }}
-                    value={Subscription_List.find((subscriptions) => subscriptions._id === value?._id) || null}
+                    value={
+                      Subscription_List.find((subscriptions) => subscriptions._id === value) || null  // Match by identifier
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
