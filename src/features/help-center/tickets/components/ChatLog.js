@@ -10,20 +10,21 @@ import { styled } from '@mui/material/styles';
 
 // ** Custom Components Imports
 import CustomAvatar from 'components/mui/avatar';
-
 import PerfectScrollbarComponent from 'react-perfect-scrollbar';
+import { getuserDetails } from 'utils';
+import { getImageUrl } from 'themes/imageUtlis';
 
 const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
-  padding: theme.spacing(3)
+  padding: theme.spacing(3),
 }));
 
 const ChatLog = (props) => {
   // ** Props
-  const { data, hidden } = props;
+  const { hidden, selectedTicket } = props;
+  const user = getuserDetails();
 
   // ** Ref
   const chatArea = useRef(null);
-
   const scrollToBottom = () => {
     if (chatArea.current) {
       if (hidden) {
@@ -34,90 +35,96 @@ const ChatLog = (props) => {
     }
   };
 
-  const mails = [
-    {
-      subject: 'Regarding Leave Approval',
-      to: 'hr@example.com',
-      from: 'employee@example.com',
-      date: Date.now(),
-      content:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce commodo nisi nec lectus ultricies, a euismod nibh eleifend. Ut lobortis erat vel dolor cursus rhoncus.'
-    }
-  ];
-
-  const renderChats = () => {
-    return (
-      <>
-        {/* First Mail Card */}
-        <Card sx={{ maxWidth: 800, margin: 'auto', mb: 2 }}>
-          <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+  // Function to render chat messages with WhatsApp-like styling
+  const renderMessages = () => {
+    if (selectedTicket && selectedTicket.messages && selectedTicket.messages.length > 0) {
+      return selectedTicket.messages.map((message, index) => {
+        const isCurrentUser = message.sender === user._id;
+  
+        return (
+          <Box
+            key={index}
+            sx={{
+              display: 'flex',
+              justifyContent: isCurrentUser ? 'flex-end' : 'flex-start',
+              mb: 3,
+            }}
+          >
+            {!isCurrentUser && (
               <CustomAvatar
                 skin="light"
-                color={data.contact.avatarColor ? data.contact.avatarColor : undefined}
-                sx={{ width: 48, height: 48, mr: 2 }}
-                {...(data.contact.avatar
-                  ? {
-                      src: data.contact.avatar,
-                      alt: data.contact.fullName
-                    }
+                color={message.sender.avatarColor || undefined}
+                sx={{ width: 36, height: 36, mr: 2 }}
+                {...(selectedTicket?.user?.image
+                  ? { src: getImageUrl(selectedTicket?.user?.image), alt: message.sender.fullName }
                   : {})}
               />
-              <Typography variant="h5">{data.contact.fullName}</Typography>
-            </Box>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              Subject: {data.subject}
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              To: {data.contact.email}
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              Leave Type: {data.leaveType}
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              Start Date: {new Date(data.startDate).toLocaleDateString()}
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              End Date: {new Date(data.endDate).toLocaleDateString()}
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              Reason: {data.reason}
-            </Typography>
-          </CardContent>
-        </Card>
-
-        {/* Second Mail Card with Mapping */}
-        {mails.map((mail, index) => (
-          <Card key={index} sx={{ maxWidth: 800, margin: 'auto', mb: 4 }}>
-            <CardContent>
-              <Typography variant="h5">{mail.subject}</Typography>
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                To: {mail.to}
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                From: {mail.from}
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                Date: {new Date(mail.date).toLocaleDateString()}
-              </Typography>
-              <Typography variant="body1">{mail.content}</Typography>
-            </CardContent>
-          </Card>
-        ))}
-      </>
-    );
+            )}
+            <Card
+              sx={{
+                maxWidth: '70%',
+                backgroundColor: isCurrentUser ? '#dcf8c6' : '#ffffff',
+                borderRadius: isCurrentUser
+                  ? '15px 15px 0 15px' // Top right rounded for user
+                  : '15px 15px 15px 0', // Top left rounded for others
+                boxShadow: 1,
+                p: 2,
+              }}
+            >
+              <CardContent sx={{ p: 0 }}>
+                {!isCurrentUser && (
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {message.sender.fullName}
+                  </Typography>
+                )}
+                <Typography variant="body1" sx={{ wordWrap: 'break-word' }}>
+                  {message.content}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="textSecondary"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: isCurrentUser ? 'flex-end' : 'flex-start',
+                    mt: 1,
+                  }}
+                >
+                  {new Date(message.date).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Box>
+        );
+      });
+    } else {
+      return (
+        <Typography variant="body1" sx={{ textAlign: 'center', mt: 4 }}>
+          No messages
+        </Typography>
+      );
+    }
   };
+  
 
   useEffect(() => {
-    if (data && data.chat && data.chat.length) {
-      scrollToBottom();
-    }
-  }, [data]);
+    scrollToBottom();
+  }, [selectedTicket]);
 
   const ScrollWrapper = ({ children }) => {
     if (hidden) {
       return (
-        <Box ref={chatArea} sx={{ p: 5, height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
+        <Box
+          ref={chatArea}
+          sx={{
+            p: 5,
+            height: '100%',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+          }}
+        >
           {children}
         </Box>
       );
@@ -131,8 +138,14 @@ const ChatLog = (props) => {
   };
 
   return (
-    <Box sx={{ height: 'calc(100% - 8.875rem)' }}>
-      <ScrollWrapper>{renderChats()}</ScrollWrapper>
+    <Box
+      sx={{
+        height: 'calc(100% - 8.875rem)',
+        backgroundColor: '#f5f5f5',
+        boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.05)',
+      }}
+    >
+      <ScrollWrapper>{renderMessages()}</ScrollWrapper>
     </Box>
   );
 };

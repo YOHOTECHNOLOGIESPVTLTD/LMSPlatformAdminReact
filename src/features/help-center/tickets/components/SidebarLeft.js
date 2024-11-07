@@ -22,6 +22,10 @@ import { Card, CardContent, IconButton, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import CustomTextField from 'components/mui/text-field';
 import UserProfileLeft from './UserProfileLeft';
+import { getImageUrl } from 'themes/imageUtlis';
+import { imagePlaceholder } from 'lib/placeholders';
+import { FormateDateToPastAsTextValue } from 'utils/formatDate';
+// import { priorityColors } from 'utils';
 
 const ScrollWrapper = ({ children, hidden }) => {
   if (hidden) {
@@ -46,7 +50,7 @@ const SidebarLeft = (props) => {
     removeSelectedChat,
     userProfileLeftOpen,
     handleLeftSidebarToggle,
-    handleUserProfileLeftSidebarToggle
+    handleUserProfileLeftSidebarToggle,handleSelectTickets
   } = props;
 
   // ** States
@@ -54,6 +58,19 @@ const SidebarLeft = (props) => {
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [active, setActive] = useState(null);
   console.log(store);
+
+  const statusColor = {
+    opened: "#7367F0",
+    closed: "#EBA13A",
+    resolved : "#280587"
+  };
+
+  const priorityColors = {
+    High: '#FF6B6B',
+    Medium: '#FFD93D',
+    Low: '#B2DFDB',
+    Urgent: '#D32F2F',
+  };
 
   useEffect(() => {
     if (store && store.chats) {
@@ -76,7 +93,7 @@ const SidebarLeft = (props) => {
   }, []);
 
   const renderContacts = () => {
-    if (store && store.contacts && store.contacts.length) {
+    if (store && store.data && store.data.length) {
       if (query.length && !filteredContacts.length) {
         return (
           <ListItem>
@@ -84,28 +101,36 @@ const SidebarLeft = (props) => {
           </ListItem>
         );
       } else {
-        const arrToMap = query.length && filteredContacts.length ? filteredContacts : store.contacts;
+        const arrToMap = query.length && filteredContacts.length ? filteredContacts : store.data;
 
         return arrToMap !== null
           ? arrToMap.map((contact, index) => {
               return (
-                <Card key={index} sx={{ mb: 2 }}>
+                <Card key={index} onClick={()=>handleSelectTickets(contact)} sx={{ mb: 2, boxShadow: "0 4px 6px rgba(0, 0, 0, 0.08)", backgroundColor: "#ffffff",
+                  transition: 'transform 0.3s, box-shadow 0.3s',
+                  cursor: "pointer",
+                  '&:hover': {
+                    transform: 'translateY(-5px)',
+                    boxShadow: '0 .5rem 1.5rem 0 rgba(38,43,67,.25)',
+                  },
+                  animation: 'fadeIn 0.5s forwards',
+                 }}>
                   <CardContent sx={{}}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Avatar
-                        alt={contact.fullName}
-                        src={contact.avatar ? contact.avatar : undefined}
+                        alt={contact?.user?.first_name}
+                        src={ contact?.user?.image ? getImageUrl(contact?.user?.image) : imagePlaceholder}
                         sx={{ width: 40, height: 40, bgcolor: contact.avatarColor }}
                       >
-                        {!contact.avatar && getInitials(contact.fullName)}
+                        {!contact.user && getInitials(contact.user.first_name + contact?.user?.last_name)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
-                        <Typography variant="h5">{contact.fullName}</Typography>
+                        <Typography variant="h5">{contact.user.first_name}</Typography>
                       </Box>
                       <Box sx={{ flexGrow: 1 }} />
                       <Box>
                         <Typography variant="body3" color="text.secondary">
-                          2 mins
+                          {FormateDateToPastAsTextValue(contact?.date)}
                         </Typography>
                       </Box>
                     </Box>
@@ -117,12 +142,12 @@ const SidebarLeft = (props) => {
                         noWrap
                         sx={{ mt: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                       >
-                        {contact.about}
+                        {contact.query}
                       </Typography>
 
                       <Box sx={{ display: 'flex', mt: 2, gap: 2 }}>
-                        <CustomChip rounded size="small" skin="light" color={'info'} label={'Open'} />
-                        <CustomChip rounded size="small" skin="light" color={'error'} label={'• High Priority'} />
+                        <CustomChip rounded size="small" skin="light" sx={{ backgroundColor: statusColor[contact?.status], color: "white"}} color={'info'} label={contact?.status} />
+                        <CustomChip rounded size="small" skin="light" sx={{ backgroundColor: priorityColors[contact?.priority],color: "white"}}   label={contact?.priority} />
                       </Box>
                     </Box>
                   </CardContent>
@@ -176,10 +201,13 @@ const SidebarLeft = (props) => {
       >
         <Box
           sx={{
-            py: 3,
+            pt:"20px",
+            pb: "19px",
             px: 5,
             display: 'flex',
             alignItems: 'center',
+            backgroundColor: "#111B21",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
             borderBottom: (theme) => `1px solid ${theme.palette.divider}`
           }}
         >
@@ -218,10 +246,11 @@ const SidebarLeft = (props) => {
             value={query}
             onChange={handleFilter}
             placeholder="Search for contact..."
-            sx={{ '& .MuiInputBase-root': { borderRadius: '30px !important' } }}
+            sx={{ '& .MuiInputBase-root': { borderRadius: '30px !important'},
+            "& .MuiFormControl-root-MuiTextField-root .MuiInputBase-root" : { backgroundColor: "white",color: "wheat"} }}
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start" sx={{ color: 'text.secondary' }}>
+                <InputAdornment position="start" sx={{ color: "wheat" }}>
                   <Icon fontSize="1.25rem" icon="tabler:search" />
                 </InputAdornment>
               )
@@ -234,21 +263,21 @@ const SidebarLeft = (props) => {
           ) : null}
         </Box>
 
-        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden' }}>
+        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden', backgroundColor: "#f7f8fc",boxShadow: "2px 0 10px rgba(0, 0, 0, 0.1)", }}>
           <ScrollWrapper hidden={hidden}>
             <Box sx={{ p: (theme) => theme.spacing(5, 3, 3) }}>
               {/* <Typography variant="h5" sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
                 Chats
               </Typography> */}
               {/* <List sx={{ mb: 5, p: 0 }}>{renderChats()}</List> */}
-              <Box sx={{display:"flex",justifyContent:"space-between"}}>
+              {/* <Box sx={{display:"flex",justifyContent:"space-between"}}>
               <Typography variant="h5" sx={{ ml: 1, mb: 3.5, color: 'primary.main' }}>
                 My Open tickets (6)
               </Typography>
               <Box>
               <Icon icon="mingcute:down-fill" color="primary.main" />
               </Box>
-              </Box>
+              </Box> */}
         
               <List sx={{ p: 0 }}>{renderContacts()}</List>
             </Box>

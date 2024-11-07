@@ -44,12 +44,13 @@ export const sendMsg = createAsyncThunk('appChat/sendMsg', async (obj, { dispatc
 
   return response.data;
 });
-// const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
-// const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2);
+
 
 export const appChatSlice = createSlice({
   name: 'chats',
   initialState: {
+    data : [],
+    loading : false,
     chats: [
       {
         id: 1,
@@ -444,6 +445,12 @@ export const appChatSlice = createSlice({
   reducers: {
     removeSelectedChat: (state) => {
       state.selectedChat = null;
+    },
+    setTickets : (state,action) => {
+      state.data = action.payload
+    },
+    setTicketsLoading : (state,action) => {
+      state.loading = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -460,6 +467,6 @@ export const appChatSlice = createSlice({
   }
 });
 
-export const { removeSelectedChat } = appChatSlice.actions;
+export const { removeSelectedChat, setTickets, setTicketsLoading } = appChatSlice.actions;
 
 export default appChatSlice.reducer;

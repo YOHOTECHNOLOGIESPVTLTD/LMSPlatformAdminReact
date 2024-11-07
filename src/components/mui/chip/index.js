@@ -14,6 +14,7 @@ const Chip = props => {
   // ** Hook
   const bgColors = useBgColor()
 
+  // ** Predefined colors
   const colors = {
     primary: { ...bgColors.primaryLight },
     secondary: { ...bgColors.secondaryLight },
@@ -22,6 +23,13 @@ const Chip = props => {
     warning: { ...bgColors.warningLight },
     info: { ...bgColors.infoLight }
   }
+
+  // ** Check if color is a predefined color or a custom hex value
+  const isPredefinedColor = color in colors
+  const customColor = !isPredefinedColor && /^#([0-9A-F]{3}){1,2}$/i.test(color)
+    ? { backgroundColor: color, contrastText: '#ffffff' } // Set default contrastText
+    : {}
+
   const propsToPass = { ...props }
   propsToPass.rounded = undefined
 
@@ -33,7 +41,7 @@ const Chip = props => {
         'MuiChip-rounded': rounded,
         'MuiChip-light': skin === 'light'
       })}
-      sx={skin === 'light' && color ? Object.assign(colors[color], sx) : sx}
+      sx={skin === 'light' && color ? Object.assign(isPredefinedColor ? colors[color] : customColor, sx) : sx}
     />
   )
 }

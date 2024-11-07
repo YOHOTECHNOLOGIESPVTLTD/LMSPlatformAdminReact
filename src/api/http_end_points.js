@@ -24,6 +24,11 @@ export const API_END_POINTS ={
         get_all : "/api/subscription/plans/all",
         create : "/api/subscription/plan/"
     },
+    help_center : {
+        ticket : {
+            get_all : '/api/institutes/admin/ticket/get-alll'
+        }
+    },
     faq_category : {
     all : "/api/lms/faq-category/",
     create : "/api/lms/faq-category/"

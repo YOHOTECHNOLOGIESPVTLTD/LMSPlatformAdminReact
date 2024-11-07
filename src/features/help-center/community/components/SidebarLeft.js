@@ -253,7 +253,7 @@ const SidebarLeft = (props) => {
             value={query}
             onChange={handleFilter}
             placeholder="Search for contact..."
-            sx={{ '& .MuiInputBase-root': { borderRadius: '30px !important' } }}
+            sx={{ '& .MuiInputBase-root': { borderRadius: '30px !important' }, display: "none" }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ color: 'text.secondary' }}>

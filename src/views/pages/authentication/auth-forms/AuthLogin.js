@@ -1,8 +1,6 @@
 import { useState } from 'react';
 // import { useSelector } from 'react-redux';
 
-// material-ui
-import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Button,
@@ -41,7 +39,6 @@ import { useSpinner } from 'context/spinnerContext';
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
-  const theme = useTheme();
   const scriptedRef = useScriptRef();
   // const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();
@@ -94,7 +91,7 @@ const FirebaseLogin = ({ ...others }) => {
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
         <form noValidate onSubmit={handleSubmit} {...others}>
-          <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
+          <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ my: 1 }}>
             <InputLabel htmlFor="outlined-adornment-email-login">Username</InputLabel>
             <OutlinedInput
               id="outlined-adornment-email-login"
@@ -113,7 +110,7 @@ const FirebaseLogin = ({ ...others }) => {
             )}
           </FormControl>
 
-          <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
+          <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ my: 1 }}>
             <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
             <OutlinedInput
               id="outlined-adornment-password-login"

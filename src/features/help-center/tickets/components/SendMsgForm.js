@@ -13,56 +13,75 @@ import CustomTextField from 'components/mui/text-field';
 const ChatFormWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(0.6),
-  paddingRight: 20,
-  boxShadow: theme.shadows[1],
-  justifyContent: 'space-between',
+  padding: theme.spacing(1), // Increased padding for better spacing
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.paper
+  backgroundColor: "#202c33", // Use the default background
+  boxShadow: theme.shadows[2], // Slightly stronger shadow
+  marginTop: theme.spacing(1), // Add some top margin for spacing
 }));
 
-const Form = styled('form')(({ theme }) => ({
-  padding: theme.spacing(0, 2, 2, 2)
+const Form = styled('form')(() => ({
+  width: '100%', // Ensuring the form takes full width
+}));
+
+const StyledTextField = styled(CustomTextField)(({ theme }) => ({
+  '& .MuiInputBase-root': {
+    borderRadius: '20px', // Rounded corners for the text field
+    backgroundColor: "#2A3942", // Light grey background
+    '&:hover': {
+      backgroundColor: theme.palette.grey[300], // Change background on hover
+    },
+  },
+  '& .Mui-focused': {
+    boxShadow: 'none !important', // Remove box shadow when focused
+  },
+}));
+
+const SendButton = styled(Button)(({ theme }) => ({
+  borderRadius: '20px', // Rounded corners for the button
+  marginLeft: theme.spacing(1), // Add left margin to the button
+  backgroundColor: theme.palette.primary.main, // Primary theme color
+  color: theme.palette.common.white, // White text color
+  '&:hover': {
+    backgroundColor: theme.palette.primary.dark, // Darker shade on hover
+  },
 }));
 
 const SendMsgForm = (props) => {
   // ** Props
-  const { store, dispatch, sendMsg } = props;
+  const {  handleSendMessages } = props;
 
   // ** State
   const [msg, setMsg] = useState('');
 
-  const handleSendMsg = (e) => {
-    e.preventDefault();
-    if (store && store.selectedChat && msg.trim().length) {
-      dispatch(sendMsg({ ...store.selectedChat, message: msg }));
-    }
-    setMsg('');
-  };
+  // const handleSendMsg = (e) => {
+  //   e.preventDefault();
+  //   if (store && store.selectedChat && msg.trim().length) {
+  //     dispatch(sendMsg({ ...store.selectedChat, message: msg }));
+  //   }
+  //   setMsg('');
+  // };
 
   return (
-    <Form onSubmit={handleSendMsg}>
+    <Form onSubmit={(e) => { e.preventDefault(); handleSendMessages(msg,setMsg)}}>
       <ChatFormWrapper>
         <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-          <CustomTextField
+          <StyledTextField
             fullWidth
             value={msg}
             placeholder="Type your message here…"
             onChange={(e) => setMsg(e.target.value)}
             sx={{
-              '& .Mui-focused': { boxShadow: 'none !important' },
               '& .MuiInputBase-input:not(textarea).MuiInputBase-inputSizeSmall': {
-                p: (theme) => theme.spacing(1.875, 2.5)
+                p: (theme) => theme.spacing(1.5, 2), // Adjust padding for input
               },
               '& .MuiInputBase-root': { border: '0 !important' }
             }}
           />
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Button type="submit" variant="contained">
-            Send
-          </Button>
-        </Box>
+        <SendButton type="submit" variant="contained" >
+          Send
+        </SendButton>
       </ChatFormWrapper>
     </Form>
   );

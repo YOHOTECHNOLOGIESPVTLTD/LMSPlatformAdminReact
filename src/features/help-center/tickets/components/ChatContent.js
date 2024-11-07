@@ -15,6 +15,7 @@ import OptionsMenu from 'components/option-menu';
 import ChatLog from './ChatLog';
 import SendMsgForm from './SendMsgForm';
 import UserProfileRight from './UserProfileRight';
+import { getImageUrl } from 'themes/imageUtlis';
 
 // ** Styled Components
 const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
@@ -40,7 +41,7 @@ const ChatContent = (props) => {
     sidebarWidth,
     userProfileRightOpen,
     handleLeftSidebarToggle,
-    handleUserProfileRightSidebarToggle
+    handleUserProfileRightSidebarToggle,selectedTicket,handleSendMessages
   } = props;
 
   const handleStartConversation = () => {
@@ -52,7 +53,7 @@ const ChatContent = (props) => {
   const renderContent = () => {
     if (store) {
       const selectedChat = store.selectedChat;
-      if (!selectedChat) {
+      if (!selectedChat  || !selectedTicket ) {
         return (
           <ChatWrapperStartChat
             sx={{
@@ -105,7 +106,9 @@ const ChatContent = (props) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                backgroundColor: 'background.paper',
+                backgroundColor: "#0CCE7F",
+                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.15)",
+                color: 'white',
                 borderBottom: (theme) => `1px solid ${theme.palette.divider}`
               }}
             >
@@ -137,21 +140,21 @@ const ChatContent = (props) => {
                       />
                     }
                   >
-                    {selectedChat.contact.avatar ? (
-                      <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat.contact.avatar} alt={selectedChat.contact.fullName} />
+                    {selectedTicket?.user?.image ? (
+                      <MuiAvatar sx={{ width: 38, height: 38 }} src={getImageUrl(selectedTicket?.user?.image)} alt={selectedTicket?.user?.first_name} />
                     ) : (
                       <CustomAvatar
                         skin="light"
                         color={selectedChat.contact.avatarColor}
                         sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                       >
-                        {getInitials(selectedChat.contact.fullName)}
+                        {getInitials(selectedTicket?.user?.first_name ?? "CHANDRAN")}
                       </CustomAvatar>
                     )}
                   </Badge>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography variant="h6">{selectedChat.contact.fullName}</Typography>
-                    <Typography sx={{ color: 'text.disabled' }}>{selectedChat.contact.role}</Typography>
+                    <Typography variant="h3">{selectedTicket?.user?.first_name + selectedTicket?.user?.last_name}</Typography>
+                    <Typography sx={{ color: 'text.disabled' }}>{selectedTicket?.user?.role?.identity}</Typography>
                   </Box>
                 </Box>
               </Box>
@@ -167,10 +170,10 @@ const ChatContent = (props) => {
             </Box>
 
             {selectedChat && store.userProfile ? (
-              <ChatLog hidden={hidden} data={{ ...selectedChat, userContact: store.userProfile }} />
+              <ChatLog hidden={hidden} data={{ ...selectedChat, userContact: store.userProfile }} selectedTicket={selectedTicket} />
             ) : null}
 
-            <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} />
+            <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} handleSendMessages={handleSendMessages} />
 
             <UserProfileRight
               store={store}

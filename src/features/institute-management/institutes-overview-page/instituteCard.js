@@ -114,6 +114,9 @@ const InstituteCard = ({ institute, index }) => {
                     fontSize: "20px",
                     wordWrap: "break-word",
                     color: "white",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
                     textShadow: "1px 1px 5px rgba(0,0,0,0.3)", // Slight text shadow for readability
                   }}
                 >
@@ -125,9 +128,9 @@ const InstituteCard = ({ institute, index }) => {
                   <LocationOnIcon fontSize="small" sx={{ color: "rgba(255, 255, 255, 0.7)" }} />
                   <Typography
                     variant="body2"
-                    sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+                    sx={{ color: "rgba(255, 255, 255, 0.7)", textOverflow: "ellipsis",overflow: "hidden",textWrap: "nowrap" }}
                   >
-                    123 Main St, City
+                    {institute?.contact_info?.address?.address1 ? institute?.contact_info?.address?.address1 :  '123 Main St, City'} 
                   </Typography>
                 </Box>
 

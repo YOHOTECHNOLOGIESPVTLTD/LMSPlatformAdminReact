@@ -44,6 +44,11 @@ class Client {
      update : (data) => httpClient.patch(API_END_POINTS.faq+data.id,data),
      delete : (data) => httpClient.delete(API_END_POINTS.faq+data.id)
    }
+   help_center = {
+      ticket : {
+         get_all : (params) => httpClient.get(API_END_POINTS.help_center.ticket.get_all,params)
+      }
+   }
 }
 
 export default new Client()
