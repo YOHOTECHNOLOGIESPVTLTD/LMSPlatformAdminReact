@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, Box, Card, Grid, Typography } from '@mui/material';
+import { Button, Box, Card, Grid, Typography, Pagination } from '@mui/material';
 // import { getInitials } from 'utils/get-initials';
 // import CustomAvatar from '../../../components/mui/avatar';
 import CustomChip from '../../../components/mui/chip';
@@ -14,6 +14,7 @@ import { getAllInstituteNotifications } from 'features/notification-management/n
 import client from "api/index"
 import toast from 'react-hot-toast';
 import { getErrorMessage } from 'utils/error-handler';
+import { useSpinner } from 'context/spinnerContext';
 
 const userStatusObj = {
   send: 'success',
@@ -21,136 +22,16 @@ const userStatusObj = {
   failed: 'secondary',
 };
 
-const handleResendNotification = async (data) => {
-  try {
-    console.log(data,"data")
-    const payload = { notification_id : data?._id , institute_id: data?.instituteId?._id,branch_id: data?.branch}
-    await client.notification.resend(payload)
-    toast.success("notification resend successfully")
-  } catch (error) {
-    const error_message = getErrorMessage(error)
-    toast.error(error_message)
-  }
-}
 
-// const renderClient = (row) => {
-//   if (row?.image) {
-//     return <CustomAvatar src={row?.image} sx={{ mr: 2.5, width: 38, height: 38 }} />;
-//   } else {
-//     return (
-//       <CustomAvatar
-//         skin="light"
-//         sx={{
-//           mr: 2.5,
-//           width: 38,
-//           height: 38,
-//           fontWeight: 500,
-//           fontSize: (theme) => theme.typography.body1.fontSize,
-//         }}
-//       >
-//         {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
-//       </CustomAvatar>
-//     );
-//   }
-// };
 
-const RowOptions = ({data}) => (
-    <Button size="small" variant="outlined" onClick={() => handleResendNotification(data)} color="secondary">
-      Resend
-    </Button>
-);
-
-const columns = [
-  // {
-  //   flex: 0.1,
-  //   minWidth: 100,
-  //   headerName: 'Id',
-  //   field: 'employee_id',
-  //   renderCell: ({ row }) => (
-  //     <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-  //       {row?.id}
-  //     </Typography>
-  //   ),
-  // },
-  // {
-  //   flex: 0.1,
-  //   minWidth: 100,
-  //   headerName: 'Image',
-  //   field: 'Image',
-  //   renderCell: ({ row }) => (
-  //     <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-  //       {renderClient({ profile_image: row?.image })}
-  //     </Typography>
-  //   ),
-  // },
-  {
-    flex: 0.12,
-    minWidth: 120,
-    field: 'Title',
-    headerName: 'Title',
-    renderCell: ({ row }) => (
-      <Typography noWrap sx={{ color: 'text.secondary' }}>
-        {row?.title}
-      </Typography>
-    ),
-  },
-  {
-    flex: 0.2,
-    field: 'Body',
-    minWidth: 190,
-    headerName: 'Body',
-    renderCell: ({ row }) => (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize', textWrap: "now-wrap",textOverflow: "ellipsis" }}>
-          {row?.body}
-        </Typography>
-      </Box>
-    ),
-  },
-  {
-    flex: 0.2,
-    field: ' institutes',
-    minWidth: 190,
-    headerName: ' institute',
-    renderCell: ({ row }) => (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.instituteId?.institute_name}
-          </Typography>
-      </Box>
-    ),
-  },
-  {
-    flex: 0.1,
-    minWidth: 100,
-    field: 'status',
-    headerName: 'Status',
-    renderCell: ({ row }) => (
-      <CustomChip
-        rounded
-        skin="light"
-        size="small"
-        label={row.status}
-        color={userStatusObj[row.status]}
-        sx={{ textTransform: 'capitalize' }}
-      />
-    ),
-  },
-  {
-    flex: 0.1,
-    minWidth: 100,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: ({ row }) => <RowOptions id={row?.id} data={row} />,
-  },
-];
 
 const Notifications = () => {
   const [value, setValue] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
   const loading = useSelector(selectLoading)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
+  const [page,setPage] = useState(1)
+  const { showSpinnerFn,hideSpinnerFn } = useSpinner()
   const dispath = useDispatch()
   const notifications_list = useSelector(selectInstituteNotifications)
   console.log(notifications_list,"notification list")
@@ -283,17 +164,104 @@ const Notifications = () => {
     ]
   };
 
-  const getList = async () => {
-    dispath(getAllInstituteNotifications())
+  const getList = async (data) => {
+    dispath(getAllInstituteNotifications(data))
   }
 
   useEffect(() => {
-    getList()
+    getList({ page: page})
   },[dispath])
 
+  
   const handleFilter = useCallback((val) => {
     setValue(val);
   }, []);
+
+  const handleResendNotification = async (data) => {
+    try {
+      showSpinnerFn()
+      const payload = { notification_id : data?._id , institute_id: data?.instituteId?._id,branch_id: data?.branch}
+      await client.notification.resend(payload)
+      toast.success("notification resend successfully",{ position: "top-center"})
+    } catch (error) {
+      const error_message = getErrorMessage(error)
+      toast.error(error_message)
+    }finally{
+      hideSpinnerFn()
+    }
+  }
+
+
+const RowOptions = ({data}) => (
+  <Button size="small" variant="outlined" onClick={() => handleResendNotification(data)} color="secondary">
+    Resend
+  </Button>
+);
+
+const columns = [
+{
+  flex: 0.12,
+  minWidth: 120,
+  field: 'Title',
+  headerName: 'Title',
+  renderCell: ({ row }) => (
+    <Typography noWrap sx={{ color: 'text.secondary' }}>
+      {row?.title}
+    </Typography>
+  ),
+},
+{
+  flex: 0.2,
+  field: 'Body',
+  minWidth: 190,
+  headerName: 'Body',
+  renderCell: ({ row }) => (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize', textWrap: "now-wrap",textOverflow: "ellipsis" }}>
+        {row?.body}
+      </Typography>
+    </Box>
+  ),
+},
+{
+  flex: 0.2,
+  field: ' institutes',
+  minWidth: 190,
+  headerName: ' institute',
+  renderCell: ({ row }) => (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+          {row?.instituteId?.institute_name}
+        </Typography>
+    </Box>
+  ),
+},
+{
+  flex: 0.1,
+  minWidth: 100,
+  field: 'status',
+  headerName: 'Status',
+  renderCell: ({ row }) => (
+    <CustomChip
+      rounded
+      skin="light"
+      size="small"
+      label={row.status}
+      color={userStatusObj[row.status]}
+      sx={{ textTransform: 'capitalize' }}
+    />
+  ),
+},
+{
+  flex: 0.1,
+  minWidth: 100,
+  sortable: false,
+  field: 'actions',
+  headerName: 'Actions',
+  renderCell: ({ row }) => <RowOptions id={row?.id} data={row} />,
+},
+];
+
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -404,6 +372,21 @@ const Notifications = () => {
               />
             </Card>
           </Grid>
+          {
+            notifications_list?.last_page !== 1 && !loading && 
+            <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: "flex-end"}}>
+               <Pagination
+               count={notifications_list?.last_page}
+               page={page}
+               color="primary"
+               onChange={async(e,page) => {
+                 const data = { page: page }
+                 setPage(page)
+                 getList(data)
+               }}
+               />
+            </Grid>
+          }
           <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
         </Grid>
       )}

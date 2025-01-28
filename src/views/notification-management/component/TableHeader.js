@@ -23,6 +23,7 @@ const TableHeader = (props) => {
             fullWidth
             value={value}
             placeholder="Search with title"
+            sx={{ display: "none"}}
             onChange={(e) => handleFilter(e.target.value)}
             InputProps={{
               startAdornment: (

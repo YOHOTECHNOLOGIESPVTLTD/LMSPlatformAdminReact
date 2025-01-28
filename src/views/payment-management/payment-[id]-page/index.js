@@ -34,34 +34,43 @@ const InstitutePaymentView = () => {
 
   const { institute, currentSubscriptionPlan, subscriptionHistory, paymentHistory } = paymentDetails;
 
-  // Merge subscriptionHistory and paymentHistory for the combined table
-  const mergedHistory = subscriptionHistory.map((history, index) => ({
+
+
+   console.log(paymentDetails,"paymentDetails")
+
+   const subscriptionColumns = [
+    { field: 'planId', headerName: 'Plan ID', width: 250 },
+    { field: 'startDate', headerName: 'Start Date', width: 250 },
+    { field: 'endDate', headerName: 'End Date', width: 250 },
+    { field: 'status', headerName: 'Status', width: 220 },
+  ];
+
+  const paymentColumns = [
+    { field: 'paymentId', headerName: 'Payment ID', width: 200 },
+    { field: 'amount', headerName: 'Amount', width: 200 },
+    { field: 'paymentStatus', headerName: 'Payment Status', width: 250 },
+    { field: 'paymentMethod', headerName: 'Payment Method', width: 250 },
+    { field: 'paymentDate', headerName: 'Payment Date', width: 250 },
+  ];
+
+  const subscriptionRows = subscriptionHistory.map((history, index) => ({
     id: index,
     planId: history.planId,
     startDate: new Date(history.startDate).toLocaleDateString(),
     endDate: new Date(history.endDate).toLocaleDateString(),
     status: history.isActive ? 'Active' : 'Expired',
-    paymentId: paymentHistory[index]?.paymentId || '-',
-    amount: paymentHistory[index]?.amount || '-',
-    paymentStatus: paymentHistory[index]?.status || '-',
-    paymentMethod: paymentHistory[index]?.paymentMethod || '-',
-    paymentDate: paymentHistory[index]?.createdAt
-      ? new Date(paymentHistory[index].createdAt).toLocaleDateString()
-      : '-',
   }));
 
-  const columns = [
-    { field: 'planId', headerName: 'Plan ID', width: 150 },
-    { field: 'startDate', headerName: 'Start Date', width: 150 },
-    { field: 'endDate', headerName: 'End Date', width: 150 },
-    { field: 'status', headerName: 'Status', width: 120 },
-    { field: 'paymentId', headerName: 'Payment ID', width: 150 },
-    { field: 'amount', headerName: 'Amount', width: 100 },
-    { field: 'paymentStatus', headerName: 'Payment Status', width: 150 },
-    { field: 'paymentMethod', headerName: 'Payment Method', width: 150 },
-    { field: 'paymentDate', headerName: 'Payment Date', width: 150 },
-  ];
-   console.log(paymentDetails,"paymentDetails")
+  const paymentRows = paymentHistory.map((payment, index) => ({
+    id: index,
+    paymentId: payment.paymentId || '-',
+    amount: payment.amount || '-',
+    paymentStatus: payment.status || '-',
+    paymentMethod: payment.paymentMethod || '-',
+    paymentDate: payment.createdAt ? new Date(payment.createdAt).toLocaleDateString() : '-',
+  }));
+
+
   return (
     <Grow in>
       <Container sx={{ mt: 4 }}>
@@ -82,7 +91,8 @@ const InstitutePaymentView = () => {
           transform: 'scale(1.03)',
           boxShadow: '0px 6px 25px rgba(0, 0, 0, 0.2)',
         },
-        minHeight: '176px',
+        minHeight: '250px',
+        maxHeight: "250px"
       }}
     >
       <Grid container spacing={2}>
@@ -140,7 +150,8 @@ const InstitutePaymentView = () => {
           transform: 'scale(1.03)',
           boxShadow: '0px 6px 25px rgba(0, 0, 0, 0.2)',
         },
-        minHeight: '176px',
+        maxHeight: '250px',
+        minHeight: "250px"
       }}
     >
       <Grid container spacing={2}>
@@ -165,6 +176,7 @@ const InstitutePaymentView = () => {
             />
           </Box>
         </Grid>
+
 
         <Grid item xs={12} sm={8}>
         <Typography variant="body1" sx={{ mb: 1, fontSize: '1.1rem', fontWeight: 500 }}>
@@ -194,83 +206,100 @@ const InstitutePaymentView = () => {
   </Grid>
 </Grid>
 
-
-        {/* Combined Subscription and Payment History Table */}
-        <Box mt={4}>
-            <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold', color: '#333' }}>
-              Subscription and Payment History
-            </Typography>
+<Box mt={4}>
+          <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold', color: '#333' }}>
+            Subscription History
+          </Typography>
           <Paper
             elevation={3}
             sx={{
-              p: 3,
               borderRadius: 2,
-              backgroundColor: '#fafafa',
+              backgroundColor: 'white',
               boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
-              transition: 'box-shadow 0.3s',
-              '&:hover': {
-                boxShadow: '0px 6px 25px rgba(0, 0, 0, 0.2)',
-              },
             }}
           >
-            <Box
-              sx={{
-                height: 400,
-                width: '100%',
-                '& .MuiDataGrid-root': {
-                  borderRadius: 2,
-                  borderColor: '#ddd', // Change the border color to light gray
-                },
-                '& .MuiDataGrid-cell:hover': {
-                  color: '#0CCE7F',
-                },
-              "& .MuiDataGrid-row" : {
-                border : "1px solid #e6e5e7",
-                borderLeft: "none",
-                borderRight: "none",
-                ":hover" : {
-                   backgroundColor : "#f5f5f7",
-                   border : "1px solid #e6e5e7",
-                   borderLeft: "none",
-                   borderRight: "none"
-                }
-              },
-              "& .MuiDataGrid-columnHeaders" : {
-                   border : "1px solid #e6e5e7",
-                   borderLeft: "none",
-                   borderRight: "none"
-              },
-                '& .MuiDataGrid-columnHeaderTitle': {
-                  fontWeight: 'bold',
-                },
-                '& .MuiDataGrid-virtualScroller': {
-                  scrollbarWidth: 'thin',
-                },
-                '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
-                  width: '8px',
-                },
-                '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb': {
-                  backgroundColor: '#ccc',
-                  borderRadius: '10px',
-                },
-              }}
-            >
+            <Box sx={{ width: '100%' }}>
               <DataGrid
-                rows={mergedHistory}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5, 10]}
+                sx={{ 
+                  "& .MuiDataGrid-row" : {
+                    border : "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                    ":hover" : {
+                       backgroundColor : "#f5f5f7",
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                    }
+                  },
+                  "& .MuiDataGrid-columnHeaders" : {
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                  },
+                  "& .MuiDataGrid-footerContainer" : {
+                    border : "1px solid #e6e5e7"
+                }
+                 }}
+                rows={subscriptionRows}
+                columns={subscriptionColumns}
                 autoHeight
                 disableSelectionOnClick
-                disableRowSelectionOnClick
+                disableColumnMenu
                 hideFooterPagination
-                hideFooter
-                disableColumnMenu={true}
-                disableColumnSorting={true}
+                disableColumnFilter={true}
               />
             </Box>
           </Paper>
         </Box>
+
+        <Box mt={4}>
+          <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold', color: '#333' }}>
+            Payment History
+          </Typography>
+          <Paper
+            elevation={3}
+            sx={{
+              borderRadius: 2,
+              backgroundColor: "white",
+              boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+            }}
+          >
+            <Box sx={{  width: '100%' }}>
+              <DataGrid 
+                 sx={{ 
+                  "& .MuiDataGrid-row" : {
+                    border : "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                    ":hover" : {
+                       backgroundColor : "#f5f5f7",
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                    }
+                  },
+                  "& .MuiDataGrid-columnHeaders" : {
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                  },
+                  "& .MuiDataGrid-footerContainer" : {
+                    border : "1px solid #e6e5e7"
+                }
+                 }}
+                rows={paymentRows}
+                columns={paymentColumns}
+                autoHeight
+                disableSelectionOnClick
+                disableColumnMenu
+                hideFooterPagination
+                disableColumnFilter={true}
+              />
+            </Box>
+          </Paper>
+        </Box>
+
       </Container>
     </Grow>
   );

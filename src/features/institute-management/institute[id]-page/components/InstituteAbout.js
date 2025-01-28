@@ -1,57 +1,97 @@
-import { Box, Container, Grid, Typography } from '@mui/material'
-import React from 'react'
-
+import React from 'react';
+import { Box, Container, Grid, Typography, Avatar, Stack } from '@mui/material';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 const InstituteAbout = () => {
+  const institute = {
+    logo: "staticfiles/lms/6267591d-1284-4f8b-b9c3-4cb5e7d46aa2.png",
+    name: "Oxford",
+    address: "Oxfordshire, England",
+    email: "institute@gmail.com",
+    phone: "5411754721",
+    description: `The University of Oxford is a collegiate research university in Oxford, England. 
+    There is evidence of teaching as early as 1096, making it the oldest university in the English-speaking 
+    world and the world's second-oldest university in continuous operation.`,
+    vision: `To remain an outstanding provider of high-quality education, inspiring and developing 
+    a global perspective among students.`,
+    mission: [
+      "Provide quality education and ignite young minds.",
+      "Create proactive and excellent professionals.",
+      "Prepare students to compete globally and become self-reliant.",
+    ],
+  };
+
   return (
-    <Container sx={{justifyContent:"flex-start", marginLeft:"10px"}}>
-      <Grid container spacing={2}  mb={4}>
-        <Grid item xs={4} >
-          <Typography variant="h4" gutterBottom sx={{ fontFamily: "Barlow Condensed", color: "#000", fontSize: "40px", fontWeight: 700, lineHeight: "normal",gap:"10px"}}>
-            43
-          </Typography>
-          <Typography variant="subtitle1" sx={{ fontFamily: "Inter", color: "#000", fontSize: "14px", fontWeight: 700, lineHeight: "normal" }}>Teaching Staffs</Typography>
+    <Container sx={{ mt: 4 }}>
+      <Grid container spacing={4} alignItems="flex-start">
+        {/* Left Column */}
+        <Grid item xs={12} md={4}>
+          <Box textAlign="center">
+            <Avatar
+              src={institute.logo}
+              alt={institute.name}
+              sx={{ width: 120, height: 120, mb: 2, mx: "auto" }}
+            />
+            <Typography variant="h5" fontWeight={700}>
+              {institute.name}
+            </Typography>
+            <Typography variant="body1" color="textSecondary" mb={2}>
+              {institute.address}
+            </Typography>
+            <Stack spacing={1}>
+              <Box display="flex" alignItems="center">
+                <LocationOnIcon sx={{ color: "gray", mr: 1 }} />
+                <Typography variant="body2">{institute.address}</Typography>
+              </Box>
+              <Box display="flex" alignItems="center">
+                <EmailIcon sx={{ color: "gray", mr: 1 }} />
+                <Typography variant="body2">{institute.email}</Typography>
+              </Box>
+              <Box display="flex" alignItems="center">
+                <PhoneIcon sx={{ color: "gray", mr: 1 }} />
+                <Typography variant="body2">{institute.phone}</Typography>
+              </Box>
+            </Stack>
+          </Box>
         </Grid>
-        <Grid item xs={4}>
-          <Typography variant="h4" gutterBottom sx={{fontFamily: "Barlow Condensed", color: "#000", fontSize: "40px", fontWeight: 700, lineHeight: "normal" }}>
-            15
-          </Typography>
-          <Typography variant="subtitle1" sx={{ fontFamily: "Inter", color: "#000", fontSize: "14px", fontWeight: 700, lineHeight: "normal" }}>Courses</Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography variant="h4" gutterBottom sx={{
-            fontFamily: "Barlow Condensed", color: "#000", fontSize: "40px", fontWeight: 700, lineHeight: "normal" }}>
-            500+
-          </Typography>
-          <Typography variant="subtitle1" sx={{ fontFamily: "Inter", color: "#000", fontSize: "14px", fontWeight: 700, lineHeight: "normal" }}>Live students</Typography>
+
+        {/* Right Column */}
+        <Grid item xs={12} md={8}>
+          <Box>
+            {/* Description */}
+            <Typography variant="h6" fontWeight={700} gutterBottom>
+              About Us
+            </Typography>
+            <Typography variant="body2" color="textSecondary" mb={4}>
+              {institute.description}
+            </Typography>
+
+            {/* Vision */}
+            <Typography variant="h6" fontWeight={700} gutterBottom>
+              Vision
+            </Typography>
+            <Typography variant="body2" color="textSecondary" mb={4}>
+              {institute.vision}
+            </Typography>
+
+            {/* Mission */}
+            <Typography variant="h6" fontWeight={700} gutterBottom>
+              Mission
+            </Typography>
+            <Box component="ul" sx={{ pl: 2, color: "textSecondary", mb: 4 }}>
+              {institute.mission.map((point, index) => (
+                <Typography component="li" variant="body2" key={index}>
+                  {point}
+                </Typography>
+              ))}
+            </Box>
+          </Box>
         </Grid>
       </Grid>
-
-      
-      <Box mb={4}>
-        <Typography variant="body1" color="textSecondary" paragraph sx={{ fontFamily: "Inter", color: "#000", fontSize: "14px", fontWeight: 400, lineHeight: "normal" }}>
-          With over 30 years of experience, Rajalakshmi Institute offers cutting-edge programming and design courses. Our expert faculty delivers high-quality education both online and offline, ensuring students gain the skills needed to succeed in today’s dynamic industries. Join us and unleash your potential in a supportive learning environment tailored to your needs.
-        </Typography>
-
-        <Typography variant="h6" gutterBottom sx={{ fontFamily: "Poppins", color: "#000", fontSize: "14px", fontWeight: 700, lineHeight: "normal" }}>
-          Vision
-        </Typography>
-        <Typography variant="body1" color="textSecondary" paragraph sx={{ fontFamily: "Poppins", color: "#000", fontSize: "14px", fontWeight: 400, lineHeight: "normal" }}>
-          The vision of the institute is to provide quality higher education to the students of rural and tribal areas, aspiring to develop a global perspective in Information Technology and Management Education.
-        </Typography>
-
-        <Typography variant="h6" gutterBottom sx={{ fontFamily: "Poppins", color: "#000", fontSize: "14px", fontWeight: 700, lineHeight: "normal" }}>
-          Mission
-        </Typography>
-        <Typography variant="body1" color="textSecondary" paragraph sx={{ fontFamily: "Poppins", color: "#000", fontSize: "14px", fontWeight: 400, lineHeight: "normal" }}>
-          • To remain an outstanding provider of high-quality management and IT education to create proactive and excellent professionals. <br />
-          • To impart quality education to students and mold them into responsible persons by raising their level of education and social status. <br />
-          • To provide value-based education and ignite young minds to bring out the best in them. <br />
-          • To make the students competent in the global scenario and become self-reliant.
-        </Typography>
-      </Box>
     </Container>
   );
 };
 
-export default InstituteAbout
+export default InstituteAbout;

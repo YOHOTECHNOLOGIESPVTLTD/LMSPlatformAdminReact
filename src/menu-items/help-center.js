@@ -40,15 +40,15 @@ const pages = {
           icon: icons.IconTicket,
           breadcrumbs: false
         },
-        {
-          id: 'chatsupport',
-          title: 'Chat Support',
-          type: 'item',
-          url: '/help-center/ChatSupport',
-          target: false,
-          icon: icons.IconTicket,
-          breadcrumbs: false
-        }
+        // {
+        //   id: 'chatsupport',
+        //   title: 'Chat Support',
+        //   type: 'item',
+        //   url: '/help-center/ChatSupport',
+        //   target: false,
+        //   icon: icons.IconTicket,
+        //   breadcrumbs: false
+        // }
       ]
     }
   ]

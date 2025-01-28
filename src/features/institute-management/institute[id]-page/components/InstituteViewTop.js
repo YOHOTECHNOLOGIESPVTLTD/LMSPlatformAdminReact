@@ -1,223 +1,122 @@
-// ** MUI Components
 import { useState } from 'react';
-import { MenuItem, Tabs, Tab,TextField, IconButton } from '@mui/material';
-import Box from '@mui/material/Box';
-// import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+import { Tabs, Tab, IconButton, Box, Typography,  CardMedia } from '@mui/material';
+import Slider from 'react-slick';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
-// import { Link } from 'react-router-dom';
-import { instituteChangeStatus } from 'features/institute-management/services/instituteService';
-import toast from 'react-hot-toast';
-import StatusDialog from 'components/modal/DeleteModel';
-import { imagePlaceholder } from 'lib/placeholders';
 import { getImageUrl } from 'themes/imageUtlis';
+import InstituteAbout from './InstituteAbout';
+import UserViewAccount from './UserViewAccount';
+import CourseView from './Course/CourseView';
+import StatusDialog from 'components/modal/DeleteModel';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Slider from 'react-slick';
-import LocationOn from '@mui/icons-material/LocationOn';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import UserViewAccount from './UserViewAccount';
-import InstituteAbout from './InstituteAbout';
-import CourseView from './Course/CourseView';
 
-
-
-const ProfilePicture = styled('img')(({ theme }) => ({
-  width: 108,
-  height: 108,
-  borderRadius: theme.shape.borderRadius,
-  border: `4px solid ${theme.palette.common.white}`,
-  [theme.breakpoints.down('md')]: {
-    marginBottom: theme.spacing(4)
-  }
+// Styled Components
+const StyledHeader = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: theme.spacing(2),
+  backgroundColor: '#002B38',
+  color: '#fff',
+  borderTopLeftRadius: theme.shape.borderRadius,
+  borderTopRightRadius: theme.shape.borderRadius,
+  boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"
 }));
 
-const images = [
-  "https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1",
-  "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1",
-  "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1"
-];
+const InstituteLogo = styled('img')(({ theme }) => ({
+  width: 60,
+  height: 60,
+  borderRadius: '50%',
+  marginRight: theme.spacing(2),
+}));
 
+const GalleryImage = styled(CardMedia)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+  // marginBottom: theme.spacing(2),
+}));
 
+const StyledTabs = styled(Tabs)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  backgroundColor: "white",
+  '.MuiTabs-indicator': {
+    backgroundColor: '#0CCE7F',
+  },
+}));
 
 const UserViewLeft = ({ institute }) => {
-  const [statusOpen, setStatusDialogOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
-  const settings = {
+  const [statusOpen, setStatusDialogOpen] = useState(false);
+
+
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
+  };
+
+  const gallerySettings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,         
-    autoplaySpeed: 10000,    // 10 seconds
+    autoplay: true,
+    autoplaySpeed: 5000,
   };
-
-  const handleTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
-  };
-  
-
-  console.log(institute,"insti")
 
   return (
-
-    <>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-        <IconButton sx={{ mr: 1 }} onClick={() => window.history.back()}>
+    <Box sx={{ backgroundColor: '#f8f9fa', minHeight: '100vh', boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
+      <StyledHeader>
+        <IconButton onClick={() => window.history.back()} sx={{ color: '#fff' }}>
           <ArrowBackIcon />
         </IconButton>
-        <Typography sx={{ flexGrow: 1, color: "#000", fontFamily:"Poppins",fontSize:'15px',fontWeight:'700',fontStyle:'normal'}}>
-          {institute?.institute_name}
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '4px',mr:24 }}>
-          <Typography
-            sx={{
-              color: "#000",
-              fontFamily: "Poppins",
-              fontSize: '15px',
-              fontWeight: '500'
-            }}
-          >
-            LMSID:
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: "5px" }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, fontFamily: 'Poppins',color: "white" }}>
+            {institute?.institute_name}
           </Typography>
-          <Typography
-            sx={{
-              color: "#747474",
-              fontFamily: "Poppins",
-              fontSize: '12px',
-              fontWeight: '400'
-            }}
-          >
-            {institute?.id}
-          </Typography>
+          <InstituteLogo
+            src={institute?.image ? getImageUrl(institute.image) : 'https://via.placeholder.com/60'}
+            alt="Institute Logo"
+          />
+        
         </Box>
+      </StyledHeader>
 
-        <Tabs value={selectedTab} onChange={handleTabChange}>
-          <Tab sx={{ color:'#002B38',fontFamily:"Poppins",fontSize:'16px',fontWeight:700,lineHeight:'normal'}} label="About" />
-          <Tab sx={{ color: '#002B38', fontFamily: "Poppins", fontSize: '16px', fontWeight: 700, lineHeight: 'normal' }} label="Profile" />
-          <Tab sx={{ color: '#002B38', fontFamily: "Poppins", fontSize: '16px', fontWeight: 700, lineHeight: 'normal' }} label="Courses" />
-          <Tab sx={{ color: '#002B38', fontFamily: "Poppins", fontSize: '16px', fontWeight: 700, lineHeight: 'normal' }} label="Subscription" />
-        </Tabs>
+      <Box 
+      sx={{ backgroundColor: "white" }}
+      >
+        <Slider  {...gallerySettings} >
+          {institute?.gallery_images?.map((image, index) => (
+            <div key={index}>
+              <GalleryImage
+                component="img"
+                image={getImageUrl(image)}
+                alt={`Gallery Image ${index + 1}`}
+                sx={{ height: { xs: 200, md: 300 } }}
+              />
+            </div>
+          ))}
+        </Slider>
       </Box>
 
-      
-        <Card sx={{ mb: 3 }}>
-          <Slider {...settings}>
-            {images?.map((image, index) => (
-              <div key={index}>
-                <CardMedia
-                  component="img"
-                  alt={`${institute?.institute_name} Institute-${index}`}
-                  image={image}
-                  sx={{
-                    height: { xs: 150, md: 250 }
-                  }}
-                />
-              </div>
-            ))}
-          </Slider>
+      <StyledTabs value={selectedTab} onChange={handleTabChange} variant="fullWidth">
+        <Tab label="About" />
+        <Tab label="Profile" />
+        <Tab label="Courses" />
+      </StyledTabs>
 
-          <CardContent
-            sx={{
-              pt: 0,
-              mt: 4,
-              display: 'flex',
-              alignItems: 'flex-end',
-              flexWrap: { xs: 'wrap', md: 'nowrap' },
-              justifyContent: 'space-between'
-            }}
-          >
-            <ProfilePicture src={`${institute?.image ? getImageUrl(institute?.image) : imagePlaceholder}`} alt="profile-picture" />
-            <Box
-              sx={{
-                width: '100%',
-                display: 'flex',
-                ml: { xs: 0, md: 6 },
-                mt: 1,
-                alignItems: 'flex-end',
-                flexWrap: ['wrap', 'nowrap'],
-                justifyContent: ['center', 'space-between']
-              }}
-            >
-              <Box
-                sx={{
-                  mt: 1.75,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  justifyContent: ['center', 'flex-start']
-                }}
-              >
-                <Typography variant="h3" sx={{ mr: 2, mt: 3, textTransform: 'uppercase', fontFamily: 'poppins', fontSize: '20px', fontWeight: 700 }}>
-                  {institute?.institute_name}
-                </Typography>
-
-                <Typography
-                  variant="h3"
-                  sx={{ mr: 2, mt: 2, textTransform: 'uppercase', color: '#141522', fontFamily: 'poppins', fontSize: '15px', fontWeight: 700, lineHeight: '21px', letterSpacing: '-0.28px' }}
-                >
-                  <LocationOn sx={{ color: '#141522', marginRight: 1 }} />
-                  {institute?.contact_info.address.city}, {institute?.contact_info.address.state}
-                </Typography>
-
-                <Typography
-                  variant="h5"
-                  sx={{
-                    mr: 4,
-                    mt: 1,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    maxWidth: 300
-                  }}
-                >
-                  {institute?.description}
-                </Typography>
-              </Box>
-
-              <TextField
-                select
-                label="Status"
-                sx={{ ml: 3 }}
-                defaultValue={institute?.is_active}
-                onChange={async (e) => {
-                  const data = {
-                    id: institute?.uuid,
-                    status: e.target.value
-                  };
-                  const result = await instituteChangeStatus(data);
-                  setStatusDialogOpen(true);
-                  if (result.success) {
-                    toast.success(result.message);
-                  } else {
-                    toast.error(result.message);
-                  }
-                }}
-              >
-                <MenuItem value={'true'}>Active</MenuItem>
-                <MenuItem value={'false'}>Inactive</MenuItem>
-              </TextField>
-
-              <StatusDialog
+      <StatusDialog
                 open={statusOpen}
                 setOpen={setStatusDialogOpen}
                 description="Are you sure you want to Change Status"
                 title="Status"
               />
-            </Box>
-          </CardContent>
-        </Card>
-      
-      {selectedTab === 0 && <div><InstituteAbout /></div>}
-      {selectedTab === 1 && <div><UserViewAccount institute={institute} /></div>}
-      {selectedTab === 2 && <div><CourseView/></div>}
-      {selectedTab === 3 && <div><CourseView /></div>}
-    </>
+      <Box sx={{ mt: 3, backgroundColor: "white" }}>
+        {selectedTab === 0 && <InstituteAbout institute={institute} />}
+        {selectedTab === 1 && <UserViewAccount institute={institute} />}
+        {selectedTab === 2 && <CourseView />}
+      </Box>
+    </Box>
   );
 };
 

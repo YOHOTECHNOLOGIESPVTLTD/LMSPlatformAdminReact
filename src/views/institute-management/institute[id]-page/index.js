@@ -1,6 +1,5 @@
 import Grid from '@mui/material/Grid';
 import InstituteViewTop from 'features/institute-management/institute[id]-page/components/InstituteViewTop';
-import InstituteViewBottom from 'features/institute-management/institute[id]-page/components/InstituteViewBottom';
 
 import { InstituteGetById } from 'features/institute-management/services/instituteService';
 
@@ -30,9 +29,6 @@ const InstituteViewPage = () => {
     <Grid container spacing={2}>
       <Grid item xs={12} md={12} lg={12}>
         <InstituteViewTop institute={institute} />
-      </Grid>
-      <Grid item xs={12} md={12} lg={12}>
-        <InstituteViewBottom institute={institute} />
       </Grid>
     </Grid>
   );

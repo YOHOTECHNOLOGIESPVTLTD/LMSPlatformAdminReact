@@ -4,7 +4,7 @@ import CardBg from "../../../assets/images/dashboard/institute_card.svg";
 import { getImageUrl } from "themes/imageUtlis";
 import LocationOnIcon from "@mui/icons-material/LocationOn"; // Icon for address
 import BusinessIcon from "@mui/icons-material/Business"; // Icon for branches
-import { imagePlaceholder } from "lib/placeholders";
+// import { imagePlaceholder } from "lib/placeholders";
 
 const backgroundColors = [
   "#4A24E3",
@@ -34,7 +34,8 @@ const backgroundColors = [
 
 const InstituteCard = ({ institute, index }) => {
   const backgroundColor = backgroundColors[index] || "#ffffff"; 
-
+  
+  console.log(institute,"institute",getImageUrl(institute?.image))
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Box
@@ -93,15 +94,15 @@ const InstituteCard = ({ institute, index }) => {
               <Grid item xs={4}>
                 {/* Avatar or image */}
                 <Box sx={{ width: "93px", height: "43px", borderRadius: "8px", overflow: "hidden",marginTop: "8px" }}>
-                  {institute?.image ? (
+                  {/* {institute?.image ? ( */}
                     <Avatar
                       src={getImageUrl(institute?.image)}
-                      alt={institute?.institute_name}
+                      // alt={institute?.institute_name}
                       sx={{ width: "100%", height: "100%", borderRadius: "0px" }}
                     />
-                  ) : (
-                    <Avatar src={imagePlaceholder} sx={{ width: "100%", height: "100%", borderRadius: "0px" }} />
-                  )}
+                   {/* ) : ( */}
+                     {/* <Avatar src={imagePlaceholder} sx={{ width: "100%", height: "100%", borderRadius: "0px" }} />
+                   )} */}
                 </Box>
               </Grid>
 

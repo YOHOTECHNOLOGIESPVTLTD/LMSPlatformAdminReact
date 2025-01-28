@@ -189,7 +189,7 @@ const gallerySchema = yup.object().shape({});
 
 const AddInstitutePage = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState(4);
+  const [activeStep, setActiveStep] = useState(0);
   const plans = useSelector(selectPlans)
   const dispatch = useDispatch()
   // const loading = useSelector(selectLoading)
@@ -345,13 +345,13 @@ const AddInstitutePage = () => {
       is_primary : true,
       branch_identity : accountData.branch_name,
       contact_info: {
-        phone_no : accountData.phone,
-        alternate_no: accountData.alternate_phone ,
+        phone_no : Number(accountData.phone),
+        alternate_no: Number(accountData.alternate_phone) ,
         address : accountData.address1,
         landmark : accountData.address2,
         state: accountData.state,
         city: accountData.city,
-        pincode : accountData.pincode,
+        pincode : Number(accountData.pincode),
       }
     }
     const admin = {
@@ -548,9 +548,9 @@ const AddInstitutePage = () => {
     if (activeStep === steps.length) {
       return (
         <Fragment>
-          <Typography>All steps are completed!</Typography>
+          <Typography onClick={handleReset} >All steps are completed!</Typography>
           <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-            <Button variant="contained" onClick={handleReset}>
+            <Button variant="contained" onClick={() => {setActiveStep(0)}}>
               Reset
             </Button>
           </Box>
@@ -610,7 +610,7 @@ const AddInstitutePage = () => {
         </StepperWrapper>
       </CardContent>
 
-      <Divider sx={{ m: '0 !important' }} />
+      <Divider sx={{ m: '0 !important' }}  />
 
       <CardContent>{renderContent()}</CardContent>
     </Card>

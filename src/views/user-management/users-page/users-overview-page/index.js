@@ -18,7 +18,7 @@ const UserList = () => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     dispatch(getAllGroups(selectedBranchId));
-  }, [selectedBranchId]);
+  }, [selectedBranchId,dispatch]);
 
   useEffect(() => {
     dispatch(getAllUsers(selectedBranchId));

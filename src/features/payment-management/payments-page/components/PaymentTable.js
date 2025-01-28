@@ -22,7 +22,6 @@ import Avatar from '@mui/material/Avatar';
 import DeleteDialog from 'components/modal/DeleteModel';
 // import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
-import PaymentAddDrawer from './PaymentAddDrawer';
 import PaymentCardHeader from './PaymentCardHeader';
 import PaymentEditDrawer from './PaymentEditDrawer';
 // ** Styled Components
@@ -398,7 +397,7 @@ const FeesTable = () => {
         </Grid>
       </Grid>
 
-      <PaymentAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      {/* <PaymentAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} /> */}
       <PaymentEditDrawer
         setRefetch={setRefetch}
         open={editUserOpen}

@@ -31,9 +31,9 @@ const input = () => {
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8
           },
-          backgroundColor: `rgba(${theme.palette.customColors.main}, 0.04)`,
+          // backgroundColor: `rgba(${theme.palette.customColors.main}, 0.04)`,
           '&:hover:not(.Mui-disabled)': {
-            backgroundColor: `rgba(${theme.palette.customColors.main}, 0.08)`
+            // backgroundColor: `rgba(${theme.palette.customColors.main}, 0.08)`
           },
           '&:before': {
             borderBottom: `1px solid rgba(${theme.palette.customColors.main}, 0.2)`

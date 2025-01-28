@@ -13,6 +13,7 @@ import { getAllSubscriptionPlans } from '../redux/subscriptionPlansThunks';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import CheckIcon from "../../../../assets/images/subscription/check.png"
+import { getImageUrl } from 'themes/imageUtlis';
 
 // Styled component for the plan card wrapper
 const BoxWrapper = styled(motion(Box))(({ theme }) => ({
@@ -209,7 +210,7 @@ const PlanDetails = (props) => {
         }}
       >
         <img
-          src={plans?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}${plans?.image}` : placeholderUrl}
+          src={plans?.image ? getImageUrl(plans?.image) : placeholderUrl}
           alt="subscription-plan-img"
           height={100}
           style={{ borderRadius: '0.5rem' }}

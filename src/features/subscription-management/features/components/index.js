@@ -4,10 +4,9 @@ import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Box } from '@mui/material';
+import { Box, Card } from '@mui/material';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
-import { imagePlaceholder } from 'lib/placeholders';
 import { useNavigate } from 'react-router';
 // import * as yup from "yup"
 
@@ -20,6 +19,7 @@ import { addSubscriptionFeature } from '../services/subscriptionFeaturesServices
 import { handleFileUpload } from 'features/fileUpload';
 // import { yupResolver } from '@hookform/resolvers/yup';
 import { useSpinner } from 'context/spinnerContext';
+import { getImageUrl } from 'themes/imageUtlis';
 
 const defaultValues = {
   plan_name: '',
@@ -87,7 +87,7 @@ const SubscriptionFeatures = () => {
   };
 
   const ImgStyled = styled('img')(({ theme }) => ({
-    width: 100,
+    width: 200,
     height: 100,
     marginRight: theme.spacing(2),
     borderRadius: theme.shape.borderRadius
@@ -100,7 +100,6 @@ const SubscriptionFeatures = () => {
     }
   }));
   const ResetButtonStyled = styled(Button)(({ theme }) => ({
-    marginLeft: theme.spacing(4),
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       marginLeft: 0,
@@ -190,9 +189,13 @@ const SubscriptionFeatures = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={5}>
           <Grid item xs={12} sm={6}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <ImgStyled  src={imgSrc?process.env.REACT_APP_PUBLIC_API_URL+imgSrc:imagePlaceholder} alt="Profile Pic" />
-              <div>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: "30px" }}>
+              <Card sx={{ display: 'flex', flexDirection: "column", alignItems: "center", boxShadow: 3, 
+              transition: 'box-shadow 0.3s ease-in-out', padding: "30px",
+              ':hover': {
+                boxShadow: 6, // Increase the shadow level on hover
+              },}}
+              >
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                   Upload Profile picture
                   <input
@@ -203,13 +206,19 @@ const SubscriptionFeatures = () => {
                     id="account-settings-upload-image"
                   />
                 </ButtonStyled>
-                <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
-                  Reset
-                </ResetButtonStyled>
                 <Typography sx={{ mt: 4, color: 'text.disabled', justifyContent: 'center', display: 'flex' }}>
                   Allowed PNG or JPEG. Max size of 800K.
                 </Typography>
-              </div>
+                </Card>
+                {
+                  imgSrc &&
+                  <Box sx={{ display: 'flex', flexDirection: "column", alignItems: "center", gap: "5px"}}>
+                  <ImgStyled  src={getImageUrl(imgSrc)} alt="Profile Pic" />
+                  <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
+                  Reset
+                </ResetButtonStyled>
+                </Box>
+                }
             </Box>
           </Grid>
 
@@ -228,7 +237,7 @@ const SubscriptionFeatures = () => {
                     border: "2px solid #a9a9a9", 
                     borderRadius: "4px",
                     padding: "10px",
-                     
+                    backgroundColor: "white",
                     color: "#000", 
                   },
                   "& .MuiInputLabel-root": {
@@ -270,11 +279,12 @@ const SubscriptionFeatures = () => {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px", 
                       padding: "10px",
-                       
+                      backgroundColor: "white",
                       color: "#000", 
                     },
                     "& .MuiInputLabel-root": {
-                      color: "#333", 
+                      color: "#333",
+                      backgroundColor: "white" 
                     },
                     "& .MuiInputBase-input::placeholder": {
                       color: "#9e9e9e", 
@@ -313,7 +323,7 @@ const SubscriptionFeatures = () => {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px",
                       padding: "10px",
-                       
+                      backgroundColor: "white",
                       color: "#000", 
                     },
                     "& .MuiInputLabel-root": {
@@ -340,7 +350,7 @@ const SubscriptionFeatures = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} >
             <Controller
               name="description"
               control={control}
@@ -354,12 +364,19 @@ const SubscriptionFeatures = () => {
                   {...field}
                   label="Plan Description"
                   sx={{
+                    backgroundColor: "white",
                     "& .MuiInputBase-input": {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px",
                       padding: "10px", 
-                       
+                      backgroundColor: "white", 
                       color: "#000", 
+                      ":focused" : {
+                           backgroundColor: "white"
+                      },
+                      ":hover" : {
+                        backgroundColor: "white"
+                      }
                     },
                     "& .MuiInputBase-root.Mui-focused" : {
                           boxShadow : "none",
@@ -367,7 +384,8 @@ const SubscriptionFeatures = () => {
                     "& .MuiInputLabel-root": {
                       color: "#333", 
                     ":focus": {
-                      boxShadow: "none"
+                      boxShadow: "none",
+                      backgroundColor: "white"
                     }
                     },
                     "& .MuiInputBase-input::placeholder": {
@@ -381,7 +399,7 @@ const SubscriptionFeatures = () => {
                     },
                   }}
                   error={Boolean(errors.textarea)}
-                  aria-describedby="validation-basic-textarea"
+                  // aria-describedby="validation-basic-textarea"
                   {...(errors.textarea && { helperText: 'This field is required' })}
                 />
               )}
@@ -405,8 +423,17 @@ const SubscriptionFeatures = () => {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px", 
                       padding: "10px",
-                       
+                      backgroundColor: "white", 
                       color: "#000", 
+                    },
+                    '& .MuiInputBase-multiline' : {
+                         backgroundColor: "white" 
+                    },
+                    '& .MuiFilledInput-root' : {
+                      backgroundColor: "white"
+                    },
+                    "& .css-13giocf-MuiInputBase-root-MuiFilledInput-root" : {
+                      backgroundColor: 'white'
                     },
                     "& .MuiInputLabel-root": {
                       color: "#333", 
@@ -448,7 +475,7 @@ const SubscriptionFeatures = () => {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px", 
                       padding: "10px",
-                       
+                      backgroundColor: "white", 
                       color: "#000", 
                     },
                     "& .MuiInputLabel-root": {
@@ -502,7 +529,7 @@ const SubscriptionFeatures = () => {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px",
                       padding: "10px",
-                       
+                      backgroundColor: "white", 
                       color: "#000", 
                     },
                     "& .MuiInputLabel-root": {
@@ -584,7 +611,7 @@ const SubscriptionFeatures = () => {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px", // Rounded corners
                       padding: "10px", // Custom padding
-                       
+                      backgroundColor: 'white',
                       color: "#000", 
                     },
                     "& .MuiInputLabel-root": {
@@ -666,7 +693,7 @@ const SubscriptionFeatures = () => {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px", // Rounded corners
                       padding: "10px", // Custom padding
-                       
+                       backgroundColor: "white",
                       color: "#000", 
                     },
                     "& .MuiInputLabel-root": {
@@ -750,7 +777,7 @@ const SubscriptionFeatures = () => {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px", // Rounded corners
                       padding: "10px", // Custom padding
-                       
+                      backgroundColor: "white", 
                       color: "#000", 
                     },
                     "& .MuiInputLabel-root": {
@@ -832,7 +859,7 @@ const SubscriptionFeatures = () => {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px", // Rounded corners
                       padding: "10px", // Custom padding
-                       
+                      backgroundColor: 'white',
                       color: "#000", 
                     },
                     "& .MuiInputLabel-root": {
@@ -904,7 +931,7 @@ const SubscriptionFeatures = () => {
                       border: "2px solid #a9a9a9", 
                       borderRadius: "4px", // Rounded corners
                       padding: "10px", // Custom padding
-                       
+                      backgroundColor: "white",
                       color: "#000", 
                     },
                     "& .MuiInputLabel-root": {
