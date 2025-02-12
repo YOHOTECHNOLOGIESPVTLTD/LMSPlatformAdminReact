@@ -31,16 +31,16 @@ const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(6),
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
 }));
 
 const schema = yup.object().shape({
-  description: yup.string().required(),
+  description: yup.string().required('Please Enter the description must required').min(10, 'Description must be at least 10 characters'),
   // category: yup.object().required('Category is required'),
   title: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-    .required()
+    .required('Enter the title name ')
 });
 
 const FaqEdit = (props) => {
@@ -64,7 +64,7 @@ const FaqEdit = (props) => {
     resolver: yupResolver(schema)
   });
 
-  console.log(props.initialValues?.institute_faq_module);
+  //console.log(props.initialValues?.institute_faq_module);
 
   useEffect(() => {
     if (open) {
@@ -82,7 +82,7 @@ const FaqEdit = (props) => {
     } else {
       toast.error(result.message);
     }
-    console.log(data);
+    //console.log(data);
   };
 
   const handleClose = () => {
@@ -90,7 +90,7 @@ const FaqEdit = (props) => {
     toggle();
     reset();
   };
-  console.log(props,defaultValues)
+ // console.log(props,defaultValues)
   return (
     <Drawer
       open={open}
@@ -98,10 +98,13 @@ const FaqEdit = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 },
+      } }}
     >
-      <Header>
-        <Typography variant="h5">Edit Faq </Typography>
+      <Header  sx={{
+    borderBottom: (theme) => `1px solid ${theme.palette.divider}`
+  }}>
+        <Typography variant="h3">Edit Faq </Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -131,7 +134,7 @@ const FaqEdit = (props) => {
                 sx={{ mb: 4 }}
                 label="Title"
                 onChange={onChange}
-                placeholder="John Doe"
+                placeholder="Enter FAQ Title"
                 error={Boolean(errors.title)}
                 {...(errors.title && { helperText: errors.title.message })}
               />
@@ -149,7 +152,7 @@ const FaqEdit = (props) => {
                 sx={{ mb: 4 }}
                 label="description"
                 onChange={onChange}
-                placeholder="Business Development Executive"
+                placeholder="Provide a detailed description"
                 error={Boolean(errors.description)}
                 {...(errors.description && { helperText: errors.description.message })}
               />
@@ -176,15 +179,35 @@ const FaqEdit = (props) => {
               />
             )}
           /> */}
+      
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mt: 3 }}>
+  <Button
+    type="submit"
+    variant="contained"
+    color="primary"
+    sx={{
+      minWidth: 120,
+      padding: '0.6rem 1.5rem',
+      fontWeight: 'bold',
+    }}
+  >
+    Submit
+  </Button>
 
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-          </Box>
+  <Button
+    variant="contained"
+    color="primary"
+    onClick={handleClose}
+    sx={{
+      minWidth: 120,
+      padding: '0.6rem 1.5rem',
+      fontWeight: 'bold',
+    }}
+  >
+    Cancel
+  </Button>
+</Box>
+
         </form>
       </Box>
     </Drawer>

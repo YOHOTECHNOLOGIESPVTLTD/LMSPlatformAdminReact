@@ -28,6 +28,8 @@ export const login = (username, password) => async (dispatch) => {
       Cookies.set("otp_data",JSON.stringify(otp_data),{expires: expires })
       return { otp_status: response?.data?.data?.otp_status}
     }
+
+    console.log(response?.data?.data?.token,'tokennnnn')
     // Store token and user data in localStorage
     localStorage.setItem('isAuthenticated', true);
     localStorage.setItem('token', response.data.data.token);
