@@ -34,7 +34,7 @@ const schema = yup.object().shape({
 const defaultValues = {
   name: '',
   description: '',
-  category: 'null'
+  category: null
 };
 
 const FaqAddDrawer = (props) => {
@@ -60,7 +60,7 @@ const FaqAddDrawer = (props) => {
     const inputData = {
       identity: data.name,
       description: data.description,
-      category: data.category.uuid  || null
+      category: data.category?.uuid  || null
     };
     const result = await addFaq(inputData);
     if (result.success) {

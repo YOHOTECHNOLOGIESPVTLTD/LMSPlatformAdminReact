@@ -41,10 +41,15 @@ const CategoriesDataGrid = () => {
 
  // console.log(faqCategories);
   useEffect(() => {
-    const data = { page: 1}
+    const data = { page}
     dispatch(getAllFaqCategories(data));
     
-  }, [dispatch, selectedBranchId, refetch]);
+  }, [dispatch, selectedBranchId, refetch,page]);
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+    setRefetch((prev) => !prev);
+  };
 
   // const handleRowClick = (params) => {
     
@@ -212,7 +217,7 @@ const CategoriesDataGrid = () => {
                     }
                     dispatch(getAllFaqCategories(data))
                   }}*/
-                    onChange={(e, newPage) => setPage(newPage)}
+                    onChange={handlePageChange}
                 />  
               </Box>
             }

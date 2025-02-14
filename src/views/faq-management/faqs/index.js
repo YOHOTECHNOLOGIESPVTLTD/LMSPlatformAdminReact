@@ -139,8 +139,8 @@ const FaqDataGrid = () => {
             {/* Display categories */}
             <TableContainer component={Paper} sx={{ "& .MuiTableCell-root": { color: "#474747", borderBottom: '1px solid #ddd' } }} >
                <Table size="medium">
-                 <TableHead sx={{ backgroundColor: "#FAFAFA"}} >
-                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "600" } }} >
+                 <TableHead sx={{ backgroundColor: "#1565C0"}} >
+                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "bold" ,color:"white"} }} >
                      <TableCell sx={{fontFamily:"poppins"}}>FAQ Name</TableCell>
                      <TableCell sx={{fontFamily:"poppins"}}>Category</TableCell>
                       <TableCell sx={{ fontFamily: "poppins" }}>Status</TableCell>
@@ -152,7 +152,8 @@ const FaqDataGrid = () => {
                     faqs?.data?.map((faq) => (
                       <TableRow
                       key={faq._id}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 },
+                    '&:hover': { backgroundColor: '#E3F2FD', transition: '0.3s ease' }  }}
                       >
                         <TableCell sx={{fontSize:"16px", fontFamily: "poppins" }}>{faq?.identity}</TableCell>
                         <TableCell sx={{ fontSize: "16px", fontFamily: "poppins" }}>{faq?.category?.identity}</TableCell>

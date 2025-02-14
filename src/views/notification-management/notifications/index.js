@@ -217,7 +217,7 @@ const columns = [
   headerName: 'Body',
   renderCell: ({ row }) => (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize', textWrap: "now-wrap",textOverflow: "ellipsis" }}>
+      <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize',maxWidth: '200px', textWrap: "now-wrap",textOverflow: "ellipsis" }}>
         {row?.body}
       </Typography>
     </Box>
