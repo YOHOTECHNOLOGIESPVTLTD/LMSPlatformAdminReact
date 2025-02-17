@@ -551,7 +551,7 @@ const SubscriptionFeatures = () => {
                 />
               )}
             />
-            <FormControl>
+            <FormControl sx={{ display: "none"}} >
               <Controller
                 name="students_checkbox"
                 control={control}
@@ -634,7 +634,7 @@ const SubscriptionFeatures = () => {
                 />
               )}
             />
-            <FormControl>
+            <FormControl sx={{ display: "none"}} >
               <Controller
                 name="admins_checkbox"
                 control={control}
@@ -715,7 +715,7 @@ const SubscriptionFeatures = () => {
                 />
               )}
             />
-            <FormControl>
+            <FormControl sx={{ display: "none"}} >
               <Controller
                 name="teachers_checkbox"
                 control={control}
@@ -799,7 +799,7 @@ const SubscriptionFeatures = () => {
                 />
               )}
             />
-            <FormControl>
+            <FormControl sx={{ display: "none"}} >
               <Controller
                 name="batches_checkbox"
                 control={control}
@@ -882,7 +882,7 @@ const SubscriptionFeatures = () => {
                 />
               )}
             />
-            <FormControl>
+            <FormControl sx={{ display: "none"}} >
               <Controller
                 name="courses_checkbox"
                 control={control}
@@ -964,7 +964,7 @@ const SubscriptionFeatures = () => {
                 />
               )}
             />
-            <FormControl>
+            <FormControl sx={{ display: "none"}} >
               <Controller
                 name="courses_checkbox"
                 control={control}
