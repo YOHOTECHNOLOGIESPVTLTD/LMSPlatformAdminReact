@@ -1,4 +1,4 @@
-import dashboard from './dashboard';
+// import dashboard from './dashboard';
 // import userManagement from './user-management';
 import PaymentManagement from './payment-management';
 import instituteManagement from './institute-management';
@@ -14,7 +14,7 @@ import FaqManagement from './faq-management';
 
 const menuItems = {
   items: [
-    dashboard,
+    // dashboard,
     instituteManagement,
     PaymentManagement,
     subscriptionManagement,

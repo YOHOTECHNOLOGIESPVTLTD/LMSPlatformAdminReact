@@ -8,7 +8,7 @@ import { Box} from '@mui/material';
 import LogoSection from '../LogoSection';
 // import SearchSection from './SearchSection';
 import ProfileSection from './ProfileSection';
-import NotificationSection from './NotificationSection';
+// import NotificationSection from './NotificationSection';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { toggleDarkMode } from 'store/actions';
 
@@ -121,7 +121,7 @@ const Header = () => {
       {/* <FormControlLabel control={<MaterialUISwitch checked={isDarkMode} onChange={handleToggleDarkMode} />} /> */}
 
       {/* notification & profile */}
-      <NotificationSection />
+      {/* <NotificationSection /> */}
       <ProfileSection />
     </>
   );

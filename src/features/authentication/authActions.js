@@ -5,7 +5,7 @@ import client from "../../api/index"
 import Cookies from 'js-cookie';
 
 const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/auth/login`;
-const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/platform-user/logout`;
+const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/auth/logout`;
 
 export const login = (username, password) => async (dispatch) => {
   let data = {
