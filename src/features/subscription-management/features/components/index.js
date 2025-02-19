@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Box } from '@mui/material';
@@ -191,7 +190,7 @@ const SubscriptionFeatures = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={5}>
         <Grid item xs={12} sm={6}>
-  <Box sx={{ display: 'flex', alignItems: 'center', gap: "30px" }}>
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: "30px",justifyContent:'center' }}>
     <Box
       sx={{
         display: 'flex',
@@ -200,32 +199,73 @@ const SubscriptionFeatures = () => {
         justifyContent: 'center',
         width: 180,
         height: 180,
-        border: '2px dashed #1976d2', 
+        border: '2px dashed #1976d2',
         borderRadius: '12px',
         cursor: 'pointer',
         transition: 'all 0.3s ease-in-out',
         backgroundColor: '#f9f9f9',
+        position: 'relative',
+        overflow: 'hidden', 
         ':hover': {
           backgroundColor: '#e3f2fd',
           borderColor: '#1565c0',
           boxShadow: 3,
-          transform: 'scale(1.05)', 
+          transform: 'scale(1.05)',
         },
         ':focus-within': {
-          transform: 'scale(1.1)', 
+          transform: 'scale(1.1)',
         },
         padding: 2,
       }}
       component="label"
       htmlFor="account-settings-upload-image"
     >
-      <Typography variant="h1" color="#1976d2" fontWeight="Normal" fontSize="5rem">+</Typography>
-      <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: '500' }}>
-        Upload Profile Picture
-      </Typography>
-      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-        PNG or JPEG (Max 800K)
-      </Typography>
+      {!imgSrc ? (
+        <>
+          <Typography variant="h1" color="#1976d2" fontWeight="Normal" fontSize="5rem">+</Typography>
+          <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: '500' }}>
+            Upload Profile Picture
+          </Typography>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            PNG or JPEG (Max 800K)
+          </Typography>
+        </>
+      ) : (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            width: '100%',  
+            height: '100%', 
+          }}
+        >
+          <ImgStyled
+            src={getImageUrl(imgSrc)}
+            alt="Profile Pic"
+            sx={{
+              width: '70px', 
+              height: '70px', 
+              objectFit: 'cover',
+              borderRadius: '50%', 
+              boxShadow: 2,
+            }}
+          />
+          <ResetButtonStyled
+            color="error"
+            variant="contained"
+            onClick={handleInputImageReset}
+            sx={{
+              fontSize: '0.75rem',  
+              padding: '4px 8px',  
+            }}
+          >
+            Reset
+          </ResetButtonStyled>
+        </Box>
+      )}
       <input
         hidden
         type="file"
@@ -234,16 +274,10 @@ const SubscriptionFeatures = () => {
         id="account-settings-upload-image"
       />
     </Box>
-    {imgSrc && (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-        <ImgStyled src={getImageUrl(imgSrc)} alt="Profile Pic" sx={{ borderRadius: '8px', boxShadow: 2 }} />
-        <ResetButtonStyled color="error" variant="contained" onClick={handleInputImageReset}>
-          Reset
-        </ResetButtonStyled>
-      </Box>
-    )}
   </Box>
 </Grid>
+
+
           <Grid item xs={12} sm={6}>
   <Controller
     name="plan_name"
