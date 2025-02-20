@@ -37,7 +37,7 @@ const schema = yup.object().shape({
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required(),
-  body: yup.string().required('Body field is required'),
+  body: yup.string().required('Body field is required').min(2),
   institutes: yup.object().required('instituteList field is required'),
   branches : yup.array().min(1,"Select at least one branches").required("branch is required"),
   link : yup.string().optional()
@@ -372,16 +372,24 @@ const SidebarAddUser = (props) => {
                onChange={onChange}
                value={value}
                error={Boolean(errors?.link)}
-               {...(errors?.link) && { helperText: errors?.link?.message} }
+               helperText={errors?.link?.message || ''}
+              // {...(errors?.link) && { helperText: errors?.link?.message} }
               />
              )}
             />
           </Grid>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center"}}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>
               Submit
             </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
+            <Button variant="contained" color="secondary" onClick={handleClose} 
+             sx={{
+              border: '1px solid',
+              borderColor: 'secondary.main',
+              '&:hover': {
+                backgroundColor: 'secondary.orange'
+              }
+            }}>
               Cancel
             </Button>
           </Box>

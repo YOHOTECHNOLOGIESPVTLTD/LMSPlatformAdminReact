@@ -35,7 +35,7 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  description: yup.string().required(),
+  description: yup.string().required('Enter the Description').min(10, 'Description must be at least 10 characters long'),
   // category: yup.object().required('Category is required'),
   title: yup
     .string()
@@ -77,6 +77,7 @@ const FaqEdit = (props) => {
     const result = await updateFaq(inputData);
     if (result.success) {
       toast.success(result.message);
+      reset();
       toggle();
       setRefetch((state) => !state);
     } else {
@@ -101,7 +102,7 @@ const FaqEdit = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Edit Faq </Typography>
+        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>Edit Faq </Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -176,15 +177,35 @@ const FaqEdit = (props) => {
               />
             )}
           /> */}
+<Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
+  <Button 
+    type="submit" 
+    variant="contained" 
+    sx={{ 
+      mr: 3, 
+      backgroundColor: "#6d788d", 
+      color: "#fff", 
+      '&:hover': { backgroundColor: "#5a667a" } 
+    }}
+  >
+    Save Changes
+  </Button>
+  <Button 
+    variant="contained" 
+    size="medium" 
+    sx={{ 
+      color: "#fff", 
+      border: "1px solid #6d788d", 
+      backgroundColor: "#6d788d", 
+      '&:hover': { backgroundColor: "#5a667a", borderColor: "#5a667a" } 
+    }} 
+    onClick={handleClose}
+  >
+    Cancel
+  </Button>
+</Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-          </Box>
+          
         </form>
       </Box>
     </Drawer>

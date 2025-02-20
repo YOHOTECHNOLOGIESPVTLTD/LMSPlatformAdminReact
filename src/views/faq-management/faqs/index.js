@@ -139,8 +139,8 @@ const FaqDataGrid = () => {
             {/* Display categories */}
             <TableContainer component={Paper} sx={{ "& .MuiTableCell-root": { color: "#474747", borderBottom: '1px solid #ddd' } }} >
                <Table size="medium">
-                 <TableHead sx={{ backgroundColor: "#FAFAFA"}} >
-                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "600" } }} >
+                 <TableHead sx={{ backgroundColor: "#1976D2"}} >
+                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "bold", color: "white" } }} >
                      <TableCell sx={{fontFamily:"poppins"}}>FAQ Name</TableCell>
                      <TableCell sx={{fontFamily:"poppins"}}>Category</TableCell>
                       <TableCell sx={{ fontFamily: "poppins" }}>Status</TableCell>
@@ -152,7 +152,8 @@ const FaqDataGrid = () => {
                     faqs?.data?.map((faq) => (
                       <TableRow
                       key={faq._id}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 },
+                      '&:hover': { backgroundColor: "#f0f0f0" } }}
                       >
                         <TableCell sx={{fontSize:"16px", fontFamily: "poppins" }}>{faq?.identity}</TableCell>
                         <TableCell sx={{ fontSize: "16px", fontFamily: "poppins" }}>{faq?.category?.identity}</TableCell>
@@ -184,15 +185,18 @@ const FaqDataGrid = () => {
                  </TableBody>
                </Table>
             </TableContainer>
+            
             {
              faqs?.last_page !==1 &&  <Box sx={{ display: "flex", justifyContent: "flex-end", my: 1}} >
                 <Pagination
                   count={faqs?.last_page}
+                  page={currentPage}
                   onChange={async(e,page) => {
-                    const data = {
+                    /*const data = {
                       page : page 
                     }
-                    dispatch(getAllFaqs(data))
+                    dispatch(getAllFaqs(data))*/
+                    setCurrentPage(page)
                   }}
                 />  
               </Box>

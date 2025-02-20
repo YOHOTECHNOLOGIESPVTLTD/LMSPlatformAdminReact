@@ -21,8 +21,8 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  description: yup.string().required(),
-  identity: yup.string().min(3).required()
+  description: yup.string().required('Enter the Description must required').min(10, 'Description must be at least 10 characters long'),
+  identity: yup.string().min(3,'Title  must be at least 3 characters').required('Full Up the title ')
 });
 
 const FaqCategoriesEdit = (props) => {
@@ -39,7 +39,8 @@ const FaqCategoriesEdit = (props) => {
   const {
     control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm({
     defaultValues: formValues,
     mode: 'onChange',
@@ -47,6 +48,9 @@ const FaqCategoriesEdit = (props) => {
   });
 
   const onSubmit = async (data) => {
+    const isConfirmed = window.confirm("Are you sure you want to save changes?");
+    if (!isConfirmed) return;
+    
     const inputData = {
       identity: data.identity,
       description: data.description,
@@ -56,6 +60,7 @@ const FaqCategoriesEdit = (props) => {
     const result = await updateFaqCategory(inputData);
     if (result.success) {
       toast.success(result.message);
+      reset();
       toggle();
       setRefetch((state) => !state);
     } else {
@@ -66,7 +71,7 @@ const FaqCategoriesEdit = (props) => {
   const handleClose = () => {
     toggle();
   };
-  console.log(formValues,"formValues")
+ // console.log(formValues,"formValues")
   return (
     <Drawer
       open={open}
@@ -77,7 +82,7 @@ const FaqCategoriesEdit = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Edit Faq Categories</Typography>
+        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>Edit Faq Categories</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -109,7 +114,8 @@ const FaqCategoriesEdit = (props) => {
                 onChange={onChange}
                 placeholder="John Doe"
                 error={Boolean(errors.title)}
-                {...(errors.title && { helperText: errors.title.message })}
+                helperText={errors.identity?.message}
+               // {...(errors.title && { helperText: errors.title.message })}
               />
             )}
           />
@@ -127,19 +133,40 @@ const FaqCategoriesEdit = (props) => {
                 onChange={onChange}
                 placeholder="Business Development Executive"
                 error={Boolean(errors.description)}
-                {...(errors.description && { helperText: errors.description.message })}
+                helperText={errors.description?.message}
+                //{...(errors.description && { helperText: errors.description.message })}
               />
             )}
           />
+   <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
+  <Button 
+    type="submit" 
+    variant="contained" 
+    sx={{ 
+      mr: 3, 
+      backgroundColor: "#6d788d", 
+      color: "#fff", 
+      '&:hover': { backgroundColor: "#5a667a" } 
+    }}
+  >
+    Save Changes
+  </Button>
+  <Button 
+    variant="contained" 
+    size="medium" 
+    sx={{ 
+      color: "#fff", 
+      border: "1px solid #6d788d", 
+      backgroundColor: "#6d788d", 
+      '&:hover': { backgroundColor: "#5a667a", borderColor: "#5a667a" } 
+    }} 
+    onClick={handleClose}
+  >
+    Cancel
+  </Button>
+</Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-          </Box>
+         
         </form>
       </Box>
     </Drawer>

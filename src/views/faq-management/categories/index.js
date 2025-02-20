@@ -23,7 +23,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const CategoriesDataGrid = () => {
   const [value, setValue] = useState('');
-
+  const [currentPage, setCurrentPage] = useState(1); 
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -39,12 +39,12 @@ const CategoriesDataGrid = () => {
   const faqCategories = useSelector(selectFaqCategories);
   const faqCategoryLoading = useSelector(selectLoading);
 
-  console.log(faqCategories);
+  //console.log(faqCategories);
   useEffect(() => {
-    const data = { page: 1}
+    const data = { page: currentPage }
     dispatch(getAllFaqCategories(data));
     
-  }, [dispatch, selectedBranchId, refetch]);
+  }, [dispatch, selectedBranchId, refetch, currentPage]);
 
   // const handleRowClick = (params) => {
     
@@ -119,6 +119,11 @@ const CategoriesDataGrid = () => {
     },
     [dispatch]
   );
+
+  // const handlePageChange = (event, page) => {
+  //   setCurrentPage(page); 
+  // };
+
   if (!faqCategories) {
     return null;
   }
@@ -143,8 +148,8 @@ const CategoriesDataGrid = () => {
             {/* Display categories */}
             <TableContainer component={Paper} sx={{ "& .MuiTableCell-root": { color: "#474747", borderBottom: '1px solid #ddd' } }} >
                <Table size="medium">
-                 <TableHead sx={{ backgroundColor: "#FAFAFA"}} >
-                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "600" } }} >
+                 <TableHead sx={{ backgroundColor: "#1976D2"}} >
+                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "bold", color: "white" } }} >
                      <TableCell>Cateogry Name</TableCell>
                      <TableCell>Status</TableCell>
                      <TableCell>Action</TableCell>
@@ -155,7 +160,8 @@ const CategoriesDataGrid = () => {
                     faqCategories?.data?.map((category) => (
                       <TableRow
                       key={category._id}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 },
+                      '&:hover': { backgroundColor: "#f0f0f0" } }}
                       >
                         <TableCell>{category?.identity}</TableCell>
                         <TableCell>
@@ -186,19 +192,14 @@ const CategoriesDataGrid = () => {
                  </TableBody>
                </Table>
             </TableContainer>
-            {
-             faqCategories?.last_page !==1 &&  <Box sx={{ display: "flex", justifyContent: "flex-end", my: 1}} >
-                <Pagination
-                  count={faqCategories?.last_page}
-                  onChange={async(e,page) => {
-                    const data = {
-                      page : page 
-                    }
-                    dispatch(getAllFaqCategories(data))
-                  }}
-                />  
-              </Box>
-            }
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+            <Pagination
+              count={faqCategories?.last_page || 1}
+              page={currentPage}
+              onChange={(e, page) => setCurrentPage(page)}
+            />
+          </Box>
+           
           </Grid>
         )}
         <FaqCategoriesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />

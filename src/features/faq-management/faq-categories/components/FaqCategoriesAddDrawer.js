@@ -15,8 +15,8 @@ import toast from 'react-hot-toast';
 
 
 const schema = yup.object().shape({
-  name: yup.string().required('Category Name is required'),
-  description: yup.string().required('Description is required')
+  name: yup.string().required('Category Name is required') .min(3, 'Category Name must be at least 3 characters'),
+  description: yup.string().required('Description is required').min(10, 'Description must be at least 10 characters'),
 });
 
 const defaultValues = {
@@ -32,7 +32,7 @@ const FaqCategoriesAddDrawer = (props) => {
   const {
     handleSubmit,
     control,
-    setValue,
+   // setValue,
     formState: { errors },
     reset
   } = useForm({
@@ -42,6 +42,10 @@ const FaqCategoriesAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
+    const isConfirmed = window.confirm("Are you sure you want to submit the form?");
+  
+    if (!isConfirmed) return;
+    
     const InputData = {
       identity: data.name,
       description: data.description
@@ -50,6 +54,7 @@ const FaqCategoriesAddDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
+      reset(); 
       toggle();
     } else {
       toast.error(result.message);
@@ -57,7 +62,7 @@ const FaqCategoriesAddDrawer = (props) => {
   };
 
   const handleClose = () => {
-    setValue('contact', Number(''));
+    //setValue('contact', Number(''));
     toggle();
     reset();
   };
@@ -93,12 +98,12 @@ const FaqCategoriesAddDrawer = (props) => {
               borderRadius: 1,
               color: 'text.primary',
               backgroundColor: 'action.selected',
-              transition: 'rotate .2s ease-in-out', 
-              rotate: '0deg', 
-              '&:hover': {
+              //transition: 'rotate .2s ease-in-out', 
+             // rotate: '0deg', 
+            //  '&:hover': {
                 // backgroundColor: (theme) => theme.palette.secondary.main,
-                rotate: '-90deg', 
-              },
+              //  rotate: '-90deg', 
+              //},
             }}
           >
 
@@ -121,6 +126,7 @@ const FaqCategoriesAddDrawer = (props) => {
                     value={value}
                     sx={{ mb: 2 }}
                     label="Title"
+                    placeholder="Enter category name"
                     onChange={onChange}
                     error={Boolean(errors.name)}
                     helperText={errors.name?.message}
@@ -138,6 +144,7 @@ const FaqCategoriesAddDrawer = (props) => {
                     value={value}
                     sx={{ mb: 2 }}
                     label="Description"
+                    placeholder="Enter Description name"
                     onChange={onChange}
                     error={Boolean(errors.description)}
                     helperText={errors.description?.message}
@@ -147,13 +154,31 @@ const FaqCategoriesAddDrawer = (props) => {
             </Grid>
 
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
-              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                Submit
-              </Button>
-              <Button variant="outlined" size="medium" sx={{ color: "#6d788d", border: "1px solid #6d788d", backgroundColor: "transparent"}} onClick={handleClose}>
-                Cancel
-              </Button>
-            </Box>
+  <Button 
+    type="submit" 
+    variant="contained" 
+    sx={{ 
+      mr: 3, 
+      backgroundColor: "#6d788d", 
+      color: "#fff", 
+      '&:hover': { backgroundColor: "#5a667a" } 
+    }}
+  >
+    Submit
+  </Button>
+  <Button 
+    variant="contained" 
+    size="medium" 
+    sx={{ 
+      color: "#fff", 
+      backgroundColor: "#6d788d",  '&:hover': { backgroundColor: "#5a667a" } 
+    }} 
+    onClick={handleClose}
+  >
+    Cancel
+  </Button>
+</Box>
+
           </form>
         </Box>
       </Box>
