@@ -17,8 +17,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadCities, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
 import { selectCities, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect,useState} from 'react';
+
 
 const FormStep1PersonalInfo = ({
   personalControl,
@@ -110,8 +110,33 @@ const FormStep1PersonalInfo = ({
   console.log('Countriesss', cities);
   console.log('selectedCountryCode', selectedCountryCode);
 
+  const [formData, setFormData] = useState({});
+
+  // Load form data from localStorage on mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('institute_form');
+    if (savedData) {
+      setFormData(JSON.parse(savedData));
+    }
+  }, []);
+
+  // Update local storage when form data changes
+  const handleFormChange = (name, value) => {
+    setFormData((prev) => {
+      const updatedData = { ...prev, [name]: value };
+      localStorage.setItem('institute_form', JSON.stringify(updatedData));
+      return updatedData;
+    });
+  };
+  console.log('formData',formData)
+
   return (
-    <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
+    <form
+      key={1}
+      onSubmit={handlePersonalSubmit((data) => {
+        onSubmit(data);
+      })}
+    >
       <Grid container spacing={5}>
         <Grid item xs={12}>
           <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
@@ -129,9 +154,12 @@ const FormStep1PersonalInfo = ({
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.institute_name}
                 label="Institute Name"
-                onChange={onChange}
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('institute_name', e.target.value);
+                }}
                 placeholder="Enter institute name"
                 error={Boolean(personalErrors['institute_name'])}
                 sx={{ backgroundColor: personalErrors['institute_name'] ? '#FFFFFF' : '#f5f5f5' }}
@@ -158,12 +186,16 @@ const FormStep1PersonalInfo = ({
                 id="issue-date"
                 maxDate={new Date()}
                 dateFormat={'dd/MM/yyyy'}
-                value={value}
+                value={value||formData.registered_date}
                 selected={value}
                 placeholderText="select date"
                 customInput={
                   <CustomInput
                     label="Registered Date"
+                    onChange={(e) => {
+                      onChange(e);
+                      handleFormChange('registered_date', e.target.value);
+                    }}
                     error={Boolean(personalErrors['registered_date'])}
                     aria-describedby="stepper-linear-personal-registered_date"
                     sx={{ backgroundColor: personalErrors['registered_date'] ? '#FFFFFF' : '#f5f5f5' }}
@@ -184,9 +216,12 @@ const FormStep1PersonalInfo = ({
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.address_line_one}
                 label="Address Line One"
-                onChange={onChange}
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('address_line_one', e.target.value);
+                }}
                 placeholder="123 Main St"
                 sx={{ backgroundColor: personalErrors['address_line_one'] ? '#FFFFFF' : '#f5f5f5' }}
                 error={Boolean(personalErrors['address_line_one'])}
@@ -211,9 +246,12 @@ const FormStep1PersonalInfo = ({
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.address_line_two}
                 label="Address Line Two"
-                onChange={onChange}
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('address_line_two', e.target.value);
+                }}
                 placeholder="Apt, Suite, or Floor"
                 sx={{ backgroundColor: personalErrors['address_line_two'] ? '#FFFFFF' : '#f5f5f5' }}
                 error={Boolean(personalErrors['address_line_two'])}
@@ -239,9 +277,12 @@ const FormStep1PersonalInfo = ({
               <CustomTextField
                 fullWidth
                 type="text"
-                value={value}
+                value={value||formData.phone}
                 label="Phone Number"
-                onChange={onChange}
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('phone', e.target.value);
+                }}
                 placeholder="12345 67890"
                 sx={{ backgroundColor: personalErrors['phone'] ? '#FFFFFF' : '#f5f5f5' }}
                 autoComplete="off"
@@ -267,10 +308,13 @@ const FormStep1PersonalInfo = ({
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.alt_phone}
                 type="text"
                 label="Alt Phone Number"
-                onChange={onChange}
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('alt_phone', e.target.value);
+                }}
                 placeholder="12345 67890"
                 autoComplete="off"
                 sx={{ backgroundColor: personalErrors['alt_phone'] ? '#FFFFFF' : '#f5f5f5' }}
@@ -304,6 +348,7 @@ const FormStep1PersonalInfo = ({
                 onChange={(e) => {
                   onChange(e);
                   handleCountryChange(e);
+                  handleFormChange(e);
                 }}
                 placeholder="Enter state"
                 sx={{ backgroundColor: personalErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
@@ -337,11 +382,12 @@ const FormStep1PersonalInfo = ({
               <TextField
                 fullWidth
                 select
-                value={value}
+                value={value||formData.state}
                 label="State"
                 onChange={(e) => {
                   onChange(e);
                   handleStateChange(e);
+                  handleFormChange('state', e.target.value);
                 }}
                 placeholder="Enter state"
                 sx={{ backgroundColor: personalErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
@@ -374,11 +420,12 @@ const FormStep1PersonalInfo = ({
               <TextField
                 fullWidth
                 select
-                value={value}
+                value={value||formData.city}
                 label="City"
                 onChange={(e) => {
                   onChange(e);
                   handleCityChange(e);
+                  handleFormChange('city', e.target.value);
                 }}
                 placeholder="Enter city"
                 sx={{ backgroundColor: personalErrors['city'] ? '#FFFFFF' : '#f5f5f5' }}
@@ -411,10 +458,13 @@ const FormStep1PersonalInfo = ({
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.pin_code}
                 label="Pin Code"
                 type="text"
-                onChange={onChange}
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('pin_code',e.target.value);
+                }}
                 placeholder="123 456"
                 sx={{ backgroundColor: personalErrors['pin_code'] ? '#FFFFFF' : '#f5f5f5' }}
                 error={Boolean(personalErrors['pin_code'])}
@@ -440,9 +490,12 @@ const FormStep1PersonalInfo = ({
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.official_email}
                 label="Official Email"
-                onChange={onChange}
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('official_email',e.target.value);
+                }}
                 placeholder="example@domain.com"
                 sx={{ backgroundColor: personalErrors['official_email'] ? '#FFFFFF' : '#f5f5f5' }}
                 error={Boolean(personalErrors['official_email'])}
@@ -467,9 +520,12 @@ const FormStep1PersonalInfo = ({
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.official_website}
                 label="Official Website"
-                onChange={onChange}
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('official_website',e.target.value);
+                }}
                 placeholder="https://your-institute-name.com"
                 sx={{ backgroundColor: personalErrors['official_website'] ? '#FFFFFF' : '#f5f5f5' }}
                 error={Boolean(personalErrors['official_website'])}
@@ -530,12 +586,15 @@ const FormStep1PersonalInfo = ({
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.description}
                 multiline
                 rows={3}
                 autoComplete={'off'}
                 label="Description"
-                onChange={onChange}
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('description',e.target.value);
+                }}
                 placeholder="Enter a brief description"
                 sx={{ backgroundColor: personalErrors['description'] ? '#FFFFFF' : '#f5f5f5' }}
                 error={Boolean(personalErrors['description'])}

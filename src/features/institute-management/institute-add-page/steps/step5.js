@@ -7,8 +7,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeIcon from '@mui/icons-material/Home';
 import { imagePlaceholder } from 'lib/placeholders';
 import { getImageUrl } from 'themes/imageUtlis';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCities, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
 import { loadCities, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
@@ -91,6 +90,22 @@ const FormStep5AccountInfo = (props) => {
   console.log('Countriess', states);
   console.log('Countriesss', cities);
   console.log('selectedCountryCode', selectedCountryCode);
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('acc_form');
+    if (savedData) {
+      setFormData(JSON.parse(savedData));
+    }
+  }, []);
+
+  const handleFormChange = (name, value) => {
+    setFormData((prev) => {
+      const updatedData = { ...prev, [name]: value };
+      localStorage.setItem('acc_form', JSON.stringify(updatedData));
+      return updatedData;
+    });
+  };
 
   return (
     <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
@@ -122,8 +137,11 @@ const FormStep5AccountInfo = (props) => {
               <TextField
                 fullWidth
                 label="Branch Name"
-                value={value}
-                onChange={onChange}
+                value={value||formData.branchName}
+                onChange={(e)=>{
+                  onChange(e)
+                  handleFormChange('branchName',e.target.value)
+                }}
                 placeholder="e.g. Carter Branch"
                 error={Boolean(accountErrors.branch_name)}
                 helperText={accountErrors.branch_name && 'This field is required'}

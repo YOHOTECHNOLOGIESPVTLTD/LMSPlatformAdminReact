@@ -4,9 +4,27 @@ import { IconTax, IconId, IconCertificate } from '@tabler/icons-react';
 import IconUpload from '@mui/icons-material/Upload';
 import { PDFViewer } from 'react-view-pdf';
 import { getImageUrl } from 'themes/imageUtlis';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const FormStep4DocumentsInfo = (props) => {
   const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docs } = props;
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('docs_form');
+    if (savedData) {
+      setFormData(JSON.parse(savedData));
+    }
+  }, []);
+
+  const handleFormChange = (name,value) => {
+    setFormData((prev) => {
+      const updatedData = { ...prev, [name]: value };
+      localStorage.setItem('docs_form',JSON.stringify(updatedData));
+      return updatedData;
+    });
+  };
 
   return (
     <form key={3} onSubmit={hanldeDocSubmit(onSubmit)}>
@@ -31,9 +49,12 @@ const FormStep4DocumentsInfo = (props) => {
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.gst_number}
                 label="GST Number"
-                onChange={onChange}
+                onChange={(e)=>{
+                  onChange(e)
+                  handleFormChange('gst_number',e.target.value)
+                }}
                 placeholder="Enter your GST number"
                 error={Boolean(docsErrors.gst_number)}
                 helperText={docsErrors.gst_number?.message}
@@ -90,9 +111,12 @@ const FormStep4DocumentsInfo = (props) => {
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.pan_number}
                 label="PAN Number"
-                onChange={onChange}
+                onChange={(e)=>{
+                  onChange(e)
+                  handleFormChange('pan_number',e.target.value)
+                }}
                 placeholder="Enter your PAN number"
                 error={Boolean(docsErrors.pan_number)}
                 helperText={docsErrors.pan_number?.message}
@@ -149,9 +173,12 @@ const FormStep4DocumentsInfo = (props) => {
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.licence_number}
                 label="License Number"
-                onChange={onChange}
+                onChange={(e)=>{
+                  onChange(e)
+                  handleFormChange('licence_number',e.target.value)
+                }}
                 placeholder="Enter your License number"
                 error={Boolean(docsErrors.licence_number)}
                 helperText={docsErrors.licence_number?.message}

@@ -320,6 +320,7 @@ const AddInstitutePage = () => {
   // const [Globes,setGlobes]=useState([formSta])
   console.log('url', currentUrl);
   // const location=useLocation()
+ 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       event.preventDefault();
