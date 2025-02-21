@@ -1,15 +1,96 @@
-import { Grid, Typography, Button, TextField, InputAdornment, IconButton } from "@mui/material";
-import { Controller } from "react-hook-form";
-import LocationOnIcon from '@mui/icons-material/LocationOn';  // Import necessary icons
+import { Grid, Typography, Button, TextField, InputAdornment, IconButton, MenuItem } from '@mui/material';
+import { Controller } from 'react-hook-form';
+import LocationOnIcon from '@mui/icons-material/LocationOn'; // Import necessary icons
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeIcon from '@mui/icons-material/Home';
-import { imagePlaceholder } from "lib/placeholders";
-import { getImageUrl } from "themes/imageUtlis";
+import { imagePlaceholder } from 'lib/placeholders';
+import { getImageUrl } from 'themes/imageUtlis';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCities, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
+import { loadCities, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
 
 const FormStep5AccountInfo = (props) => {
-  const {  handleAccountSubmit, onSubmit, accountControl, accountErrors, steps, handleBack, hanldeProfileImageChange } = props;
+  const { handleAccountSubmit, onSubmit, accountControl, accountErrors, steps, handleBack, hanldeProfileImageChange } = props;
+  const dispatch = useDispatch();
+  const countries = useSelector(selectCountries);
+  const states = useSelector(selectStates);
+  const cities = useSelector(selectCities);
+  const [selectedCountryCode, setSelectedCountryCode] = useState('');
+  const [selectedCountryPhone, setSelectedCountryPhone] = useState('');
+  // const [selectedState, setSelectedState] = useState('');
+  // const [loadingCities, setLoadingCities] = useState(false);
+
+  const defaultCountry = countries.filter((item) => item.iso2 === 'IN');
+  // const defaultStates = states.filter((item) => item.iso2 === 'WB');
+  // console.log(defaultStates);
+
+  // const defaultCity = cities.filter((item) => item.name === 'Gopalpur');
+  // console.log('defaultCity', defaultCity);
+
+  useEffect(() => {
+    dispatch(loadCountries());
+  }, [dispatch]);
+
+  useEffect(() => {
+    const defaultCountryCode = defaultCountry.length ? defaultCountry[0].iso2 : '';
+    console.log('DCCC', defaultCountryCode);
+    if (defaultCountryCode) {
+      setSelectedCountryCode(defaultCountryCode);
+      dispatch(loadStates(defaultCountryCode));
+    }
+  }, [countries]);
+  // useEffect(() => {
+  //   const DSC = defaultStates.length ? defaultStates[0].iso2 : '';
+  //   if (DSC) {
+  //     setSelectedState(DSC);
+  //     setLoadingCities(true);
+  //     dispatch(loadCities(selectedCountryCode, DSC)).then(() => {
+  //       setLoadingCities(false);
+  //     });
+  //   }
+  // }, [dispatch, selectedCountryCode, states]);
+  useEffect(() => {
+    if (cities.length > 0) {
+      const defaultCity = cities.filter((item) => item.name === 'Gopalpur');
+      console.log('defaultCity', defaultCity);
+    }
+  }, [cities]);
+  console.log('selectedCountryPhone', selectedCountryPhone);
+  const handleCountryChange = (e) => {
+    const countryCode = e.target.value;
+    console.log('cc', countryCode);
+    setSelectedCountryCode(countryCode);
+    dispatch(loadStates(countryCode));
+
+    countries.filter((item) => {
+      if (item.iso2 === countryCode) {
+        setSelectedCountryPhone(item.phonecode);
+      }
+    });
+  };
+
+  const handleStateChange = (e) => {
+    const stateCode = e.target.value;
+    if (selectedCountryCode) {
+      // setSelectedState(stateCode);
+      dispatch(loadCities(selectedCountryCode, stateCode));
+    } else {
+      console.error('Country code not found for the selected state');
+    }
+  };
+
+  const handleCityChange = (e) => {
+    const cityId = e.target.value;
+    console.log('Selected city ID:', cityId);
+  };
+  console.log('Countries', countries);
+  console.log('Countriess', states);
+  console.log('Countriesss', cities);
+  console.log('selectedCountryCode', selectedCountryCode);
 
   return (
     <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
@@ -45,13 +126,13 @@ const FormStep5AccountInfo = (props) => {
                 onChange={onChange}
                 placeholder="e.g. Carter Branch"
                 error={Boolean(accountErrors.branch_name)}
-                helperText={accountErrors.branch_name && "This field is required"}
+                helperText={accountErrors.branch_name && 'This field is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <AccountCircleIcon />
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
@@ -72,13 +153,13 @@ const FormStep5AccountInfo = (props) => {
                 onChange={onChange}
                 placeholder="e.g. 123-456-7890"
                 error={Boolean(accountErrors.phone)}
-                helperText={accountErrors.phone && "This field is required"}
+                helperText={accountErrors.phone && 'This field is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <PhoneIcon />
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
@@ -98,13 +179,13 @@ const FormStep5AccountInfo = (props) => {
                 onChange={onChange}
                 placeholder="e.g. 987-654-3210"
                 error={Boolean(accountErrors.alternate_phone)}
-                helperText={accountErrors.alternate_phone && "Alternate Phone Number is required"}
+                helperText={accountErrors.alternate_phone && 'Alternate Phone Number is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <PhoneIcon />
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
@@ -124,13 +205,13 @@ const FormStep5AccountInfo = (props) => {
                 onChange={onChange}
                 placeholder="e.g. 123 Main St"
                 error={Boolean(accountErrors.address1)}
-                helperText={ accountErrors.address1 && "Address line one is required"}
+                helperText={accountErrors.address1 && 'Address line one is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <HomeIcon />
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
@@ -150,15 +231,55 @@ const FormStep5AccountInfo = (props) => {
                 onChange={onChange}
                 placeholder="e.g. Suite 101"
                 error={Boolean(accountErrors.address2)}
-                helperText={ accountErrors.address2 && "Address Line 2 is required"}
+                helperText={accountErrors.address2 && 'Address Line 2 is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <HomeIcon />
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
+            )}
+          />
+        </Grid>
+        {/*country */}
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="County"
+            control={accountControl}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                fullWidth
+                select
+                disabled
+                value={value || selectedCountryCode ? selectedCountryCode : defaultCountry.length ? defaultCountry[0].iso2 : ''}
+                label="Country"
+                defaultValue={defaultCountry.length ? defaultCountry[0].name : ''}
+                onChange={(e) => {
+                  onChange(e);
+                  handleCountryChange(e);
+                }}
+                placeholder="Enter state"
+                sx={{ backgroundColor: accountErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
+                error={Boolean(accountErrors.state)}
+                aria-describedby="stepper-linear-personal-state-helper"
+                {...(accountErrors.state && { helperText: accountErrors?.state?.message })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LocationOnIcon sx={{ color: '#3B4056' }} />
+                    </InputAdornment>
+                  )
+                }}
+              >
+                {countries.map((country) => (
+                  <MenuItem key={country.iso2} value={country.iso2}>
+                    (+{country.phonecode}) {country.name}
+                  </MenuItem>
+                ))}
+              </TextField>
             )}
           />
         </Grid>
@@ -168,23 +289,36 @@ const FormStep5AccountInfo = (props) => {
           <Controller
             name="state"
             control={accountControl}
+            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
-                label="State"
+                select
                 value={value}
-                onChange={onChange}
-                placeholder="e.g. California"
-                error={ Boolean(accountErrors.state)}
-                helperText={accountErrors.state && "State is required"}
+                label="State"
+                onChange={(e) => {
+                  onChange(e);
+                  handleStateChange(e);
+                }}
+                placeholder="Enter state"
+                sx={{ backgroundColor: accountErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
+                error={Boolean(accountErrors.state)}
+                aria-describedby="stepper-linear-personal-state-helper"
+                {...(accountErrors && { helperText: accountErrors?.state?.message })}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <LocationOnIcon />
+                      <LocationOnIcon sx={{ color: '#3B4056' }} />
                     </InputAdornment>
-                  ),
+                  )
                 }}
-              />
+              >
+                {states.map((state) => (
+                  <MenuItem key={state.iso2} value={state.iso2}>
+                    {state.name}
+                  </MenuItem>
+                ))}
+              </TextField>
             )}
           />
         </Grid>
@@ -194,23 +328,37 @@ const FormStep5AccountInfo = (props) => {
           <Controller
             name="city"
             control={accountControl}
+            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
-                label="City"
+                select
                 value={value}
-                onChange={onChange}
-                placeholder="e.g. Los Angeles"
+                label="City"
+                onChange={(e) => {
+                  onChange(e);
+                  handleCityChange(e);
+                }}
+                placeholder="Enter city"
+                sx={{ backgroundColor: accountErrors['city'] ? '#FFFFFF' : '#f5f5f5' }}
                 error={Boolean(accountErrors.city)}
-                helperText={ accountErrors.city && "City is required"}
+                aria-describedby="stepper-linear-personal-city-helper"
+                {...(accountErrors.city && { helperText: accountErrors?.city?.message })}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <LocationOnIcon />
+                      <LocationOnIcon sx={{ color: '#3B4056' }} />
                     </InputAdornment>
-                  ),
+                  )
                 }}
-              />
+                // disabled={loadingCities}
+              >
+                {cities.map((city) => (
+                  <MenuItem key={city.id} value={city.id}>
+                    {city.name}
+                  </MenuItem>
+                ))}
+              </TextField>
             )}
           />
         </Grid>
@@ -227,14 +375,14 @@ const FormStep5AccountInfo = (props) => {
                 value={value}
                 onChange={onChange}
                 placeholder="e.g. 90001"
-                error={ Boolean(accountErrors.pincode)}
-                helperText={ accountErrors.pincode && "pin code is required"}
+                error={Boolean(accountErrors.pincode)}
+                helperText={accountErrors.pincode && 'pin code is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <LocationOnIcon />
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
@@ -262,13 +410,13 @@ const FormStep5AccountInfo = (props) => {
                 onChange={onChange}
                 placeholder="e.g. Carter"
                 error={Boolean(accountErrors.first_name)}
-                helperText={accountErrors.first_name && "This field is required"}
+                helperText={accountErrors.first_name && 'This field is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <AccountCircleIcon />
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
@@ -289,13 +437,13 @@ const FormStep5AccountInfo = (props) => {
                 onChange={onChange}
                 placeholder="e.g. Leonard"
                 error={Boolean(accountErrors.last_name)}
-                helperText={accountErrors.last_name && "This field is required"}
+                helperText={accountErrors.last_name && 'This field is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <AccountCircleIcon />
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
@@ -317,13 +465,13 @@ const FormStep5AccountInfo = (props) => {
                 onChange={onChange}
                 placeholder="e.g. carterleonard@gmail.com"
                 error={Boolean(accountErrors.email)}
-                helperText={accountErrors.email && "This field is required"}
+                helperText={accountErrors.email && 'This field is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <EmailIcon />
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
@@ -346,13 +494,13 @@ const FormStep5AccountInfo = (props) => {
                 onChange={onChange}
                 placeholder="e.g. 123-456-7890"
                 error={Boolean(accountErrors.phone_number)}
-                helperText={accountErrors.phone_number && "This field is required"}
+                helperText={accountErrors.phone_number && 'This field is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <PhoneIcon />
                     </InputAdornment>
-                  ),
+                  )
                 }}
               />
             )}
@@ -364,22 +512,26 @@ const FormStep5AccountInfo = (props) => {
           <Controller
             name="image"
             control={accountControl}
-            render={({ field: { value} }) => (
+            render={({ field: { value } }) => (
               <TextField
                 fullWidth
                 type="file"
                 label="Profile Image"
                 onChange={hanldeProfileImageChange}
                 error={Boolean(accountErrors.image)}
-                helperText={accountErrors.image && "Profile image is required"}
+                helperText={accountErrors.image && 'Profile image is required'}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <IconButton component="label">
-                        <img src={value ? getImageUrl(value) : imagePlaceholder} alt="Profile Preview" style={{ width: '24px', height: '24px' }} />
+                        <img
+                          src={value ? getImageUrl(value) : imagePlaceholder}
+                          alt="Profile Preview"
+                          style={{ width: '24px', height: '24px' }}
+                        />
                       </IconButton>
                     </InputAdornment>
-                  ),
+                  )
                 }}
                 aria-describedby="stepper-linear-account-image"
               />
