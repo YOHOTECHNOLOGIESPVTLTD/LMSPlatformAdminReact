@@ -181,7 +181,7 @@ const InstituteCard = ({ institute, index }) => {
                 color: "#4A24E3", // Accent color for button
                 fontWeight: "bold",
                 borderRadius: "12px",
-                display:"none",
+                
                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", // Soft shadow
                 "&:hover": {
                   backgroundColor: "#f0f0f0",
