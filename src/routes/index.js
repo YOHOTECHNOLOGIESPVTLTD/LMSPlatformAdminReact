@@ -88,7 +88,7 @@ const InstituteCourseOverviewPage = Loadable(
 );
 
 
-const Dashboard2 = Loadable(lazy(() => import("views/dashboard/Default/index")))
+const Dashboard2 = Loadable(lazy(() => import("views/dashboard/Default/dashboard2")))
 
 const InstituteTicketsViewPage = Loadable(lazy(() => import("views/ticket-management/institute-tickets-page/index")))
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
