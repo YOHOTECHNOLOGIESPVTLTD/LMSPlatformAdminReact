@@ -11,17 +11,17 @@ import {
   CardContent,
   Chip,
   ClickAwayListener,
-  // Divider,
+  Divider,
   Grid,
-  // InputAdornment,
+  InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  // OutlinedInput,
+  OutlinedInput,
   Paper,
   Popper,
-  // Stack,
+  Stack,
   Switch,
   Typography
 } from '@mui/material';
@@ -40,7 +40,7 @@ import { useDispatch } from 'react-redux';
 
 // assets
 import { IconLogout, 
-  // IconSearch, IconSettings, IconUser
+  IconSearch, IconSettings, IconUser
  } from '@tabler/icons';
 // import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
@@ -159,7 +159,7 @@ const ProfileSection = () => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
-                  {/* <Box sx={{ p: 2 }}>
+                  <Box sx={{ p: 2 }}>
                     <Stack>
                       <Stack direction="row" spacing={0.5} alignItems="center">
                         <Typography variant="h4">Good Morning,</Typography>
@@ -185,12 +185,12 @@ const ProfileSection = () => {
                         'aria-label': 'weight'
                       }}
                     />
-                    {/* <Divider /> 
-                  </Box> */}
+                     <Divider /> 
+                  </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>
                       {/* <UpgradePlanCard /> */}
-                      {/* <Divider /> */}
+                      <Divider />
                       <Card
                         sx={{
                           bgcolor: theme.palette.primary.light,
@@ -234,7 +234,7 @@ const ProfileSection = () => {
                           </Grid>
                         </CardContent>
                       </Card>
-                      {/* <Divider /> */}
+                      <Divider />
                       <List
                         component="nav"
                         sx={{
@@ -251,7 +251,7 @@ const ProfileSection = () => {
                           }
                         }}
                       >
-                        {/* <ListItemButton
+                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 0}
                           // href="/profile-management/account-settings"
@@ -292,7 +292,7 @@ const ProfileSection = () => {
                               </Grid>
                             }
                           />
-                        </ListItemButton> */}
+                        </ListItemButton> 
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={0 === 4}
