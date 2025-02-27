@@ -17,6 +17,7 @@ const dashboard = {
       type: 'item',
       url: '/dashboard',
       icon: icons.IconLayoutDashboard,
+      target: false,
       breadcrumbs: false
     }
   ]
