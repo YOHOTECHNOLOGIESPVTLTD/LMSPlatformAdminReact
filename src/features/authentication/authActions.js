@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 
 const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/auth/login`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/auth/logout`;
+const RESEND_OTP_API = `${process.env.REACT_APP_PUBLIC_API_URL}/api/auth/resend-otp`;
 
 export const login = (username, password) => async (dispatch) => {
   let data = {
@@ -33,7 +34,7 @@ export const login = (username, password) => async (dispatch) => {
     localStorage.setItem('token', response.data.data.token);
     localStorage.setItem('userData', JSON.stringify(response.data.data.user));
     localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
-    
+    localStorage.setItem('loginTime', Date.now()); // Store login time in localStorage
     // Dispatch success action
     dispatch({
       type: 'LOGIN_SUCCESS',
@@ -69,6 +70,7 @@ export const verifyOtp = (data) => async (dispatch) => {
     localStorage.setItem('token', response.data.data.token);
     localStorage.setItem('userData', JSON.stringify(response.data.data.user));
     localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
+
     Cookies.remove("step")
     Cookies.remove("otp_data")
     
@@ -89,6 +91,39 @@ export const verifyOtp = (data) => async (dispatch) => {
      throw new Error(message)
    }
 }
+
+
+
+
+// Redux action to handle OTP resend
+export const resendOtp = (email) => async (dispatch) => {
+  try {
+
+
+    const response = await axios.post(
+      RESEND_OTP_API,
+      { email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response?.data?.status) {
+      toast.success("OTP resent successfully. Please check your email.");
+      dispatch({ type: "RESEND_OTP_SUCCESS" }); // Dispatch success action if needed
+      return { success: true, message: "OTP resent successfully" };
+    } else {
+      throw new Error(response?.data?.message || "Failed to resend OTP");
+    }
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "Failed to resend OTP");
+    dispatch({ type: "RESEND_OTP_FAILURE", payload: error.message }); // Dispatch failure action if needed
+    return { success: false, message: "Failed to resend OTP" };
+  }
+};
+
 
 
 export const logout = () => async (dispatch) => {
@@ -121,13 +156,41 @@ export const logout = () => async (dispatch) => {
       });
       window.location.replace('/login');
       toast.success('Logout Successful');
+    } else {
+      // Handle unsuccessful logout response
+      throw new Error(response.data.message || 'Logout failed');
     }
+    
   } catch (error) {
     console.log(error,"error")
-    // Dispatch error action
+    // Dispatch error action 
     dispatch({
       type: 'LOGOUT_FAILURE',
       payload: error.response.data.message
     });
   }
 };
+
+const checkAutoLogout = () => {
+  const loginTime = localStorage.getItem('loginTime'); // Get stored login time
+  console.log(loginTime, "loginTime")
+  if (loginTime) {
+    const elapsedTime = Date.now() - parseInt(loginTime, 10); // Calculate time passed since login
+    const expirationTime = 24 * 60 * 60 * 1000; // 
+  console.log(expirationTime)
+    if (elapsedTime >= expirationTime) {
+      autoLogout();
+    }
+  }
+};
+
+const autoLogout = () => {
+  localStorage.clear(); 
+  window.location.replace('/login'); 
+  toast.info('Session expired. Please log in again.');
+};
+
+// Check for session expiration when the page loads
+window.addEventListener('load', checkAutoLogout);
+setInterval(checkAutoLogout, 5 * 60 * 1000); 
+

@@ -247,15 +247,19 @@ OTP.propTypes = {
 
 const AuthOtpForm = () => {
   const [otp, setOtp] = React.useState("");
-  const [timeLeft, setTimeLeft] = useState(600);
+  const [timeLeft, setTimeLeft] = useState(300);
   const [error, setError] = useState("");
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const { showSpinnerFn , hideSpinnerFn } = useSpinner()
 
   useEffect(() => {
-    if (timeLeft === 0) return;
-
+    if (timeLeft === 0) {
+      setIsResendDisabled(false);
+      return;
+  }
+      setIsResendDisabled(true);
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => prevTime - 1);
     }, 1000);
@@ -263,8 +267,17 @@ const AuthOtpForm = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  const handleResend = () => {
-    setTimeLeft(60);
+  const handleResend = async () => {
+    const otp_data = Cookies.get("otp_data");
+    if (!otp_data) return;
+  
+    const otp_data2 = JSON.parse(otp_data);
+    const response = await dispatch(resendOtp(otp_data2.email));
+  
+    if (response.success) {
+      setTimeLeft(300); // Reset timer to 5 minutes
+      setIsResendDisabled(true);
+    }
   };
 
   const handleVerify = async () => {
@@ -325,10 +338,10 @@ const AuthOtpForm = () => {
             {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? "0" : ""}
             {timeLeft % 60}
           </Typography>
-          {timeLeft === 0 && (
             <Button
               variant="outlined"
               onClick={handleResend}
+              disabled={isResendDisabled}
               sx={{
                 mt: 2,
                 borderRadius: 5,
@@ -341,9 +354,8 @@ const AuthOtpForm = () => {
                 padding: "0px",
               }}
             >
-              Resend
+              Resend OTP
             </Button>
-          )}
         </Box>
         <Box>
           <Button
