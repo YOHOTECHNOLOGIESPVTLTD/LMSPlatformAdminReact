@@ -5,18 +5,21 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import PinterestIcon from '@mui/icons-material/Pinterest';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const FormStep3SocialLinks = (props) => {
-  const { handleSocialSubmit, handleBack, onSubmit, CustomTextField, socialControl, socialErrors, steps } = props;
+  const { handleSocialSubmit, handleBack, onSubmit, CustomTextField, socialControl, socialErrors, steps, socialReset } = props;
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
     const savedData = localStorage.getItem('social_form');
     if (savedData) {
-      setFormData(JSON.parse(savedData));
+      const parsedData = JSON.parse(savedData);
+      setFormData(parsedData);
+      socialReset(parsedData);
     }
-  }, []);
+  }, [socialReset]);
+
   const handleFormChange = (name, value) => {
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: value };
@@ -101,11 +104,11 @@ const FormStep3SocialLinks = (props) => {
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value||formData.instagram}
+                value={value || formData.instagram}
                 label="Instagram"
-                onChange={(e)=>{
-                  onChange(e)
-                  handleFormChange('instagram', e.target.value)
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('instagram', e.target.value);
                 }}
                 error={Boolean(socialErrors.instagram)}
                 aria-describedby="stepper-linear-social-instagram"

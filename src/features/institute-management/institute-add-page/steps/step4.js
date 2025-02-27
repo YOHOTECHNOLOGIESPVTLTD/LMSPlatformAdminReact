@@ -8,15 +8,17 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 
 const FormStep4DocumentsInfo = (props) => {
-  const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docs } = props;
+  const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docs,docReset} = props;
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
     const savedData = localStorage.getItem('docs_form');
     if (savedData) {
-      setFormData(JSON.parse(savedData));
+     const parsedData=JSON.parse(savedData)
+     setFormData(parsedData)
+     docReset(parsedData)
     }
-  }, []);
+  }, [docReset]);
 
   const handleFormChange = (name,value) => {
     setFormData((prev) => {
@@ -219,7 +221,7 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.licence && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={getImageUrl(docs.licence)} width="100%" height="400px" /> {/* Preview PDF */}
+              <PDFViewer file={getImageUrl(docs.licence)} width="100%" height="400px" />
             </Box>
           )}
         </Grid>

@@ -164,46 +164,45 @@ const documentSchema = yup.object().shape({
 });
 
 const personalSchema = yup.object().shape({
-  state: yup.string().required('State is required'),
-  city: yup.string().required('City is required'),
-  pin_code: yup
-    .number()
-    .required('Pin code is required')
-    .test('len', 'Pin code must be exactly 6 digits', (value) => {
-      return value.toString().length === 6;
-    }),
-  address_line_one: yup.string().required('Address line one required'),
-  address_line_two: yup.string().required(),
-  registered_date: yup.string().required(),
-  institute_name: yup
-    .string()
-    .required('The institute name is required.')
-    .test('is-letters', 'The institute name must consist of letters.', (val) => {
-      return /^[A-Za-z\s]+$/.test(val);
-    }),
-  phone: yup
-    .number()
-    .required()
-    .test('len', 'Phone number must be exactly 10 digits', (value) => {
-      return value.toString().length === 10;
-    }),
-  alt_phone: yup
-    .number()
-    .required()
-    .test('len', 'Phone number must be exactly 10 digits', (value) => {
-      return value.toString().length === 10;
-    }),
-  description: yup
-    .string()
-    .required()
-    .test('word-limit', 'Description must be between 50 and 100 words.', (value) => {
-      if (!value) return false;
-      const wordCount = value.trim().split(/\s+/).length;
-      return wordCount >= 50 && wordCount <= 100;
-    }),
-  official_email: yup.string().required(),
-  official_website: yup.string().required(),
-  subscription: yup.string().required()
+  // state: yup.string().required('State is required'),
+  // city: yup.string().required('City is required'),
+  // pin_code: yup
+  //   .number()
+  //   .required('Pin code is required')
+  //   .test('len', 'Pin code must be exactly 6 digits', (value) => {
+  //     return value.toString().length === 6;
+  //   }),
+  // address_line_one: yup.string().required('Address line one required'),
+  // address_line_two: yup.string().required(),
+  // registered_date: yup.string().required(),
+  // institute_name: yup
+  //   .string()
+  //   .required('The institute name is required.')
+  //   .test('is-letters', 'The institute name must consist of letters.', (val) => {
+  //     return /^[A-Za-z\s]+$/.test(val);
+  //   }),
+  // phone: yup
+  //   .number()
+  //   .required()
+  //   .test('len', 'Phone number must be exactly 10 digits', (value) => {
+  //     return value.toString().length === 10;
+  //   }),
+  // alt_phone: yup
+  //   .number()
+  //   .required()
+  //   .test('len', 'Phone number must be exactly 10 digits', (value) => {
+  //     return value.toString().length === 10;
+  //   }),
+  // description: yup
+  //   .string()
+  //   .required()
+  //   .test('word-limit', 'Description must be between 50 and 100 words.', (value) => {
+  //     if (!value) return false;
+  //     const wordCount = value.trim().split(/\s+/).length;
+  //     return wordCount >= 50 && wordCount <= 100;
+  //   }),
+  // official_email: yup.string().required(),
+  // official_website: yup.string().required(),
   // subscription: yup.string().required()
 });
 
@@ -320,7 +319,7 @@ const AddInstitutePage = () => {
   // const [Globes,setGlobes]=useState([formSta])
   console.log('url', currentUrl);
   // const location=useLocation()
- 
+
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       event.preventDefault();
@@ -332,8 +331,7 @@ const AddInstitutePage = () => {
       if (!confirmation) {
         window.history.pushState(null, '', window.location.href);
       } else {
-        // Keep the user on the same page, don't navigate
-        navigate(currentUrl);
+        navigate('/');
       }
     };
 
@@ -553,6 +551,7 @@ const AddInstitutePage = () => {
             steps={steps}
             personalErrors={personalErrors}
             plans={plans}
+            personalReset={personalReset}
           />
           // </DatePickerWrapper>
         );
@@ -587,6 +586,7 @@ const AddInstitutePage = () => {
             socialControl={socialControl}
             socialErrors={socialErrors}
             steps={steps}
+            socialReset={socialReset}
           />
         );
       case 3:
@@ -616,6 +616,7 @@ const AddInstitutePage = () => {
             handleAccountSubmit={handleAccountSubmit}
             setError={setError}
             hanldeProfileImageChange={hanldeProfileImageChange}
+            accountReset={accountReset}
           />
         );
       default:

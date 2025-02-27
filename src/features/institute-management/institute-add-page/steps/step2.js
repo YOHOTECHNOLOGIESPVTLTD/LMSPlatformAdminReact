@@ -1,96 +1,220 @@
-import { Grid, Typography, Box, Button, Paper } from "@mui/material";
+import { Grid, Typography, Box, Button, Paper, IconButton } from "@mui/material";
+import { useDropzone } from "react-dropzone"; // Import react-dropzone
 import { getImageUrl } from "themes/imageUtlis";
-import { imagePlaceholder } from "lib/placeholders";
+import { Upload, Delete, ArrowBack, ArrowForward } from "@mui/icons-material";
 
 const FormStep2GalleryInfo = (props) => {
   const {
-    steps, handleGallerySubmit, onSubmit, ImgStyled, ButtonStyled, ResetButtonStyled,
-    handleBack, logo, handleInputImageChange, handleInputImageReset, instituteImage,
-    handleInstituteImageChange, handleInstituteImageReset, galleryImages, setGalleryImages, Gallery
+    steps,
+    handleGallerySubmit,
+    onSubmit,
+    handleBack,
+    logo,
+    handleInputImageChange,
+    handleInputImageReset,
+    instituteImage,
+    handleInstituteImageChange,
+    handleInstituteImageReset,
+    galleryImages,
+    setGalleryImages,
+    Gallery,
   } = props;
 
-  const renderUploadSection = (image, handleImageChange, handleImageReset, label, id, dimensions, maxSize) => (
-    <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
-      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: "black" }}>{label}</Typography>
-      <Typography variant="caption" sx={{ color: "black", mb: 2 }}>
-        Image size should be {dimensions}. Max size {maxSize}.
-      </Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        {!image ? (
-          <ButtonStyled component="label" variant="contained" htmlFor={id}>
-            Upload
-            <input
-              hidden
-              type="file"
-              accept="image/png, image/jpeg"
-              onChange={handleImageChange}
-              id={id}
+  const {
+    getRootProps: getLogoRootProps,
+    getInputProps: getLogoInputProps,
+  } = useDropzone({
+    accept: "image/png, image/jpeg",
+    maxFiles: 1,
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        handleInputImageChange({ target: { files: acceptedFiles } });
+      }
+    },
+  });
+
+  const {
+    getRootProps: getInstituteImageRootProps,
+    getInputProps: getInstituteImageInputProps,
+  } = useDropzone({
+    accept: "image/png, image/jpeg",
+    maxFiles: 1,
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        handleInstituteImageChange({ target: { files: acceptedFiles } });
+      }
+    },
+  });
+
+  const renderUploadCard = (
+    image,
+    getRootProps,
+    getInputProps,
+    handleImageReset,
+    label,
+    id,
+    dimensions,
+    maxSize
+  ) => {
+    return (
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+        <Box
+          {...getRootProps()}
+          sx={{
+            width: 300,
+            height: 200,
+            border: "2px dashed #ccc",
+            borderRadius: "16px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            cursor: "pointer",
+            backgroundColor: "#f9f9f9",
+            "&:hover": {
+              borderColor: "#3f51b5",
+            },
+          }}
+        >
+          <input {...getInputProps()} id={id} />
+          {image ? (
+            <Box
+              component="img"
+              src={getImageUrl(image)}
+              alt={label}
+              sx={{ width: "100%", height: "100%", borderRadius: "16px", objectFit: "cover" }}
             />
-          </ButtonStyled>
-        ) : (
-          <>
-            <ImgStyled src={image ? getImageUrl(image) : imagePlaceholder} alt={label} sx={{ width: 200, height: 200, objectFit: 'cover', borderRadius: 4 }} />
-            <Box>
-              <ButtonStyled component="label" variant="contained" htmlFor={id} sx={{ mr: 2 }}>
-                Change
-                <input
-                  hidden
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  onChange={handleImageChange}
-                  id={id}
-                />
-              </ButtonStyled>
-              <ResetButtonStyled color="secondary" variant="outlined" onClick={handleImageReset}>
-                Reset
-              </ResetButtonStyled>
-            </Box>
-          </>
+          ) : (
+            <>
+              <Upload fontSize="large" sx={{ color: "#3f51b5", mb: 1 }} />
+              <Typography variant="body2" sx={{ color: "#3f51b5" }}>
+                Drag & drop or click to upload
+              </Typography>
+              <Typography variant="caption" sx={{ color: "#6b6b6b" }}>
+                Image size: {dimensions}, Max: {maxSize}
+              </Typography>
+            </>
+          )}
+        </Box>
+
+      
+        {image && (
+          <Box display="flex" gap={2}>
+            <Button
+              component="label"
+              variant="contained"
+              startIcon={<Upload />}
+              htmlFor={id}
+              onClick={(e) => e.stopPropagation()} 
+            >
+              Change
+            </Button>
+            <IconButton color="error" onClick={handleImageReset}>
+              <Delete />
+            </IconButton>
+          </Box>
         )}
       </Box>
-    </Paper>
-  );
+    );
+  };
 
   return (
     <form key={2} onSubmit={handleGallerySubmit(onSubmit)}>
-      <Grid container spacing={4}>
+      <Grid container spacing={6}>
         {/* Step Title */}
-        <Grid item xs={12}>
-          <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary', mb: 2 }}>
+        <Grid item xs={12} textAlign="center">
+          <Typography variant="h3" sx={{ fontWeight: 800, color: "text.primary", mb: 3 }}>
             {steps[1].title}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary', mb: 4 }}>
+          <Typography variant="body1" sx={{ color: "text.secondary", mb: 5 }}>
             {steps[1].subtitle}
           </Typography>
         </Grid>
 
-        {/* Institute Logo Upload */}
-        <Grid item xs={12} sm={6}>
-          {renderUploadSection(logo, handleInputImageChange, handleInputImageReset, "Upload Institute Logo", "upload-logo", "200x200px", "800KB")}
-        </Grid>
-
-        {/* Institute Image Upload */}
-        <Grid item xs={12} sm={6}>
-          {renderUploadSection(instituteImage, handleInstituteImageChange, handleInstituteImageReset, "Upload Institute Image", "1280x720px", "1MB")}
-        </Grid>
-
-        {/* Gallery Upload */}
         <Grid item xs={12}>
-          <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>Upload Gallery</Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary', mb: 2 }}>
-              Upload three images. Each image max size 1MB.
-            </Typography>
-            <Gallery setGalleryImages={setGalleryImages} galleryImages={galleryImages} maxImages={3} />
+          <Paper elevation={4} sx={{ p: 4, borderRadius: 4, mb: 4 }}>
+            <Grid container spacing={4} alignItems="center">
+              
+              <Grid item xs={12} md={4}>
+                <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                  Institute Logo
+                </Typography>
+                <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                  Upload your institute logo. Image size: 200x200px, Max: 800KB.
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={8} display="flex" justifyContent="flex-end">
+                {renderUploadCard(
+                  logo,
+                  getLogoRootProps,
+                  getLogoInputProps,
+                  handleInputImageReset,
+                  "Institute Logo",
+                  "upload-logo",
+                  "200x200px",
+                  "800KB"
+                )}
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper elevation={4} sx={{ p: 4, borderRadius: 4, mb: 4 }}>
+            <Grid container spacing={4} alignItems="center">
+              <Grid item xs={12} md={4}>
+                <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                  Institute Image
+                </Typography>
+                <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                  Upload your institute image. Image size: 1280x720px, Max: 1MB.
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={8} display="flex" justifyContent="flex-end">
+                {renderUploadCard(
+                  instituteImage,
+                  getInstituteImageRootProps,
+                  getInstituteImageInputProps,
+                  handleInstituteImageReset,
+                  "Institute Image",
+                  "upload-institute",
+                  "1280x720px",
+                  "1MB"
+                )}
+              </Grid>
+            </Grid>
           </Paper>
         </Grid>
 
-        {/* Buttons */}
-        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button variant="outlined" color="secondary" onClick={handleBack}>
+        {/* Group 3: Gallery Upload */}
+        <Grid item xs={12}>
+          <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
+            <Grid container spacing={4} alignItems="center">
+              <Grid item xs={12} md={4}>
+                <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                  Gallery Upload
+                </Typography>
+                <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                  Upload up to three images, max size: 1MB each.
+                </Typography>
+              </Grid>
+
+             
+              <Grid item xs={12} md={8} display="flex" justifyContent="flex-end">
+                <Gallery setGalleryImages={setGalleryImages} galleryImages={galleryImages} maxImages={3} />
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+
+        {/* Navigation Buttons */}
+        <Grid item xs={12} display="flex" justifyContent="space-between" mt={4}>
+          <Button variant="outlined" color="secondary" startIcon={<ArrowBack />} onClick={handleBack}>
             Back
           </Button>
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" endIcon={<ArrowForward />}>
             Next
           </Button>
         </Grid>
