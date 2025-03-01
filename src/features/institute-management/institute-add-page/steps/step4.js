@@ -1,12 +1,32 @@
-import { Grid, Typography, Button, InputAdornment, Box } from "@mui/material";
-import { Controller } from "react-hook-form";
+import { Grid, Typography, Button, InputAdornment, Box } from '@mui/material';
+import { Controller } from 'react-hook-form';
 import { IconTax, IconId, IconCertificate } from '@tabler/icons-react';
 import IconUpload from '@mui/icons-material/Upload';
-import { PDFViewer } from "react-view-pdf";
-import { getImageUrl } from "themes/imageUtlis";
+import { PDFViewer } from 'react-view-pdf';
+import { getImageUrl } from 'themes/imageUtlis';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const FormStep4DocumentsInfo = (props) => {
-  const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docs } = props;
+  const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docs,docReset} = props;
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('docs_form');
+    if (savedData) {
+     const parsedData=JSON.parse(savedData)
+     setFormData(parsedData)
+     docReset(parsedData)
+    }
+  }, [docReset]);
+
+  const handleFormChange = (name,value) => {
+    setFormData((prev) => {
+      const updatedData = { ...prev, [name]: value };
+      localStorage.setItem('docs_form',JSON.stringify(updatedData));
+      return updatedData;
+    });
+  };
 
   return (
     <form key={3} onSubmit={hanldeDocSubmit(onSubmit)}>
@@ -22,17 +42,21 @@ const FormStep4DocumentsInfo = (props) => {
 
         {/* Group 1: GST Number and Document Upload */}
         <Grid item xs={12} sm={6} md={4} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 1 }}>GST Information</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 1 }}>
+            GST Information
+          </Typography>
           <Controller
             name="gst_number"
             control={docControl}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.gst_number}
                 label="GST Number"
-                onChange={onChange}
+                onChange={(e)=>{
+                  onChange(e)
+                  handleFormChange('gst_number',e.target.value)
+                }}
                 placeholder="Enter your GST number"
                 error={Boolean(docsErrors.gst_number)}
                 helperText={docsErrors.gst_number?.message}
@@ -49,12 +73,14 @@ const FormStep4DocumentsInfo = (props) => {
           <Controller
             name="gst_doc"
             control={docControl}
-            rules={{ required: true }}
             render={({ field: { onChange } }) => (
               <label>
                 <input
                   type="file"
-                  onChange={(e) => { onChange(e.target.files); hanldeDocsUpload("gst", e); }}
+                  onChange={(e) => {
+                    onChange(e.target.files);
+                    hanldeDocsUpload('gst', e);
+                  }}
                   accept=".pdf,.jpg,.png"
                   style={{ display: 'none' }}
                 />
@@ -62,7 +88,7 @@ const FormStep4DocumentsInfo = (props) => {
                   variant="outlined"
                   component="span"
                   startIcon={<IconUpload />}
-                  sx={{ textTransform: 'none', fontWeight: 500, width: "100%", height: 40, borderRadius: 2 }}
+                  sx={{ textTransform: 'none', fontWeight: 500, width: '100%', height: 40, borderRadius: 2 }}
                 >
                   Upload GST Document
                 </Button>
@@ -71,28 +97,28 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.gst && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={ getImageUrl(docs.gst)} width="100%" height="400px" /> 
+              <PDFViewer file={getImageUrl(docs.gst)} width="100%" height="400px" />
             </Box>
-          )}
-          {docsErrors.gst_doc && (
-            <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-              {docsErrors.gst_doc.message}
-            </Typography>
           )}
         </Grid>
 
         {/* Group 2: PAN Number and Document Upload */}
         <Grid item xs={12} sm={6} md={4} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 1 }}>PAN Information</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 1 }}>
+            PAN Information
+          </Typography>
           <Controller
             name="pan_number"
             control={docControl}
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.pan_number}
                 label="PAN Number"
-                onChange={onChange}
+                onChange={(e)=>{
+                  onChange(e)
+                  handleFormChange('pan_number',e.target.value)
+                }}
                 placeholder="Enter your PAN number"
                 error={Boolean(docsErrors.pan_number)}
                 helperText={docsErrors.pan_number?.message}
@@ -113,7 +139,10 @@ const FormStep4DocumentsInfo = (props) => {
               <label>
                 <input
                   type="file"
-                  onChange={(e) => { onChange(e.target.files); hanldeDocsUpload("pan", e); }}
+                  onChange={(e) => {
+                    onChange(e.target.files);
+                    hanldeDocsUpload('pan', e);
+                  }}
                   accept=".pdf,.jpg,.png"
                   style={{ display: 'none' }}
                 />
@@ -121,7 +150,7 @@ const FormStep4DocumentsInfo = (props) => {
                   variant="outlined"
                   component="span"
                   startIcon={<IconUpload />}
-                  sx={{ textTransform: 'none', fontWeight: 500, width: "100%", height: 40, borderRadius: 2 }}
+                  sx={{ textTransform: 'none', fontWeight: 500, width: '100%', height: 40, borderRadius: 2 }}
                 >
                   Upload PAN Document
                 </Button>
@@ -130,35 +159,35 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.pan && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={ getImageUrl(docs.pan)} width="100%" height="400px" /> {/* Preview PDF */}
+              <PDFViewer file={getImageUrl(docs.pan)} width="100%" height="400px" /> {/* Preview PDF */}
             </Box>
-          )}
-          {docsErrors.pan_doc && (
-            <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-              {docsErrors.pan_doc.message}
-            </Typography>
           )}
         </Grid>
 
         {/* Group 3: License Number and Document Upload */}
         <Grid item xs={12} sm={6} md={4} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 1 }}>License Information</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 500, mb: 1 }}>
+            License Information
+          </Typography>
           <Controller
             name="licence_number"
             control={docControl}
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value}
+                value={value||formData.licence_number}
                 label="License Number"
-                onChange={onChange}
+                onChange={(e)=>{
+                  onChange(e)
+                  handleFormChange('licence_number',e.target.value)
+                }}
                 placeholder="Enter your License number"
                 error={Boolean(docsErrors.licence_number)}
                 helperText={docsErrors.licence_number?.message}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <IconCertificate color='#3B4056' />
+                      <IconCertificate color="#3B4056" />
                     </InputAdornment>
                   )
                 }}
@@ -172,7 +201,10 @@ const FormStep4DocumentsInfo = (props) => {
               <label>
                 <input
                   type="file"
-                  onChange={(e) => { onChange(e.target.files); hanldeDocsUpload("licence", e); }}
+                  onChange={(e) => {
+                    onChange(e.target.files);
+                    hanldeDocsUpload('licence', e);
+                  }}
                   accept=".pdf,.jpg,.png"
                   style={{ display: 'none' }}
                 />
@@ -180,7 +212,7 @@ const FormStep4DocumentsInfo = (props) => {
                   variant="outlined"
                   component="span"
                   startIcon={<IconUpload />}
-                  sx={{ textTransform: 'none', fontWeight: 500, width: "100%", height: 40, borderRadius: 2 }}
+                  sx={{ textTransform: 'none', fontWeight: 500, width: '100%', height: 40, borderRadius: 2 }}
                 >
                   Upload License Document
                 </Button>
@@ -189,13 +221,8 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.licence && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={ getImageUrl(docs.licence)} width="100%" height="400px" /> {/* Preview PDF */}
+              <PDFViewer file={getImageUrl(docs.licence)} width="100%" height="400px" />
             </Box>
-          )}
-          {docsErrors.licence_doc && (
-            <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-              {docsErrors.licence_doc.message}
-            </Typography>
           )}
         </Grid>
       </Grid>
