@@ -34,7 +34,7 @@ import MainCard from 'components/cards/MainCard';
 import Transitions from 'components/extended/Transitions';
 // import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
-// import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { logout } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 
@@ -48,13 +48,13 @@ import { IconLogout,
 const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [sdm, setSdm] = useState(true);
-  // const [value, setValue] = useState('');
+  const [value, setValue] = useState('');
   const [notification, setNotification] = useState(false);
-  // const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -71,14 +71,14 @@ const ProfileSection = () => {
     setOpen(false);
   };
 
-  // const handleListItemClick = (event, index, route = '') => {
-  //   setSelectedIndex(index);
-  //   handleClose(event);
+  const handleListItemClick = (event, index, route = '') => {
+    setSelectedIndex(index);
+    handleClose(event);
 
-  //   if (route && route !== '') {
-  //     navigate(route);
-  //   }
-  // };
+    if (route && route !== '') {
+      navigate(route);
+    }
+  };
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
