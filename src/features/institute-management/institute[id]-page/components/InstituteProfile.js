@@ -14,7 +14,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
 // import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import CustomChip from 'components/mui/chip';
 import TextField from 'components/mui/text-field';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
@@ -23,6 +22,8 @@ import * as yup from 'yup';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 import { updateInstitute } from 'features/institute-management/services/instituteService';
 import toast from 'react-hot-toast';
+import { Card, CardContent,Chip, Divider } from '@mui/material';
+
 
 const data = {
   id: 1,
@@ -186,109 +187,90 @@ const InstituteProfile = ({ institute }) => {
     
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  <Box sx={{ pt: 4 }}>
-                    <Box sx={{ display: 'flex', mb: 3 }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, color: '#000', fontFamily: 'Poppins', fontSize: '14px' }}>
-                        Institute ID:
-                      </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{institute?.id}</Typography>
-                    </Box>
-                  </Box>
-                </Grid>
+            <Card
+      sx={{
+        maxWidth: 850,
+        margin: 'auto',
+        borderRadius: 3,
+        boxShadow: 4,
+        backgroundColor: '#f9f9f9',
+        p: 2,
+      }}
+    >
+      <CardContent>
+        <Typography
+          variant="h3"
+          sx={{ fontWeight: 600, mb: 2, textAlign: 'center', color: '#333', fontFamily: 'Poppins' }}
+        >
+          Institute Details
+        </Typography>
 
-                <Grid item xs={4}>
-                  <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#000', fontFamily: 'Poppins', fontSize: '14px' }}>
-                      Institute Code:
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>RAJ00876</Typography>
-                  </Box>
-                </Grid>
+        <Divider sx={{ mb: 3 }} />
 
-                <Grid item xs={4}>
-                  <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#000', fontFamily: 'Poppins', fontSize: '14px' }}>
-                      Institute Name:
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>{institute?.institute_name}</Typography>
-                  </Box>
-                </Grid>
+        <Grid container spacing={3}>
+          {[
+            { label: 'Institute ID', value: institute?.id },
+            { label: 'Institute Code', value: 'RAJ00876' },
+            { label: 'Institute Name', value: institute?.institute_name },
+            { label: 'Official Email', value: institute?.email },
+            {
+              label: 'Status',
+              value: (
+                <Chip
+                  label={institute?.is_active ? 'Active' : 'Inactive'}
+                  color={statusColors[institute?.is_active]}
+                  size="small"
+                  sx={{ fontWeight: 500, px: 1.5, borderRadius: '8px' }}
+                />
+              ),
+            },
+            { label: 'Contact', value: `+91 ${institute?.contact_info.phone_no}` },
+            { label: 'Alternate Number', value: `+91 ${institute?.contact_info.alternate_no}` },
+            { label: 'Registered Date', value: institute?.registered_date },
+          ].map((item, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Box sx={{ mb: 1.5 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#444', fontFamily: 'Poppins' }}>
+                  {item.label}:
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {item.value}
+                </Typography>
+              </Box>
+            </Grid>
+          ))}
 
-                <Grid item xs={4}>
-                  <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#000', fontFamily: 'Poppins', fontSize: '14px' }}>
-                      Official Email:
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>{institute?.email}</Typography>
-                  </Box>
-                </Grid>
+          <Grid item xs={12}>
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#444', fontFamily: 'Poppins' }}>
+                Address:
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {institute?.contact_info.address.address1}, {institute?.contact_info.address.address2},{' '}
+                {institute?.contact_info.address.city}, {institute?.contact_info.address.state},{' '}
+                {institute?.contact_info.address.pincode}
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </CardContent>
 
-                <Grid item xs={4}>
-                  <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#000', fontFamily: 'Poppins', fontSize: '14px' }}>
-                      Status:
-                    </Typography>
-                    <CustomChip
-                      rounded
-                      skin="light"
-                      size="small"
-                      label={institute?.is_active ? 'Active' : 'Inactive'}
-                      color={statusColors[institute?.is_active]}
-                      sx={{ textTransform: 'capitalize' }}
-                    />
-                  </Box>
-                </Grid>
+      <Divider sx={{ my: 2 }} />
 
-                <Grid item xs={4}>
-                  <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#000', fontFamily: 'Poppins', fontSize: '14px' }}>
-                      Contact:
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>+91 {institute?.contact_info.phone_no}</Typography>
-                  </Box>
-                </Grid>
-
-                <Grid item xs={4}>
-                  <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#000', fontFamily: 'Poppins', fontSize: '14px' }}>
-                      Alternate Number:
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>+91 {institute?.contact_info.alternate_no}</Typography>
-                  </Box>
-                </Grid>
-
-                <Grid item xs={4}>
-                  <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#000', fontFamily: 'Poppins', fontSize: '14px' }}>
-                      Registered date:
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>{institute?.registered_date}</Typography>
-                  </Box>
-                </Grid>
-
-                <Grid item xs={4}>
-                  <Box sx={{ display: 'flex' }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#000', fontFamily: 'Poppins', fontSize: '14px' }}>
-                      Address:
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>
-                      {institute?.contact_info.address.address1}, {institute?.contact_info.address.address2}, {institute?.contact_info.address.state}, {institute?.contact_info.address.city}, {institute?.contact_info.address.pincode}
-                    </Typography>
-                  </Box>
-                </Grid>
-              </Grid>
-             
-
-              <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="contained" sx={{ mr: 2 }} onClick={handleEditClickOpen}>
-                  Edit
-                </Button>
-                <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>
-                  Suspend
-                </Button>
-              </CardActions>
+      <CardActions sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+        <Button variant="contained" sx={{ borderRadius: 2, px: 3, backgroundColor:'black' }} onClick={handleEditClickOpen}>
+          Edit
+        </Button>
+        <Button
+          color="error"
+          variant="outlined"
+          sx={{ borderRadius: 2, px: 3, ml: 2 }}
+          onClick={() => setSuspendDialogOpen(true)}
+        >
+          Suspend
+        </Button>
+      </CardActions>
+    </Card>
 
               {/* EditInstituteDialouge */}
               <Dialog

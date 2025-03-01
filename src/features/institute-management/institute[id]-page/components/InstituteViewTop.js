@@ -100,9 +100,9 @@ const UserViewLeft = ({ institute }) => {
       </Box>
 
       <StyledTabs value={selectedTab} onChange={handleTabChange} variant="fullWidth">
-        <Tab label="About" />
-        <Tab label="Profile" />
-        <Tab label="Courses" />
+        <Tab sx={{fontSize:'25px', fontWeight:'bold',}} label="About" />
+        <Tab  sx={{fontSize:'25px', fontWeight:'bold',}} label="Profile" />
+        <Tab  sx={{fontSize:'25px', fontWeight:'bold',}} label="Courses" />
       </StyledTabs>
 
       <StatusDialog
