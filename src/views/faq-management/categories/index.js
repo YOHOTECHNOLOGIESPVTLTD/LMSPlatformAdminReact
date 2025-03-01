@@ -23,7 +23,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const CategoriesDataGrid = () => {
   const [value, setValue] = useState('');
-
+  const [page, setPage] = useState(1);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -39,12 +39,17 @@ const CategoriesDataGrid = () => {
   const faqCategories = useSelector(selectFaqCategories);
   const faqCategoryLoading = useSelector(selectLoading);
 
-  console.log(faqCategories);
+ // console.log(faqCategories);
   useEffect(() => {
-    const data = { page: 1}
+    const data = { page}
     dispatch(getAllFaqCategories(data));
     
-  }, [dispatch, selectedBranchId, refetch]);
+  }, [dispatch, selectedBranchId, refetch,page]);
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+    setRefetch((prev) => !prev);
+  };
 
   // const handleRowClick = (params) => {
     
@@ -87,22 +92,36 @@ const CategoriesDataGrid = () => {
       toast.error(response.message);
     }
   };
-  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+ 
 
   const handleDelete = (itemId) => {
-    console.log('Delete clicked for item ID:', itemId);
+   // console.log('Delete clicked for item ID:', itemId);
     setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
   };
 
-  const toggleEditUserDrawer = () => {
-    setEditUserOpen(!editUserOpen);
-    console.log('Toggle drawer');
-  };
+  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+  const toggleEditUserDrawer = () => setEditUserOpen(!editUserOpen);
+
 
   // ** Hooks
-
   const handleFilter = useCallback(
+    (val) => {
+      setValue(val);
+      if (!val) {
+        setFilteredData(studentCertificatesdata); 
+      } else {
+        const filtered = studentCertificatesdata.filter((item) =>
+          item.title.toLowerCase().includes(val.toLowerCase()) ||
+          item.description.toLowerCase().includes(val.toLowerCase()) ||
+          item.course_name.toLowerCase().includes(val.toLowerCase())
+        );
+        setFilteredData(filtered);
+      }
+    },
+    []
+  );
+  /*const handleFilter = useCallback(
     async (val) => {
       try {
         setValue(val);
@@ -118,7 +137,7 @@ const CategoriesDataGrid = () => {
       }
     },
     [dispatch]
-  );
+  );*/
   if (!faqCategories) {
     return null;
   }
@@ -143,9 +162,9 @@ const CategoriesDataGrid = () => {
             {/* Display categories */}
             <TableContainer component={Paper} sx={{ "& .MuiTableCell-root": { color: "#474747", borderBottom: '1px solid #ddd' } }} >
                <Table size="medium">
-                 <TableHead sx={{ backgroundColor: "#FAFAFA"}} >
-                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "600" } }} >
-                     <TableCell>Cateogry Name</TableCell>
+                 <TableHead sx={{ backgroundColor: "#1565C0"}} >
+                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "bold" ,color:"white"} }} >
+                     <TableCell >Cateogry Name</TableCell>
                      <TableCell>Status</TableCell>
                      <TableCell>Action</TableCell>
                    </TableRow>
@@ -155,7 +174,8 @@ const CategoriesDataGrid = () => {
                     faqCategories?.data?.map((category) => (
                       <TableRow
                       key={category._id}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 },
+                    '&:hover': { backgroundColor: '#E3F2FD', transition: '0.3s ease' } }}
                       >
                         <TableCell>{category?.identity}</TableCell>
                         <TableCell>
@@ -187,22 +207,24 @@ const CategoriesDataGrid = () => {
                </Table>
             </TableContainer>
             {
-             faqCategories?.last_page !==1 &&  <Box sx={{ display: "flex", justifyContent: "flex-end", my: 1}} >
+            // faqCategories?.last_page !==1 && 
+              <Box sx={{ display: "flex", justifyContent: "flex-end", my: 1}} >
                 <Pagination
-                  count={faqCategories?.last_page}
-                  onChange={async(e,page) => {
+                  count={faqCategories?.last_page || 1} page={page} 
+                 /* onChange={async(e,page) => {
                     const data = {
                       page : page 
                     }
                     dispatch(getAllFaqCategories(data))
-                  }}
+                  }}*/
+                    onChange={handlePageChange}
                 />  
               </Box>
             }
           </Grid>
         )}
-        <FaqCategoriesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
-        <FaqCategoriesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} setRefetch={setRefetch} />
+        <FaqCategoriesAddDrawer open={addUserOpen} toggle={() => setAddUserOpen(!addUserOpen)} setRefetch={setRefetch} />
+        <FaqCategoriesEdit open={editUserOpen} toggle={() => setEditUserOpen(!editUserOpen)} initialValues={selectedRow} setRefetch={setRefetch} />
         <DeleteDialog
           open={isDeleteDialogOpen}
           setOpen={setDeleteDialogOpen}

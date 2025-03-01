@@ -22,7 +22,7 @@ const CardStatsHorizontalWithDetails = (props) => {
           <Box sx={{ mb: 1, columnGap: 1.5, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
             <Typography variant="h4">{stats ? stats : 0}</Typography>
           </Box>
-          <Typography variant="h6" sx={{ color: 'text.secondary' }}>
+          <Typography variant="h3" sx={{ color: 'text.secondary' ,fontWeiht:'bold'}}>
             {subtitle}
           </Typography>
         </Box>

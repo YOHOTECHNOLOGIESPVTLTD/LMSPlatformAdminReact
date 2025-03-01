@@ -377,14 +377,43 @@ const SidebarAddUser = (props) => {
              )}
             />
           </Grid>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center',justifyContent: 'center', mt: 3 }}>
+  <Button
+    type="submit"
+    variant="contained"
+    sx={{ 
+      mr: 3, 
+      borderRadius: 2, 
+       boxShadow: 3,
+      '&:hover': { boxShadow: 6 }
+    }}
+  >
+    Submit
+  </Button>
+  <Button
+    variant="contained"
+    color="secondary"
+    sx={{ 
+      backgroundColor: '#f0f0f0', 
+      color: '#333', 
+      borderRadius: 2, 
+      boxShadow: 1, 
+      '&:hover': { backgroundColor: '#e0e0e0', boxShadow: 4 }
+    }}
+    onClick={handleClose}
+  >
+    Cancel
+  </Button>
+</Box>
+
+          {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>
               Submit
             </Button>
             <Button variant="tonal" color="secondary" onClick={handleClose}>
               Cancel
             </Button>
-          </Box>
+          </Box> */}
         </form>
       </Box>
     </Drawer>

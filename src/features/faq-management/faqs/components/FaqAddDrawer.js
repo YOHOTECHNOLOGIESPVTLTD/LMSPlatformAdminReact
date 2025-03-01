@@ -28,13 +28,13 @@ const Header = styled(Box)(({ theme }) => ({
 const schema = yup.object().shape({
   name: yup.string().required('Category Name is required'),
   description: yup.string().required('Description is required'),
-  category: yup.object().required('Category is required')
+  category: yup.object().nullable().required('Category is required') .typeError('Invalid category selection')
 });
 
 const defaultValues = {
   name: '',
   description: '',
-  category: ''
+  category: null
 };
 
 const FaqAddDrawer = (props) => {
@@ -45,7 +45,7 @@ const FaqAddDrawer = (props) => {
   const {
     handleSubmit,
     control,
-    setValue,
+    //setValue,
     formState: { errors },
     reset
   } = useForm({
@@ -55,12 +55,12 @@ const FaqAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
 
     const inputData = {
       identity: data.name,
       description: data.description,
-      category: data.category.uuid
+      category: data.category?.uuid  || null
     };
     const result = await addFaq(inputData);
     if (result.success) {
@@ -68,16 +68,16 @@ const FaqAddDrawer = (props) => {
       toggle();
       setRefetch((state) => !state);
     } else {
-      toast.error(result.message);
+      toast.error(result.message || 'An error occurred');
     }
   };
 
   const handleClose = () => {
-    setValue('contact', Number(''));
+    //setValue('contact', Number(''));
     toggle();
     reset();
   };
-  console.log(faqCategories,"faqCategories")
+ // console.log(faqCategories,"faqCategories")
   return (
     <DatePickerWrapper>
       <Drawer
@@ -86,10 +86,12 @@ const FaqAddDrawer = (props) => {
         variant="temporary"
         onClose={handleClose}
         ModalProps={{ keepMounted: true }}
-        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
+        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 },
+       
+       } }}
       >
         <Header>
-          <Typography variant="h5">Add Faq</Typography>
+          <Typography variant="h3">Add Faq</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -119,9 +121,11 @@ const FaqAddDrawer = (props) => {
                     value={value}
                     sx={{ mb: 2 }}
                     label="Title"
+                     placeholder="Enter FAQ Title"
                     onChange={onChange}
                     error={Boolean(errors.name)}
-                    {...(errors.name && { helperText: errors.name.message })}
+                    helperText={errors.name?.message}
+                    // {...(errors.name && { helperText: errors.name.message })}
                   />
                 )}
               />
@@ -136,10 +140,12 @@ const FaqAddDrawer = (props) => {
                     fullWidth
                     value={value}
                     sx={{ mb: 2 }}
-                    label="description"
+                    label="Description"
+                    placeholder="Enter a detailed description"
                     onChange={onChange}
                     error={Boolean(errors.description)}
-                    {...(errors.description && { helperText: errors.description.message })}
+                    helperText={errors.description?.message}
+                    // {...(errors.description && { helperText: errors.description.message })}
                   />
                 )}
               />
@@ -153,15 +159,17 @@ const FaqAddDrawer = (props) => {
                   <Autocomplete
                     fullWidth
                     sx={{ mb: 2 }}
-                    getOptionLabel={(option) => option.identity}
-                    onChange={(e, newValue) => {
-                      onChange(newValue);
+                    getOptionLabel={(option) => option?.identity  || '' }
+                    onChange={(e, newValue ) => {
+                      onChange(newValue || null);
                     }}
-                    options={faqCategories}
+                    options={faqCategories  || []}
+                     noOptionsText="No categories available"
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="Select Category"
+                         placeholder="Choose a category"
                         error={Boolean(errors.category)}
                         helperText={errors.category?.message}
                       />
@@ -171,14 +179,35 @@ const FaqAddDrawer = (props) => {
               />
             </Grid>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
-              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                Submit
-              </Button>
-              <Button variant="tonal" color="secondary" onClick={handleClose}>
-                Cancel
-              </Button>
-            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4,justifyContent: 'center' }}>
+  <Button
+    type="submit"
+    variant="contained"
+    color="primary"
+    sx={{
+      mr: 3,
+      padding: '0.6rem 1.5rem',
+      fontWeight: 'bold',
+      width: '150px',
+    }}
+  >
+    Submit
+  </Button>
+  
+  <Button
+    variant="contained"
+    color="primary"
+    onClick={handleClose}
+    sx={{
+      padding: '0.6rem 1.5rem',
+      fontWeight: 'bold',
+      width: '150px',
+    }}
+  >
+    Cancel
+  </Button>
+</Box>
+
           </form>
         </Box>
       </Drawer>
