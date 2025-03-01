@@ -17,7 +17,9 @@ class Client {
    subscription = {
     all : (params) => httpClient.get(API_END_POINTS.subscription.all,params),
     create : (data) => httpClient.post(API_END_POINTS.subscription.create,data),
-    get_all : (data) => httpClient.get(API_END_POINTS.subscription.get_all,data)
+    get_all : (data) => httpClient.get(API_END_POINTS.subscription.get_all,data),
+    getWidId : (params) => httpClient.get(API_END_POINTS.subscription.getWithId + params?.institute),
+    approve: (data) => httpClient.post(API_END_POINTS.subscription.approve,data),
    }
    notification = {
       create : (data) => httpClient.post(API_END_POINTS.notification.create,data),
@@ -26,7 +28,9 @@ class Client {
    }
    payments = {
       get_all : (params) => httpClient.get(API_END_POINTS.payments.getAll,params),
-      getWidId : (params) => httpClient.get(API_END_POINTS.payments.getWithId + params?.institute)
+      getWidId : (params) => httpClient.get(API_END_POINTS.payments.getWithId + params?.institute),
+      create : (data) => httpClient.post(API_END_POINTS.payments.create,data),
+      approve : (data) => httpClient.post(API_END_POINTS.payments.approve,data),
    }
    file ={
    upload : (data) => httpClient.uploadFile(API_END_POINTS.fileUpload,data),
