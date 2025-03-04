@@ -128,7 +128,7 @@ const [rejectReason, setRejectReason] = useState("");
 
    console.log(paymentDetails,"paymentDetails")
    console.log(subreqDetails,"sub")
-   console.log(subreqDetails[0].is_readed,"sub")
+  //  console.log(subreqDetails[0].is_readed,"sub")
 
    const subReqColumns = [
     { field: "newSubscriptionId", headerName: "New Subscription ID", width: 300,headerAlign: "center", 
