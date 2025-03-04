@@ -158,7 +158,10 @@ const FaqAddDrawer = (props) => {
                   <Autocomplete
                     fullWidth
                     sx={{ mb: 2 }}
-                    getOptionLabel={(option) => option.identity}
+                    getOptionLabel={(option) => {
+                      console.log(option, 'option')
+                      option?.identity}
+                    }
                     onChange={(e, newValue) => {
                       onChange(newValue);
                     }}

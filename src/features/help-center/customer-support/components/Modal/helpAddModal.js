@@ -8,6 +8,9 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { Box } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -23,8 +26,8 @@ const schema = yup.object().shape({
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required(),
-  description: yup.string().required('description field is required'),
-  module: yup.string().required()
+  description: yup.string().required('description field is required').min(10),
+  module: yup.string().required('must fill the module name').min(5)
 });
 
 const defaultValues = {
@@ -101,13 +104,27 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
           id="user-view-edit"
           sx={{
             textAlign: 'center',
+            position: 'relative',
             fontSize: '1.5rem !important',
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
           }}
         >
           Add Help Information
+          <IconButton
+    aria-label="close"
+    onClick={handleClose}
+    sx={{
+      position: 'absolute',
+      right: 8,
+      top: 8,
+      color: (theme) => theme.palette.grey[500]
+    }}
+  >
+    <CloseIcon />
+  </IconButton>
         </DialogTitle>
+        
         <DialogContent
           sx={{
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(2)} !important`],
@@ -146,7 +163,7 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
                     fullWidth
                     value={value}
                     onChange={onChange}
-                    placeholder="module"
+                    placeholder="Enter the module"
                     label="module"
                     error={Boolean(errors.module)}
                     {...(errors.module && { helperText: errors.module.message })}
@@ -168,7 +185,7 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
                     rows={4}
                     value={value}
                     onChange={onChange}
-                    placeholder="description"
+                    placeholder="Enter the description"
                     label="description"
                     error={Boolean(errors.description)}
                     {...(errors.description && { helperText: errors.description.message })}
@@ -176,13 +193,14 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
                 )}
               />
             </Grid>
-
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
+            <Box display="flex" justifyContent="center" mt={2}>
+            <Button type="submit" variant="contained" sx={{ mr: 3,width: '150px', fontWeight: 'bold', }}>
               Submit
             </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
+            <Button variant="contained" color="secondary" onClick={handleClose} sx={{ mr: 3,width: '150px', fontWeight: 'bold', }}>
               Cancel
             </Button>
+            </Box>
           </form>
         </DialogContent>
       </Dialog>
