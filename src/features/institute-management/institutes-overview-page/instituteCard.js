@@ -6,15 +6,12 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import BusinessIcon from "@mui/icons-material/Business";
 
 const backgroundColors = [
-  "#4A24E3",
-  "#E36924",
-  "#E33A24",
+  "#4A24E3", "#E36924", "#E33A24",
   "linear-gradient(112deg, #FED4B4 0%, #3BB9A1 100%)",
   "linear-gradient(112deg, #E77879 0%, #FBDDB3 100%)",
   "linear-gradient(112deg, #BAE8FB 0%, #B2B1FD 100%)",
   "linear-gradient(112deg, #6E8B75 0%, #D0C9C1 100%)",
-  "#D14D72",
-  "#4DD1A1",
+  "#D14D72", "#4DD1A1",
 ];
 
 const InstituteCard = ({ institute, index }) => {
@@ -25,23 +22,27 @@ const InstituteCard = ({ institute, index }) => {
       <Box
         sx={{
           position: "relative",
-          borderRadius: "16px",
+          borderRadius: "20px",
           padding: "24px",
           minWidth: "320px",
-          minHeight: "20px",
+          minHeight: "220px",
           color: "white",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           overflow: "hidden",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
           transition: "transform 0.3s ease, box-shadow 0.3s ease",
+          backdropFilter: "blur(10px)",
+          background: "rgba(255, 255, 255, 0.1)",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
           "&:hover": {
-            transform: "translateY(-8px)",
-            boxShadow: "0 8px 30px rgba(0, 0, 0, 0.25)",
+            transform: "translateY(-6px)",
+            boxShadow: "0 12px 30px rgba(0, 0, 0, 0.25)",
           },
         }}
       >
+        {/* Background Overlay */}
         <Box
           sx={{
             background: backgroundColor,
@@ -59,10 +60,11 @@ const InstituteCard = ({ institute, index }) => {
             position: "absolute",
             inset: 0,
             zIndex: 2,
-            opacity: 0.5,
+            opacity: 0.4,
           }}
         />
 
+        {/* Content */}
         <Box sx={{ position: "relative", zIndex: 3, width: "100%" }}>
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={4}>
@@ -71,12 +73,12 @@ const InstituteCard = ({ institute, index }) => {
                 sx={{
                   width: "80px",
                   height: "80px",
-                  borderRadius: "12px",
+                  borderRadius: "16px",
                   overflow: "hidden",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
                   padding: "8px",
                 }}
               >
@@ -85,7 +87,7 @@ const InstituteCard = ({ institute, index }) => {
                   sx={{
                     width: "100%",
                     height: "100%",
-                    borderRadius: "8px",
+                    borderRadius: "12px",
                     objectFit: "cover",
                   }}
                 />
@@ -98,8 +100,7 @@ const InstituteCard = ({ institute, index }) => {
                 variant="h6"
                 sx={{
                   fontWeight: 700,
-                  fontSize: "18px",
-                  wordWrap: "break-word",
+                  fontSize: "20px",
                   color: "white",
                   textOverflow: "ellipsis",
                   overflow: "hidden",
@@ -130,7 +131,7 @@ const InstituteCard = ({ institute, index }) => {
               <Box sx={{ display: "flex", alignItems: "center", gap: "6px", mt: 1 }}>
                 <BusinessIcon fontSize="small" sx={{ color: "rgba(255, 255, 255, 0.8)" }} />
                 <Typography variant="body2" sx={{ color: "rgba(255, 255, 255, 0.8)" }}>
-                  Branches: {institute?.branches || 5}
+                  {institute?.branches} Branches
                 </Typography>
               </Box>
             </Grid>
@@ -138,17 +139,16 @@ const InstituteCard = ({ institute, index }) => {
         </Box>
 
         {/* Footer */}
-        <Box
-          sx={{
-            mt: 3,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            zIndex:100
-          }}
-        >
+        <Box sx={{ mt: 3, display: "flex", justifyContent: "space-between", alignItems: "center", zIndex: 100 }}>
           {/* Subscription Plan */}
-          <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "rgba(255, 255, 255, 0.85)" }}>
+          <Typography
+            variant="subtitle1"
+            sx={{
+              fontWeight: "bold",
+              color: "rgba(255, 255, 255, 0.9)",
+              fontSize: "16px",
+            }}
+          >
             {institute?.subscription?.identity} Plan
           </Typography>
 
@@ -158,16 +158,16 @@ const InstituteCard = ({ institute, index }) => {
             to={`/institute-management/institutes/${institute?.uuid}`}
             state={{ id: institute?.uuid }}
             sx={{
-              padding: "8px 20px",
-              backgroundColor: "white",
+              padding: "10px 22px",
+              background: "linear-gradient(135deg, #ffffff, #d8d8ff)",
               color: "#4A24E3",
               fontWeight: "bold",
-              borderRadius: "10px",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+              borderRadius: "12px",
+              boxShadow: "0 4px 12px rgba(255, 255, 255, 0.2)",
+              transition: "all 0.3s ease",
               "&:hover": {
-                backgroundColor: "#f0f0f0",
+                background: "linear-gradient(135deg, #ffffff, #c2c2ff)",
               },
-              transition: "background-color 0.3s ease",
             }}
           >
             View

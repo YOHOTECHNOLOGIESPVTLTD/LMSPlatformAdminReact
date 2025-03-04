@@ -20,7 +20,8 @@ const InstituteSkeleton = () => {
           ))}
         </Grid>
         <Card>
-          <CardContent sx={{ p: 1.25, display: 'flex', pt: 0, justifyContent: 'right' }}>
+          <CardContent sx={{ p: 1.25, display: 'flex', pt: 0, justifyContent: 'space-between' }}>
+            <Skeleton variant="rectangular" height={25} width={75} sx={{ backgroundColor: 'grey', my: 2 }} />
             <Skeleton variant="rectangular" height={25} width={75} sx={{ backgroundColor: 'grey', my: 2 }} />
           </CardContent>
 
