@@ -20,7 +20,6 @@ import { Typography } from '@mui/material';
 import CustomTextField from 'components/mui/text-field';
 
 // ** Third Party Imports
-import toast from 'react-hot-toast';
 import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
@@ -164,27 +163,22 @@ const EditPlan = () => {
       marginTop: theme.spacing(2)
     }
   }));
+  const [errorMessage, setErrorMessage] = useState('');
+
   const onSubmit = async (data) => {
+    setErrorMessage(''); 
   
-    if (studentInputBoxChecked === false && studentInputChecked === false) {
-      setStudentError(true);
-    }
-    if (adminInputBoxChecked === false && adminInputChecked === false) {
-      setAdminError(true);
-    }
-    if (teachersInputBoxChecked === false && teachersInputChecked === false) {
-      setTeachersError(true);
-    }
-    if (batchesInputBoxChecked === false && batchesInputChecked === false) {
-      setBatchesError(true);
-    }
-    if (coursesInputBoxChecked === false && coursesInputChecked === false) {
-      setCoursesError(true);
-    }
-    if (classesInputBoxChecked === false && classesInputChecked === false) {
-      setClassesError(true);
-    }
+    if (!studentInputBoxChecked && !studentInputChecked) setStudentError(true);
+    if (!adminInputBoxChecked && !adminInputChecked) setAdminError(true);
+    if (!teachersInputBoxChecked && !teachersInputChecked) setTeachersError(true);
+    if (!batchesInputBoxChecked && !batchesInputChecked) setBatchesError(true);
+    if (!coursesInputBoxChecked && !coursesInputChecked) setCoursesError(true);
+    if (!classesInputBoxChecked && !classesInputChecked) setClassesError(true);
+  
+    if (studentError || adminError || teachersError || batchesError || coursesError || classesError) return;
+  
     var bodyFormData = new FormData();
+    bodyFormData.append('plan_id', planId); 
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('plan_name', data?.plan_name);
     bodyFormData.append('plan_price', data?.plan_price);
@@ -194,32 +188,29 @@ const EditPlan = () => {
     bodyFormData.append('description', data?.description);
     bodyFormData.append('no_of_students', data?.students);
     bodyFormData.append('no_of_admins', data?.admins);
-    bodyFormData.append('no_of_staffs', data?.teachers);
     bodyFormData.append('no_of_teachers', data?.teachers);
     bodyFormData.append('no_of_batches', data?.batches);
     bodyFormData.append('no_of_courses', data?.courses);
     bodyFormData.append('no_of_classes', data?.classes);
-    bodyFormData.append('student_is_unlimited', studentInputChecked === true ? '1' : '');
-    bodyFormData.append('teacher_is_unlimited', teachersInputChecked === true ? '1' : '');
-    bodyFormData.append('admin_is_unlimited', adminInputChecked === true ? '1' : '');
-    bodyFormData.append('course_is_unlimited', coursesInputChecked === true ? '1' : '');
-    bodyFormData.append('batches_is_unlimited', batchesInputChecked === true ? '1' : '');
-    bodyFormData.append('class_is_unlimited', classesInputChecked === true ? '1' : '');
-    // bodyFormData.append('staff_is_unlimited', classesInputChecked === true ? '1' : '');
-
+    bodyFormData.append('student_is_unlimited', studentInputChecked ? '1' : '');
+    bodyFormData.append('teacher_is_unlimited', teachersInputChecked ? '1' : '');
+    bodyFormData.append('admin_is_unlimited', adminInputChecked ? '1' : '');
+    bodyFormData.append('course_is_unlimited', coursesInputChecked ? '1' : '');
+    bodyFormData.append('batches_is_unlimited', batchesInputChecked ? '1' : '');
+    bodyFormData.append('class_is_unlimited', classesInputChecked ? '1' : '');
+  
     try {
       const result = await updateSubscriptionFeature(bodyFormData);
       if (result.success) {
-        toast.success(result.message);
         navigate(-1);
       } else {
-        toast.error(result.message);
+        setErrorMessage(result.message || 'Failed to update subscription.');
       }
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error.response?.data?.message || 'An unexpected error occurred while updating the subscription.');
     }
-    console.log('bodyFormdata:', bodyFormData);
   };
+  
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -245,6 +236,11 @@ const EditPlan = () => {
 
   return (
     <Box p={1}>
+      {errorMessage && (
+        <Typography sx={{ color: 'red', fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
+          {errorMessage}
+        </Typography>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={5}>
         <Grid item xs={12} sm={6}>
@@ -279,7 +275,7 @@ const EditPlan = () => {
       
       {selectedImage || planData?.image ? (
         <ImgStyled        
-          src={selectedImage ? imgSrc : `${process.env.REACT_APP_PUBLIC_API_URL}${planData?.image}`}
+        src={selectedImage ? imgSrc : `${process.env.REACT_APP_PUBLIC_API_URL.replace(/\/$/, '')}/${planData?.image.replace(/^\//, '')}`}
           alt="Profile Pic"
           sx={{
             width: '70px',
@@ -1374,7 +1370,7 @@ const EditPlan = () => {
 
           <Grid item xs={12} display="flex" justifyContent="center">
             <Button type="submit" variant="contained">
-              Submit
+              Update
             </Button>
           </Grid>
         </Grid>
