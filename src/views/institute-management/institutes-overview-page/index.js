@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import CustomAvatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import { FormControl, InputLabel, Select, TextField } from '@mui/material';
 // import CardContent from '@mui/material/CardContent';
 // import CardHeader from '@mui/material/CardHeader';
 // import CustomChip from '@mui/material/Chip';
@@ -46,9 +45,7 @@ const Institutes = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   // const [allInstitutes, setAllInstitutes] = useState('');
-  const [plan, setPlan] = useState('');
-  const [status, setStatus] = useState('');
-  const [date, setDate] = useState('');
+ 
 
   const [selectedInstitutes, setSelectedInstitutes] = useState(null);
   const [selectedInstitutesStatus, setSelectedInstitutesStatus] = useState(null);
@@ -387,39 +384,6 @@ const Institutes = () => {
           </Card>
         </Grid> */}
 
-          <Grid item xs={12}>
-            <Box sx={{ display: 'flex', gap: 2, backgroundColor: 'white', p: 2, borderRadius: 5 }}>
-              {/* Subscription Plan Select */}
-              <FormControl fullWidth>
-                <InputLabel>Subscription Plan</InputLabel>
-                <Select value={plan} onChange={(e) => setPlan(e.target.value)}>
-                  <MenuItem value="basic">Basic</MenuItem>
-                  <MenuItem value="standard">Standard</MenuItem>
-                  <MenuItem value="premium">Premium</MenuItem>
-                </Select>
-              </FormControl>
-
-              {/* Status Select */}
-              <FormControl fullWidth>
-                <InputLabel>Status</InputLabel>
-                <Select value={status} onChange={(e) => setStatus(e.target.value)}>
-                  <MenuItem value="active">Active</MenuItem>
-                  <MenuItem value="inactive">Inactive</MenuItem>
-                  <MenuItem value="pending">Pending</MenuItem>
-                </Select>
-              </FormControl>
-
-              {/* Date Picker */}
-              <TextField
-                fullWidth
-                label="Date"
-                type="date"
-                InputLabelProps={{ shrink: true }}
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </Box>
-          </Grid>
           <Grid item xs={12}>
             <TableHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
           </Grid>
