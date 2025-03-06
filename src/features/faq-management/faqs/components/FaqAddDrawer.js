@@ -124,7 +124,6 @@ const FaqAddDrawer = (props) => {
                     label="Title"
                      placeholder="Enter FAQ Title"
                     onChange={onChange}
-                     placeholder="Enter category name"
                     error={Boolean(errors.name)}
                     helperText={errors.name?.message}
                    // {...(errors.name && { helperText: errors.name.message })}

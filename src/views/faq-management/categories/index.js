@@ -22,7 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 
 const CategoriesDataGrid = () => {
-  const [value, setValue] = useState('');
+  // const [value, setValue] = useState('');
   const [page, setPage] = useState(1);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -110,22 +110,22 @@ useEffect(() => {
 
 
   // ** Hooks
-  const handleFilter = useCallback(
-    (val) => {
-      setValue(val);
-      if (!val) {
-        setFilteredData(studentCertificatesdata); 
-      } else {
-        const filtered = studentCertificatesdata.filter((item) =>
-          item.title.toLowerCase().includes(val.toLowerCase()) ||
-          item.description.toLowerCase().includes(val.toLowerCase()) ||
-          item.course_name.toLowerCase().includes(val.toLowerCase())
-        );
-        setFilteredData(filtered);
-      }
-    },
-    []
-  );
+  // const handleFilter = useCallback(
+  //   (val) => {
+  //     setValue(val);
+  //     if (!val) {
+  //       setFilteredData(studentCertificatesdata); 
+  //     } else {
+  //       const filtered = studentCertificatesdata.filter((item) =>
+  //         item.title.toLowerCase().includes(val.toLowerCase()) ||
+  //         item.description.toLowerCase().includes(val.toLowerCase()) ||
+  //         item.course_name.toLowerCase().includes(val.toLowerCase())
+  //       );
+  //       setFilteredData(filtered);
+  //     }
+  //   },
+  //   []
+  // );
   /*const handleFilter = useCallback(
     async (val) => {
       try {
