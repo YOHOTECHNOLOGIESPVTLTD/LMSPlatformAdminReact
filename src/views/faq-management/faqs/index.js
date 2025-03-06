@@ -24,7 +24,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');
-
+  const [currentPage, setCurrentPage] = useState(1);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -44,17 +44,18 @@ const FaqDataGrid = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getAllFaqs());
-  }, [dispatch, refetch]);
+    dispatch(getAllFaqs({page: currentPage}));
+  }, [dispatch, refetch, currentPage]);
 
   const getFaqCategories = async () => {
     const result = await getAllFaqCategorywithFaq();
     setFaqCategories(result.data.data);
   };
 
-  console.log(deletingItemId,faqCategories);
+ // console.log(deletingItemId,faqCategories);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+ 
 
   const handleDelete = (itemId) => {
     console.log('Delete clicked for item ID:', itemId);
@@ -69,7 +70,8 @@ const FaqDataGrid = () => {
     const response = await deleteFaq(data);
     if (response.success) {
       toast.success(response.message);
-      setRefetch((state) => !state);
+      //setRefetch((state) => !state);
+      setRefetch(!refetch);
     } else {
       toast.error(response.message);
     }
@@ -89,7 +91,8 @@ const FaqDataGrid = () => {
     const response = await updateStatusFaq(data);
     if (response.success) {
       toast.success(response.message);
-      setRefetch((state) => !state);
+      setRefetch(!refetch);
+      // setRefetch((state) => !state);
     } else {
       toast.error(response.message);
     }
@@ -97,7 +100,7 @@ const FaqDataGrid = () => {
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('Toggle drawer');
+   // console.log('Toggle drawer');
   };
 
   // ** Hooks
@@ -139,8 +142,8 @@ const FaqDataGrid = () => {
             {/* Display categories */}
             <TableContainer component={Paper} sx={{ "& .MuiTableCell-root": { color: "#474747", borderBottom: '1px solid #ddd' } }} >
                <Table size="medium">
-                 <TableHead sx={{ backgroundColor: "#1565C0"}} >
-                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "bold" ,color:"white"} }} >
+                 <TableHead sx={{ backgroundColor: "#1976D2"}} >
+                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "bold", color: "white" } }} >
                      <TableCell sx={{fontFamily:"poppins"}}>FAQ Name</TableCell>
                      <TableCell sx={{fontFamily:"poppins"}}>Category</TableCell>
                       <TableCell sx={{ fontFamily: "poppins" }}>Status</TableCell>
@@ -149,11 +152,12 @@ const FaqDataGrid = () => {
                  </TableHead>
                  <TableBody>
                    {
+                    faqs?.data?.length > 0 ? (
                     faqs?.data?.map((faq) => (
                       <TableRow
                       key={faq._id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 },
-                    '&:hover': { backgroundColor: '#E3F2FD', transition: '0.3s ease' }  }}
+                      '&:hover': { backgroundColor: "#f0f0f0" } }}
                       >
                         <TableCell sx={{fontSize:"16px", fontFamily: "poppins" }}>{faq?.identity}</TableCell>
                         <TableCell sx={{ fontSize: "16px", fontFamily: "poppins" }}>{faq?.category?.identity}</TableCell>
@@ -162,7 +166,7 @@ const FaqDataGrid = () => {
                         </TableCell>
                         <TableCell sx={{ display: 'flex', gap: "5px"}}>
                           <Tooltip title={"Edit"} >
-                           <IconButton sx={{ backgroundColor: "#5f71fa33", width: "36px", height: "36px",borderRadius: "18px", ":hover": {  backgroundColor: "#5f71fa80", transition: ".2s ease-in-out",transform: "scale(1.2)"}}} onClick={()=>{
+                           <IconButton  sx={{ backgroundColor: "#5f71fa33", width: "36px", height: "36px",borderRadius: "18px", ":hover": {  backgroundColor: "#5f71fa80", transition: ".2s ease-in-out",transform: "scale(1.2)"}}} onClick={()=>{
                              setSelectedRow(setSelectedRow({
                               id: faq.uuid, 
                               title: faq.identity, 
@@ -181,19 +185,35 @@ const FaqDataGrid = () => {
                         </TableCell>
                       </TableRow>
                     ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} align="center" sx={{ fontSize: "18px", fontFamily: "poppins" }}>
+                        No Data Found
+                      </TableCell>
+                    </TableRow>
+                  )
                    }
                  </TableBody>
                </Table>
             </TableContainer>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+            <Pagination
+              count={faqCategories?.last_page || 1}
+              page={currentPage}
+              onChange={(e, page) => setCurrentPage(page)}
+            />
+          </Box>
             {
-             faqs?.last_page !==1 &&  <Box sx={{ display: "flex", justifyContent: "flex-end", my: 1}} >
+             faqs?.last_page > 1 &&  <Box sx={{ display: "flex", justifyContent: "flex-end", my: 1}} >
                 <Pagination
                   count={faqs?.last_page}
-                  onChange={async(e,page) => {
-                    const data = {
+                  page={currentPage}
+                  onChange={(e,page) => {
+                    /*const data = {
                       page : page 
                     }
-                    dispatch(getAllFaqs(data))
+                    dispatch(getAllFaqs(data))*/
+                    setCurrentPage(page)
                   }}
                 />  
               </Box>

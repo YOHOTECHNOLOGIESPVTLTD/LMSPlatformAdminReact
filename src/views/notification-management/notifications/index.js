@@ -231,7 +231,7 @@ const columns = [
   renderCell: ({ row }) => (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-          {row?.instituteId?.institute_name}
+          {row?.instituteId?.institute_name || 'Institute name not available'}
         </Typography>
     </Box>
   ),

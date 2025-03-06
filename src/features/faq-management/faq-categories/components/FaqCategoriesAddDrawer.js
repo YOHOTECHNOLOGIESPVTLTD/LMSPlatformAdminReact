@@ -11,12 +11,11 @@ import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import { addFaqCategory } from '../services/faqCategoryServices';
 import toast from 'react-hot-toast';
-
-
+import { useState } from 'react';
 
 const schema = yup.object().shape({
-  name: yup.string().required('Full the Category Name is required').min(3, 'Category Name must be at least 3 characters'),
-  description: yup.string().required('Enter the Description must be  required').min(10, 'Description must be at least 10 characters')
+  name: yup.string().required('Category Name is required').min(3, 'Category Name must be at least 3 characters'),
+  description: yup.string().required('Description is required').min(10, 'Description must be at least 10 characters'),
 });
 
 const defaultValues = {
@@ -26,13 +25,12 @@ const defaultValues = {
 
 const FaqCategoriesAddDrawer = (props) => {
   // ** Props
-  const { open = false, toggle, setRefetch } = props; // Ensure 'open' has a default value
-  // ** State
+  const { open = false, toggle, setRefetch } = props;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     handleSubmit,
     control,
-   // setValue,
     formState: { errors },
     reset
   } = useForm({
@@ -42,22 +40,36 @@ const FaqCategoriesAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
+    const isConfirmed = window.confirm("Are you sure you want to submit the form?");
+    if (!isConfirmed) return;
+
+    setIsSubmitting(true);
     const InputData = {
       identity: data.name,
       description: data.description
     };
-    const result = await addFaqCategory(InputData);
-    if (result.success) {
-      toast.success(result.message);
-      setRefetch((state) => !state);
-      toggle();
-    } else {
-      toast.error(result.message);
+
+    try {
+      const result = await addFaqCategory(InputData);
+      console.log("API Response:", result);
+
+      if (result.success) {
+        toast.success(result.message);
+        setRefetch((state) => !state);
+        reset();
+        toggle();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Something went wrong");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleClose = () => {
-    //setValue('contact', Number(''));
     toggle();
     reset();
   };
@@ -68,7 +80,6 @@ const FaqCategoriesAddDrawer = (props) => {
       onClose={handleClose}
       aria-labelledby="add-faq-category-modal"
       aria-describedby="modal-to-add-faq-category"
-     
     >
       <Box
         sx={{
@@ -78,12 +89,11 @@ const FaqCategoriesAddDrawer = (props) => {
           boxShadow: 24,
           p: 4,
           mx: 'auto',
-          mt: { xs: '20vh', sm: '15vh' } ,
-         
+          mt: { xs: '20vh', sm: '15vh' }
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "flex-end"}}>
-        <IconButton
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <IconButton
             size="small"
             onClick={handleClose}
             sx={{
@@ -93,24 +103,16 @@ const FaqCategoriesAddDrawer = (props) => {
               marginLeft: "-40px",
               borderRadius: 1,
               color: 'text.primary',
-              backgroundColor: 'action.selected',
-              transition: 'rotate .2s ease-in-out', 
-              rotate: '0deg', 
-              '&:hover': {
-                // backgroundColor: (theme) => theme.palette.secondary.main,
-               // rotate: '-90deg', 
-              },
+              backgroundColor: 'action.selected'
             }}
           >
-
-
-            <Icon icon="tabler:x" fontSize="1.125rem"  />
+            <Icon icon="tabler:x" fontSize="1.125rem" />
           </IconButton>
         </Box>
-        <Box sx={{  textAlign: "flex-start",borderBottom: "2px solid #ddd", pb: 1, mb: 3  }}>
-        <Typography variant="h3">Add Faq Categories</Typography>
+        <Box sx={{ pb: "16px", textAlign: "center" }}>
+          <Typography variant="h3">Add Faq Categories</Typography>
         </Box>
-        <Box sx={{ p: (theme) => theme.spacing(0, 0, 0) }}>
+        <Box>
           <form onSubmit={handleSubmit(onSubmit)}>
           <Box
            sx={{
@@ -128,7 +130,7 @@ const FaqCategoriesAddDrawer = (props) => {
                     value={value}
                     sx={{ mb: 2 }}
                     label="Title"
-                    placeholder="Enter FAQ Title"
+                    placeholder="Enter category name"
                     onChange={onChange}
                     error={Boolean(errors.name)}
                     helperText={errors.name?.message}
@@ -146,7 +148,7 @@ const FaqCategoriesAddDrawer = (props) => {
                     value={value}
                     sx={{ mb: 2 }}
                     label="Description"
-                    placeholder="Enter the Description"
+                    placeholder="Enter Description name"
                     onChange={onChange}
                     error={Boolean(errors.description)}
                     helperText={errors.description?.message}
@@ -154,36 +156,33 @@ const FaqCategoriesAddDrawer = (props) => {
                 )}
               />
             </Grid>
-       
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mt: 3 }}>
-  <Button
-    type="submit"
-    variant="contained"
-    color="primary"
-    sx={{
-      minWidth: 120,
-      padding: '0.6rem 1.5rem',
-      fontWeight: 'bold',
-    }}
-  >
-    Submit
-  </Button>
-
-  <Button
-    variant="contained"
-    color="primary"
-    onClick={handleClose}
-    sx={{
-      minWidth: 120,
-      padding: '0.6rem 1.5rem',
-      fontWeight: 'bold',
-    }}
-  >
-    Cancel
-  </Button>
-</Box>
-
-          </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={isSubmitting}
+                sx={{
+                  mr: 3,
+                  backgroundColor: "#6d788d",
+                  color: "#fff",
+                  '&:hover': { backgroundColor: "#5a667a" }
+                }}
+              >
+                {isSubmitting ? "Submitting..." : "Submit"}
+              </Button>
+              <Button
+                variant="contained"
+                size="medium"
+                sx={{
+                  color: "#fff",
+                  backgroundColor: "#6d788d",
+                  '&:hover': { backgroundColor: "#5a667a" }
+                }}
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+            </Box>
           </form>
         </Box>
       </Box>

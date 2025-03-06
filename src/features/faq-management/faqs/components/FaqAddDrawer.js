@@ -26,9 +26,9 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  name: yup.string().required('Category Name is required'),
-  description: yup.string().required('Description is required'),
-  category: yup.object().nullable().required('Category is required') .typeError('Invalid category selection')
+  name: yup.string().required('Category Name is required').min(4, 'Category Name  must be at least 10 characters long'),
+  description: yup.string().required('Description is required').min(10, 'Description must be at least 10 characters long'),
+  category: yup.object().required('Category is required')
 });
 
 const defaultValues = {
@@ -55,7 +55,7 @@ const FaqAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
-    // console.log(data);
+   // console.log(data);
 
     const inputData = {
       identity: data.name,
@@ -65,6 +65,7 @@ const FaqAddDrawer = (props) => {
     const result = await addFaq(inputData);
     if (result.success) {
       toast.success(result.message);
+      reset();
       toggle();
       setRefetch((state) => !state);
     } else {
@@ -91,7 +92,7 @@ const FaqAddDrawer = (props) => {
        } }}
       >
         <Header>
-          <Typography variant="h3">Add Faq</Typography>
+          <Typography variant="h3" sx={{ fontWeight: 'bold' }}>Add Faq</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -123,9 +124,10 @@ const FaqAddDrawer = (props) => {
                     label="Title"
                      placeholder="Enter FAQ Title"
                     onChange={onChange}
+                     placeholder="Enter category name"
                     error={Boolean(errors.name)}
                     helperText={errors.name?.message}
-                    // {...(errors.name && { helperText: errors.name.message })}
+                   // {...(errors.name && { helperText: errors.name.message })}
                   />
                 )}
               />
@@ -140,12 +142,12 @@ const FaqAddDrawer = (props) => {
                     fullWidth
                     value={value}
                     sx={{ mb: 2 }}
-                    label="Description"
-                    placeholder="Enter a detailed description"
+                    label="description"
+                     placeholder="Enter a brief description"
                     onChange={onChange}
                     error={Boolean(errors.description)}
                     helperText={errors.description?.message}
-                    // {...(errors.description && { helperText: errors.description.message })}
+                  //  {...(errors.description && { helperText: errors.description.message })}
                   />
                 )}
               />
@@ -159,9 +161,12 @@ const FaqAddDrawer = (props) => {
                   <Autocomplete
                     fullWidth
                     sx={{ mb: 2 }}
-                    getOptionLabel={(option) => option?.identity  || '' }
-                    onChange={(e, newValue ) => {
-                      onChange(newValue || null);
+                    getOptionLabel={(option) => {
+                      console.log(option, 'option')
+                      option?.identity}
+                    }
+                    onChange={(e, newValue) => {
+                      onChange(newValue);
                     }}
                     options={faqCategories  || []}
                      noOptionsText="No categories available"
@@ -179,30 +184,29 @@ const FaqAddDrawer = (props) => {
               />
             </Grid>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4,justifyContent: 'center' }}>
-  <Button
-    type="submit"
-    variant="contained"
-    color="primary"
-    sx={{
-      mr: 3,
-      padding: '0.6rem 1.5rem',
-      fontWeight: 'bold',
-      width: '150px',
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
+  <Button 
+    type="submit" 
+    variant="contained" 
+    sx={{ 
+      mr: 3, 
+      backgroundColor: "#6d788d", 
+      color: "#fff", 
+      '&:hover': { backgroundColor: "#5a667a" } 
     }}
   >
     Submit
   </Button>
-  
-  <Button
-    variant="contained"
-    color="primary"
+  <Button 
+    variant="contained" 
+    size="medium" 
+    sx={{ 
+      color: "#fff", 
+      border: "1px solid #6d788d", 
+      backgroundColor: "#6d788d", 
+      '&:hover': { backgroundColor: "#5a667a", borderColor: "#5a667a" } 
+    }} 
     onClick={handleClose}
-    sx={{
-      padding: '0.6rem 1.5rem',
-      fontWeight: 'bold',
-      width: '150px',
-    }}
   >
     Cancel
   </Button>

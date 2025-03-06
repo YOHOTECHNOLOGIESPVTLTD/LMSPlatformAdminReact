@@ -22,8 +22,8 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  identity: yup.string().min(3,'Title must be at least 3 characters long').required('Full up the Title  '),
-  description: yup.string().min(5,'Description must be at least 5 characters long').required('Full up the Description  ')
+  description: yup.string().required('Enter the Description must required').min(10, 'Description must be at least 10 characters long'),
+  identity: yup.string().min(3,'Title  must be at least 3 characters').required('Full Up the title ')
 });
 
 const FaqCategoriesEdit = (props) => {
@@ -40,8 +40,8 @@ const FaqCategoriesEdit = (props) => {
   const {
     control,
     handleSubmit,
-    reset,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm({
     defaultValues: formValues,
     mode: 'onChange',
@@ -53,6 +53,9 @@ const FaqCategoriesEdit = (props) => {
   }, [formValues, reset]);
  
   const onSubmit = async (data) => {
+    const isConfirmed = window.confirm("Are you sure you want to save changes?");
+    if (!isConfirmed) return;
+    
     const inputData = {
       identity: data.identity,
       description: data.description,
@@ -63,6 +66,7 @@ const FaqCategoriesEdit = (props) => {
     const result = await updateFaqCategory(inputData);
     if (result.success) {
       toast.success(result.message);
+      reset();
       toggle();
       setRefetch((state) => !state);
     } else {
@@ -77,7 +81,7 @@ const FaqCategoriesEdit = (props) => {
   const handleClose = () => {
     toggle();
   };
-  // console.log(formValues,"formValues")
+ // console.log(formValues,"formValues")
   return (
     <Drawer
       open={open}
@@ -89,10 +93,7 @@ const FaqCategoriesEdit = (props) => {
     } }}
     >
       <Header>
-        <Box sx={{  textAlign: "flex-start",}}>
-        <Typography variant="h3">Edit Faq Categories</Typography>
-        </Box>
-
+        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>Edit Faq Categories</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -151,39 +152,39 @@ const FaqCategoriesEdit = (props) => {
                 placeholder="Enter the Description"
                 error={Boolean(errors.description)}
                 helperText={errors.description?.message}
-                // {...(errors.description && { helperText: errors.description.message })}
+                //{...(errors.description && { helperText: errors.description.message })}
               />
             )}
           />
-               
-               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mt: 3 }}>
-  <Button
-    type="submit"
-    variant="contained"
-    color="primary"
-    sx={{
-      minWidth: 120,
-      padding: '0.6rem 1.5rem',
-      fontWeight: 'bold',
+   <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
+  <Button 
+    type="submit" 
+    variant="contained" 
+    sx={{ 
+      mr: 3, 
+      backgroundColor: "#6d788d", 
+      color: "#fff", 
+      '&:hover': { backgroundColor: "#5a667a" } 
     }}
   >
-    Submit
+    Save Changes
   </Button>
-
-  <Button
-    variant="contained"
-    color="primary"
+  <Button 
+    variant="contained" 
+    size="medium" 
+    sx={{ 
+      color: "#fff", 
+      border: "1px solid #6d788d", 
+      backgroundColor: "#6d788d", 
+      '&:hover': { backgroundColor: "#5a667a", borderColor: "#5a667a" } 
+    }} 
     onClick={handleClose}
-    sx={{
-      minWidth: 120,
-      padding: '0.6rem 1.5rem',
-      fontWeight: 'bold',
-    }}
   >
     Cancel
   </Button>
 </Box>
 
+         
         </form>
       </Box>
     </Drawer>

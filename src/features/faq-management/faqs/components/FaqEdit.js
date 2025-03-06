@@ -35,7 +35,7 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  description: yup.string().required('Please Enter the description must required').min(10, 'Description must be at least 10 characters'),
+  description: yup.string().required('Enter the Description').min(10, 'Description must be at least 10 characters long'),
   // category: yup.object().required('Category is required'),
   title: yup
     .string()
@@ -77,6 +77,7 @@ const FaqEdit = (props) => {
     const result = await updateFaq(inputData);
     if (result.success) {
       toast.success(result.message);
+      reset();
       toggle();
       setRefetch((state) => !state);
     } else {
@@ -101,10 +102,8 @@ const FaqEdit = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 },
       } }}
     >
-      <Header  sx={{
-    borderBottom: (theme) => `1px solid ${theme.palette.divider}`
-  }}>
-        <Typography variant="h3">Edit Faq </Typography>
+      <Header>
+        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>Edit Faq </Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -179,30 +178,29 @@ const FaqEdit = (props) => {
               />
             )}
           /> */}
-      
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mt: 3 }}>
-  <Button
-    type="submit"
-    variant="contained"
-    color="primary"
-    sx={{
-      minWidth: 120,
-      padding: '0.6rem 1.5rem',
-      fontWeight: 'bold',
+<Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
+  <Button 
+    type="submit" 
+    variant="contained" 
+    sx={{ 
+      mr: 3, 
+      backgroundColor: "#6d788d", 
+      color: "#fff", 
+      '&:hover': { backgroundColor: "#5a667a" } 
     }}
   >
-    Submit
+    Save Changes
   </Button>
-
-  <Button
-    variant="contained"
-    color="primary"
+  <Button 
+    variant="contained" 
+    size="medium" 
+    sx={{ 
+      color: "#fff", 
+      border: "1px solid #6d788d", 
+      backgroundColor: "#6d788d", 
+      '&:hover': { backgroundColor: "#5a667a", borderColor: "#5a667a" } 
+    }} 
     onClick={handleClose}
-    sx={{
-      minWidth: 120,
-      padding: '0.6rem 1.5rem',
-      fontWeight: 'bold',
-    }}
   >
     Cancel
   </Button>

@@ -26,7 +26,7 @@ const StyledBox2 = styled(Box)(({ theme }) => ({
 
 const HelpFooter = () => {
   return (
-    <Box sx={{ mt: 13, textAlign: 'center' }}>
+    <Box sx={{ mt: 4, textAlign: 'center' }}>
       <CustomChip rounded size="small" skin="light" color="primary" label="Question" />
       <Typography variant="h4" sx={{ my: 2 }}>
         You still have a question?
@@ -45,7 +45,7 @@ const HelpFooter = () => {
               href="/"
               variant="h4"
               onClick={(e) => e.preventDefault()}
-              sx={{ mb: 2.5, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}
+              sx={{ mb: 1.5, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}
             >
               + (810) 2548 2568
             </Typography>
@@ -62,7 +62,7 @@ const HelpFooter = () => {
               href="/"
               variant="h4"
               onClick={(e) => e.preventDefault()}
-              sx={{ mb: 2.5, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}
+              sx={{ mb: 1.5, textDecoration: 'none', '&:hover': { color: 'primary.main' } }}
             >
               hello@help.com
             </Typography>
