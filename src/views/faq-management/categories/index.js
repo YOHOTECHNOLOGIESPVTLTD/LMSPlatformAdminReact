@@ -8,7 +8,7 @@ import DeleteDialog from 'components/modal/DeleteModel';
 import StatusDialog from 'components/modal/DeleteModel';
 import FaqCategoriesAddDrawer from 'features/faq-management/faq-categories/components/FaqCategoriesAddDrawer';
 import FaqCategoriesEdit from 'features/faq-management/faq-categories/components/FaqCategoriesEdit';
-import { useCallback, useState } from 'react';
+import {  useState } from 'react';
 import FaqCategoriesTableHeader from 'features/faq-management/faq-categories/components/FaqCategoriesTableHeader';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllFaqCategories } from 'features/faq-management/faq-categories/redux/faqCategoryThunks';
@@ -22,7 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 
 const CategoriesDataGrid = () => {
-  const [value, setValue] = useState('');
+  // const [value, setValue] = useState('');
   const [page, setPage] = useState(1);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -51,6 +51,11 @@ const CategoriesDataGrid = () => {
     setRefetch((prev) => !prev);
   };
 
+useEffect(() => {
+    if (faqCategories?.data?.length === 0 && currentPage > 1) {
+      setCurrentPage(1);
+    }
+  }, [faqCategories, currentPage]);
   // const handleRowClick = (params) => {
     
   //   setSelectedRow({
@@ -105,22 +110,22 @@ const CategoriesDataGrid = () => {
 
 
   // ** Hooks
-  const handleFilter = useCallback(
-    (val) => {
-      setValue(val);
-      if (!val) {
-        setFilteredData(studentCertificatesdata); 
-      } else {
-        const filtered = studentCertificatesdata.filter((item) =>
-          item.title.toLowerCase().includes(val.toLowerCase()) ||
-          item.description.toLowerCase().includes(val.toLowerCase()) ||
-          item.course_name.toLowerCase().includes(val.toLowerCase())
-        );
-        setFilteredData(filtered);
-      }
-    },
-    []
-  );
+  // const handleFilter = useCallback(
+  //   (val) => {
+  //     setValue(val);
+  //     if (!val) {
+  //       setFilteredData(studentCertificatesdata); 
+  //     } else {
+  //       const filtered = studentCertificatesdata.filter((item) =>
+  //         item.title.toLowerCase().includes(val.toLowerCase()) ||
+  //         item.description.toLowerCase().includes(val.toLowerCase()) ||
+  //         item.course_name.toLowerCase().includes(val.toLowerCase())
+  //       );
+  //       setFilteredData(filtered);
+  //     }
+  //   },
+  //   []
+  // );
   /*const handleFilter = useCallback(
     async (val) => {
       try {
@@ -149,8 +154,10 @@ const CategoriesDataGrid = () => {
         {/* Category filter and header */}
         <Grid item xs={12} sx={{ marginLeft: "15px" }}>
           <FaqCategoriesTableHeader
-            value={value}
-            handleFilter={handleFilter}
+           // value={value}
+           // handleFilter={handleFilter}
+               value={searchQuery}
+            handleFilter={(val) => setSearchQuery(val)}
             toggle={toggleAddUserDrawer}
             selectedBranchId={selectedBranchId}
           />
@@ -171,6 +178,7 @@ const CategoriesDataGrid = () => {
                  </TableHead>
                  <TableBody>
                    {
+                     faqCategories?.data?.length > 0 ? (
                     faqCategories?.data?.map((category) => (
                       <TableRow
                       key={category._id}
@@ -202,6 +210,11 @@ const CategoriesDataGrid = () => {
                         </TableCell>
                       </TableRow>
                     ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={3} align="center">No data found</TableCell>
+                    </TableRow>
+                  )
                    }
                  </TableBody>
                </Table>

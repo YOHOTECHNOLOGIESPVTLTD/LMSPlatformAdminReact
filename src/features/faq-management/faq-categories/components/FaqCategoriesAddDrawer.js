@@ -11,8 +11,7 @@ import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import { addFaqCategory } from '../services/faqCategoryServices';
 import toast from 'react-hot-toast';
-
-
+import { useState } from 'react';
 
 const schema = yup.object().shape({
   name: yup.string().required('Full the Category Name is required').min(3, 'Category Name must be at least 3 characters'),
@@ -26,8 +25,8 @@ const defaultValues = {
 
 const FaqCategoriesAddDrawer = (props) => {
   // ** Props
-  const { open = false, toggle, setRefetch } = props; // Ensure 'open' has a default value
-  // ** State
+  const { open = false, toggle, setRefetch } = props;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     handleSubmit,
@@ -42,17 +41,32 @@ const FaqCategoriesAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
+    const isConfirmed = window.confirm("Are you sure you want to submit the form?");
+    if (!isConfirmed) return;
+
+    setIsSubmitting(true);
     const InputData = {
       identity: data.name,
       description: data.description
     };
-    const result = await addFaqCategory(InputData);
-    if (result.success) {
-      toast.success(result.message);
-      setRefetch((state) => !state);
-      toggle();
-    } else {
-      toast.error(result.message);
+
+    try {
+      const result = await addFaqCategory(InputData);
+      console.log("API Response:", result,isSubmitting);
+
+      if (result.success) {
+        toast.success(result.message);
+        setRefetch((state) => !state);
+        reset();
+        toggle();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("Something went wrong");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -68,7 +82,6 @@ const FaqCategoriesAddDrawer = (props) => {
       onClose={handleClose}
       aria-labelledby="add-faq-category-modal"
       aria-describedby="modal-to-add-faq-category"
-     
     >
       <Box
         sx={{
@@ -82,8 +95,8 @@ const FaqCategoriesAddDrawer = (props) => {
          
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "flex-end"}}>
-        <IconButton
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <IconButton
             size="small"
             onClick={handleClose}
             sx={{
@@ -102,15 +115,13 @@ const FaqCategoriesAddDrawer = (props) => {
               },
             }}
           >
-
-
-            <Icon icon="tabler:x" fontSize="1.125rem"  />
+            <Icon icon="tabler:x" fontSize="1.125rem" />
           </IconButton>
         </Box>
         <Box sx={{  textAlign: "flex-start",borderBottom: "2px solid #ddd", pb: 1, mb: 3  }}>
         <Typography variant="h3">Add Faq Categories</Typography>
         </Box>
-        <Box sx={{ p: (theme) => theme.spacing(0, 0, 0) }}>
+        <Box>
           <form onSubmit={handleSubmit(onSubmit)}>
           <Box
            sx={{
