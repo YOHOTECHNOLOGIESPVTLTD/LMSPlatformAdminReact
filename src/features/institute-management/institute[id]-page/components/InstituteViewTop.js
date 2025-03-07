@@ -114,7 +114,7 @@ const UserViewLeft = ({ institute }) => {
       <Box sx={{ mt: 3, backgroundColor: "white" }}>
         {selectedTab === 0 && <InstituteAbout institute={institute} />}
         {selectedTab === 1 && <UserViewAccount institute={institute} />}
-        {selectedTab === 2 && <CourseView />}
+        {selectedTab === 2 && <CourseView  institute={institute}/>}
       </Box>
     </Box>
   );
