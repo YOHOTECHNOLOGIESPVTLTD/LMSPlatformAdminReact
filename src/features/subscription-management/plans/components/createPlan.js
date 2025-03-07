@@ -2,25 +2,19 @@
 import { useState } from 'react';
 // ** MUI Imports
 import Dialog from '@mui/material/Dialog';
-// import Typography from '@mui/material/Typography';
-// import DialogTitle from '@mui/material/DialogTitle';
-import { DialogContent, Grid } from '@mui/material';
+import { DialogContent, Grid, Typography, Box } from '@mui/material';
 import styled from '@emotion/styled';
 import { Button } from '@mui/material';
-// import useMediaQuery from '@mui/material/useMediaQuery';
-// import { useTheme } from '@mui/material/styles';
 import CustomTextField from 'components/mui/text-field';
 import { Controller, useForm } from 'react-hook-form';
 import { DialogActions } from '@mui/material';
 import { Fragment } from 'react';
 import MenuItem from '@mui/material/MenuItem';
-// import { addSubscriptionPlan } from '../services/subscriptionPlansServices';
-
-
 
 const CreatePlan = ({ handleDialogClose, open }) => {
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [imgSrc, setImgSrc] = useState('https://www.charitycomms.org.uk/wp-content/uploads/2019/02/placeholder-image-square.jpg');
 
   const ImgStyled = styled('img')(({ theme }) => ({
@@ -36,6 +30,7 @@ const CreatePlan = ({ handleDialogClose, open }) => {
       textAlign: 'center'
     }
   }));
+
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -53,7 +48,6 @@ const CreatePlan = ({ handleDialogClose, open }) => {
     plan_name:'',
     plan_description:'',
     plan_duration:'',
-
   };
 
   const {
@@ -63,17 +57,28 @@ const CreatePlan = ({ handleDialogClose, open }) => {
   } = useForm({ defaultValues });
 
   const onSubmit = (data) => {
-    console.log('subData',data);
+    setErrorMessage(''); 
+    if (!data.plan_name || !data.plan_description || !data.plan_duration) {
+      setErrorMessage('All fields are required. Please fill them in.');
+      return;
+    }
+    console.log('subData', data);
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
     console.log(bodyFormData);
   };
+
 
   return (
     <Fragment>
       <Dialog onClose={handleDialogClose} aria-labelledby="responsive-dialog-title" open={open}>
         {/* <DialogTitle id="simple-dialog-title">Add New Plan</DialogTitle> */}
         <DialogContent>
+        {errorMessage && (
+            <Box sx={{ color: 'red', textAlign: 'center', fontWeight: 'bold', mb: 2 }}>
+              {errorMessage}
+            </Box>
+          )}
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container xs={12} spacing={3}>
               <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
