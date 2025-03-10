@@ -12,6 +12,9 @@ import { useSelector } from 'react-redux';
 
 // const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
+const UserNameAndEmailInput = Loadable(lazy(() => import('features/authentication/forgot-password-page/components/UserNameAndEmailInput')));
+const AuthOtp = Loadable(lazy(() => import('views/pages/authentication/auth-forms/AuthOtp')));
+const NewPassword=Loadable(lazy(()=>import('features/authentication/forgot-password-page/components/NewPassword')))
 
 // User Management
 // const SamplePage = Loadable(lazy(() => import('views/sample-page')));
@@ -23,7 +26,7 @@ const UsersPage = Loadable(lazy(() => import('views/user-management/users-page/u
 const ViewUserPage = Loadable(lazy(() => import('views/user-management/users-page/users[id]-page')));
 //Payment Management
 const Payments = Loadable(lazy(() => import('views/payment-management/payments-page')));
-const PaymentsViewPage = Loadable(lazy(() => import("views/payment-management/payment-[id]-page/index")))
+const PaymentsViewPage = Loadable(lazy(() => import('views/payment-management/payment-[id]-page/index')));
 
 //Institute Management
 const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes-overview-page')));
@@ -84,13 +87,14 @@ const InstituteAdminUserViewPage = Loadable(
 
 //Institute Course Management
 const InstituteCourseOverviewPage = Loadable(
-  lazy(() => import('views/institute-management/institute[id]-page/institute-software-pages/course-management/courses-page/course-overview-page'))
+  lazy(() =>
+    import('views/institute-management/institute[id]-page/institute-software-pages/course-management/courses-page/course-overview-page')
+  )
 );
 
+const Dashboard2 = Loadable(lazy(() => import('views/dashboard/Default/dashboard2')));
 
-const Dashboard2 = Loadable(lazy(() => import("views/dashboard/Default/dashboard2")))
-
-const InstituteTicketsViewPage = Loadable(lazy(() => import("views/ticket-management/institute-tickets-page/index")))
+const InstituteTicketsViewPage = Loadable(lazy(() => import('views/ticket-management/institute-tickets-page/index')));
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 const Protected = () => {
@@ -159,7 +163,7 @@ const ApplicationRoutes = () => {
         <Route path="/payment-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/payment-management/payments" />} />
           <Route path="payments" element={<Payments />} />
-          <Route path='payments/:id/view' element={<PaymentsViewPage />} />
+          <Route path="payments/:id/view" element={<PaymentsViewPage />} />
         </Route>
         {/* Profile */}
         <Route path="/profile-management" element={<MainLayout />}>
@@ -174,7 +178,7 @@ const ApplicationRoutes = () => {
         </Route>
 
         {/* </ Tax Route> */}
-        
+
         <Route path="/tax-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/tax-management/taxes" />} />
           <Route path="taxes" element={<TaxesPage />} />
@@ -226,6 +230,9 @@ const ApplicationRoutes = () => {
 
       <Route element={<MinimalLayout />}>
         <Route path="/login" element={<AuthLogin />} />
+        <Route path="/forgot-password" element={<UserNameAndEmailInput />} />
+        <Route path="/verify-otp" element={<AuthOtp />} />
+        <Route path='/new-password' element={<NewPassword/>}/>
       </Route>
       <Route element={<MinimalLayout />}>
         <Route path="*" element={<Page404 />} />

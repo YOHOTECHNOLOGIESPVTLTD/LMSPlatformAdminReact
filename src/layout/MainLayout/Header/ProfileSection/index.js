@@ -40,7 +40,8 @@ import { useDispatch } from 'react-redux';
 
 // assets
 import { IconLogout, 
-  IconSearch, IconSettings, IconUser
+  // IconSearch, IconSettings, 
+  // IconUser
  } from '@tabler/icons';
 // import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
@@ -172,12 +173,12 @@ const ProfileSection = () => {
                     <OutlinedInput
                       sx={{ width: '100%', pr: 1, pl: 2, my: 2, display: "none" }}
                       id="input-search-profile"
-                      value={value}
+                      // value={value}
                       onChange={(e) => setValue(e.target.value)}
                       placeholder="Search profile options"
                       startAdornment={
                         <InputAdornment position="start">
-                          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} />
+                          {/* <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} /> */}
                         </InputAdornment>
                       }
                       aria-describedby="search-helper-text"
@@ -251,7 +252,7 @@ const ProfileSection = () => {
                           }
                         }}
                       >
-                         <ListItemButton
+                         {/* <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 0}
                           // href="/profile-management/account-settings"
@@ -292,7 +293,7 @@ const ProfileSection = () => {
                               </Grid>
                             }
                           />
-                        </ListItemButton> 
+                        </ListItemButton>  */}
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={0 === 4}

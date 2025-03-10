@@ -359,6 +359,10 @@ const AddInstitutePage = () => {
       window.removeEventListener('hashchange', handleUrlChange);
     };
   }, [currentUrl, navigate]);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [berror, setBerror] = useState('');
+  console.log("Berror",berror);
+  
   const onSubmit = async () => {
     const accountData = accountControl?._formValues;
     const personalData = personalControl?._formValues;
@@ -430,27 +434,27 @@ const AddInstitutePage = () => {
       image: accountData?.image
     };
     console.log(institute, 'institute', branch, admin);
-    setActiveStep(activeStep + 1);
-    if (activeStep === steps.length - 1) {
-      const result = await addInstitute({ institute, admin, branch });
-      if (result.success) {
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
-      }
-    }
-    // const formData = {
-    //   personalData,
-    //   accountData,
-    //   socialData,
-    //   docsData
-    // };
-    // if (formData) {
-    //   localStorage.setItem('Allss', JSON.stringify(formData));
-    // }
-  };
-  // console.log()
 
+    if (activeStep === steps.length - 1) {
+      try {
+        const result = await addInstitute({ institute, admin, branch });
+        console.log("result",result)
+        if (result.success) {
+          toast.success(result.message);
+          setIsSuccess(true);
+          setActiveStep(activeStep + 1);
+        } else {
+          setBerror(result.message || 'An Error occured on the server.');
+        }
+      } catch (error) {
+        toast.error(error.message);
+        setBerror(error?.response?.data,message || 'An Error occured on the server.');
+      }
+    } else {
+      setActiveStep(activeStep + 1);
+    }
+  };
+  console.log(berror, 'bE');
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
     height: 100,
@@ -525,7 +529,7 @@ const AddInstitutePage = () => {
     const response = await handleFileUpload(data);
     setInstituteImage(response?.data?.data?.file);
   };
-
+  
   console.log('Gallery : ', galleryImages, 'Institute Image :', instituteImage, 'logo :', logo, logoSrc, instituteSrc, docs);
 
   const handleInputImageReset = () => {
@@ -537,6 +541,10 @@ const AddInstitutePage = () => {
     setInstituteSrc('/images/avatars/15.png');
   };
   console.log(socialErrors, accountErrors, docsErrors, personalErrors, galleryControl);
+  function handleClose(){
+    setBerror(" ")
+  }
+  
   const getStepContent = (step) => {
     switch (step) {
       case 0:
@@ -625,7 +633,7 @@ const AddInstitutePage = () => {
   };
 
   const renderContent = () => {
-    if (activeStep === steps.length) {
+    if (activeStep === steps.length && isSuccess) {
       return (
         <Fragment>
           <Typography onClick={handleReset}>All steps are completed!</Typography>
@@ -714,7 +722,26 @@ const AddInstitutePage = () => {
 
       <Divider sx={{ m: '0 !important' }} />
 
-      <CardContent>{renderContent()}</CardContent>
+      <CardContent>
+        {berror && (
+          <Box>
+            <Box
+              sx={{
+                backgroundColor: '#ffebee',
+                color: '#c62828',
+                padding: '10px',
+                borderRadius: '4px',
+                marginBottom: '20px',
+                textAlign: 'center'
+              }}
+            >
+              <Typography variant="body1">{berror}</Typography>
+            </Box>
+            <Box><Button onClick={handleClose}>close</Button></Box>
+          </Box>
+        )}
+        {renderContent()}
+      </CardContent>
     </Card>
   );
 };

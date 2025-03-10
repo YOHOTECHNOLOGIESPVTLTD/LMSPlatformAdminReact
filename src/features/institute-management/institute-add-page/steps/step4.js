@@ -3,39 +3,47 @@ import { Controller } from 'react-hook-form';
 import { IconTax, IconId, IconCertificate } from '@tabler/icons-react';
 import IconUpload from '@mui/icons-material/Upload';
 import { PDFViewer } from 'react-view-pdf';
-import { getImageUrl } from 'themes/imageUtlis';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const FormStep4DocumentsInfo = (props) => {
-  const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docs,docReset} = props;
+  const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docReset } = props;
   const [formData, setFormData] = useState({});
+  const [docs, setDocs] = useState({});
 
   useEffect(() => {
     const savedData = localStorage.getItem('docs_form');
     if (savedData) {
-     const parsedData=JSON.parse(savedData)
-     setFormData(parsedData)
-     docReset(parsedData)
+      const parsedData = JSON.parse(savedData);
+      setFormData(parsedData);
+      docReset(parsedData);
     }
   }, [docReset]);
 
-  const handleFormChange = (name,value) => {
+  const handleFormChange = (name, value) => {
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: value };
-      localStorage.setItem('docs_form',JSON.stringify(updatedData));
+      localStorage.setItem('docs_form', JSON.stringify(updatedData));
       return updatedData;
     });
+  };
+
+  const handleFileUpload = (type, e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      hanldeDocsUpload(type, e); // Call the parent handler if needed
+      setDocs((prev) => ({ ...prev, [type]: fileUrl }));
+    }
   };
 
   return (
     <form key={3} onSubmit={hanldeDocSubmit(onSubmit)}>
       <Grid container spacing={5}>
-        <Grid item xs={12}>
-          <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+        <Grid item xs={12} textAlign="center">
+          <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.primary', mb: 2 }}>
             {steps[3].title}
           </Typography>
-          <Typography variant="body1" component={'p'} sx={{ mb: 2 }}>
+          <Typography variant="body1" sx={{ color: 'text.secondary', mb: 5 }} component="p">
             {steps[3].subtitle}
           </Typography>
         </Grid>
@@ -51,11 +59,11 @@ const FormStep4DocumentsInfo = (props) => {
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value||formData.gst_number}
+                value={value || formData.gst_number}
                 label="GST Number"
-                onChange={(e)=>{
-                  onChange(e)
-                  handleFormChange('gst_number',e.target.value)
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('gst_number', e.target.value);
                 }}
                 placeholder="Enter your GST number"
                 error={Boolean(docsErrors.gst_number)}
@@ -78,10 +86,10 @@ const FormStep4DocumentsInfo = (props) => {
                 <input
                   type="file"
                   onChange={(e) => {
-                    onChange(e.target.files);
-                    hanldeDocsUpload('gst', e);
+                    onChange(e.target.files[0]);
+                    handleFileUpload('gst', e);
                   }}
-                  accept=".pdf,.jpg,.png"
+                  accept=".pdf"
                   style={{ display: 'none' }}
                 />
                 <Button
@@ -97,7 +105,7 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.gst && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={getImageUrl(docs.gst)} width="100%" height="400px" />
+              <PDFViewer file={docs.gst} width="100%" height="400px" />
             </Box>
           )}
         </Grid>
@@ -113,11 +121,11 @@ const FormStep4DocumentsInfo = (props) => {
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value||formData.pan_number}
+                value={value || formData.pan_number}
                 label="PAN Number"
-                onChange={(e)=>{
-                  onChange(e)
-                  handleFormChange('pan_number',e.target.value)
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('pan_number', e.target.value);
                 }}
                 placeholder="Enter your PAN number"
                 error={Boolean(docsErrors.pan_number)}
@@ -140,10 +148,10 @@ const FormStep4DocumentsInfo = (props) => {
                 <input
                   type="file"
                   onChange={(e) => {
-                    onChange(e.target.files);
-                    hanldeDocsUpload('pan', e);
+                    onChange(e.target.files[0]);
+                    handleFileUpload('pan', e);
                   }}
-                  accept=".pdf,.jpg,.png"
+                  accept=".pdf"
                   style={{ display: 'none' }}
                 />
                 <Button
@@ -159,7 +167,7 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.pan && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={getImageUrl(docs.pan)} width="100%" height="400px" /> {/* Preview PDF */}
+              <PDFViewer file={docs.pan} width="100%" height="400px" />
             </Box>
           )}
         </Grid>
@@ -175,11 +183,11 @@ const FormStep4DocumentsInfo = (props) => {
             render={({ field: { value, onChange } }) => (
               <CustomTextField
                 fullWidth
-                value={value||formData.licence_number}
+                value={value || formData.licence_number}
                 label="License Number"
-                onChange={(e)=>{
-                  onChange(e)
-                  handleFormChange('licence_number',e.target.value)
+                onChange={(e) => {
+                  onChange(e);
+                  handleFormChange('licence_number', e.target.value);
                 }}
                 placeholder="Enter your License number"
                 error={Boolean(docsErrors.licence_number)}
@@ -202,10 +210,10 @@ const FormStep4DocumentsInfo = (props) => {
                 <input
                   type="file"
                   onChange={(e) => {
-                    onChange(e.target.files);
-                    hanldeDocsUpload('licence', e);
+                    onChange(e.target.files[0]);
+                    handleFileUpload('licence', e);
                   }}
-                  accept=".pdf,.jpg,.png"
+                  accept=".pdf"
                   style={{ display: 'none' }}
                 />
                 <Button
@@ -221,7 +229,7 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.licence && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={getImageUrl(docs.licence)} width="100%" height="400px" />
+              <PDFViewer file={docs.licence} width="100%" height="400px" />
             </Box>
           )}
         </Grid>

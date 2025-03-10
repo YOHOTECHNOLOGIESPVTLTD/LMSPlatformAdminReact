@@ -17,7 +17,10 @@ export const API_END_POINTS ={
       getWithId : "/api/lms/platform/payments/subscription-management/payment/"
     },
     auth : {
-       verify_otp : "/api/auth/verify-otp/"
+       verify_otp : "/api/auth/verify-otp/",
+       validate_otp:"/api/auth/validate-otp/",
+       forget_password:"/api/auth/forget-password/",
+       update_password:"/api/auth/update-password/"
     },
     subscription : {
         all : "/api/subscription/plans",
