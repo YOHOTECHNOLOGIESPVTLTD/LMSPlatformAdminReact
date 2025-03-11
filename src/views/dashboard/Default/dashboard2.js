@@ -11,7 +11,7 @@ import {
   Collapse,
   Button
 } from '@mui/material';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import PeopleIcon from '@mui/icons-material/People';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
@@ -178,100 +178,142 @@ const Dashboard2 = () => {
 
       {/* Quick Stats Section */}
       <Grid container spacing={3} sx={{ mt: 2 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '12px',
-              boxShadow: theme.shadows[3],
-              transition: 'transform 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-8px)' }
-            }}
-          >
-            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <AccountBalanceIcon fontSize="large" sx={{ color: theme.palette.success.main }} />
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                  Total Institutes
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                  {metrics.totalInstitutes}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '12px',
-              boxShadow: theme.shadows[3],
-              transition: 'transform 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-8px)' }
-            }}
-          >
-            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <PeopleIcon fontSize="large" sx={{ color: theme.palette.primary.main }} />
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                  Institute Subscriptions
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                  {metrics.totalUsers}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '12px',
-              boxShadow: theme.shadows[3],
-              transition: 'transform 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-8px)' }
-            }}
-          >
-            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <PaymentsIcon fontSize="large" sx={{ color: theme.palette.warning.main }} />
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                  Active Subscriptions
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                  {metrics.activeSubscriptions}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '12px',
-              boxShadow: theme.shadows[3],
-              transition: 'transform 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-8px)' }
-            }}
-          >
-            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <SupportAgentIcon fontSize="large" sx={{ color: theme.palette.error.main }} />
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                  New Support Tickets
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                  {metrics.newSupportTickets}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+  {/* Total Institutes Card */}
+  <Grid item xs={12} sm={6} md={3}>
+    <Card
+      sx={{
+        background: 'linear-gradient(135deg,rgb(218, 52, 138) 0%,rgb(115, 161, 240) 100%)',
+        borderRadius: '12px',
+        boxShadow: theme.shadows[3],
+        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-8px) scale(1.05)',
+          boxShadow: theme.shadows[6],
+          animation: 'pulse 1.5s infinite',
+        },
+        '@keyframes pulse': {
+          '0%': { transform: 'translateY(-8px) scale(1.05)' },
+          '50%': { transform: 'translateY(-8px) scale(1.1)' },
+          '100%': { transform: 'translateY(-8px) scale(1.05)' },
+        },
+      }}
+    >
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#fff', p: 3 }}>
+        <AccountBalanceIcon fontSize="large" sx={{ color: '#fff', fontSize: '2.5rem' }} />
+        <Box>
+          <Typography variant="subtitle1" fontWeight="bold" color="inherit">
+            Total Institutes
+          </Typography>
+          <Typography variant="h4" fontWeight="bold" color="inherit">
+            {metrics.totalInstitutes}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  </Grid>
 
+  {/* Institute Subscriptions Card */}
+  <Grid item xs={12} sm={6} md={3}>
+    <Card
+      sx={{
+        background: 'linear-gradient(135deg,rgb(195, 227, 120) 0%,rgb(99, 137, 242) 100%)',
+        borderRadius: '12px',
+        boxShadow: theme.shadows[3],
+        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-8px) scale(1.05)',
+          boxShadow: theme.shadows[6],
+          animation: 'glow 1.5s infinite',
+        },
+        '@keyframes glow': {
+          '0%': { boxShadow: '0 0 10px #00c6ff' },
+          '50%': { boxShadow: '0 0 20px #0072ff' },
+          '100%': { boxShadow: '0 0 10px #00c6ff' },
+        },
+      }}
+    >
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#fff', p: 3 }}>
+        <PeopleIcon fontSize="large" sx={{ color: '#fff', fontSize: '2.5rem' }} />
+        <Box>
+          <Typography variant="subtitle1" fontWeight="bold" color="inherit">
+            Institute Subscriptions
+          </Typography>
+          <Typography variant="h4" fontWeight="bold" color="inherit">
+            {metrics.totalUsers}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  </Grid>
+
+  {/* Active Subscriptions Card */}
+  <Grid item xs={12} sm={6} md={3}>
+    <Card
+      sx={{
+        background: 'linear-gradient(135deg,rgb(222, 211, 151) 0%,rgb(177, 95, 97) 100%)',
+        borderRadius: '12px',
+        boxShadow: theme.shadows[3],
+        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-8px) scale(1.05)',
+          boxShadow: theme.shadows[6],
+          animation: 'pulse 1.5s infinite',
+        },
+        '@keyframes pulse': {
+          '0%': { transform: 'translateY(-8px) scale(1.05)' },
+          '50%': { transform: 'translateY(-8px) scale(1.1)' },
+          '100%': { transform: 'translateY(-8px) scale(1.05)' },
+        },
+      }}
+    >
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#fff', p: 3 }}>
+        <PaymentsIcon fontSize="large" sx={{ color: '#fff', fontSize: '2.5rem' }} />
+        <Box>
+          <Typography variant="subtitle1" fontWeight="bold" color="inherit">
+            Active Subscriptions
+          </Typography>
+          <Typography variant="h4" fontWeight="bold" color="inherit">
+            {metrics.activeSubscriptions}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  </Grid>
+
+  {/* New Support Tickets Card */}
+  <Grid item xs={12} sm={6} md={3}>
+    <Card
+      sx={{
+        background: 'linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)',
+        borderRadius: '12px',
+        boxShadow: theme.shadows[3],
+        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-8px) scale(1.05)',
+          boxShadow: theme.shadows[6],
+          animation: 'glow 1.5s infinite',
+        },
+        '@keyframes glow': {
+          '0%': { boxShadow: '0 0 10px #ff7e5f' },
+          '50%': { boxShadow: '0 0 20px #feb47b' },
+          '100%': { boxShadow: '0 0 10px #ff7e5f' },
+        },
+      }}
+    >
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#fff', p: 3 }}>
+        <SupportAgentIcon fontSize="large" sx={{ color: '#fff', fontSize: '2.5rem' }} />
+        <Box>
+          <Typography variant="subtitle1" fontWeight="bold" color="inherit">
+            New Support Tickets
+          </Typography>
+          <Typography variant="h4" fontWeight="bold" color="inherit">
+            {metrics.newSupportTickets}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  </Grid>
+</Grid>
       {/* Graphs Section */}
       <Box sx={{ mt: 4 }}>
         <Typography variant="h5" gutterBottom>
@@ -282,17 +324,27 @@ const Dashboard2 = () => {
           <Grid item xs={12} md={6}>
             <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h4" gutterBottom>
                   Revenue Trends (Monthly)
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={revenueData? revenueData:data.revenue}>
-                    <CartesianGrid stroke="#e0e0e0" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="revenue" stroke={theme.palette.primary.main} />
-                  </LineChart>
+                <AreaChart
+          width={500}
+          height={400}
+          data={revenueData? revenueData : data.revenue}
+          margin={{
+            top: 10,
+            right: 30,
+            left: 0,
+            bottom: 0,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" />
+          <YAxis />
+          <Tooltip />
+          <Area type="monotone" dataKey="revenue" stroke="#8884d8" fill="#8884d8" />
+        </AreaChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
@@ -302,7 +354,7 @@ const Dashboard2 = () => {
           <Grid item xs={12} md={6}>
             <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h4" gutterBottom>
                   Subscription Details
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
