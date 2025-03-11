@@ -24,3 +24,11 @@ export const updatePassword = async (data) => {
     throw error.response.data;
   }
 };
+export const resendOtp=async(email)=>{
+  try{
+    const response=await Client.auth.resend_otp({email});
+    return response.data;
+  }catch(error){
+    throw error.response.data;
+  }
+}

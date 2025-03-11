@@ -5,6 +5,7 @@ import { API_END_POINTS } from "./http_end_points";
 class Client {
    auth = {
       verify_otp : (data) => httpClient.post(API_END_POINTS.auth.verify_otp,data),
+      resend_otp : (data) => httpClient.post(API_END_POINTS.auth.resend_otp,data),
       validate_otp : (data) =>httpClient.post(API_END_POINTS.auth.validate_otp,data),
       forget_password:(data)=>httpClient.post(API_END_POINTS.auth.forget_password,data),
       update_password:(data)=>httpClient.post(API_END_POINTS.auth.update_password,data)

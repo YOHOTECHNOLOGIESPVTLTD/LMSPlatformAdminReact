@@ -361,8 +361,9 @@ const AddInstitutePage = () => {
   }, [currentUrl, navigate]);
   const [isSuccess, setIsSuccess] = useState(false);
   const [berror, setBerror] = useState('');
-  console.log("Berror",berror);
-  
+  console.log('Berror', berror);
+  const [shows, setShows] = useState(false);
+
   const onSubmit = async () => {
     const accountData = accountControl?._formValues;
     const personalData = personalControl?._formValues;
@@ -438,7 +439,7 @@ const AddInstitutePage = () => {
     if (activeStep === steps.length - 1) {
       try {
         const result = await addInstitute({ institute, admin, branch });
-        console.log("result",result)
+        console.log('result', result);
         if (result.success) {
           toast.success(result.message);
           setIsSuccess(true);
@@ -448,7 +449,9 @@ const AddInstitutePage = () => {
         }
       } catch (error) {
         toast.error(error.message);
-        setBerror(error?.response?.data,message || 'An Error occured on the server.');
+        setBerror(error?.response?.data?.message || 'An Error occured on the server.');
+        console.log('Berororroro', error);
+        setShows(true);
       }
     } else {
       setActiveStep(activeStep + 1);
@@ -504,7 +507,7 @@ const AddInstitutePage = () => {
       const response = await handleFileUpload(form_data);
       console.log(response, 'response');
       setDocs((prev) => ({ ...prev, [name]: response?.data?.data?.file }));
-      console.log(docs);
+      console.log(docs,'doxs');
     } catch (error) {
       console.log(error, 'error');
     }
@@ -529,7 +532,7 @@ const AddInstitutePage = () => {
     const response = await handleFileUpload(data);
     setInstituteImage(response?.data?.data?.file);
   };
-  
+
   console.log('Gallery : ', galleryImages, 'Institute Image :', instituteImage, 'logo :', logo, logoSrc, instituteSrc, docs);
 
   const handleInputImageReset = () => {
@@ -541,10 +544,11 @@ const AddInstitutePage = () => {
     setInstituteSrc('/images/avatars/15.png');
   };
   console.log(socialErrors, accountErrors, docsErrors, personalErrors, galleryControl);
-  function handleClose(){
-    setBerror(" ")
+  function handleClose() {
+    setBerror(' ');
+    setShows(false);
   }
-  
+
   const getStepContent = (step) => {
     switch (step) {
       case 0:
@@ -625,6 +629,8 @@ const AddInstitutePage = () => {
             setError={setError}
             hanldeProfileImageChange={hanldeProfileImageChange}
             accountReset={accountReset}
+            setDocs={setDocs}
+            docs={docs}
           />
         );
       default:
@@ -724,10 +730,9 @@ const AddInstitutePage = () => {
 
       <CardContent>
         {berror && (
-          <Box>
+          <>
             <Box
               sx={{
-                backgroundColor: '#ffebee',
                 color: '#c62828',
                 padding: '10px',
                 borderRadius: '4px',
@@ -736,9 +741,15 @@ const AddInstitutePage = () => {
               }}
             >
               <Typography variant="body1">{berror}</Typography>
+            {shows ? (
+              <Button variant='contained' onClick={handleClose} sx={{ marginTop: '10px' }}>
+                Close
+              </Button>
+            ) : (
+              ''
+            )}
             </Box>
-            <Box><Button onClick={handleClose}>close</Button></Box>
-          </Box>
+          </>
         )}
         {renderContent()}
       </CardContent>

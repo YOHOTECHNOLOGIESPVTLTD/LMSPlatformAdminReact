@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 // import { useDispatch } from "react-redux";
 import Cookies from 'js-cookie';
 import { useSpinner } from 'context/spinnerContext';
-import { sendOtpForPasswordReset, validateOtp } from 'features/authentication/forgot-password-page/service/forgotPasswordService';
+import {resendOtp, validateOtp } from 'features/authentication/forgot-password-page/service/forgotPasswordService';
+
 
 const InputElement = styled('input')(
   ({ theme }) => `
@@ -205,12 +206,13 @@ const AuthOtpForm = () => {
     if (!otp_data) return;
 
     const otp_data2 = JSON.parse(otp_data);
-    const response = await sendOtpForPasswordReset(otp_data2.email);
+    const response = await resendOtp(otp_data2.email);
     console.log('resended otp', response);
 
     if (response.success) {
-      setTimeLeft(300);
+      setTimeLeft(20);
       setIsResendDisabled(true);
+      setError('')
     }
   };
 

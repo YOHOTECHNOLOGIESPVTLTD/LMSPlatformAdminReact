@@ -21,6 +21,8 @@ const FormStep5AccountInfo = (props) => {
   const [selectedCountryCode, setSelectedCountryCode] = useState('IN'); // Default to India
   const [selectedStateCode, setSelectedStateCode] = useState('');
   const [selectedCityId, setSelectedCityId] = useState('');
+  // const [selectedCountryPhone, setSelectedCountryPhone] = useState('');
+  
 
   const defaultCountry = countries.find((item) => item.iso2 === 'IN');
 
@@ -45,6 +47,7 @@ const FormStep5AccountInfo = (props) => {
     setSelectedCountryCode(countryCode);
     setSelectedStateCode('');
     setSelectedCityId('');
+    
   };
 
   const handleStateChange = (e) => {
@@ -124,7 +127,7 @@ const FormStep5AccountInfo = (props) => {
                               <AccountCircleIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -155,12 +158,39 @@ const FormStep5AccountInfo = (props) => {
                               <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry ? defaultCountry.phonecode : ''}
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
                   />
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="alternate_phone"
+                      control={accountControl}
+                      render={({ field: { value, onChange } }) => (
+                        <TextField
+                          fullWidth
+                          label="Alternate Phone"
+                          value={value || formData.alt_phone}
+                          onChange={(e) => {
+                            onChange(e);
+                            handleFormChange('alternate_phone', e.target.value);
+                          }}
+                          placeholder="e.g. 987-654-3210"
+                          error={Boolean(accountErrors.alternate_phone)}
+                          helperText={accountErrors.alternate_phone && 'Alternate Phone Number is required'}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                 <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry ? defaultCountry.phonecode : ''}
+                              </InputAdornment>
+                            )
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
 
                 {/* Address Line 1 */}
                 <Grid item xs={12} sm={6}>
@@ -186,7 +216,7 @@ const FormStep5AccountInfo = (props) => {
                               <HomeIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -216,7 +246,7 @@ const FormStep5AccountInfo = (props) => {
                               <HomeIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -248,7 +278,7 @@ const FormStep5AccountInfo = (props) => {
                               <LocationOnIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       >
                         {countries.map((country) => (
@@ -285,8 +315,7 @@ const FormStep5AccountInfo = (props) => {
                               <LocationOnIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
-                          
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       >
                         {states.map((state) => (
@@ -323,7 +352,7 @@ const FormStep5AccountInfo = (props) => {
                               <LocationOnIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       >
                         {cities.map((city) => (
@@ -360,7 +389,7 @@ const FormStep5AccountInfo = (props) => {
                               <LocationOnIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -405,7 +434,7 @@ const FormStep5AccountInfo = (props) => {
                               <AccountCircleIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -436,7 +465,7 @@ const FormStep5AccountInfo = (props) => {
                               <AccountCircleIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -467,7 +496,7 @@ const FormStep5AccountInfo = (props) => {
                               <EmailIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -498,7 +527,7 @@ const FormStep5AccountInfo = (props) => {
                               <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry ? defaultCountry.phonecode : ''}
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -530,7 +559,7 @@ const FormStep5AccountInfo = (props) => {
                               </IconButton>
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}

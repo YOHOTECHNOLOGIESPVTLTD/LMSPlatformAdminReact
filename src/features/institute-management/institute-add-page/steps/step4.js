@@ -4,11 +4,12 @@ import { IconTax, IconId, IconCertificate } from '@tabler/icons-react';
 import IconUpload from '@mui/icons-material/Upload';
 import { PDFViewer } from 'react-view-pdf';
 import { useEffect, useState } from 'react';
+import { getImageUrl } from 'themes/imageUtlis';
 
 const FormStep4DocumentsInfo = (props) => {
-  const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docReset } = props;
+  const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docReset,docs} = props;
   const [formData, setFormData] = useState({});
-  const [docs, setDocs] = useState({});
+  // const [docs, setDocs] = useState({ gst: '', pan: '', licence: '' });
 
   useEffect(() => {
     const savedData = localStorage.getItem('docs_form');
@@ -30,11 +31,11 @@ const FormStep4DocumentsInfo = (props) => {
   const handleFileUpload = (type, e) => {
     const file = e.target.files[0];
     if (file) {
-      const fileUrl = URL.createObjectURL(file);
-      hanldeDocsUpload(type, e); // Call the parent handler if needed
-      setDocs((prev) => ({ ...prev, [type]: fileUrl }));
+      hanldeDocsUpload(type, e); 
+      // setDocs((prev) => ({ ...prev, [type]: fileUrl }));
     }
   };
+  console.log("Uploaded docs",docs)
 
   return (
     <form key={3} onSubmit={hanldeDocSubmit(onSubmit)}>
@@ -105,7 +106,8 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.gst && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={docs.gst} width="100%" height="400px" />
+              <PDFViewer file={ getImageUrl(docs.gst)
+              } width="100%" height="400px" />
             </Box>
           )}
         </Grid>
