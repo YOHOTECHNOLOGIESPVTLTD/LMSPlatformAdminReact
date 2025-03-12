@@ -23,9 +23,13 @@ const UserViewSecurity = ({ id }) => {
     showConfirmNewPassword: false
   });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [passwordStrength, setPasswordStrength] = useState('');
 
   const handleNewPasswordChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
+    if (prop === 'newPassword') {
+      checkPasswordStrength(event.target.value);
+  }
   };
 
   const handleClickShowNewPassword = () => {
@@ -34,6 +38,17 @@ const UserViewSecurity = ({ id }) => {
 
   const handleConfirmNewPasswordChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
+    setPasswordsMatch(values.newPassword === event.target.value);
+  };
+
+  const checkPasswordStrength = (password) => {
+    let strength = 'Weak';
+    if (password.length >= 8 && /[A-Z]/.test(password) && /\d/.test(password)) {
+      strength = 'Strong';
+    } else if (password.length >= 6) {
+      strength = 'Medium';
+    }
+    setPasswordStrength(strength);
   };
 
   const handleClickShowConfirmNewPassword = () => {
@@ -92,7 +107,7 @@ const UserViewSecurity = ({ id }) => {
                     label="New Password"
                     placeholder="············"
                     value={values.newPassword}
-                    id="user-view-security-new-password"
+                    //id="user-view-security-new-password"
                     onChange={handleNewPasswordChange('newPassword')}
                     type={values.showNewPassword ? 'text' : 'password'}
                     InputProps={{
@@ -110,6 +125,7 @@ const UserViewSecurity = ({ id }) => {
                       )
                     }}
                   />
+                  <Typography variant="body2">{passwordStrength}</Typography>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
@@ -118,7 +134,7 @@ const UserViewSecurity = ({ id }) => {
                     placeholder="············"
                     label="Confirm New Password"
                     value={values.confirmNewPassword}
-                    id="user-view-security-confirm-new-password"
+                   // id="user-view-security-confirm-new-password"
                     type={values.showConfirmNewPassword ? 'text' : 'password'}
                     onChange={handleConfirmNewPasswordChange('confirmNewPassword')}
                     InputProps={{
@@ -144,7 +160,7 @@ const UserViewSecurity = ({ id }) => {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Button type="submit" variant="contained">
+                  <Button type="submit" variant="contained"  disabled={!passwordsMatch}>
                     Change Password
                   </Button>
                 </Grid>

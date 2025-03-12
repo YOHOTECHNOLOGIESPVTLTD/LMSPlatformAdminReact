@@ -71,7 +71,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
           <Divider sx={{ my: '0 !important', mx: 6 }} />
 
           <CardContent sx={{ pb: 1 }}>
-            <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
+            <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase',fontWeight:'bold' }}>
               Details
             </Typography>
             <Box sx={{ pt: 4 }}>

@@ -4,10 +4,11 @@ import { ArrowBack } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import OnlineIcon from '@mui/icons-material/Wifi';
 import PeopleIcon from '@mui/icons-material/People';
-import CourseCard from 'features/institute-management/institute[id]-page/components/Course/CourseCard';
+// import CourseCard from 'features/institute-management/institute[id]-page/components/Course/CourseCard';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import TeacherView from 'features/institute-management/institute[id]-page/components/Course/TeacherView';
 import StudentView from 'features/institute-management/institute[id]-page/components/Course/StudentView';
+import { useNavigate,  } from 'react-router';
 
 const CourseOverview = () => {
     // State for course and modules
@@ -15,7 +16,7 @@ const CourseOverview = () => {
     const [modules, setModules] = useState([]);
     const [view, setView] = useState('courseOverview');
     
-   
+    const navigate = useNavigate()
 
     useEffect(() => {
         setCourse({
@@ -104,13 +105,21 @@ const CourseOverview = () => {
 
     console.log(modules,"modules")
 
+const navigation =()=>{
+    navigate(-1)
+}
+
     return (
         <Box p={3} sx={{  margin: 'auto' }}>
             {/* Header */}
-            <Typography variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center', mb: 2 ,fontFamily:"Poppins",fontSize:"24px",fontWeight:700, gap:"10px",marginBottom:"52px"}}>
+            <Box sx={{display:'flex'}}>
+            <Button  sx={{":hover":{backgroundColor: "transparent",}}} onClick={navigation}>
                 <ArrowBack />
+            </Button>
+            <Typography variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center' ,fontFamily:"Poppins",fontSize:"24px",fontWeight:700, gap:"10px"}}>
                  Institute course view
             </Typography>
+            </Box>
 
             {/* Course Information */}
             <Grid container spacing={2}>
@@ -225,13 +234,13 @@ const CourseOverview = () => {
             <Typography variant="body1" color="textSecondary" sx={{ mb: 4, fontFamily: "Nunito Sans", fontWeight: 400, fontSize: '16px', color: '#000' }}>
                 {course.modulesDescription}
             </Typography>
-            <Grid container spacing={2}>
+            {/* <Grid container spacing={2}>
                 {modules?.map((module,index) => (
                     <CourseCard key={index} course={course} mod={module}  sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} />
                 ))}
             
             </Grid>                      
-            
+             */}
         </Box>
     );
 };

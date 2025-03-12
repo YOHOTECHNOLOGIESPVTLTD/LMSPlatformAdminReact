@@ -34,6 +34,9 @@ import StatusDialog from 'components/modal/DeleteModel';
 import toast from 'react-hot-toast';
 import { instituteChangeStatus } from 'features/institute-management/services/instituteService';
 import { useSpinner } from 'context/spinnerContext';
+import UserSkeleton from 'components/cards/Skeleton/UserSkeleton';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 const Institutes = () => {
   // const [plan, setPlan] = useState('');
@@ -42,13 +45,14 @@ const Institutes = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   // const [allInstitutes, setAllInstitutes] = useState('');
+ 
 
   const [selectedInstitutes, setSelectedInstitutes] = useState(null);
   const [selectedInstitutesStatus, setSelectedInstitutesStatus] = useState(null);
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const { showSpinnerFn, hideSpinnerFn } = useSpinner()
+  const { showSpinnerFn, hideSpinnerFn } = useSpinner();
 
   const dispatch = useDispatch();
   const allInstitutes = useSelector(selectInstitutes);
@@ -56,7 +60,9 @@ const Institutes = () => {
   const instituteLoading = useSelector(selectLoading);
 
   useEffect(() => {
+    showSpinnerFn();
     dispatch(getAllInstitutes());
+    hideSpinnerFn();
   }, [dispatch, getAllInstitutes, selectedBranchId, refetch]);
 
   console.log(allInstitutes);
@@ -159,7 +165,7 @@ const Institutes = () => {
                 menuItemProps: {
                   component: Link,
                   to: `${row?.uuid}`,
-                  state: { id: row?.uuid}
+                  state: { id: row?.uuid }
                 }
               }
             ]}
@@ -302,7 +308,7 @@ const Institutes = () => {
   };
 
   const handleStatusChangeApi = async () => {
-    showSpinnerFn()
+    showSpinnerFn();
     const data = {
       status: selectedInstitutesStatus,
       id: selectedInstitutes?.id
@@ -313,21 +319,24 @@ const Institutes = () => {
       setRefetch((state) => !state);
     } else {
       toast.error(response.message);
-      hideSpinnerFn()
+      hideSpinnerFn();
     }
   };
-  console.log(allInstitutes,"allInstitutes")
+  console.log(allInstitutes, 'allInstitutes');
   // ** State
   return (
     <>
-      <Grid container spacing={3}>
-        {/* User Header Section */}
-        <Grid item xs={12}>
-          <InstituteHeaderSection users={allInstitutes} groups={allInstitutes} />
-        </Grid>
+      {instituteLoading ? (
+        <InstituteSkeleton />
+      ) : (
+        <Grid container spacing={3}>
+          {/* User Header Section */}
+          <Grid item xs={12}>
+            <InstituteHeaderSection users={allInstitutes} groups={allInstitutes} />
+          </Grid>
 
-        {/* User Filter Card */}
-        {/* <Grid item xs={12}>
+          {/* User Filter Card */}
+          {/* <Grid item xs={12}>
           <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
             <CardContent>
               <Grid container spacing={3}>
@@ -376,48 +385,54 @@ const Institutes = () => {
           </Card>
         </Grid> */}
 
-        <Grid item xs={12}>
-          <TableHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
-        </Grid>
-
-        {/* Display Skeleton or User Body Section based on loading state */}
-        <Grid container spacing={3} sx={{ paddingLeft: "24px"}} >
-            {
-              allInstitutes?.map((institute, index) => 
-                <InstituteCard institute={institute} key={institute?._id} index={index} />
-              )
-            }
-        </Grid>
-        {instituteLoading ? (
-          <InstituteSkeleton />
-        ) : (
-          <Grid item xs={12} sx={{ display: "none"}} >
-            <Card>
-              <Divider sx={{ m: '0 !important' }} />
-              <DataGrid
-                autoHeight
-                // rowHeight={90}
-                getRowHeight={() => 'auto'}
-                rows={allInstitutes}
-                columns={columns}
-                disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
-              />
-            </Card>
+          <Grid item xs={12}>
+            <TableHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
           </Grid>
-        )}
 
-        {/* StatusDialog Drawer */}
-        <StatusDialog
-          open={statusOpen}
-          setOpen={setStatusDialogOpen}
-          description="Are you sure you want to Change Status"
-          title="Status"
-          handleSubmit={handleStatusChangeApi}
-        />
-      </Grid>
+          {/* Display Skeleton or User Body Section based on loading state */}
+
+          <Grid container spacing={3} sx={{ paddingLeft: '24px' }}>
+            {allInstitutes?.map((institute, index) => (
+              <InstituteCard institute={institute} key={institute?._id} index={index} />
+            ))}
+          </Grid>
+          <Grid container spacing={3} sx={{ pl: 5, mt: 1 ,alignItems:'right' ,justifyContent:'right'}}>
+            <Stack spacing={2}>
+              <Pagination count={allInstitutes.length>3 ? allInstitutes.length: 1 } color="primary" />
+            </Stack>
+          </Grid>
+
+          {instituteLoading ? (
+            <UserSkeleton />
+          ) : (
+            <Grid item xs={12} sx={{ display: 'none' }}>
+              <Card>
+                <Divider sx={{ m: '0 !important' }} />
+                <DataGrid
+                  autoHeight
+                  // rowHeight={90}
+                  getRowHeight={() => 'auto'}
+                  rows={allInstitutes}
+                  columns={columns}
+                  disableRowSelectionOnClick
+                  pageSizeOptions={[10, 25, 50]}
+                  paginationModel={paginationModel}
+                  onPaginationModelChange={setPaginationModel}
+                />
+              </Card>
+            </Grid>
+          )}
+
+          {/* StatusDialog Drawer */}
+          <StatusDialog
+            open={statusOpen}
+            setOpen={setStatusDialogOpen}
+            description="Are you sure you want to Change Status"
+            title="Status"
+            handleSubmit={handleStatusChangeApi}
+          />
+        </Grid>
+      )}
     </>
   );
 };

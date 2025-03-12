@@ -6,7 +6,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 
 const InstituteAbout = () => {
   const institute = {
-    logo: "staticfiles/lms/6267591d-1284-4f8b-b9c3-4cb5e7d46aa2.png",
+    logo: "https://lms-node-backend-v1-1.onrender.com/staticfiles/lms/6267591d-1284-4f8b-b9c3-4cb5e7d46aa2.png",
     name: "Oxford",
     address: "Oxfordshire, England",
     email: "institute@gmail.com",
@@ -25,9 +25,9 @@ const InstituteAbout = () => {
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Grid container spacing={4} alignItems="flex-start">
+      <Grid container spacing={4} >
         {/* Left Column */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={4} justifyItems={'center'}>
           <Box textAlign="center">
             <Avatar
               src={institute.logo}
@@ -61,7 +61,7 @@ const InstituteAbout = () => {
         <Grid item xs={12} md={8}>
           <Box>
             {/* Description */}
-            <Typography variant="h6" fontWeight={700} gutterBottom>
+            <Typography variant="h5" fontWeight={700} gutterBottom>
               About Us
             </Typography>
             <Typography variant="body2" color="textSecondary" mb={4}>
@@ -69,7 +69,7 @@ const InstituteAbout = () => {
             </Typography>
 
             {/* Vision */}
-            <Typography variant="h6" fontWeight={700} gutterBottom>
+            <Typography variant="h5" fontWeight={700} gutterBottom>
               Vision
             </Typography>
             <Typography variant="body2" color="textSecondary" mb={4}>
@@ -77,7 +77,7 @@ const InstituteAbout = () => {
             </Typography>
 
             {/* Mission */}
-            <Typography variant="h6" fontWeight={700} gutterBottom>
+            <Typography variant="h5" fontWeight={700} gutterBottom>
               Mission
             </Typography>
             <Box component="ul" sx={{ pl: 2, color: "textSecondary", mb: 4 }}>
