@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 import IconifyIcon from 'components/icon';
 import CustomAutocomplete from 'components/mui/autocomplete';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Autocomplete = styled(CustomAutocomplete)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
@@ -31,6 +32,13 @@ const Autocomplete = styled(CustomAutocomplete)(({ theme }) => ({
 const HelpHeader = ({ allArticles }) => {
   const [value, setValue] = useState('');
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleRedirection = (option) => {
+    if (option && option.slug) {
+      navigate(`/articles/${option.slug}`); // Navigate to article page
+    }
+  };  
   return (
     <CardContent
       sx={{
@@ -43,7 +51,13 @@ const HelpHeader = ({ allArticles }) => {
         backgroundImage: 'url(http://localhost:3000/images/pages/header-bg.png)'
       }}
     >
-      <Typography sx={{ mb: 4, fontWeight: 500, fontSize: '1.625rem', lineHeight: 1.385 }}>Hello, how can we help?</Typography>
+       <img 
+    src="https://img.freepik.com/premium-vector/human-health-logo-letter-h-letter-h-health-care-logo-template-medical-logo-template_754537-7120.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid" 
+    alt="logo" 
+    style={{ width: '190px', marginBottom: '16px' }} 
+  />
+
+      <Typography sx={{ mb: 4, fontWeight: 'bold', fontSize: '1.625rem', lineHeight: 1.385, color: 'blue' }}>Hello, how can we help?</Typography>
 
       <Autocomplete
         open={open}
@@ -51,13 +65,13 @@ const HelpHeader = ({ allArticles }) => {
         inputValue={value}
         options={allArticles}
         onClose={() => setOpen(false)}
-        sx={{
-          mb: 4,
-          '& + .MuiAutocomplete-popper .MuiAutocomplete-listbox': { maxHeight: 250 },
-          '& .MuiInputBase-root.MuiFilledInput-root': {
-            backgroundColor: (theme) => `${theme.palette.background.paper} !important`
-          }
-        }}
+        // sx={{
+        //   mb: 4,
+        //   '& + .MuiAutocomplete-popper .MuiAutocomplete-listbox': { maxHeight: 250 },
+        //   '& .MuiInputBase-root.MuiFilledInput-root': {
+        //     backgroundColor: (theme) => `${theme.palette.background.paper} !important`
+        //   }
+        // }}
         getOptionLabel={(option) => option.title || ''}
         isOptionEqualToValue={(option, value) => value === option}
         onChange={(event, option) => handleRedirection(option)}
@@ -71,7 +85,7 @@ const HelpHeader = ({ allArticles }) => {
             size="medium"
             value={value}
             placeholder="Search a question..."
-            onChange={(event) => setValue(event.target.value)}
+            //onChange={(event) => setValue(event.target.value)}
             InputProps={{
               ...params.InputProps,
               startAdornment: (
@@ -84,8 +98,9 @@ const HelpHeader = ({ allArticles }) => {
         )}
         renderOption={(props, option) => {
           return value.length ? (
-            <ListItem {...props} sx={{ p: '0 !important' }} key={option.slug} onClick={() => handleRedirection(option)}>
-              <ListItemButton sx={{ py: 1.5 }}>{option.title}</ListItemButton>
+           // <ListItem {...props} sx={{ p: '0 !important' }} key={option.slug} onClick={() => handleRedirection(option)}>
+           <ListItem {...props} key={option.slug} onClick={() => handleRedirection(option)}>  
+           <ListItemButton sx={{ py: 1.5 }}>{option.title}</ListItemButton>
             </ListItem>
           ) : null;
         }}

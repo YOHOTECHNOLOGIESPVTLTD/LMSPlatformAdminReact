@@ -1,7 +1,8 @@
-import React from "react";
+import React  ,{useEffect}from "react";
 import { styled } from "@mui/system";
 import { Card, CardMedia, CardContent, Typography, Button, Grid, Avatar, Chip, AvatarGroup, Box } from "@mui/material";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 const courses = [
     {
@@ -79,6 +80,33 @@ const CourseView = () => {
     const handleViewDetails = (id) => {
         navigate(`/courseview/course-overview/${id}`);
     };
+
+    useEffect(() => {
+        getAllCourses()
+    }, [])
+    
+  
+     const getAllCourses = async() => {
+       
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/01d78342-5ebd-4c6e-9714-17a73467d36b/courses`,{
+               
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Token ${localStorage.getItem('token')}`
+                }
+            })
+            if (response.data) {
+                console.log('ok');
+                return         
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+
+     }
+        
 
     return (
         <Box sx={{ p: 4 }}>

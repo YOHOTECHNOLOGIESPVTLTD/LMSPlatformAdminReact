@@ -29,7 +29,7 @@ const useTimeout = (callback, delay) => {
 
 const CategoriesDataGrid = () => {
   const [value, setValue] = useState('');
-
+  const [filteredData, setFilteredData] = useState(studentCertificatesdata);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -248,23 +248,21 @@ const CategoriesDataGrid = () => {
   }, 1000);
 
   const handleFilter = useCallback(
-    async (val) => {
-      try {
-        setValue(val);
-        const result = await searchUsers(val);
-        if (result.success) {
-          console.log('Search results:', result.data);
-          dispatch(setUsers(result.data));
-        } else {
-          console.log(result.message);
-        }
-      } catch (error) {
-        console.log(error);
+    (val) => {
+      setValue(val);
+      if (!val) {
+        setFilteredData(studentCertificatesdata); 
+      } else {
+        const filtered = studentCertificatesdata.filter((item) =>
+          item.title.toLowerCase().includes(val.toLowerCase()) ||
+          item.description.toLowerCase().includes(val.toLowerCase()) ||
+          item.course_name.toLowerCase().includes(val.toLowerCase())
+        );
+        setFilteredData(filtered);
       }
     },
-    [dispatch]
+    []
   );
-
   return (
     <>
       {loading ? (
@@ -279,7 +277,7 @@ const CategoriesDataGrid = () => {
               <DataGrid
                 autoHeight
                 rowHeight={80}
-                rows={studentCertificatesdata}
+                rows={filteredData}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}

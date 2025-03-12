@@ -182,29 +182,29 @@ const Dashboard2 = () => {
   <Grid item xs={12} sm={6} md={3}>
     <Card
       sx={{
-        background: 'linear-gradient(135deg,rgb(218, 52, 138) 0%,rgb(115, 161, 240) 100%)',
+        background: 'linear-gradient(135deg,rgb(244, 189, 175) 0%,rgb(221, 212, 205) 100%)',
         borderRadius: '12px',
         boxShadow: theme.shadows[3],
         transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
         '&:hover': {
           transform: 'translateY(-8px) scale(1.05)',
           boxShadow: theme.shadows[6],
-          animation: 'pulse 1.5s infinite',
+          animation: 'iglow 1.5s infinite',
         },
-        '@keyframes pulse': {
-          '0%': { transform: 'translateY(-8px) scale(1.05)' },
-          '50%': { transform: 'translateY(-8px) scale(1.1)' },
-          '100%': { transform: 'translateY(-8px) scale(1.05)' },
+        '@keyframes iglow': {
+          '0%': { boxShadow: '0 0 10px rgb(130, 223, 144)' },
+          '50%': { boxShadow: '0 0 20px rgb(80, 184, 80)' },
+          '100%': { boxShadow: '0 0 10px  rgb(130, 223, 144)' },
         },
       }}
     >
-      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#fff', p: 3 }}>
-        <AccountBalanceIcon fontSize="large" sx={{ color: '#fff', fontSize: '2.5rem' }} />
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#35312e', p: 3 }}>
+        <AccountBalanceIcon fontSize="large" sx={{ color: '#03c203', fontSize: '2.5rem' }} />
         <Box>
-          <Typography variant="subtitle1" fontWeight="bold" color="inherit">
+          <Typography variant="subtitle1" fontWeight="semi-bold" color="inherit">
             Total Institutes
           </Typography>
-          <Typography variant="h4" fontWeight="bold" color="inherit">
+          <Typography  sx={{textAlign:"center", paddingTop:"10px"}} variant="h3" fontWeight="bold" color="#03c203">
             {metrics.totalInstitutes}
           </Typography>
         </Box>
@@ -214,31 +214,32 @@ const Dashboard2 = () => {
 
   {/* Institute Subscriptions Card */}
   <Grid item xs={12} sm={6} md={3}>
+  {/* rgb(195, 227, 120) 0%,rgb(99, 137, 242) */}
     <Card
       sx={{
-        background: 'linear-gradient(135deg,rgb(195, 227, 120) 0%,rgb(99, 137, 242) 100%)',
+        background: 'linear-gradient(135deg,rgb(244, 189, 175) 0%,rgb(221, 212, 205) 100%)',
         borderRadius: '12px',
         boxShadow: theme.shadows[3],
         transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
         '&:hover': {
           transform: 'translateY(-8px) scale(1.05)',
           boxShadow: theme.shadows[6],
-          animation: 'glow 1.5s infinite',
+          animation: 'sglow 1.5s infinite',
         },
-        '@keyframes glow': {
-          '0%': { boxShadow: '0 0 10px #00c6ff' },
-          '50%': { boxShadow: '0 0 20px #0072ff' },
-          '100%': { boxShadow: '0 0 10px #00c6ff' },
+        '@keyframes sglow': {
+          '0%': { boxShadow: '0 0 10px rgb(233, 112, 112)' },
+          '50%': { boxShadow: '0 0 20px rgb(229, 77, 77)' },
+          '100%': { boxShadow: '0 0 10px rgb(233, 112, 112)' },
         },
       }}
     >
-      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#fff', p: 3 }}>
-        <PeopleIcon fontSize="large" sx={{ color: '#fff', fontSize: '2.5rem' }} />
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#35312e', p: 3 }}>
+        <PeopleIcon fontSize="large" sx={{ color: '#f60101', fontSize: '2.5rem' }} />
         <Box>
-          <Typography variant="subtitle1" fontWeight="bold" color="inherit">
+          <Typography variant="subtitle1" fontWeight="semi-bold" color="inherit">
             Institute Subscriptions
           </Typography>
-          <Typography variant="h4" fontWeight="bold" color="inherit">
+          <Typography  sx={{textAlign:"center", paddingTop:"10px"}} variant="h3" fontWeight="bold" color="#f60101">
             {metrics.totalUsers}
           </Typography>
         </Box>
@@ -250,29 +251,29 @@ const Dashboard2 = () => {
   <Grid item xs={12} sm={6} md={3}>
     <Card
       sx={{
-        background: 'linear-gradient(135deg,rgb(222, 211, 151) 0%,rgb(177, 95, 97) 100%)',
+        background: 'linear-gradient(135deg,rgb(244, 189, 175) 0%,rgb(221, 212, 205)100%)',
         borderRadius: '12px',
         boxShadow: theme.shadows[3],
         transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
         '&:hover': {
           transform: 'translateY(-8px) scale(1.05)',
           boxShadow: theme.shadows[6],
-          animation: 'pulse 1.5s infinite',
+          animation: 'glows 1.5s infinite',
         },
-        '@keyframes pulse': {
-          '0%': { transform: 'translateY(-8px) scale(1.05)' },
-          '50%': { transform: 'translateY(-8px) scale(1.1)' },
-          '100%': { transform: 'translateY(-8px) scale(1.05)' },
+        '@keyframes glows': {
+          '0%': { boxShadow: '0 0 10px rgb(195, 185, 236)' },
+          '50%': { boxShadow: '0 0 20px #626bc5' },
+          '100%': { boxShadow: '0 0 10px rgb(195, 185, 236)' },
         },
       }}
     >
-      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#fff', p: 3 }}>
-        <PaymentsIcon fontSize="large" sx={{ color: '#fff', fontSize: '2.5rem' }} />
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#35312e', p: 3 }}>
+        <PaymentsIcon fontSize="large" sx={{ color: '#626bc5', fontSize: '2.5rem' }} />
         <Box>
-          <Typography variant="subtitle1" fontWeight="bold" color="inherit">
+          <Typography variant="subtitle1" fontWeight="semi-bold" color="inherit">
             Active Subscriptions
           </Typography>
-          <Typography variant="h4" fontWeight="bold" color="inherit">
+          <Typography  sx={{textAlign:"center", paddingTop:"10px"}} variant="h3" fontWeight="bold" color="#626bc5">
             {metrics.activeSubscriptions}
           </Typography>
         </Box>
@@ -284,7 +285,7 @@ const Dashboard2 = () => {
   <Grid item xs={12} sm={6} md={3}>
     <Card
       sx={{
-        background: 'linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)',
+        background: 'linear-gradient(135deg,rgb(244, 189, 175) 0%,rgb(221, 212, 205) 100%)',
         borderRadius: '12px',
         boxShadow: theme.shadows[3],
         transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
@@ -294,19 +295,19 @@ const Dashboard2 = () => {
           animation: 'glow 1.5s infinite',
         },
         '@keyframes glow': {
-          '0%': { boxShadow: '0 0 10px #ff7e5f' },
-          '50%': { boxShadow: '0 0 20px #feb47b' },
-          '100%': { boxShadow: '0 0 10px #ff7e5f' },
+          '0%': { boxShadow: '0 0 10px rgb(233, 120, 147)' },
+          '50%': { boxShadow: '0 0 20px rgb(211, 49, 95)' },
+          '100%': { boxShadow: '0 0 10px rgb(233, 120, 147)' },
         },
       }}
     >
-      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#fff', p: 3 }}>
-        <SupportAgentIcon fontSize="large" sx={{ color: '#fff', fontSize: '2.5rem' }} />
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#35312e', p: 3 }}>
+        <SupportAgentIcon fontSize="large" sx={{ color: '#df0945', fontSize: '2.5rem' }} />
         <Box>
-          <Typography variant="subtitle1" fontWeight="bold" color="inherit">
+          <Typography variant="subtitle1" fontWeight="semi-bold" color="inherit" sx={{ paddingTop:"-5px"}}>
             New Support Tickets
           </Typography>
-          <Typography variant="h4" fontWeight="bold" color="inherit">
+          <Typography sx={{textAlign:"center", paddingTop:"10px"}} variant="h3" fontWeight="bold" color="#df0945" >
             {metrics.newSupportTickets}
           </Typography>
         </Box>

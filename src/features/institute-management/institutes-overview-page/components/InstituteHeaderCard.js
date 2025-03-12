@@ -5,63 +5,47 @@ import Typography from '@mui/material/Typography';
 import CustomAvatar from 'components/mui/avatar';
 import InstituteIcon from 'assets/icons/Dashboard/instituteIcon';
 
-const CardStatsHorizontalWithDetails = (props) => {
-  const { sx,  stats, title, subtitle, avatarSize = 56, avatarColor = 'primary', background } = props;
-  
+const CardStatsModern = ({ sx, stats, title, subtitle, avatarSize = 56, avatarColor = 'primary', background }) => {
   return (
     <Card
       sx={{
         ...sx,
-        position: 'relative', 
-        overflow: 'hidden', 
-        borderRadius: '0.625rem',
-        backgroundClip: 'padding-box',
-        cursor: 'text',
-        boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
-        maxWidth: '330px',
-        borderBottom: `2px solid ${avatarColor}`,
-        transition: 'transform 0.3s ease-in-out',
+        position: 'relative',
+        overflow: 'hidden',
+        borderRadius: '1rem',
+        background: 'linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%)',
+        color: '#333',
+        boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.1)',
+        transition: 'all 0.3s ease-in-out',
         ':hover': {
-          transform: 'translateY(-5px)', 
-        },
-        '::after': {
-          content: '""',
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          borderBottom: `2px solid ${avatarColor}`,
-          borderRadius: '0.625rem',
-          transition: 'all 0.2s ease-in-out',
-          zIndex: -1,
-        },
-        ':hover::after': {
-          borderBottomWidth: '3px', 
-          borderBottomColor: avatarColor, 
+          transform: 'translateY(-8px)',
+          boxShadow: '0px 15px 40px rgba(0, 0, 0, 0.2)',
         },
       }}
     >
-      <CardContent sx={{ gap: 3, display: 'flex'}}>
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, padding: '1.5rem' }}>
         <CustomAvatar
           skin="light"
           variant="rounded"
-          sx={{ width: avatarSize, height: avatarSize, backgroundColor: background }}
+          sx={{
+            width: avatarSize,
+            height: avatarSize,
+            background: `linear-gradient(135deg, ${background} 30%, ${avatarColor} 100%)`,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          <InstituteIcon width="20px" height="20px" color={avatarColor} />
+          <InstituteIcon width="24px" height="24px" color="#fff" />
         </CustomAvatar>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <Typography sx={{ mb: 1, color: 'text.secondary', fontWeight: 500,  }}>{title}</Typography>
-          <Box sx={{ mb: 1, columnGap: 1.5, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-            <Typography variant="h3" sx={{ color : avatarColor, fontSize: "16px"}} >{stats}</Typography>
-          </Box>
-          <Typography variant="h6" sx={{ color: 'text.secondary' }}>
-            {subtitle}
-          </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+          <Typography sx={{ fontSize: '1rem', fontWeight: 600, color: '#333' }}>{title}</Typography>
+          <Typography variant="h4" sx={{ fontWeight: 700, color: avatarColor, fontSize: '1.75rem' }}>{stats}</Typography>
+          <Typography sx={{ fontSize: '0.9rem', color: '#666' }}>{subtitle}</Typography>
         </Box>
       </CardContent>
     </Card>
   );
 };
 
-export default CardStatsHorizontalWithDetails;
+export default CardStatsModern;

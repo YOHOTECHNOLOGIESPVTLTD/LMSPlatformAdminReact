@@ -5,6 +5,7 @@ import Loadable from 'components/loadable';
 import MinimalLayout from 'layout/MinimalLayout';
 import InstituteMainLayout from 'layout/InstituteMainLayout';
 import MainLayout from 'layout/MainLayout';
+import ViewPlan from 'features/subscription-management/plans/components/ViewPlan.js';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
@@ -171,6 +172,8 @@ const ApplicationRoutes = () => {
         <Route path="/subscription-management" element={<MainLayout />}>
           <Route path="plans-and-features" element={<Subscription />} />
           <Route path="plans-and-features/edit/:id" element={<SubscriptionEdit />} />
+          <Route path="plans-and-features/view/:id" element={<ViewPlan />} />
+
         </Route>
 
         {/* </ Tax Route> */}

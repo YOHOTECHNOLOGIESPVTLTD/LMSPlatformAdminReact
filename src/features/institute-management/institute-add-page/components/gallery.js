@@ -21,10 +21,13 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
   const handleRemoveImage = (index) => {
     const updatedImages = [...galleryImages];
     updatedImages.splice(index, 1);
+    console.log(process.env.REACT_APP_PUBLIC_API_URL+image.file, 'img');
 
     // Update galleryImages state
     setGalleryImages(updatedImages);
   };
+
+  
 
   const CustomCloseButton = styled(IconButton)(({ theme }) => ({
     top: -80,

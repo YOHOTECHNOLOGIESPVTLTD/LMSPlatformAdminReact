@@ -269,6 +269,13 @@ const PlanDetails = (props) => {
                   setDeleteDialogOpen(true);
                 }
               }
+            }, {
+              text: 'View', 
+              menuItemProps: {
+                component: Link,
+                to: `view/${plans?.uuid}`, 
+                state: { id: plans?.uuid, plans: plans }
+              }
             }
           ]}
         />
