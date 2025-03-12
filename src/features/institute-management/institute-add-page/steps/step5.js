@@ -9,20 +9,19 @@ import { imagePlaceholder } from 'lib/placeholders';
 import { getImageUrl } from 'themes/imageUtlis';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCities, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
-import { loadCities, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
+import { selectCitiesForFormB, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
+import {  loadCitiesForFormB, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
 
 const FormStep5AccountInfo = (props) => {
   const { handleAccountSubmit, onSubmit, accountControl, accountErrors, steps, handleBack, hanldeProfileImageChange, accountReset } = props;
   const dispatch = useDispatch();
   const countries = useSelector(selectCountries);
   const states = useSelector(selectStates);
-  const cities = useSelector(selectCities);
+  const cities = useSelector(selectCitiesForFormB);
   const [selectedCountryCode, setSelectedCountryCode] = useState('IN'); // Default to India
   const [selectedStateCode, setSelectedStateCode] = useState('');
   const [selectedCityId, setSelectedCityId] = useState('');
   // const [selectedCountryPhone, setSelectedCountryPhone] = useState('');
-  
 
   const defaultCountry = countries.find((item) => item.iso2 === 'IN');
 
@@ -36,26 +35,22 @@ const FormStep5AccountInfo = (props) => {
     }
   }, [selectedCountryCode]);
 
-  useEffect(() => {
-    if (selectedStateCode) {
-      dispatch(loadCities(selectedCountryCode, selectedStateCode));
-    }
-  }, [selectedStateCode]);
 
   const handleCountryChange = (e) => {
     const countryCode = e.target.value;
     setSelectedCountryCode(countryCode);
     setSelectedStateCode('');
     setSelectedCityId('');
-    
   };
-
   const handleStateChange = (e) => {
     const stateCode = e.target.value;
-    setSelectedStateCode(stateCode);
-    setSelectedCityId('');
-  };
+    const selectedState = states.find((state) => state.iso2 === stateCode);
 
+    if (selectedState) {
+      handleFormChange('state', selectedState.name);
+      dispatch(loadCitiesForFormB(selectedCountryCode, stateCode));
+    }
+  };
   const handleCityChange = (e) => {
     const cityId = e.target.value;
     setSelectedCityId(cityId);
@@ -165,32 +160,32 @@ const FormStep5AccountInfo = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="alternate_phone"
-                      control={accountControl}
-                      render={({ field: { value, onChange } }) => (
-                        <TextField
-                          fullWidth
-                          label="Alternate Phone"
-                          value={value || formData.alt_phone}
-                          onChange={(e) => {
-                            onChange(e);
-                            handleFormChange('alternate_phone', e.target.value);
-                          }}
-                          placeholder="e.g. 987-654-3210"
-                          error={Boolean(accountErrors.alternate_phone)}
-                          helperText={accountErrors.alternate_phone && 'Alternate Phone Number is required'}
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                 <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry ? defaultCountry.phonecode : ''}
-                              </InputAdornment>
-                            )
-                          }}
-                        />
-                      )}
-                    />
-                  </Grid>
+                  <Controller
+                    name="alternate_phone"
+                    control={accountControl}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        fullWidth
+                        label="Alternate Phone"
+                        value={value || formData.alt_phone}
+                        onChange={(e) => {
+                          onChange(e);
+                          handleFormChange('alternate_phone', e.target.value);
+                        }}
+                        placeholder="e.g. 987-654-3210"
+                        error={Boolean(accountErrors.alternate_phone)}
+                        helperText={accountErrors.alternate_phone && 'Alternate Phone Number is required'}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry ? defaultCountry.phonecode : ''}
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    )}
+                  />
+                </Grid>
 
                 {/* Address Line 1 */}
                 <Grid item xs={12} sm={6}>

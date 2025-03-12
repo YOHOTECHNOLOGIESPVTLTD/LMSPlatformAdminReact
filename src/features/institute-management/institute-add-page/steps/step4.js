@@ -106,7 +106,7 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.gst && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={ getImageUrl(docs.gst)
+              <PDFViewer url={getImageUrl(docs.gst)
               } width="100%" height="400px" />
             </Box>
           )}
@@ -169,7 +169,8 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.pan && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={docs.pan} width="100%" height="400px" />
+            <PDFViewer url={getImageUrl(docs.pan)
+              } width="100%" height="400px" />
             </Box>
           )}
         </Grid>
@@ -231,7 +232,8 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.licence && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer file={docs.licence} width="100%" height="400px" />
+            <PDFViewer url={getImageUrl(docs.license)
+              } width="100%" height="400px" />
             </Box>
           )}
         </Grid>

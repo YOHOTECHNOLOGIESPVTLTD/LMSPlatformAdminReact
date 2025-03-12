@@ -3,7 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState={
     countries:[],
     states:[],
-    cities:[],
+    cities:{
+        formA:[],
+        formB:[],
+    },
     loading:false,
     error:null,
 }
@@ -18,8 +21,11 @@ const locationSlice=createSlice({
         setStates(state,action){
             state.states=action.payload
         },
-        setCities(state,action){
-            state.cities=action.payload
+        setCitiesForFormA(state,action){
+            state.cities.formA=action.payload
+        },
+        setCitiesForFormB(state,action){
+            state.cities.formB=action.payload
         },
         setLoading(state,action){
             state.loading=action.payload
@@ -30,5 +36,5 @@ const locationSlice=createSlice({
     }
 })
 
-export const{setCountries,setStates,setCities}=locationSlice.actions;
+export const{setCountries,setStates,setCitiesForFormA,setCitiesForFormB}=locationSlice.actions;
 export default locationSlice.reducer;

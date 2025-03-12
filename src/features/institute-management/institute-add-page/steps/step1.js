@@ -13,8 +13,8 @@ import DatePicker from 'react-datepicker';
 import './index.css';
 import MenuItem from '@mui/material/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadCities, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
-import { selectCities, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
+import { loadCitiesForFormA, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
+import { selectCitiesForFormA, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
 import { useEffect, useState } from 'react';
 
 const FormStep1PersonalInfo = ({
@@ -32,7 +32,7 @@ const FormStep1PersonalInfo = ({
   const dispatch = useDispatch();
   const countries = useSelector(selectCountries);
   const states = useSelector(selectStates);
-  const cities = useSelector(selectCities);
+  const cities = useSelector(selectCitiesForFormA);
   const [selectedCountryCode, setSelectedCountryCode] = useState('');
   const [selectedCountryPhone, setSelectedCountryPhone] = useState('');
 
@@ -76,7 +76,7 @@ const FormStep1PersonalInfo = ({
 
     if (selectedState) {
       handleFormChange('state', selectedState.name);
-      dispatch(loadCities(selectedCountryCode, stateCode));
+      dispatch(loadCitiesForFormA(selectedCountryCode, stateCode));
     }
   };
 
