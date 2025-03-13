@@ -26,16 +26,20 @@ const Form = styled('form')(() => ({
 
 const StyledTextField = styled(CustomTextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
-    borderRadius: '20px', // Rounded corners for the text field
-    backgroundColor: "#2A3942", // Light grey background
+    borderRadius: '20px', 
+    backgroundColor: "#2A3942", 
+    transition: 'background-color 0.3s ease, border 0.3s ease', 
     '&:hover': {
-      backgroundColor: theme.palette.grey[300], // Change background on hover
+      backgroundColor: "#354A52", 
+    },
+    '&.Mui-focused': {
+      backgroundColor: "#3C525A", 
+      border: `2px solid ${theme.palette.primary.main}`,
+      boxShadow: 'none !important', 
     },
   },
-  '& .Mui-focused': {
-    boxShadow: 'none !important', // Remove box shadow when focused
-  },
 }));
+
 
 const SendButton = styled(Button)(({ theme }) => ({
   borderRadius: '20px', // Rounded corners for the button
