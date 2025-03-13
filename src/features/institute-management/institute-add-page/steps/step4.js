@@ -232,7 +232,7 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.licence && (
             <Box sx={{ mt: 1 }}>
-            <PDFViewer url={getImageUrl(docs.license)
+            <PDFViewer url={getImageUrl(docs.licence)
               } width="100%" height="400px" />
             </Box>
           )}

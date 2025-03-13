@@ -13,7 +13,7 @@ import DatePicker from 'react-datepicker';
 import './index.css';
 import MenuItem from '@mui/material/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadCitiesForFormA, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
+import { loadCitiesForFromA, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
 import { selectCitiesForFormA, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
 import { useEffect, useState } from 'react';
 
@@ -29,67 +29,26 @@ const FormStep1PersonalInfo = ({
   plans,
   personalReset
 }) => {
+  const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
   const countries = useSelector(selectCountries);
+  console.log('countries',countries);
+  
   const states = useSelector(selectStates);
   const cities = useSelector(selectCitiesForFormA);
-  const [selectedCountryCode, setSelectedCountryCode] = useState('');
-  const [selectedCountryPhone, setSelectedCountryPhone] = useState('');
-
-  const defaultCountry = countries.filter((item) => item.iso2 === 'IN');
-  // const defaultStates = states.filter((item) => item.iso2 === 'WB');
-  // const defaultCity = cities.filter((item) => item.name === 'Gopalpur');
+  console.log("cities",cities);
+  
+  const defaultCountry = countries.filter((country) => country.iso2 === 'IN');
 
   useEffect(() => {
     dispatch(loadCountries());
   }, [dispatch]);
 
   useEffect(() => {
-    const defaultCountryCode = defaultCountry.length ? defaultCountry[0].iso2 : '';
-    if (defaultCountryCode) {
-      setSelectedCountryCode(defaultCountryCode);
-      dispatch(loadStates(defaultCountryCode));
+    if (defaultCountry.length) {
+      dispatch(loadStates(defaultCountry[0].iso2));
     }
   }, [countries]);
-
-  // useEffect(() => {
-  //   if (cities.length > 0) {
-  //     const defaultCity = cities.filter((item) => item.name === 'Gopalpur');
-  //   }
-  // }, [cities]);
-
-  const handleCountryChange = (e) => {
-    const countryCode = e.target.value;
-    setSelectedCountryCode(countryCode);
-    dispatch(loadStates(countryCode));
-
-    countries.filter((item) => {
-      if (item.iso2 === countryCode) {
-        setSelectedCountryPhone(item.phonecode);
-      }
-    });
-  };
-
-  const handleStateChange = (e) => {
-    const stateCode = e.target.value;
-    const selectedState = states.find((state) => state.iso2 === stateCode);
-
-    if (selectedState) {
-      handleFormChange('state', selectedState.name);
-      dispatch(loadCitiesForFormA(selectedCountryCode, stateCode));
-    }
-  };
-
-  const handleCityChange = (e) => {
-    const cityId = e.target.value;
-    const selectedCity = cities.find((city) => city.id === cityId);
-
-    if (selectedCity) {
-      handleFormChange('city', selectedCity.name);
-    }
-  };
-
-  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     const savedData = localStorage.getItem('institute_form');
@@ -102,6 +61,16 @@ const FormStep1PersonalInfo = ({
       personalReset(parsedData);
     }
   }, [personalReset]);
+  const handleStateChange = (e) => {
+    const stateCode = e.target.value;
+    if (defaultCountry.length) {
+      dispatch(loadCitiesForFromA(defaultCountry[0].iso2,stateCode));
+    }
+  };
+  const handleCityChange = (e) => {
+    const cityId = e.target.value;
+    console.log('city Id',cityId)
+  };
 
   const handleFormChange = (name, value) => {
     setFormData((prev) => {
@@ -326,8 +295,7 @@ const FormStep1PersonalInfo = ({
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneOutlinedIcon color="#3B4056" />+
-                              {defaultCountry.length ? defaultCountry[0].phonecode : selectedCountryPhone}
+                              <PhoneOutlinedIcon color="#3B4056" />+{defaultCountry.length?defaultCountry[0].phonecode:''}
                             </InputAdornment>
                           )
                         }}
@@ -352,15 +320,14 @@ const FormStep1PersonalInfo = ({
                         }}
                         placeholder="12345 67890"
                         autoComplete="off"
-                        sx={{ backgroundColor: personalErrors['alt_phone'] ? '#FFFFFF' : '#f5f5f5' }}
+                        sx={{ backgroundColor: personalErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
                         error={Boolean(personalErrors['alt_phone'])}
                         aria-describedby="stepper-linear-personal-alt_phone"
                         {...(personalErrors['alt_phone'] && { helperText: personalErrors?.alt_phone?.message })}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneOutlinedIcon color="#3B4056" />+
-                              {defaultCountry.length ? defaultCountry[0].phonecode : selectedCountryPhone}
+                              <PhoneOutlinedIcon color="#3B4056" />+{defaultCountry.length?defaultCountry[0].phonecode:''}
                             </InputAdornment>
                           )
                         }}
@@ -378,15 +345,12 @@ const FormStep1PersonalInfo = ({
                         fullWidth
                         select
                         disabled
-                        value={value || selectedCountryCode ? selectedCountryCode : defaultCountry.length ? defaultCountry[0].iso2 : ''}
+                        value={value || defaultCountry.length ? defaultCountry[0].iso2 : ''}
                         label="Country"
-                        defaultValue={defaultCountry.length ? defaultCountry[0].name : ''}
                         onChange={(e) => {
                           onChange(e);
-                          handleCountryChange(e);
-                          handleFormChange(e);
                         }}
-                        placeholder="Enter state"
+                        placeholder="Enter country"
                         sx={{ backgroundColor: personalErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
                         error={Boolean(personalErrors.state)}
                         aria-describedby="stepper-linear-personal-state-helper"
@@ -417,11 +381,12 @@ const FormStep1PersonalInfo = ({
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.state}
+                        value={value || formData.length ? formData.state : ''}
                         label="State"
                         onChange={(e) => {
                           onChange(e);
                           handleStateChange(e);
+                          handleFormChange('state', e.target.value);
                         }}
                         placeholder="Enter state"
                         sx={{ backgroundColor: personalErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
@@ -450,15 +415,16 @@ const FormStep1PersonalInfo = ({
                     name="city"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value,onChange} }) => (
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.city}
+                        value={value || formData.length?formData.city:''}
                         label="City"
                         onChange={(e) => {
-                          onChange(e);
-                          handleCityChange(e);
+                          onChange(e)
+                          handleCityChange(e)
+                          handleFormChange('city',e.target.value)
                         }}
                         placeholder="Enter city"
                         sx={{ backgroundColor: personalErrors['city'] ? '#FFFFFF' : '#f5f5f5' }}

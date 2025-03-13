@@ -155,55 +155,55 @@ const accountSchema = yup.object().shape({
 });
 
 const documentSchema = yup.object().shape({
-  gst_number: yup.string().required(),
-  // gst_doc: yup.string().required(),
-  pan_number: yup.string().required(),
-  // pan_doc: yup.string().required(),
-  licence_number: yup.string().required()
-  // licence_doc: yup.string().required()
+  // gst_number: yup.string().required(),
+  // // gst_doc: yup.string().required(),
+  // pan_number: yup.string().required(),
+  // // pan_doc: yup.string().required(),
+  // licence_number: yup.string().required()
+  // // licence_doc: yup.string().required()
 });
 
 const personalSchema = yup.object().shape({
-  // state: yup.string().required('State is required'),
-  // city: yup.string().required('City is required'),
-  // pin_code: yup
-  //   .number()
-  //   .required('Pin code is required')
-  //   .test('len', 'Pin code must be exactly 6 digits', (value) => {
-  //     return value.toString().length === 6;
-  //   }),
-  // address_line_one: yup.string().required('Address line one required'),
-  // address_line_two: yup.string().required(),
-  // registered_date: yup.string().required(),
-  // institute_name: yup
-  //   .string()
-  //   .required('The institute name is required.')
-  //   .test('is-letters', 'The institute name must consist of letters.', (val) => {
-  //     return /^[A-Za-z\s]+$/.test(val);
-  //   }),
-  // phone: yup
-  //   .number()
-  //   .required()
-  //   .test('len', 'Phone number must be exactly 10 digits', (value) => {
-  //     return value.toString().length === 10;
-  //   }),
-  // alt_phone: yup
-  //   .number()
-  //   .required()
-  //   .test('len', 'Phone number must be exactly 10 digits', (value) => {
-  //     return value.toString().length === 10;
-  //   }),
-  // description: yup
-  //   .string()
-  //   .required()
-  //   .test('word-limit', 'Description must be between 50 and 100 words.', (value) => {
-  //     if (!value) return false;
-  //     const wordCount = value.trim().split(/\s+/).length;
-  //     return wordCount >= 50 && wordCount <= 100;
-  //   }),
-  // official_email: yup.string().required(),
-  // official_website: yup.string().required(),
-  // subscription: yup.string().required()
+  state: yup.string().required('State is required'),
+  city: yup.string().required('City is required'),
+  pin_code: yup
+    .number()
+    .required('Pin code is required')
+    .test('len', 'Pin code must be exactly 6 digits', (value) => {
+      return value.toString().length === 6;
+    }),
+  address_line_one: yup.string().required('Address line one required'),
+  address_line_two: yup.string().required(),
+  registered_date: yup.string().required(),
+  institute_name: yup
+    .string()
+    .required('The institute name is required.')
+    .test('is-letters', 'The institute name must consist of letters.', (val) => {
+      return /^[A-Za-z\s]+$/.test(val);
+    }),
+  phone: yup
+    .number()
+    .required()
+    .test('len', 'Phone number must be exactly 10 digits', (value) => {
+      return value.toString().length === 10;
+    }),
+  alt_phone: yup
+    .number()
+    .required()
+    .test('len', 'Phone number must be exactly 10 digits', (value) => {
+      return value.toString().length === 10;
+    }),
+  description: yup
+    .string()
+    .required()
+    .test('word-limit', 'Description must be between 50 and 100 words.', (value) => {
+      if (!value) return false;
+      const wordCount = value.trim().split(/\s+/).length;
+      return wordCount >= 50 && wordCount <= 100;
+    }),
+  official_email: yup.string().required(),
+  official_website: yup.string().required(),
+  subscription: yup.string().required()
 });
 
 const socialSchema = yup.object().shape({});
@@ -366,6 +366,7 @@ const AddInstitutePage = () => {
 
   const onSubmit = async () => {
     const accountData = accountControl?._formValues;
+    console.log('accountData',accountData)
     const personalData = personalControl?._formValues;
     console.log('personalData:', personalData);
     console.log('FormData:', FormData);
@@ -396,7 +397,7 @@ const AddInstitutePage = () => {
           address1: personalData?.address_line_one,
           address2: personalData?.address_line_two,
           state: personalData?.state,
-          city: personalData?.city,
+          city: String(personalData?.city || ""),
           pincode: personalData?.pin_code
         }
       },

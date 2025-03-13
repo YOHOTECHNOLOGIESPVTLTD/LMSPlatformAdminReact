@@ -54,8 +54,12 @@ const ProfileSection = () => {
 
   const [sdm, setSdm] = useState(true);
   const [value, setValue] = useState('');
+  console.log(value);
+  
   const [notification, setNotification] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  console.log(selectedIndex);
+  
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -83,6 +87,8 @@ const ProfileSection = () => {
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
+  console.log(handleListItemClick);
+  
 
   const prevOpen = useRef(open);
   useEffect(() => {
