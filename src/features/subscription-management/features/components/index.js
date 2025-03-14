@@ -3,6 +3,9 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import { IconButton } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Box } from '@mui/material';
@@ -55,6 +58,22 @@ const defaultValues = {
 // })
 
 const SubscriptionFeatures = () => {
+  const [customFields, setCustomFields] = useState([]);
+
+  const handleAddField = () => {
+    setCustomFields([...customFields, { id: Date.now(), name: "", value: "" }]);
+  };
+
+  const handleRemoveField = (id) => {
+    setCustomFields(customFields.filter((field) => field.id !== id));
+  };
+
+  const handleFieldChange = (id, key, value) => {
+    setCustomFields(
+      customFields.map((field) => (field.id === id ? { ...field, [key]: value } : field))
+    );
+  };
+
   // ** StatesforInput
   const [studentInputChecked, setStudentInputChecked] = useState(false);
   const [adminInputChecked, setAdminInputChecked] = useState(false);
@@ -109,53 +128,69 @@ const SubscriptionFeatures = () => {
     }
   }));
   const onSubmit = async (data) => {
-    if (studentInputBoxChecked === false && studentInputChecked === false) {
+  
+    if (!studentInputBoxChecked && !studentInputChecked) {
       setStudentError(true);
     }
-    if (adminInputBoxChecked === false && adminInputChecked === false) {
+    if (!adminInputBoxChecked && !adminInputChecked) {
       setAdminError(true);
     }
-    if (teachersInputBoxChecked === false && teachersInputChecked === false) {
+    if (!teachersInputBoxChecked && !teachersInputChecked) {
       setTeachersError(true);
     }
-    if (batchesInputBoxChecked === false && batchesInputChecked === false) {
+    if (!batchesInputBoxChecked && !batchesInputChecked) {
       setBatchesError(true);
     }
-    if (coursesInputBoxChecked === false && coursesInputChecked === false) {
+    if (!coursesInputBoxChecked && !coursesInputChecked) { 
       setCoursesError(true);
     }
-    if (classesInputBoxChecked === false && classesInputChecked === false) {
+    if (!classesInputBoxChecked && !classesInputChecked) {
       setClassesError(true);
     }
+    const allFeatures = [
+      { feature: "Admins", count: data?.admins },
+      { feature: "Students", count: data?.students },
+      { feature: "Teachers", count: data?.teachers },
+      { feature: "Batches", count: data?.batches },
+      { feature: "Courses", count: data?.courses },
+      ...customFields.map((field) => ({
+        feature: field.name,
+        count: field.value,
+      })),
+    ];
     const subscription_data = {
-      identity : data?.plan_name,
-      image : selectedImage,
-      description : data?.description,
-      features : [
-        {feature : "Admins",count : data?.admins },
-        {feature : "Students", count : data?.students },
-        {feature : "Teachers", count : data?.teachers },
-        { feature : "Batches", count : data?.batches },
-        { feature : "Courses", count : data?.courses }
-      ],
-      duration : {value:data?.plan_duration,unit:data?.plan_duration_type},
-      price : data.plan_price
-    }
-    const log = studentInputChecked === true ?'1':''
-    console.log('subData', log);
-   
+      identity: data?.plan_name,
+      image: selectedImage,
+      description: data?.description,
+      features: allFeatures,
+      duration: { value: data?.plan_duration, unit: data?.plan_duration_type },
+      price: data.plan_price,
+    };
+  
+    console.log("subData :", subscription_data);
+  
     try {
-      showSpinnerFn()
+      showSpinnerFn();
+  
       const result = await addSubscriptionFeature(subscription_data);
       toast.success(result.message);
       navigate(-1);
     } catch (error) {
-      console.log(error);
-      toast.error(error?.message)
-    }finally{
-      hideSpinnerFn()
-    }    
+   
+      if (error?.message.includes("E11000 duplicate key error")) {
+        toast.error(` A plan with the name "${data.plan_name}" already exists. Choose a different name.`);
+      } else {
+        toast.error(error?.message || "Something went wrong.");
+      }
+    } finally {
+      hideSpinnerFn();
+      console.log(" Process Completed");
+    }
   };
+  
+  
+
+
 
   const handleInputImageChange = async (file) => {
     try {
@@ -1296,11 +1331,126 @@ const SubscriptionFeatures = () => {
 </Grid>
 
 
-          <Grid item xs={12} display="flex" justifyContent="center">
-            <Button type="submit" variant="contained">
-              Submit
-            </Button>
-          </Grid>
+          {customFields.map((field) => (
+  <Grid container item xs={12} spacing={2} key={field.id} sx={{ position: "relative", paddingTop: 2 }}>
+    
+    <IconButton
+      color="error"
+      onClick={() => handleRemoveField(field.id)}
+      sx={{
+        position: "absolute",
+        right: -30, 
+        top: 0,
+        zIndex: 10,
+      }}
+    >
+      <RemoveCircleIcon />
+    </IconButton>
+
+    <Grid container item xs={12} spacing={2} alignItems="center">
+      
+      <Grid item xs={6}>
+        <Controller
+          name={`field_name_${field.id}`}
+          control={control}
+          render={({ field: nameField }) => (
+            <TextField
+              {...nameField}
+              fullWidth
+              label="Field Name"
+              placeholder="Enter Field Name"
+              onChange={(e) => {
+                nameField.onChange(e);
+                handleFieldChange(field.id, "name", e.target.value);
+              }}
+              variant="standard" 
+              InputLabelProps={{
+                shrink: true,
+                sx: { fontSize: "1.2rem", transition: "all 0.3s ease" },
+              }}
+              sx={{
+                bgcolor: "white", 
+                "& .MuiInputBase-root": { bgcolor: "white" },
+                "& .MuiInputBase-input": { color: "#000", fontSize: "1rem", padding: "8px 0px" },
+                "& .MuiInputLabel-root": { color: "#000", fontWeight: "500", fontSize: "1.2rem" },
+                "& .MuiInputLabel-root.Mui-focused": { color: "#FF6D00" },
+                "& .MuiInput-underline:before": { borderBottom: "2px solid black !important" }, 
+                "& .MuiInput-underline:hover:before": { borderBottom: "2px solid #FF6D00 !important" }, 
+                "& .MuiInput-underline:after": { borderBottom: "2px solid #FF6D00 !important" }, 
+                "& .MuiInputBase-input::placeholder": { color: "#9E9E9E", fontSize: "1rem" },
+              }}
+            />
+          )}
+        />
+      </Grid>
+
+      <Grid item xs={6}>
+        <Controller
+          name={`field_value_${field.id}`}
+          control={control}
+          render={({ field: valueField }) => (
+            <TextField
+              {...valueField}
+              fullWidth
+              label="Value"
+              placeholder="Enter Values"
+              onChange={(e) => {
+                valueField.onChange(e);
+                handleFieldChange(field.id, "value", e.target.value);
+              }}
+              type="number"
+              inputProps={{ maxLength: 5, min: 0 }}
+              onWheel={(e) => e.target.blur()} 
+              variant="standard" 
+              InputLabelProps={{
+                shrink: true,
+                sx: { fontSize: "1.2rem", transition: "all 0.3s ease" },
+              }}
+              sx={{
+                bgcolor: "white", 
+                "& .MuiInputBase-root": { bgcolor: "white" },
+                "& .MuiInputBase-input": { color: "#000", fontSize: "1rem", padding: "8px 0px" },
+                "& .MuiInputLabel-root": { color: "#000", fontWeight: "500", fontSize: "1.2rem" },
+                "& .MuiInputLabel-root.Mui-focused": { color: "#FF6D00" },
+                "& .MuiInput-underline:before": { borderBottom: "2px solid black !important" }, 
+                "& .MuiInput-underline:hover:before": { borderBottom: "2px solid #FF6D00 !important" }, 
+                "& .MuiInput-underline:after": { borderBottom: "2px solid #FF6D00 !important" }, 
+                "& .MuiInputBase-input::placeholder": { color: "#9E9E9E", fontSize: "1rem" },
+              }}
+            />
+          )}
+        />
+      </Grid>
+    </Grid>
+  </Grid>
+))}
+
+
+
+
+
+
+
+
+
+
+      
+      <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <Button variant="outlined" startIcon={<AddCircleIcon />} onClick={handleAddField}>
+          Add Field
+        </Button>
+      </Grid>
+
+      <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <Button variant="contained" color="error" onClick={() => setCustomFields([])} sx={{ mx: 2 }}>
+            Cancel
+          </Button>
+          <Button type="submit" variant="contained" sx={{ mx: 2 }}>
+            Submit
+          </Button>
+        </Grid>
+
+
         </Grid>
       </form>
     </Box>

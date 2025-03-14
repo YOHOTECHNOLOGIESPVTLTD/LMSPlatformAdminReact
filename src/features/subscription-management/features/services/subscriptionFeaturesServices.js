@@ -55,13 +55,18 @@ export const searchSubscriptionFeatures = async (searchQuery) => {
 
 export const addSubscriptionFeature = async (data) => {
   try {
-    await Client.subscription.create(data)
-    return { success: true, message: 'SubscriptionFeature created successfully' }
+    await Client.subscription.create(data);
+    return { success: true, message: 'SubscriptionFeature created successfully' };
   } catch (error) {
-    const error_message = getErrorMessage(error)
-    throw new Error(error_message)
+    const errorMessage = getErrorMessage(error);
+    if (errorMessage.includes("E11000 duplicate key error")) {
+      throw new Error("A subscription plan with this name already exists. Please choose a different name.");
+    }
+
+    throw new Error(errorMessage);
   }
 };
+
 
 export const deleteSubscriptionFeature = async (SubscriptionFeatureId) => {
   try {

@@ -8,7 +8,7 @@ const ViewPlan = () => {
   const navigate = useNavigate();
   const plan = location.state?.plans;
 
-  console.log("Plan Data:", plan); 
+  console.log("Plan Data:", plan);
 
   if (!plan) {
     return <Typography variant="h6" textAlign="center" mt={5}>No plan details available.</Typography>;
@@ -40,14 +40,10 @@ const ViewPlan = () => {
     return description;
   };
 
-  const featureList = [
-    { label: "Admins", count: plan?.features?.[1]?.count || (plan?.features?.admin_is_unlimited === "1" ? "Unlimited" : "0") },
-    { label: "Batches", count: plan?.features?.[2]?.count || (plan?.features?.batches_is_unlimited === "1" ? "Unlimited" : "0") },
-    { label: "Classes", count: plan?.features?.no_of_classes || (plan?.features?.class_is_unlimited === "1" ? "Unlimited" : "0") },
-    { label: "Courses", count: plan?.features?.[7]?.count || (plan?.features?.course_is_unlimited === "1" ? "Unlimited" : "0") },
-    { label: "Staffs", count: plan?.features?.[6]?.count || (plan?.features?.staff_is_unlimited === "1" ? "Unlimited" : "0") },
-    { label: "Students", count: plan?.features?.[0]?.count || (plan?.features?.student_is_unlimited === "1" ? "Unlimited" : "0") }
-  ];
+  const featureList = plan?.features?.map((feature, index) => ({
+    label: feature.feature?.identity || feature.feature || `Feature ${index + 1}`,
+    count: feature.count || "Unlimited"
+  })) || [];
 
   return (
     <Box
@@ -71,6 +67,7 @@ const ViewPlan = () => {
           Back
         </Button>
       </Box>
+
       <Card
         sx={{
           width: "100%",
