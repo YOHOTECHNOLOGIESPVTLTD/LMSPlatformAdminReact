@@ -1,5 +1,5 @@
 import { fetchCities, fetchCountries, fetchStates } from "../services/locationService"
-import { setCities, setCountries, setStates } from "./locationSlice"
+import { setCitiesForFormA, setCitiesForFormB, setCountries, setStates } from "./locationSlice"
 
 export const loadCountries = () => async (dispatch) => {
     try {
@@ -19,10 +19,18 @@ export const loadStates = (countryCode) => async (dispatch) => {
     }
 };
 
-export const loadCities = (countryCode, stateCode) => async (dispatch) => {
+export const loadCitiesForFromA = (countryCode, stateCode) => async (dispatch) => {
     try {
         const cities = await fetchCities(countryCode, stateCode);
-        dispatch(setCities(cities));
+        dispatch(setCitiesForFormA(cities));
+    } catch (error) {
+        console.error('Failed to load cities:', error);
+    }
+};
+export const loadCitiesForFromB = (countryCode, stateCode) => async (dispatch) => {
+    try {
+        const cities = await fetchCities(countryCode, stateCode);
+        dispatch(setCitiesForFormB(cities));
     } catch (error) {
         console.error('Failed to load cities:', error);
     }

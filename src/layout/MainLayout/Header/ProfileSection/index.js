@@ -40,7 +40,8 @@ import { useDispatch } from 'react-redux';
 
 // assets
 import { IconLogout, 
-  IconSearch, IconSettings, IconUser
+  // IconSearch, IconSettings, 
+  // IconUser
  } from '@tabler/icons';
 // import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
@@ -53,8 +54,12 @@ const ProfileSection = () => {
 
   const [sdm, setSdm] = useState(true);
   const [value, setValue] = useState('');
+  console.log(value);
+  
   const [notification, setNotification] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  console.log(selectedIndex);
+  
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -82,6 +87,8 @@ const ProfileSection = () => {
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
+  console.log(handleListItemClick);
+  
 
   const prevOpen = useRef(open);
   useEffect(() => {
@@ -172,12 +179,12 @@ const ProfileSection = () => {
                     <OutlinedInput
                       sx={{ width: '100%', pr: 1, pl: 2, my: 2, display: "none" }}
                       id="input-search-profile"
-                      value={value}
+                      // value={value}
                       onChange={(e) => setValue(e.target.value)}
                       placeholder="Search profile options"
                       startAdornment={
                         <InputAdornment position="start">
-                          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} />
+                          {/* <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} /> */}
                         </InputAdornment>
                       }
                       aria-describedby="search-helper-text"
@@ -251,7 +258,7 @@ const ProfileSection = () => {
                           }
                         }}
                       >
-                         <ListItemButton
+                         {/* <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 0}
                           // href="/profile-management/account-settings"
@@ -292,7 +299,7 @@ const ProfileSection = () => {
                               </Grid>
                             }
                           />
-                        </ListItemButton> 
+                        </ListItemButton>  */}
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={0 === 4}

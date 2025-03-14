@@ -155,55 +155,55 @@ const accountSchema = yup.object().shape({
 });
 
 const documentSchema = yup.object().shape({
-  gst_number: yup.string().required(),
-  // gst_doc: yup.string().required(),
-  pan_number: yup.string().required(),
-  // pan_doc: yup.string().required(),
-  licence_number: yup.string().required()
-  // licence_doc: yup.string().required()
+  // gst_number: yup.string().required(),
+  // // gst_doc: yup.string().required(),
+  // pan_number: yup.string().required(),
+  // // pan_doc: yup.string().required(),
+  // licence_number: yup.string().required()
+  // // licence_doc: yup.string().required()
 });
 
 const personalSchema = yup.object().shape({
-  // state: yup.string().required('State is required'),
-  // city: yup.string().required('City is required'),
-  // pin_code: yup
-  //   .number()
-  //   .required('Pin code is required')
-  //   .test('len', 'Pin code must be exactly 6 digits', (value) => {
-  //     return value.toString().length === 6;
-  //   }),
-  // address_line_one: yup.string().required('Address line one required'),
-  // address_line_two: yup.string().required(),
-  // registered_date: yup.string().required(),
-  // institute_name: yup
-  //   .string()
-  //   .required('The institute name is required.')
-  //   .test('is-letters', 'The institute name must consist of letters.', (val) => {
-  //     return /^[A-Za-z\s]+$/.test(val);
-  //   }),
-  // phone: yup
-  //   .number()
-  //   .required()
-  //   .test('len', 'Phone number must be exactly 10 digits', (value) => {
-  //     return value.toString().length === 10;
-  //   }),
-  // alt_phone: yup
-  //   .number()
-  //   .required()
-  //   .test('len', 'Phone number must be exactly 10 digits', (value) => {
-  //     return value.toString().length === 10;
-  //   }),
-  // description: yup
-  //   .string()
-  //   .required()
-  //   .test('word-limit', 'Description must be between 50 and 100 words.', (value) => {
-  //     if (!value) return false;
-  //     const wordCount = value.trim().split(/\s+/).length;
-  //     return wordCount >= 50 && wordCount <= 100;
-  //   }),
-  // official_email: yup.string().required(),
-  // official_website: yup.string().required(),
-  // subscription: yup.string().required()
+  state: yup.string().required('State is required'),
+  city: yup.string().required('City is required'),
+  pin_code: yup
+    .number()
+    .required('Pin code is required')
+    .test('len', 'Pin code must be exactly 6 digits', (value) => {
+      return value.toString().length === 6;
+    }),
+  address_line_one: yup.string().required('Address line one required'),
+  address_line_two: yup.string().required(),
+  registered_date: yup.string().required(),
+  institute_name: yup
+    .string()
+    .required('The institute name is required.')
+    .test('is-letters', 'The institute name must consist of letters.', (val) => {
+      return /^[A-Za-z\s]+$/.test(val);
+    }),
+  phone: yup
+    .number()
+    .required()
+    .test('len', 'Phone number must be exactly 10 digits', (value) => {
+      return value.toString().length === 10;
+    }),
+  alt_phone: yup
+    .number()
+    .required()
+    .test('len', 'Phone number must be exactly 10 digits', (value) => {
+      return value.toString().length === 10;
+    }),
+  description: yup
+    .string()
+    .required()
+    .test('word-limit', 'Description must be between 50 and 100 words.', (value) => {
+      if (!value) return false;
+      const wordCount = value.trim().split(/\s+/).length;
+      return wordCount >= 50 && wordCount <= 100;
+    }),
+  official_email: yup.string().required(),
+  official_website: yup.string().required(),
+  subscription: yup.string().required()
 });
 
 const socialSchema = yup.object().shape({});
@@ -359,8 +359,14 @@ const AddInstitutePage = () => {
       window.removeEventListener('hashchange', handleUrlChange);
     };
   }, [currentUrl, navigate]);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [berror, setBerror] = useState('');
+  console.log('Berror', berror);
+  const [shows, setShows] = useState(false);
+
   const onSubmit = async () => {
     const accountData = accountControl?._formValues;
+    console.log('accountData',accountData)
     const personalData = personalControl?._formValues;
     console.log('personalData:', personalData);
     console.log('FormData:', FormData);
@@ -391,7 +397,7 @@ const AddInstitutePage = () => {
           address1: personalData?.address_line_one,
           address2: personalData?.address_line_two,
           state: personalData?.state,
-          city: personalData?.city,
+          city: String(personalData?.city || ""),
           pincode: personalData?.pin_code
         }
       },
@@ -430,27 +436,29 @@ const AddInstitutePage = () => {
       image: accountData?.image
     };
     console.log(institute, 'institute', branch, admin);
-    setActiveStep(activeStep + 1);
-    if (activeStep === steps.length - 1) {
-      const result = await addInstitute({ institute, admin, branch });
-      if (result.success) {
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
-      }
-    }
-    // const formData = {
-    //   personalData,
-    //   accountData,
-    //   socialData,
-    //   docsData
-    // };
-    // if (formData) {
-    //   localStorage.setItem('Allss', JSON.stringify(formData));
-    // }
-  };
-  // console.log()
 
+    if (activeStep === steps.length - 1) {
+      try {
+        const result = await addInstitute({ institute, admin, branch });
+        console.log('result', result);
+        if (result.success) {
+          toast.success(result.message);
+          setIsSuccess(true);
+          setActiveStep(activeStep + 1);
+        } else {
+          setBerror(result.message || 'An Error occured on the server.');
+        }
+      } catch (error) {
+        toast.error(error.message);
+        setBerror(error?.response?.data?.message || 'An Error occured on the server.');
+        console.log('Berororroro', error);
+        setShows(true);
+      }
+    } else {
+      setActiveStep(activeStep + 1);
+    }
+  };
+  console.log(berror, 'bE');
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
     height: 100,
@@ -500,7 +508,7 @@ const AddInstitutePage = () => {
       const response = await handleFileUpload(form_data);
       console.log(response, 'response');
       setDocs((prev) => ({ ...prev, [name]: response?.data?.data?.file }));
-      console.log(docs);
+      console.log(docs,'doxs');
     } catch (error) {
       console.log(error, 'error');
     }
@@ -537,6 +545,11 @@ const AddInstitutePage = () => {
     setInstituteSrc('/images/avatars/15.png');
   };
   console.log(socialErrors, accountErrors, docsErrors, personalErrors, galleryControl);
+  function handleClose() {
+    setBerror(' ');
+    setShows(false);
+  }
+
   const getStepContent = (step) => {
     switch (step) {
       case 0:
@@ -617,6 +630,8 @@ const AddInstitutePage = () => {
             setError={setError}
             hanldeProfileImageChange={hanldeProfileImageChange}
             accountReset={accountReset}
+            setDocs={setDocs}
+            docs={docs}
           />
         );
       default:
@@ -625,7 +640,7 @@ const AddInstitutePage = () => {
   };
 
   const renderContent = () => {
-    if (activeStep === steps.length) {
+    if (activeStep === steps.length && isSuccess) {
       return (
         <Fragment>
           <Typography onClick={handleReset}>All steps are completed!</Typography>
@@ -714,7 +729,31 @@ const AddInstitutePage = () => {
 
       <Divider sx={{ m: '0 !important' }} />
 
-      <CardContent>{renderContent()}</CardContent>
+      <CardContent>
+        {berror && (
+          <>
+            <Box
+              sx={{
+                color: '#c62828',
+                padding: '10px',
+                borderRadius: '4px',
+                marginBottom: '20px',
+                textAlign: 'center'
+              }}
+            >
+              <Typography variant="body1">{berror}</Typography>
+            {shows ? (
+              <Button variant='contained' onClick={handleClose} sx={{ marginTop: '10px' }}>
+                Close
+              </Button>
+            ) : (
+              ''
+            )}
+            </Box>
+          </>
+        )}
+        {renderContent()}
+      </CardContent>
     </Card>
   );
 };

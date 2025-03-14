@@ -56,6 +56,7 @@ const Institutes = () => {
 
   const dispatch = useDispatch();
   const allInstitutes = useSelector(selectInstitutes);
+  console.log(allInstitutes)
   const instituteLoading = useSelector(selectLoading);
 
   useEffect(() => {

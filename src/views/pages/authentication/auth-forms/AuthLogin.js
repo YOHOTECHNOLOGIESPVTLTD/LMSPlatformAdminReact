@@ -4,14 +4,18 @@ import { useState } from 'react';
 import {
   Box,
   Button,
+  Checkbox,
   // Checkbox,
   FormControl,
+  FormControlLabel,
   // FormControlLabel,
   FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
   OutlinedInput,
+  Stack,
+  Typography,
   // Stack,
   // Typography
 } from '@mui/material';
@@ -33,6 +37,7 @@ import { useAtom } from 'jotai';
 import { stepsAtomWithPersistence } from 'store/atoms/authorized-atom';
 import { otp_step } from 'lib/constants';
 import { useSpinner } from 'context/spinnerContext';
+import { useNavigate } from 'react-router';
 
 // import Google from 'assets/images/icons/social-google.svg';
 
@@ -40,9 +45,9 @@ import { useSpinner } from 'context/spinnerContext';
 
 const FirebaseLogin = ({ ...others }) => {
   const scriptedRef = useScriptRef();
-  // const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();
-  const [,setStep] = useAtom(stepsAtomWithPersistence)
+  const [setStep] = useAtom(stepsAtomWithPersistence)
   const { showSpinnerFn,hideSpinnerFn} = useSpinner()
 
   const [showPassword, setShowPassword] = useState(false);
@@ -53,7 +58,8 @@ const FirebaseLogin = ({ ...others }) => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
+console.log("others",others)
+const navigate=useNavigate()
   return (
     <Formik
       initialValues={{
@@ -141,21 +147,21 @@ const FirebaseLogin = ({ ...others }) => {
               </FormHelperText>
             )}
           </FormControl>
-          {/* <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
             <FormControlLabel
               control={<Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />}
               label="Remember me"
             />
 
             <Typography
-              onClick={others?.handleOtpPage}
+              onClick={()=>navigate('/forgot-password')}
               variant="subtitle1"
               color="secondary"
               sx={{ textDecoration: 'none', cursor: 'pointer' }}
             >
               Forgot Password?
             </Typography>
-          </Stack> */}
+          </Stack>
           {errors.submit && (
             <Box sx={{ mt: 3 }}>
               <FormHelperText error>{errors.submit}</FormHelperText>

@@ -8,26 +8,24 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
   const handleImageChange = async (event) => {
     const files = event.target.files;
 
-    const data = new FormData()
-    for(const file of files){
-     data.append("files",file)
+    const data = new FormData();
+    for (const file of files) {
+      data.append('files', file);
     }
-    const response = await handleMultipleFiles(data)
+    const response = await handleMultipleFiles(data);
     console.log(response)
-    const gallery = response.data.data
+    const gallery = Array.from(files).map((file) => ({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
     setGalleryImages([...galleryImages, ...gallery]);
   };
 
   const handleRemoveImage = (index) => {
     const updatedImages = [...galleryImages];
     updatedImages.splice(index, 1);
-    console.log(process.env.REACT_APP_PUBLIC_API_URL+image.file, 'img');
-
-    // Update galleryImages state
     setGalleryImages(updatedImages);
   };
-
-  
 
   const CustomCloseButton = styled(IconButton)(({ theme }) => ({
     top: -80,
@@ -39,12 +37,14 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
       transform: 'translate(7px, -5px)'
     }
   }));
+
   const ButtonStyled = styled(Button)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       textAlign: 'center'
     }
   }));
+
   return (
     <Box>
       <ButtonStyled component="label" variant="contained" htmlFor="account-settings-gallery-image">
@@ -60,17 +60,16 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
         <Icon icon="tabler:cloud-upload" style={{ marginLeft: '10px' }} />
       </ButtonStyled>
 
-      {/* Display selected images as previews */}
-      <div style={{ marginTop: '20px', marginBottom: '20px' }}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 2 }}>
         {galleryImages?.map((image, index) => (
-          <Box key={index} style={{ display: 'inline-block', marginRight: '30px', marginTop: '20px', marginBottom: '20px' }}>
-            <img src={process.env.REACT_APP_PUBLIC_API_URL+image.file} alt={`preview-${index}`} style={{ maxWidth: '100px', maxHeight: '100px' }} />
+          <Box key={index} sx={{ position: 'relative' }}>
+            <img src={image.preview} alt={`preview-${index}`} style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '4px' }} />
             <CustomCloseButton variant="contained" color="error" size="small" onClick={() => handleRemoveImage(index)}>
               <Icon icon="tabler:x" fontSize="1.25rem" />
             </CustomCloseButton>
           </Box>
         ))}
-      </div>
+      </Box>
     </Box>
   );
 };
