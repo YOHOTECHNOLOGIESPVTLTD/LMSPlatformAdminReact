@@ -1,268 +1,320 @@
-import React, { useState,useEffect } from 'react';
-import { Grid,Card,CardContent,Typography,Box,useTheme,TextField,MenuItem,Select,FormControl,InputLabel,
+import React, { useState, useEffect } from 'react';
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  useTheme,
+  TextField,
+  MenuItem,
+  Collapse,
+  Button
 } from '@mui/material';
-import {LineChart,Line,XAxis,YAxis,CartesianGrid,Tooltip,ResponsiveContainer,BarChart,Bar,PieChart,Pie,Cell,
-} from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import PeopleIcon from '@mui/icons-material/People';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-// import axios from 'axios';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import axios from 'axios';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-// const METRIC_DATA_API = `${process.env.REACT_APP_PUBLIC_API_URL}'/dashboard'`;
 
-
-const data = {
-  metrics: {
-    totalInstitutes: 150,
-    totalUsers: 1200,
-    activeSubscriptions: 320,
-    newSupportTickets: 25
-  },
-  revenueTrends: [
-    { month: "Jan", revenue: 4000 },
-    { month: "Feb", revenue: 3000 },
-    { month: "Mar", revenue: 2000 }
-  ],
-  userGrowth: [
-    { month: "Jan", users: 2400 },
-    { month: "Feb", users: 1398 },
-    { month: "Mar", users: 9800 }
-  ],
-  institutePerformance: [
-    { name: "Institute A", performance: 4000 },
-    { name: "Institute B", performance: 3000 },
-    { name: "Institute B", performance: 3000 },
-  
-  ],
-  subscriptionDetails: [
-    { name: "Active", value: 400 },
-    { name:" inactive", value: 300 }
-  ],      
-  financialReports: { totalRevenue: 20000, totalExpenses: 15000, netProfit: 5000 }
-};
+const DASHBOARD_API_ENDPOINT = "http://localhost:3001/api/institutes/platform/report";
 
 const Dashboard2 = () => {
   const theme = useTheme();
 
-  const [dateRange, setDateRange] = useState('');
-  const [instituteType, setInstituteType] = useState('');
-  const [subscriptionStatus, setSubscriptionStatus] = useState('');
-  const [metrics, setMetrics] = useState({});
+  const [month, setMonth] = useState('');
+  const [year, setYear] = useState('');
+  const [metrics, setMetrics] = useState({
+    totalInstitutes: 0,
+    totalUsers: 0,
+    activeSubscriptions: 0,
+    inactiveSubscriptions: 0,
+    newSupportTickets: 0
+  });
   const [revenueData, setRevenueData] = useState([]);
-  const [userGrowthData, setUserGrowthData] = useState([]);
-  const [institutePerformanceData, setInstitutePerformanceData] = useState([]);
+  const [revenueDatas, setRevenueDatas] = useState([]);
   const [subscriptionData, setSubscriptionData] = useState([]);
-  const [financialData, setFinancialData] = useState({});
+  const [showFilters, setShowFilters] = useState(false);  
+  
 
   useEffect(() => {
     fetchDashboardData();
-  }, [dateRange, instituteType, subscriptionStatus]); // Refetch data when filters change
+  }, [month, year]);
 
   const fetchDashboardData = async () => {
     try {
-      // const response = await axios.get(METRIC_DATA_API, {
-      //   params: {
-      //     dateRange,
-      //     instituteType,  
-      //     subscriptionStatus,
-      //   },
-      // });
-      // const data = response.data;
-    
-      setMetrics(data.metrics);
-      setRevenueData(data.revenueTrends);
-      setUserGrowthData(data.userGrowth);
-      setInstitutePerformanceData(data.institutePerformance);
-      setSubscriptionData(data.subscriptionDetails);
-      setFinancialData(data.financialReports);
+      const response = await axios.get(DASHBOARD_API_ENDPOINT, {
+        params: {
+          month: month,
+          year: year,
+        }
+      });
+  
+      const data = response.data;
+      console.log(data)
+      // Map API response to state variables
+      setMetrics({
+        totalInstitutes: data.totalInstituteCount,
+        totalUsers: data.instituteSubscriptions.length,
+        activeSubscriptions: data.activeSubscriptions,
+        inactiveSubscriptions: data.inactiveSubscriptions,
+        newSupportTickets: data.supportTickets.studentTickets + data.supportTickets.teachingTickets + data.supportTickets.staffTickets + data.supportTickets.adminTickets
+      });
+  
+      console.log(revenueDatas, "data")
+      console.log(data.revenue, "data1")
+      setRevenueDatas(data.revenue)
+  
+      const monthData = [{ month: "Jan", index: 0 }, { month: "Feb", index: 1 }, { month: "Mar", index: 2 }, { month: "Apr", index: 3 }, { month: "May", index: 4 }, { month: "Jun", index: 5 }, { month: "Jul", index: 6 }, { month: "Aug", index: 7 }, { month: "Sep", index: 8 }, { month: "Oct", index: 9 }, { month: "Nov", index: 10 }, { month: "Dec", index: 11 }]
+  
+      let revenueData;
+      if (month === '') {
+        // If no specific month is selected, show data for all months
+        revenueData = monthData.map((item, index) => ({
+          month: item.month,
+          revenue: data.revenue[index]
+        }));
+      } else {
+        // Map revenue data for the selected month
+        const revenueTrends = data.revenue.filter((item, index) => index === monthData.find((item2) => item2.month === month).index)
+        console.log(revenueTrends[0])
+  
+        revenueData = [
+          {
+            month: month,
+            revenue: revenueTrends[0]
+          }
+        ];
+      }
+  
+      setRevenueData(revenueData);
+  
+      // Map subscription data
+      const subscriptionDetails = [
+        { name: 'Active', value: data.activeSubscriptions },
+        { name: 'Inactive', value: data.inactiveSubscriptions }
+      ];
+      setSubscriptionData(subscriptionDetails);
+  
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     }
   };
-
-  const handleDateRangeChange = (event) => {
-    setDateRange(event.target.value);
+  const handleMonthChange = (event) => {
+    setMonth(event.target.value);
   };
 
-  const handleInstituteTypeChange = (event) => {
-    setInstituteType(event.target.value);
+  const handleYearChange = (event) => {
+    setYear(event.target.value);
   };
 
-  const handleSubscriptionStatusChange = (event) => {
-    setSubscriptionStatus(event.target.value);
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
   };
 
   return (
     <Box sx={{ padding: '32px', minHeight: '100vh' }}>
-      {/* Quick Stats Section */}
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '12px',
-              boxShadow: theme.shadows[3],
-              transition: 'transform 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-8px)' },
-            }}
-          >
-            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <AccountBalanceIcon fontSize="large" sx={{ color: theme.palette.success.main }} />
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                  Total Institutes
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                  {metrics.totalInstitutes}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '12px',
-              boxShadow: theme.shadows[3],
-              transition: 'transform 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-8px)' },
-            }}
-          >
-            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <PeopleIcon fontSize="large" sx={{ color: theme.palette.primary.main }} />
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                  Total Users
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                  {metrics.totalUsers}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '12px',
-              boxShadow: theme.shadows[3],
-              transition: 'transform 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-8px)' },
-            }}
-          >
-            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <PaymentsIcon fontSize="large" sx={{ color: theme.palette.warning.main }} />
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                  Active Subscriptions
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                  {metrics.activeSubscriptions}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '12px',
-              boxShadow: theme.shadows[3],
-              transition: 'transform 0.3s ease-in-out',
-              '&:hover': { transform: 'translateY(-8px)' },
-            }}
-          >
-            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <SupportAgentIcon fontSize="large" sx={{ color: theme.palette.error.main }} />
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                  New Support Tickets
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                  {metrics.newSupportTickets}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      {/* Button to Toggle Filters */}
+      <Button variant="contained" onClick={toggleFilters} sx={{ mb: 2 }}>
+        <FilterListIcon color='primary' sx={{ pr: 1 }} />
+        {showFilters ? 'Hide Filters' : 'Show Filters'}
+      </Button>
 
       {/* Filter Cards Section */}
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h5" gutterBottom>
-          Filters
-        </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={4}>
-            <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Date Range
-                </Typography>
-                <TextField
-                  select
-                  fullWidth
-                  value={dateRange}
-                  onChange={handleDateRangeChange}
-                  variant="outlined"
-                >
-                  <MenuItem value="last_7_days">Last 7 Days</MenuItem>
-                  <MenuItem value="last_30_days">Last 30 Days</MenuItem>
-                  <MenuItem value="last_90_days">Last 90 Days</MenuItem>
-                </TextField>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Institute Type
-                </Typography>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Institute Type</InputLabel>
-                  <Select
-                    value={instituteType}
-                    onChange={handleInstituteTypeChange}
-                    label="Institute Type"
-                  >
-                    <MenuItem value="school">School</MenuItem>
-                    <MenuItem value="college">College</MenuItem>
-                    <MenuItem value="university">University</MenuItem>
-                  </Select>
-                </FormControl>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Subscription Status
-                </Typography>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel>Subscription Status</InputLabel>
-                  <Select
-                    value={subscriptionStatus}
-                    onChange={handleSubscriptionStatusChange}
-                    label="Subscription Status"
-                  >
-                    <MenuItem value="active">Active</MenuItem>
-                    <MenuItem value="inactive">Inactive</MenuItem>
-                  </Select>
-                </FormControl>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
+      <Collapse in={showFilters}>
+        <Box sx={{ mt: 0 }}>
+          <Typography variant="h5" gutterBottom>
+            Filters
+          </Typography>
+          <Grid container spacing={3}>
+            {/* Month Filter */}
+            <Grid item xs={12} sm={6} md={4}>
+              <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Month
+                  </Typography>
+                  <TextField select fullWidth value={month} onChange={handleMonthChange} variant="outlined">
+                    <MenuItem value="Jan">January</MenuItem>
+                    <MenuItem value="Feb">February</MenuItem>
+                    <MenuItem value="Mar">March</MenuItem>
+                    <MenuItem value="Apr">April</MenuItem>
+                    <MenuItem value="May">May</MenuItem>
+                    <MenuItem value="Jun">June</MenuItem>
+                    <MenuItem value="Jul">July</MenuItem>
+                    <MenuItem value="Aug">August</MenuItem>
+                    <MenuItem value="Sep">September</MenuItem>
+                    <MenuItem value="Oct">October</MenuItem>
+                    <MenuItem value="Nov">November</MenuItem>
+                    <MenuItem value="Dec">December</MenuItem>
+                  </TextField>
+                </CardContent>
+              </Card>
+            </Grid>
 
+            {/* Year Filter */}
+            <Grid item xs={12} sm={6} md={4}>
+              <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Year
+                  </Typography>
+                  <TextField select fullWidth value={year} onChange={handleYearChange} variant="outlined">
+                    <MenuItem value="2023">2023</MenuItem>
+                    <MenuItem value="2022">2022</MenuItem>
+                    <MenuItem value="2021">2021</MenuItem>
+                    <MenuItem value="2020">2020</MenuItem>
+                  </TextField>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
+      </Collapse>
+
+      {/* Quick Stats Section */}
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+  {/* Total Institutes Card */}
+  <Grid item xs={12} sm={6} md={3}>
+    <Card
+      sx={{
+        background: 'linear-gradient(135deg,rgb(244, 189, 175) 0%,rgb(221, 212, 205) 100%)',
+        borderRadius: '12px',
+        boxShadow: theme.shadows[3],
+        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-8px) scale(1.05)',
+          boxShadow: theme.shadows[6],
+          animation: 'iglow 1.5s infinite',
+        },
+        '@keyframes iglow': {
+          '0%': { boxShadow: '0 0 10px rgb(130, 223, 144)' },
+          '50%': { boxShadow: '0 0 20px rgb(80, 184, 80)' },
+          '100%': { boxShadow: '0 0 10px  rgb(130, 223, 144)' },
+        },
+      }}
+    >
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#35312e', p: 3 }}>
+        <AccountBalanceIcon fontSize="large" sx={{ color: '#03c203', fontSize: '2.5rem' }} />
+        <Box>
+          <Typography variant="subtitle1" fontWeight="semi-bold" color="inherit">
+            Total Institutes
+          </Typography>
+          <Typography  sx={{textAlign:"center", paddingTop:"10px"}} variant="h3" fontWeight="bold" color="#03c203">
+            {metrics.totalInstitutes}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  </Grid>
+
+  {/* Institute Subscriptions Card */}
+  <Grid item xs={12} sm={6} md={3}>
+  {/* rgb(195, 227, 120) 0%,rgb(99, 137, 242) */}
+    <Card
+      sx={{
+        background: 'linear-gradient(135deg,rgb(244, 189, 175) 0%,rgb(221, 212, 205) 100%)',
+        borderRadius: '12px',
+        boxShadow: theme.shadows[3],
+        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-8px) scale(1.05)',
+          boxShadow: theme.shadows[6],
+          animation: 'sglow 1.5s infinite',
+        },
+        '@keyframes sglow': {
+          '0%': { boxShadow: '0 0 10px rgb(233, 112, 112)' },
+          '50%': { boxShadow: '0 0 20px rgb(229, 77, 77)' },
+          '100%': { boxShadow: '0 0 10px rgb(233, 112, 112)' },
+        },
+      }}
+    >
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#35312e', p: 3 }}>
+        <PeopleIcon fontSize="large" sx={{ color: '#f60101', fontSize: '2.5rem' }} />
+        <Box>
+          <Typography variant="subtitle1" fontWeight="semi-bold" color="inherit">
+            Institute Subscriptions
+          </Typography>
+          <Typography  sx={{textAlign:"center", paddingTop:"10px"}} variant="h3" fontWeight="bold" color="#f60101">
+            {metrics.totalUsers}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  </Grid>
+
+  {/* Active Subscriptions Card */}
+  <Grid item xs={12} sm={6} md={3}>
+    <Card
+      sx={{
+        background: 'linear-gradient(135deg,rgb(244, 189, 175) 0%,rgb(221, 212, 205)100%)',
+        borderRadius: '12px',
+        boxShadow: theme.shadows[3],
+        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-8px) scale(1.05)',
+          boxShadow: theme.shadows[6],
+          animation: 'glows 1.5s infinite',
+        },
+        '@keyframes glows': {
+          '0%': { boxShadow: '0 0 10px rgb(195, 185, 236)' },
+          '50%': { boxShadow: '0 0 20px #626bc5' },
+          '100%': { boxShadow: '0 0 10px rgb(195, 185, 236)' },
+        },
+      }}
+    >
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#35312e', p: 3 }}>
+        <PaymentsIcon fontSize="large" sx={{ color: '#626bc5', fontSize: '2.5rem' }} />
+        <Box>
+          <Typography variant="subtitle1" fontWeight="semi-bold" color="inherit">
+            Active Subscriptions
+          </Typography>
+          <Typography  sx={{textAlign:"center", paddingTop:"10px"}} variant="h3" fontWeight="bold" color="#626bc5">
+            {metrics.activeSubscriptions}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  </Grid>
+
+  {/* New Support Tickets Card */}
+  <Grid item xs={12} sm={6} md={3}>
+    <Card
+      sx={{
+        background: 'linear-gradient(135deg,rgb(244, 189, 175) 0%,rgb(221, 212, 205) 100%)',
+        borderRadius: '12px',
+        boxShadow: theme.shadows[3],
+        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-8px) scale(1.05)',
+          boxShadow: theme.shadows[6],
+          animation: 'glow 1.5s infinite',
+        },
+        '@keyframes glow': {
+          '0%': { boxShadow: '0 0 10px rgb(233, 120, 147)' },
+          '50%': { boxShadow: '0 0 20px rgb(211, 49, 95)' },
+          '100%': { boxShadow: '0 0 10px rgb(233, 120, 147)' },
+        },
+      }}
+    >
+      <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2, color: '#35312e', p: 3 }}>
+        <SupportAgentIcon fontSize="large" sx={{ color: '#df0945', fontSize: '2.5rem' }} />
+        <Box>
+          <Typography variant="subtitle1" fontWeight="semi-bold" color="inherit" sx={{ paddingTop:"-5px"}}>
+            New Support Tickets
+          </Typography>
+          <Typography sx={{textAlign:"center", paddingTop:"10px"}} variant="h3" fontWeight="bold" color="#df0945" >
+            {metrics.newSupportTickets}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  </Grid>
+</Grid>
       {/* Graphs Section */}
       <Box sx={{ mt: 4 }}>
         <Typography variant="h5" gutterBottom>
@@ -273,57 +325,27 @@ const Dashboard2 = () => {
           <Grid item xs={12} md={6}>
             <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h4" gutterBottom>
                   Revenue Trends (Monthly)
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={revenueData}>
-                    <CartesianGrid stroke="#e0e0e0" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="revenue" stroke={theme.palette.primary.main} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* User Growth Chart */}
-          <Grid item xs={12} md={6}>
-            <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  User Growth Trends (Monthly)
-                </Typography>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={userGrowthData}>
-                    <CartesianGrid stroke="#e0e0e0" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="users" fill={theme.palette.secondary.main} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Institute Performance Chart */}
-          <Grid item xs={12} md={6}>
-            <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Institute Performance
-                </Typography>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={institutePerformanceData}>
-                    <CartesianGrid stroke="#e0e0e0" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="performance" fill={theme.palette.info.main} />
-                  </BarChart>
+                <AreaChart
+          width={500}
+          height={400}
+          data={revenueData? revenueData : data.revenue}
+          margin={{
+            top: 10,
+            right: 30,
+            left: 0,
+            bottom: 0,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" />
+          <YAxis />
+          <Tooltip />
+          <Area type="monotone" dataKey="revenue" stroke="#8884d8" fill="#8884d8" />
+        </AreaChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
@@ -333,21 +355,12 @@ const Dashboard2 = () => {
           <Grid item xs={12} md={6}>
             <Card sx={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: theme.shadows[3] }}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h4" gutterBottom>
                   Subscription Details
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie
-                      data={subscriptionData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                      label
-                    >
+                    <Pie data={subscriptionData} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="value" label>
                       {subscriptionData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
@@ -355,84 +368,6 @@ const Dashboard2 = () => {
                     <Tooltip />
                   </PieChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
-
-      {/* Financial Reports Section */}
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h5" gutterBottom>
-          Financial Reports
-        </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={4}>
-            <Card
-              sx={{
-                backgroundColor: '#fff',
-                borderRadius: '12px',
-                boxShadow: theme.shadows[3],
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': { transform: 'translateY(-8px)' },
-              }}
-            >
-              <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <MonetizationOnIcon fontSize="large" sx={{ color: theme.palette.success.main }} />
-                <Box>
-                  <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                    Total Revenue
-                  </Typography>
-                  <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                    ${financialData.totalRevenue}
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Card
-              sx={{
-                backgroundColor: '#fff',
-                borderRadius: '12px',
-                boxShadow: theme.shadows[3],
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': { transform: 'translateY(-8px)' },
-              }}
-            >
-              <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <MonetizationOnIcon fontSize="large" sx={{ color: theme.palette.error.main }} />
-                <Box>
-                  <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                    Total Expenses
-                  </Typography>
-                  <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                    ${financialData.totalExpenses}
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Card
-              sx={{
-                backgroundColor: '#fff',
-                borderRadius: '12px',
-                boxShadow: theme.shadows[3],
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': { transform: 'translateY(-8px)' },
-              }}
-            >
-              <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <MonetizationOnIcon fontSize="large" sx={{ color: theme.palette.warning.main }} />
-                <Box>
-                  <Typography variant="subtitle1" fontWeight="bold" color="textSecondary">
-                    Net Profit
-                  </Typography>
-                  <Typography variant="h4" fontWeight="bold" color="textPrimary">
-                    ${financialData.netProfit}
-                  </Typography>
-                </Box>
               </CardContent>
             </Card>
           </Grid>
