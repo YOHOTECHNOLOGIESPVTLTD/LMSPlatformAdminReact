@@ -52,6 +52,8 @@ const FormStep5AccountInfo = (props) => {
   };
   const handleCityChange = (e) => {
     const cityId = e.target.value;
+    console.log(cityId);
+    
   };
   const handleStoredState = (e) => {
     const ss = states.find((state) => state.iso2 === e.target.value);

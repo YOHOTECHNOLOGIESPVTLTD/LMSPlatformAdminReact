@@ -414,7 +414,7 @@ const AddInstitutePage = () => {
       },
       website: personalData.official_website
     };
-
+    console.log(institute,galleryImages)
     const branch = {
       is_primary: true,
       branch_identity: accountData.branch_name,
@@ -533,6 +533,7 @@ const AddInstitutePage = () => {
     const response = await handleFileUpload(data);
     setInstituteImage(response?.data?.data?.file);
   };
+  
 
   console.log('Gallery : ', galleryImages, 'Institute Image :', instituteImage, 'logo :', logo, logoSrc, instituteSrc, docs);
 

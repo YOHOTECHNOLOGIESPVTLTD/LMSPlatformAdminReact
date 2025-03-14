@@ -68,7 +68,7 @@ const FormStep2GalleryInfo = (props) => {
               component="img"
               src={getImageUrl(image)}
               alt={label}
-              sx={{ width: '100%', height: '100%', borderRadius: '16px', objectFit: 'cover' }}
+              sx={{ width: '100%', height: '100%', borderRadius: '16px', objectFit: "contain" }}
             />
           ) : (
             <>
