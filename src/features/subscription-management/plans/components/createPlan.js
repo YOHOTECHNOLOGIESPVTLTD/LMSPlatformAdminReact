@@ -1,35 +1,44 @@
 // ** React Imports
-import { useState } from 'react';
+import { useState, Fragment } from "react";
 // ** MUI Imports
-import Dialog from '@mui/material/Dialog';
-import { DialogContent, Grid, Typography, Box } from '@mui/material';
-import styled from '@emotion/styled';
-import { Button } from '@mui/material';
-import CustomTextField from 'components/mui/text-field';
-import { Controller, useForm } from 'react-hook-form';
-import { DialogActions } from '@mui/material';
-import { Fragment } from 'react';
-import MenuItem from '@mui/material/MenuItem';
+import Dialog from "@mui/material/Dialog";
+import { DialogContent, Grid, Typography, Box, IconButton, MenuItem } from "@mui/material";
+import styled from "@emotion/styled";
+import { Button } from "@mui/material";
+import CustomTextField from "components/mui/text-field";
+import { Controller, useForm } from "react-hook-form";
+import { DialogActions } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import axios from "axios"; // For API calls
 
 const CreatePlan = ({ handleDialogClose, open }) => {
-  const [inputValue, setInputValue] = useState('');
-  const [selectedImage, setSelectedImage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [imgSrc, setImgSrc] = useState('https://www.charitycomms.org.uk/wp-content/uploads/2019/02/placeholder-image-square.jpg');
+  const [selectedImage, setSelectedImage] = useState("");
+  const [imgSrc, setImgSrc] = useState("https://www.charitycomms.org.uk/wp-content/uploads/2019/02/placeholder-image-square.jpg");
+  const [customFields, setCustomFields] = useState([]); 
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const ImgStyled = styled('img')(({ theme }) => ({
-    width: 100,
-    height: 100,
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
-  }));
+  const defaultValues = {
+    plan_name: "",
+    plan_description: "",
+    plan_duration: "",
+    plan_duration_type: "days",
+    plan_price: "",
+  };
 
-  const ButtonStyled = styled(Button)(({ theme }) => ({
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      textAlign: 'center'
-    }
-  }));
+  const { control, handleSubmit, formState: { errors }, reset } = useForm({ defaultValues });
+
+  const handleAddField = () => {
+    setCustomFields([...customFields, { id: Date.now(), name: "", value: "" }]);
+  };
+
+  const handleRemoveField = (id) => {
+    setCustomFields(customFields.filter((field) => field.id !== id));
+  };
+
+  const handleFieldChange = (id, key, value) => {
+    setCustomFields(customFields.map((field) => (field.id === id ? { ...field, [key]: value } : field)));
+  };
 
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
@@ -38,81 +47,63 @@ const CreatePlan = ({ handleDialogClose, open }) => {
       reader.onload = () => setImgSrc(reader.result);
       setSelectedImage(files[0]);
       reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
     }
   };
 
-  const defaultValues = {
-    plan_name:'',
-    plan_description:'',
-    plan_duration:'',
-  };
+  const onSubmit = async (data) => {
+    setErrorMessage("");
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({ defaultValues });
-
-  const onSubmit = (data) => {
-    setErrorMessage(''); 
-    if (!data.plan_name || !data.plan_description || !data.plan_duration) {
-      setErrorMessage('All fields are required. Please fill them in.');
+    if (!data.plan_name || !data.plan_description || !data.plan_duration || !data.plan_price) {
+      setErrorMessage("All required fields must be filled.");
       return;
     }
-    console.log('subData', data);
-    var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    console.log(bodyFormData);
-  };
 
+    const planData = {
+      identity: data.plan_name,
+      description: data.plan_description,
+      duration: { value: data.plan_duration, unit: data.plan_duration_type },
+      price: data.plan_price,
+      image: selectedImage ? selectedImage.name : "",
+      features: customFields.map((field) => ({
+        name: field.name,
+        count: field.value,
+      })),
+    };
+
+    try {
+      await axios.post("/api/plans", planData);
+      alert("Plan created successfully!");
+      reset();
+      setCustomFields([]);
+      handleDialogClose();
+    } catch (error) {
+      console.error("Error creating plan", error);
+    }
+  };
 
   return (
     <Fragment>
-      <Dialog onClose={handleDialogClose} aria-labelledby="responsive-dialog-title" open={open}>
-        {/* <DialogTitle id="simple-dialog-title">Add New Plan</DialogTitle> */}
+      <Dialog onClose={handleDialogClose} aria-labelledby="responsive-dialog-title" open={open} fullWidth maxWidth="sm">
         <DialogContent>
-        {errorMessage && (
-            <Box sx={{ color: 'red', textAlign: 'center', fontWeight: 'bold', mb: 2 }}>
-              {errorMessage}
-            </Box>
+          {errorMessage && (
+            <Box sx={{ color: "red", textAlign: "center", fontWeight: "bold", mb: 2 }}>{errorMessage}</Box>
           )}
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container xs={12} spacing={3}>
-              <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <ImgStyled src={imgSrc} alt="Profile Pic" />
-                <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload
-                    <input
-                      hidden
-                      type="file"
-                      value={inputValue}
-                      accept="image/png, image/jpeg"
-                      onChange={handleInputImageChange}
-                      id="account-settings-upload-image"
-                    />
-                  </ButtonStyled>
-                </div>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <img src={imgSrc} alt="Profile Pic" style={{ width: 100, height: 100, borderRadius: 8, marginRight: 10 }} />
+                <Button component="label" variant="contained">
+                  Upload
+                  <input hidden type="file" accept="image/png, image/jpeg" onChange={handleInputImageChange} />
+                </Button>
               </Grid>
-              <Grid item xs={12} sm={12}>
+              <Grid item xs={12}>
                 <Controller
                   name="plan_name"
                   control={control}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Plan Name"
-                      onChange={onChange}
-                      placeholder="Basic Plan"
-                      error={Boolean(errors.firstName)}
-                      aria-describedby="validation-basic-first-name"
-                      {...(errors.firstName && { helperText: 'This field is required' })}
-                    />
+                  render={({ field }) => (
+                    <CustomTextField fullWidth label="Plan Name" {...field} error={!!errors.plan_name} helperText={errors.plan_name && "This field is required"} />
                   )}
                 />
               </Grid>
@@ -122,78 +113,75 @@ const CreatePlan = ({ handleDialogClose, open }) => {
                   control={control}
                   rules={{ required: true }}
                   render={({ field }) => (
-                    <CustomTextField
-                      rows={4}
-                      fullWidth
-                      multiline
-                      {...field}
-                      label="Plan Description"
-                      error={Boolean(errors.textarea)}
-                      aria-describedby="validation-basic-textarea"
-                      {...(errors.textarea && { helperText: 'This field is required' })}
-                    />
+                    <CustomTextField fullWidth multiline rows={4} label="Plan Description" {...field} error={!!errors.plan_description} helperText={errors.plan_description && "This field is required"} />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Controller
+                  name="plan_duration"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <CustomTextField fullWidth type="number" label="Duration" {...field} error={!!errors.plan_duration} helperText={errors.plan_duration && "This field is required"} />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Controller
+                  name="plan_duration_type"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <CustomTextField fullWidth select label="Duration Type" {...field}>
+                      <MenuItem value="days">Days</MenuItem>
+                      <MenuItem value="months">Months</MenuItem>
+                      <MenuItem value="year">Year</MenuItem>
+                    </CustomTextField>
                   )}
                 />
               </Grid>
               <Grid item xs={12}>
                 <Controller
-                  name="plan_duration"
+                  name="plan_price"
                   control={control}
                   rules={{ required: true }}
-                
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      type="number"
-                      value={value}
-                      label="Duration"
-                      onChange={onChange}
-                      placeholder="120 days"
-                      error={Boolean(errors.firstName)}
-                      aria-describedby="validation-basic-first-name"
-                      {...(errors.firstName && { helperText: 'This field is required' })}
-                    />
+                  render={({ field }) => (
+                    <CustomTextField fullWidth type="number" label="Price ($)" {...field} error={!!errors.plan_price} helperText={errors.plan_price && "This field is required"} />
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-            <Controller
-              name="Duration Type"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <CustomTextField
-                  select
-                  fullWidth
-                  defaultValue="days"
-                  label="Duration Type"
-                  SelectProps={{
-                    value: value,
-                    onChange: (e) => onChange(e)
-                  }}
-                  id="validation-basic-select"
-                  error={Boolean(errors.select)}
-                  aria-describedby="validation-basic-select"
-                  {...(errors.select && { helperText: 'This field is required' })}
-                >
-                  <MenuItem value="days">Days</MenuItem>
-                  <MenuItem value="months">Months</MenuItem>
-                  <MenuItem value="year">Year</MenuItem>
-                </CustomTextField>
-              )}
-            />
-          </Grid>
+              {customFields.map((field) => (
+                <Grid container item xs={12} spacing={2} key={field.id} alignItems="center">
+                  <Grid item xs={5}>
+                    <TextField fullWidth label="Feature Name" value={field.name} onChange={(e) => handleFieldChange(field.id, "name", e.target.value)} required />
+                  </Grid>
+                  <Grid item xs={5}>
+                    <TextField fullWidth label="Value" value={field.value} onChange={(e) => handleFieldChange(field.id, "value", e.target.value)} required />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <IconButton color="error" onClick={() => handleRemoveField(field.id)}>
+                      <RemoveCircleIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              ))}
+              <Grid item xs={12}>
+                <Button variant="outlined" startIcon={<AddCircleIcon />} onClick={handleAddField}>
+                  Add Feature
+                </Button>
+              </Grid>
             </Grid>
+            <DialogActions sx={{ justifyContent: "center", display: "flex" }}>
+              <Button variant="tonal" color="error" onClick={handleDialogClose} sx={{ mx: 2 }}>
+                Cancel
+              </Button>
+              <Button variant="contained" color="primary" type="submit" sx={{ mx: 2 }}>
+                Submit
+              </Button>
+            </DialogActions>
           </form>
         </DialogContent>
-        <DialogActions className="dialog-actions-dense" sx={{ justifyContent: 'center', display: 'flex' }}>
-          <Button variant="tonal" color="error" onClick={handleDialogClose} sx={{ mx: 2 }}>
-            Cancel
-          </Button>
-          <Button variant="contained" color="primary" type="submit" onClick={handleSubmit} sx={{ mx: 2 }}>
-            Submit
-          </Button>
-        </DialogActions>
       </Dialog>
     </Fragment>
   );

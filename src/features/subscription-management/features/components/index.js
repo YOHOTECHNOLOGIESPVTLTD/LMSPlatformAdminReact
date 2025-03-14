@@ -59,6 +59,7 @@ const defaultValues = {
 
 const SubscriptionFeatures = () => {
   const [customFields, setCustomFields] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddField = () => {
     setCustomFields([...customFields, { id: Date.now(), name: "", value: "" }]);
@@ -69,8 +70,8 @@ const SubscriptionFeatures = () => {
   };
 
   const handleFieldChange = (id, key, value) => {
-    setCustomFields(
-      customFields.map((field) => (field.id === id ? { ...field, [key]: value } : field))
+    setCustomFields((prevFields) =>
+      prevFields.map((field) => (field.id === id ? { ...field, [key]: value } : field))
     );
   };
 
@@ -127,66 +128,67 @@ const SubscriptionFeatures = () => {
       marginTop: theme.spacing(2)
     }
   }));
-  const onSubmit = async (data) => {
+  const onSubmit = async (eventOrData, data) => {
+    // Check if the first argument is an event
+    if (eventOrData?.preventDefault) {
+      eventOrData.preventDefault();
+    }
   
-    if (!studentInputBoxChecked && !studentInputChecked) {
-      setStudentError(true);
-    }
-    if (!adminInputBoxChecked && !adminInputChecked) {
-      setAdminError(true);
-    }
-    if (!teachersInputBoxChecked && !teachersInputChecked) {
-      setTeachersError(true);
-    }
-    if (!batchesInputBoxChecked && !batchesInputChecked) {
-      setBatchesError(true);
-    }
-    if (!coursesInputBoxChecked && !coursesInputChecked) { 
-      setCoursesError(true);
-    }
-    if (!classesInputBoxChecked && !classesInputChecked) {
-      setClassesError(true);
-    }
+    const formData = eventOrData?.target ? data : eventOrData; // Handle different call types
+  
+    if (isSubmitting) return; 
+    setIsSubmitting(true);
+  
+    // Error Handling for Required Fields
+    if (!studentInputBoxChecked && !studentInputChecked) setStudentError(true);
+    if (!adminInputBoxChecked && !adminInputChecked) setAdminError(true);
+    if (!teachersInputBoxChecked && !teachersInputChecked) setTeachersError(true);
+    if (!batchesInputBoxChecked && !batchesInputChecked) setBatchesError(true);
+    if (!coursesInputBoxChecked && !coursesInputChecked) setCoursesError(true);
+    if (!classesInputBoxChecked && !classesInputChecked) setClassesError(true);
+  
     const allFeatures = [
-      { feature: "Admins", count: data?.admins },
-      { feature: "Students", count: data?.students },
-      { feature: "Teachers", count: data?.teachers },
-      { feature: "Batches", count: data?.batches },
-      { feature: "Courses", count: data?.courses },
+      { feature: "Admins", count: formData?.admins },
+      { feature: "Students", count: formData?.students },
+      { feature: "Teachers", count: formData?.teachers },
+      { feature: "Batches", count: formData?.batches },
+      { feature: "Courses", count: formData?.courses },
+      { feature: "Classes", count: formData?.classes },
       ...customFields.map((field) => ({
         feature: field.name,
         count: field.value,
       })),
     ];
+  
     const subscription_data = {
-      identity: data?.plan_name,
+      identity: formData?.plan_name,
       image: selectedImage,
-      description: data?.description,
+      description: formData?.description,
       features: allFeatures,
-      duration: { value: data?.plan_duration, unit: data?.plan_duration_type },
-      price: data.plan_price,
+      duration: { value: formData?.plan_duration, unit: formData?.plan_duration_type },
+      price: formData.plan_price,
     };
   
     console.log("subData :", subscription_data);
   
     try {
       showSpinnerFn();
-  
       const result = await addSubscriptionFeature(subscription_data);
       toast.success(result.message);
       navigate(-1);
     } catch (error) {
-   
       if (error?.message.includes("E11000 duplicate key error")) {
-        toast.error(` A plan with the name "${data.plan_name}" already exists. Choose a different name.`);
+        toast.error(`A plan with the name "${formData.plan_name}" already exists. Choose a different name.`);
       } else {
         toast.error(error?.message || "Something went wrong.");
       }
     } finally {
       hideSpinnerFn();
-      console.log(" Process Completed");
+      setIsSubmitting(false);
+      console.log("Process Completed");
     }
   };
+  
   
   
 
@@ -1331,7 +1333,7 @@ const SubscriptionFeatures = () => {
 </Grid>
 
 
-          {customFields.map((field) => (
+{customFields.map((field) => (
   <Grid container item xs={12} spacing={2} key={field.id} sx={{ position: "relative", paddingTop: 2 }}>
     
     <IconButton
@@ -1425,36 +1427,25 @@ const SubscriptionFeatures = () => {
   </Grid>
 ))}
 
+            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+              <Button variant="outlined" startIcon={<AddCircleIcon />} onClick={handleAddField}>
+                Add Field
+              </Button>
+            </Grid>
 
+            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+              <Button variant="contained" color="error" onClick={() => setCustomFields([])} sx={{ mx: 2 }}>
+                Cancel
+              </Button>
+              <Button type="submit" variant="contained" sx={{ mx: 2 }}>
+                Submit
+              </Button>
+            </Grid>
 
-
-
-
-
-
-
-
-      
-      <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-        <Button variant="outlined" startIcon={<AddCircleIcon />} onClick={handleAddField}>
-          Add Field
-        </Button>
-      </Grid>
-
-      <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-          <Button variant="contained" color="error" onClick={() => setCustomFields([])} sx={{ mx: 2 }}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="contained" sx={{ mx: 2 }}>
-            Submit
-          </Button>
-        </Grid>
-
-
-        </Grid>
-      </form>
-    </Box>
-  );
-};
+                    </Grid>
+                  </form>
+                </Box>
+              );
+            };
 
 export default SubscriptionFeatures;

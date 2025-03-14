@@ -1,57 +1,96 @@
-// ** MUI Imports
-import Grid from '@mui/material/Grid';
-// import { useEffect } from 'react';
-import { Box } from '@mui/material';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Grid from "@mui/material/Grid";
+import { Box, Pagination, CircularProgress, Typography } from "@mui/material";
+import PlanDetails from "./plan-details";
 
-// ** Custom Components Imports
-import PlanDetails from './plan-details';
-// import { getAllSubscriptionPlans } from '../redux/subscriptionPlansThunks';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { selectSubscriptionPlans } from '../redux/subscriptionPlansSelectors';
-import { Pagination } from '@mui/material';
-// import { useSpinner } from 'context/spinnerContext';
-
-const PricingPlans = ({page,setpage,plans}) => {
-
-  // ** Props
-
-  // create-modal
+const PricingPlans = ({ page, setPage, plans }) => {
+  const [loading, setLoading] = useState(false);
+  const [plansData, setPlansData] = useState(plans || { data: [], last_page: 1 });
 
 
-  // useEffect(() => {
-  //   try {
-  //     showSpinnerFn()
-  //     let data = { perPage : 3,page:page}
-  //     dispatch(getAllSubscriptionPlans(data));
-  //     console.log("running",data)
-  //   } catch (error) {
-  //     hideSpinnerFn()
-  //   }finally{
-  //     hideSpinnerFn()
-  //   }
-    
-  // }, []);
-
-
+  useEffect(() => {
+    const fetchPlans = async () => {
+      setLoading(true);
+      try {
+  
+        const token = localStorage.getItem("token"); 
+        if (!token) {
+          return;
+        }
+  
+        const response = await axios.get(
+          `http://localhost:3001/api/subscription/plans?page=${page}&perPage=3`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        if (response.data && response.data.data) {
+          setPlansData({
+            data: response.data.data.data,
+            last_page: response.data.data.last_page || 1,
+          });
+        }
+      }  finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchPlans();
+  }, [page]);
+  
+  
   return (
     <Grid container spacing={6}>
-      {plans &&
-        plans?.data?.map((item, i) => (
-          <Grid item xs={12} md={4} key={i}>
-            <PlanDetails plans={item} />
-          </Grid>
-        ))}
-      <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", py: "20px"}}>
-      {
-        plans?.last_page && plans?.last_page !== 1 && 
-        <Pagination
-        page={page}
-        count={plans?.last_page}
-        onChange={(e,value) => {
-          setpage(value)
-        }}
-        />
-      }  
+      {loading && (
+        <Grid
+          item
+          xs={12}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "200px",
+          }}
+        >
+          <CircularProgress />
+        </Grid>
+      )}
+
+      {!loading && Array.isArray(plansData.data) && plansData.data.length > 0 ? (
+  plansData.data.map((item, i) => (
+    <Grid item xs={12} md={4} key={i}>
+      <PlanDetails plans={item} />
+    </Grid>
+  ))
+) : (
+  !loading && (
+    <Grid item xs={12} sx={{ textAlign: "center", py: 4 }}>
+      <Typography variant="h6" color="text.secondary">
+        No plans available. Try adding a new plan.
+      </Typography>
+    </Grid>
+  )
+)}
+
+
+      <Box sx={{ display: "flex", justifyContent: "center", width: "100%", py: "20px" }}>
+        {plansData?.last_page && plansData?.last_page > 1 && (
+          <Pagination
+            page={page}
+            count={plansData.last_page}
+            onChange={(e, value) => {
+              console.log("🔹 Page changed to:", value);
+              if (typeof setPage === "function") {
+                setPage(value); 
+              } 
+            }}
+            color="primary"
+          />
+        )}
       </Box>
     </Grid>
   );

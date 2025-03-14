@@ -1,7 +1,7 @@
 // SubscriptionPlanService.js
 import axios from 'axios';
 
-const SUBSCRIPTION_PLAN_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/subscription-plans`;
+const SUBSCRIPTION_PLAN_END_POINT = "http://localhost:3001/api/subscription";
 import Client from "../../../../api/index"
 
 export const getAllSubscriptionPlans = async (data) => {
@@ -58,6 +58,13 @@ export const searchSubscriptionPlans = async (searchQuery) => {
 
 export const addSubscriptionPlan = async (data) => {
   try {
+    console.log("🟢 Sending API Request to:", `${SUBSCRIPTION_PLAN_END_POINT}/create`);
+    console.log("🟢 Request Headers:", {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    });
+    console.log("🟢 Request Data:", data);
+
     const response = await axios.post(`${SUBSCRIPTION_PLAN_END_POINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
@@ -65,16 +72,26 @@ export const addSubscriptionPlan = async (data) => {
       }
     });
 
-    if (response.data.status) {
+    console.log("✅ API Response:", response.data);
+
+    if (response.data.status === "success") {
       return { success: true, message: 'SubscriptionPlan created successfully' };
     } else {
-      return { success: false, message: 'Failed to create SubscriptionPlan' };
+      console.error("❌ Backend Error Response:", response.data);
+      return { success: false, message: response.data.message || 'Failed to create SubscriptionPlan' };
     }
   } catch (error) {
-    console.error('Error in addSubscriptionPlan:', error);
+    console.error("❌ Error in addSubscriptionPlan:", error);
+
+    if (error.response) {
+      console.error("❌ Response Data:", error.response.data);
+      console.error("❌ Status Code:", error.response.status);
+    }
+
     throw error;
   }
 };
+
 
 export const deleteSubscriptionPlan = async (SubscriptionPlanId) => {
   try {
