@@ -24,6 +24,8 @@ const FormStep5AccountInfo = (props) => {
   console.log('cities', cities);
   const defaultCountry = countries.filter((country) => country.iso2 === 'IN');
   console.log('dc', defaultCountry);
+  const [storedState1, setStoredState1] = useState('');
+  const [storedCity1, setStoredCity1] = useState('');
 
   useEffect(() => {
     dispatch(loadCountries());
@@ -48,9 +50,22 @@ const FormStep5AccountInfo = (props) => {
       dispatch(loadCitiesForFromB(defaultCountry[0].iso2, stateCode));
     }
   };
-  const handleCityChange=(e)=>{
-    const cityId=e.target.value
-  }
+  const handleCityChange = (e) => {
+    const cityId = e.target.value;
+  };
+  const handleStoredState = (e) => {
+    const ss = states.find((state) => state.iso2 === e.target.value);
+    console.log('ss', ss);
+
+    setStoredState1(ss.name);
+    console.log('ssn', storedState);
+  };
+
+  const handleStoredCity = (e) => {
+    const stc = cities.filter((city) => city.id === e.target.value);
+    console.log('stc', stc);
+    setStoredCity1(stc[0].name);
+  };
 
   const handleFormChange = (name, value) => {
     setFormData((prev) => {
@@ -135,7 +150,7 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length?defaultCountry[0].phonecode:''}
+                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length ? defaultCountry[0].phonecode : ''}
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }
@@ -163,7 +178,7 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length?defaultCountry[0].phonecode:''}
+                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length ? defaultCountry[0].phonecode : ''}
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }
@@ -285,9 +300,10 @@ const FormStep5AccountInfo = (props) => {
                         value={value || formData.length ? formData.state : ''}
                         label="State"
                         onChange={(e) => {
-                          onChange(e);
+                          onChange(storedState1);
                           handleStateChange(e);
                           handleFormChange('state', e.target.value);
+                          handleStoredState(e)
                         }}
                         error={Boolean(accountErrors.state)}
                         helperText={accountErrors.state && 'This field is required'}
@@ -320,12 +336,13 @@ const FormStep5AccountInfo = (props) => {
                       <TextField
                         fullWidth
                         select
-                        value={value||formData.length ? formData.city : ''}
+                        value={value || formData.length ? formData.city : ''}
                         label="City"
                         onChange={(e) => {
-                          onChange(e);
+                          onChange(storedCity1);
                           handleCityChange(e);
-                          handleFormChange('city',e.target.value)
+                          handleFormChange('city', e.target.value);
+                          handleStoredCity(e)
                         }}
                         error={Boolean(accountErrors.city)}
                         helperText={accountErrors.city && 'This field is required'}
