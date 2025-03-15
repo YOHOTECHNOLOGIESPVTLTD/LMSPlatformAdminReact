@@ -81,21 +81,36 @@ const FormStep1PersonalInfo = ({
       return updatedData;
     });
   };
+  useEffect(() => {
+    if (storedState.length > 0) {
+      handleFormChange('state', storedState);
+    }
+  }, [storedState]);
 
   const handleStoredState = (e) => {
     const ss = states.find((state) => state.iso2 === e.target.value);
     console.log('ss', ss);
-    setStoredState(ss.name)
+    setStoredState(ss.name);
+    if (storedState.length > 0) {
+      handleFormChange('state', storedState);
+    }
   };
+  useEffect(() => {
+    if (storedCity.length > 0) {
+      handleFormChange('city', storedCity);
+    }
+  }, [storedCity]);
 
-  const handleStoredCity=(e)=>{
-    const stc=cities.filter((city)=>city.id===e.target.value)
-    console.log('stc',stc);
-    setStoredCity(stc[0].name)
-  }
+  const handleStoredCity = (e) => {
+    const stc = cities.filter((city) => city.id === e.target.value);
+    console.log('stc', stc);
+    setStoredCity(stc[0].name);
+    if (storedCity.length) {
+      handleFormChange('city', storedCity);
+    }
+  };
   console.log('sssn', storedState);
-  console.log('stcc',storedCity);
-  
+  console.log('stcc', storedCity);
 
   return (
     <form
@@ -398,12 +413,13 @@ const FormStep1PersonalInfo = ({
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.length ? formData.state : ''}
+                        value={value|| formData.length?formData.stateCode: ''}
                         label="State"
                         onChange={(e) => {
-                          onChange(storedState);
+                          const selectedState=states.find((state)=>state.iso2===e.target.value)
+                          onChange(selectedState.name);
                           handleStateChange(e);
-                          handleFormChange('state', e.target.value);
+                          handleFormChange('stateCode', e.target.value);
                           handleStoredState(e);
                         }}
                         placeholder="Enter state"
@@ -437,12 +453,14 @@ const FormStep1PersonalInfo = ({
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.length ? formData.city : ''}
+                        value={value ||formData.lengh?formData.cityCode:""} 
                         label="City"
                         onChange={(e) => {
-                          onChange(storedCity);
+                          const selectedCity=cities.find((city)=>city.id===e.target.value)
+                          console.log(selectedCity.name,'selectedCIty')
+                          onChange(selectedCity.name);
                           handleCityChange(e);
-                          handleFormChange('city', e.target.value);
+                          handleFormChange('cityCode', e.target.value);
                           handleStoredCity(e);
                         }}
                         placeholder="Enter city"
