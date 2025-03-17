@@ -32,13 +32,15 @@ const FormStep1PersonalInfo = ({
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
   const countries = useSelector(selectCountries);
-  console.log('countries',countries);
-  
+  console.log('countries', countries);
+
   const states = useSelector(selectStates);
   const cities = useSelector(selectCitiesForFormA);
-  console.log("cities",cities);
-  
+  console.log('cities', cities);
+
   const defaultCountry = countries.filter((country) => country.iso2 === 'IN');
+  const [storedState, setStoredState] = useState('');
+  const [storedCity, setStoredCity] = useState('');
 
   useEffect(() => {
     dispatch(loadCountries());
@@ -64,12 +66,12 @@ const FormStep1PersonalInfo = ({
   const handleStateChange = (e) => {
     const stateCode = e.target.value;
     if (defaultCountry.length) {
-      dispatch(loadCitiesForFromA(defaultCountry[0].iso2,stateCode));
+      dispatch(loadCitiesForFromA(defaultCountry[0].iso2, stateCode));
     }
   };
   const handleCityChange = (e) => {
     const cityId = e.target.value;
-    console.log('city Id',cityId)
+    console.log('city Id', cityId);
   };
 
   const handleFormChange = (name, value) => {
@@ -79,6 +81,36 @@ const FormStep1PersonalInfo = ({
       return updatedData;
     });
   };
+  useEffect(() => {
+    if (storedState.length > 0) {
+      handleFormChange('state', storedState);
+    }
+  }, [storedState]);
+
+  const handleStoredState = (e) => {
+    const ss = states.find((state) => state.iso2 === e.target.value);
+    console.log('ss', ss);
+    setStoredState(ss.name);
+    if (storedState.length > 0) {
+      handleFormChange('state', storedState);
+    }
+  };
+  useEffect(() => {
+    if (storedCity.length > 0) {
+      handleFormChange('city', storedCity);
+    }
+  }, [storedCity]);
+
+  const handleStoredCity = (e) => {
+    const stc = cities.filter((city) => city.id === e.target.value);
+    console.log('stc', stc);
+    setStoredCity(stc[0].name);
+    if (storedCity.length) {
+      handleFormChange('city', storedCity);
+    }
+  };
+  console.log('sssn', storedState);
+  console.log('stcc', storedCity);
 
   return (
     <form
@@ -88,11 +120,11 @@ const FormStep1PersonalInfo = ({
       })}
     >
       <Grid container spacing={5}>
-        <Grid item xs={6}>
-          <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+        <Grid item xs={6} sx={{ml:'45%'}}>
+          <Typography variant="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
             {steps[0].title}
           </Typography>
-          <Typography variant="caption" component="p">
+          <Typography variant="caption" component="p" sx={{ml:'10px'}}>
             {steps[0].subtitle}
           </Typography>
         </Grid>
@@ -101,7 +133,7 @@ const FormStep1PersonalInfo = ({
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-              Institute Details
+              Enter Your Institute Details Here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -205,7 +237,7 @@ const FormStep1PersonalInfo = ({
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-              Address Information
+              Enter your Address Information here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -295,7 +327,7 @@ const FormStep1PersonalInfo = ({
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneOutlinedIcon color="#3B4056" />+{defaultCountry.length?defaultCountry[0].phonecode:''}
+                              <PhoneOutlinedIcon color="#3B4056" />+{defaultCountry.length ? defaultCountry[0].phonecode : ''}
                             </InputAdornment>
                           )
                         }}
@@ -320,14 +352,14 @@ const FormStep1PersonalInfo = ({
                         }}
                         placeholder="12345 67890"
                         autoComplete="off"
-                        sx={{ backgroundColor: personalErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
+                        sx={{ backgroundColor: personalErrors['alt_phone'] ? '#FFFFFF' : '#f5f5f5' }}
                         error={Boolean(personalErrors['alt_phone'])}
                         aria-describedby="stepper-linear-personal-alt_phone"
                         {...(personalErrors['alt_phone'] && { helperText: personalErrors?.alt_phone?.message })}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneOutlinedIcon color="#3B4056" />+{defaultCountry.length?defaultCountry[0].phonecode:''}
+                              <PhoneOutlinedIcon color="#3B4056" />+{defaultCountry.length ? defaultCountry[0].phonecode : ''}
                             </InputAdornment>
                           )
                         }}
@@ -351,10 +383,10 @@ const FormStep1PersonalInfo = ({
                           onChange(e);
                         }}
                         placeholder="Enter country"
-                        sx={{ backgroundColor: personalErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
+                        sx={{ backgroundColor: personalErrors['Country'] ? '#FFFFFF' : '#EBEBE4' }}
                         error={Boolean(personalErrors.state)}
                         aria-describedby="stepper-linear-personal-state-helper"
-                        {...(personalErrors.state && { helperText: personalErrors?.state?.message })}
+                        {...(personalErrors.Country && { helperText: personalErrors?.Country?.message })}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -381,12 +413,14 @@ const FormStep1PersonalInfo = ({
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.length ? formData.state : ''}
+                        value={value || formData.length ? formData.stateCode : ''}
                         label="State"
                         onChange={(e) => {
-                          onChange(e);
+                          const selectedState = states.find((state) => state.iso2 === e.target.value);
+                          onChange(selectedState.name);
                           handleStateChange(e);
-                          handleFormChange('state', e.target.value);
+                          handleFormChange('stateCode', e.target.value);
+                          handleStoredState(e);
                         }}
                         placeholder="Enter state"
                         sx={{ backgroundColor: personalErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
@@ -415,16 +449,19 @@ const FormStep1PersonalInfo = ({
                     name="city"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value,onChange} }) => (
+                    render={({ field: { value, onChange } }) => (
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.length?formData.city:''}
+                        value={value || formData.lengh ? formData.cityCode : ''}
                         label="City"
                         onChange={(e) => {
-                          onChange(e)
-                          handleCityChange(e)
-                          handleFormChange('city',e.target.value)
+                          const selectedCity = cities.find((city) => city.id === e.target.value);
+                          console.log(selectedCity.name, 'selectedCIty');
+                          onChange(selectedCity.name);
+                          handleCityChange(e);
+                          handleFormChange('cityCode', e.target.value);
+                          handleStoredCity(e);
                         }}
                         placeholder="Enter city"
                         sx={{ backgroundColor: personalErrors['city'] ? '#FFFFFF' : '#f5f5f5' }}
@@ -488,7 +525,7 @@ const FormStep1PersonalInfo = ({
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-              Social Details
+              Enter your Contact Details here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -563,7 +600,7 @@ const FormStep1PersonalInfo = ({
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 2 }}>
-              Subscription Information
+              Enter your Subscription Information here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -574,7 +611,7 @@ const FormStep1PersonalInfo = ({
                     name="subscription"
                     control={personalControl}
                     defaultValue=""
-                    render={({ field }) => (
+                    render={({field}) => (
                       <TextField
                         {...field}
                         fullWidth
@@ -607,27 +644,29 @@ const FormStep1PersonalInfo = ({
             </Paper>
           </Grid>
         </Grid>
-
-        {/* Group 5: Description */}
-        {/* <Grid container item>
-          <Grid xs={3}>
-            <Typography variant="h4" sx={{ mt: 2 }}>
-              Description
-            </Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Paper elevation={3} sx={{ p: 3 }}>
-              <Grid container spacing={3}>
-                
-              </Grid>
-            </Paper>
-          </Grid>
-        </Grid> */}
         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button variant="contained" color="secondary" onClick={handleBack}>
+          <Button
+            variant="contained"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            onClick={handleBack}
+          >
             Back
           </Button>
-          <Button type="submit" variant="contained">
+          <Button
+            type="submit"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            variant="contained"
+          >
             Next
           </Button>
         </Grid>

@@ -3,6 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import { handleMultipleFiles } from 'features/fileUpload';
+import { getImageUrl } from 'themes/imageUtlis';
 
 const ImageUploader = ({ galleryImages, setGalleryImages }) => {
   const handleImageChange = async (event) => {
@@ -12,14 +13,26 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
     for (const file of files) {
       data.append('files', file);
     }
-    const response = await handleMultipleFiles(data);
-    console.log(response)
-    const gallery = Array.from(files).map((file) => ({
-      file,
-      preview: URL.createObjectURL(file)
-    }));
-    setGalleryImages([...galleryImages, ...gallery]);
+
+    try {
+      const response = await handleMultipleFiles(data);
+      console.log('Response from handleMultipleFiles:', response); 
+
+      if (response && response.data && response.data.data) {
+        const uploadedImages = response.data.data.map((file) => ({
+          file,
+          preview: getImageUrl(file.file)
+        }));
+        setGalleryImages([...galleryImages, ...uploadedImages]);
+      } else {
+        console.error('No data returned from file upload');
+      }
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    }
   };
+  console.log('gallery Images',galleryImages);
+  
 
   const handleRemoveImage = (index) => {
     const updatedImages = [...galleryImages];

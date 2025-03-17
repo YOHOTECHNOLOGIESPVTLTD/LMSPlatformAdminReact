@@ -1,4 +1,4 @@
-import { Grid, Typography, InputAdornment, Button, Paper} from '@mui/material';
+import { Grid, Typography, InputAdornment, Button, Paper } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import XIcon from '@mui/icons-material/X';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -45,7 +45,7 @@ const FormStep3SocialLinks = (props) => {
         <Grid container item>
           <Grid item xs={3}>
             <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 3 }}>
-              Social Links
+              Give your Social Links here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -76,7 +76,7 @@ const FormStep3SocialLinks = (props) => {
                               <XIcon sx={{ mr: '5px' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -108,7 +108,7 @@ const FormStep3SocialLinks = (props) => {
                               <FacebookIcon sx={{ mr: '5px' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -172,7 +172,7 @@ const FormStep3SocialLinks = (props) => {
                               <LinkedInIcon sx={{ mr: '5px' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' } 
+                          sx: { backgroundColor: '#f5f5f5' }
                         }}
                       />
                     )}
@@ -216,11 +216,29 @@ const FormStep3SocialLinks = (props) => {
         </Grid>
 
         {/* Navigation Buttons */}
-        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-          <Button variant="contained" color="secondary" onClick={handleBack}>
+        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Button
+            variant="contained"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            onClick={handleBack}
+          >
             Back
           </Button>
-          <Button type="submit" variant="contained">
+          <Button
+            type="submit"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            variant="contained"
+          >
             Next
           </Button>
         </Grid>

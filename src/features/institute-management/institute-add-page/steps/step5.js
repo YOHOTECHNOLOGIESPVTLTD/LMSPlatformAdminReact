@@ -24,6 +24,8 @@ const FormStep5AccountInfo = (props) => {
   console.log('cities', cities);
   const defaultCountry = countries.filter((country) => country.iso2 === 'IN');
   console.log('dc', defaultCountry);
+  const [storedState, setStoredState] = useState('');
+  const [storedCity, setStoredCity] = useState('');
 
   useEffect(() => {
     dispatch(loadCountries());
@@ -48,10 +50,40 @@ const FormStep5AccountInfo = (props) => {
       dispatch(loadCitiesForFromB(defaultCountry[0].iso2, stateCode));
     }
   };
-  const handleCityChange=(e)=>{
-    const cityId=e.target.value
-  }
+  const handleCityChange = (e) => {
+    const cityId = e.target.value;
+    console.log(cityId);
+  };
+  useEffect(() => {
+    if (storedState.length > 0) {
+      handleFormChange('state', storedState);
+    }
+  }, [storedState]);
 
+  const handleStoredState = (e) => {
+    const ss = states.find((state) => state.iso2 === e.target.value);
+    console.log('ss', ss);
+    setStoredState(ss.name);
+    if (storedState.length > 0) {
+      handleFormChange('state', storedState);
+    }
+  };
+  useEffect(() => {
+    if (storedCity.length > 0) {
+      handleFormChange('city', storedCity);
+    }
+  }, [storedCity]);
+
+  const handleStoredCity = (e) => {
+    const stc = cities.filter((city) => city.id === e.target.value);
+    console.log('stc', stc);
+    setStoredCity(stc[0].name);
+    if (storedCity.length) {
+      handleFormChange('city', storedCity);
+    }
+  };
+  console.log('sssn', storedState);
+  console.log('stcc', storedCity);
   const handleFormChange = (name, value) => {
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: value };
@@ -61,7 +93,8 @@ const FormStep5AccountInfo = (props) => {
   };
 
   return (
-    <form key={5} onSubmit={handleAccountSubmit(onSubmit)}>
+    <form key={5} onSubmit={
+      handleAccountSubmit(onSubmit)}>
       <Grid container spacing={5}>
         {/* Step Title */}
         <Grid item xs={12} textAlign="center">
@@ -77,7 +110,7 @@ const FormStep5AccountInfo = (props) => {
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-              Branch Details
+             Enter your Branch Details here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -135,7 +168,7 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length?defaultCountry[0].phonecode:''}
+                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length ? defaultCountry[0].phonecode : ''}
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }
@@ -163,7 +196,7 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length?defaultCountry[0].phonecode:''}
+                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length ? defaultCountry[0].phonecode : ''}
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }
@@ -282,12 +315,14 @@ const FormStep5AccountInfo = (props) => {
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.length ? formData.state : ''}
+                        value={value || formData.length ? formData.stateCode : ''}
                         label="State"
                         onChange={(e) => {
-                          onChange(e);
+                          const selectedState = states.find((state) => state.iso2 === e.target.value);
+                          onChange(selectedState.name);
                           handleStateChange(e);
-                          handleFormChange('state', e.target.value);
+                          handleFormChange('stateCode', e.target.value);
+                          handleStoredState(e);
                         }}
                         error={Boolean(accountErrors.state)}
                         helperText={accountErrors.state && 'This field is required'}
@@ -320,12 +355,15 @@ const FormStep5AccountInfo = (props) => {
                       <TextField
                         fullWidth
                         select
-                        value={value||formData.length ? formData.city : ''}
+                        value={value || formData.length ? formData.cityCode : ''}
                         label="City"
                         onChange={(e) => {
-                          onChange(e);
+                          const selectedCity = cities.find((city) => city.id === e.target.value);
+                          console.log(selectedCity.name, 'selectedCIty');
+                          onChange(selectedCity.name);
                           handleCityChange(e);
-                          handleFormChange('city',e.target.value)
+                          handleFormChange('cityCode', e.target.value);
+                          handleStoredCity(e);
                         }}
                         error={Boolean(accountErrors.city)}
                         helperText={accountErrors.city && 'This field is required'}
@@ -387,8 +425,8 @@ const FormStep5AccountInfo = (props) => {
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-              Contact Details
-            </Typography>
+              Enter your Contact Details here
+            </Typography> 
           </Grid>
           <Grid item xs={9}>
             <Paper elevation={3} sx={{ p: 3 }}>
@@ -555,11 +593,29 @@ const FormStep5AccountInfo = (props) => {
 
         {/* Navigation Buttons */}
         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button variant="contained" color="secondary" onClick={handleBack}>
+          <Button
+            variant="contained"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            onClick={handleBack}
+          >
             Back
           </Button>
-          <Button type="submit" variant="contained">
-            Submit
+          <Button
+            type="submit"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            variant="contained"
+          >
+            Next
           </Button>
         </Grid>
       </Grid>
