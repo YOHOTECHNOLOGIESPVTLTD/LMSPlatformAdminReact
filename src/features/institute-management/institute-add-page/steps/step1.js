@@ -120,11 +120,11 @@ const FormStep1PersonalInfo = ({
       })}
     >
       <Grid container spacing={5}>
-        <Grid item xs={6}>
-          <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+        <Grid item xs={6} sx={{ml:'45%'}}>
+          <Typography variant="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
             {steps[0].title}
           </Typography>
-          <Typography variant="caption" component="p">
+          <Typography variant="caption" component="p" sx={{ml:'10px'}}>
             {steps[0].subtitle}
           </Typography>
         </Grid>
@@ -133,7 +133,7 @@ const FormStep1PersonalInfo = ({
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-              Institute Details
+              Enter Your Institute Details Here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -237,7 +237,7 @@ const FormStep1PersonalInfo = ({
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-              Address Information
+              Enter your Address Information here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -383,7 +383,7 @@ const FormStep1PersonalInfo = ({
                           onChange(e);
                         }}
                         placeholder="Enter country"
-                        sx={{ backgroundColor: personalErrors['Country'] ? '#FFFFFF' : '#f5f5f5' }}
+                        sx={{ backgroundColor: personalErrors['Country'] ? '#FFFFFF' : '#EBEBE4' }}
                         error={Boolean(personalErrors.state)}
                         aria-describedby="stepper-linear-personal-state-helper"
                         {...(personalErrors.Country && { helperText: personalErrors?.Country?.message })}
@@ -413,10 +413,10 @@ const FormStep1PersonalInfo = ({
                       <TextField
                         fullWidth
                         select
-                        value={value|| formData.length?formData.stateCode: ''}
+                        value={value || formData.length ? formData.stateCode : ''}
                         label="State"
                         onChange={(e) => {
-                          const selectedState=states.find((state)=>state.iso2===e.target.value)
+                          const selectedState = states.find((state) => state.iso2 === e.target.value);
                           onChange(selectedState.name);
                           handleStateChange(e);
                           handleFormChange('stateCode', e.target.value);
@@ -453,11 +453,11 @@ const FormStep1PersonalInfo = ({
                       <TextField
                         fullWidth
                         select
-                        value={value ||formData.lengh?formData.cityCode:""} 
+                        value={value || formData.lengh ? formData.cityCode : ''}
                         label="City"
                         onChange={(e) => {
-                          const selectedCity=cities.find((city)=>city.id===e.target.value)
-                          console.log(selectedCity.name,'selectedCIty')
+                          const selectedCity = cities.find((city) => city.id === e.target.value);
+                          console.log(selectedCity.name, 'selectedCIty');
                           onChange(selectedCity.name);
                           handleCityChange(e);
                           handleFormChange('cityCode', e.target.value);
@@ -525,7 +525,7 @@ const FormStep1PersonalInfo = ({
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-              Social Details
+              Enter your Contact Details here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -600,7 +600,7 @@ const FormStep1PersonalInfo = ({
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 2 }}>
-              Subscription Information
+              Enter your Subscription Information here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -611,7 +611,7 @@ const FormStep1PersonalInfo = ({
                     name="subscription"
                     control={personalControl}
                     defaultValue=""
-                    render={({ field }) => (
+                    render={({field}) => (
                       <TextField
                         {...field}
                         fullWidth
@@ -644,27 +644,29 @@ const FormStep1PersonalInfo = ({
             </Paper>
           </Grid>
         </Grid>
-
-        {/* Group 5: Description */}
-        {/* <Grid container item>
-          <Grid xs={3}>
-            <Typography variant="h4" sx={{ mt: 2 }}>
-              Description
-            </Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Paper elevation={3} sx={{ p: 3 }}>
-              <Grid container spacing={3}>
-                
-              </Grid>
-            </Paper>
-          </Grid>
-        </Grid> */}
         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button variant="contained" color="secondary" onClick={handleBack}>
+          <Button
+            variant="contained"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            onClick={handleBack}
+          >
             Back
           </Button>
-          <Button type="submit" variant="contained">
+          <Button
+            type="submit"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            variant="contained"
+          >
             Next
           </Button>
         </Grid>

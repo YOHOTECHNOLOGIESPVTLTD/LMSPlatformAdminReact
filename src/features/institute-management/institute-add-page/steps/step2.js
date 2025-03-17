@@ -1,7 +1,7 @@
 import { Grid, Typography, Box, Button, Paper, IconButton } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { getImageUrl } from 'themes/imageUtlis';
-import { Upload, Delete, ArrowBack, ArrowForward } from '@mui/icons-material';
+import { Upload, Delete} from '@mui/icons-material';
 
 const FormStep2GalleryInfo = (props) => {
   const {
@@ -68,7 +68,7 @@ const FormStep2GalleryInfo = (props) => {
               component="img"
               src={getImageUrl(image)}
               alt={label}
-              sx={{ width: '100%', height: '100%', borderRadius: '16px', objectFit: "contain" }}
+              sx={{ width: '100%', height: '100%', borderRadius: '16px', objectFit: 'contain' }}
             />
           ) : (
             <>
@@ -180,11 +180,29 @@ const FormStep2GalleryInfo = (props) => {
         </Grid>
 
         {/* Navigation Buttons */}
-        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-          <Button variant="contained" color="secondary" startIcon={<ArrowBack />} onClick={handleBack}>
+        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Button
+            variant="contained"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            onClick={handleBack}
+          >
             Back
           </Button>
-          <Button type="submit" variant="contained" endIcon={<ArrowForward />}>
+          <Button
+            type="submit"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            variant="contained"
+          >
             Next
           </Button>
         </Grid>

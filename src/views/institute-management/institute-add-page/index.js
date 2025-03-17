@@ -39,6 +39,7 @@ import FormStep3SocialLinks from 'features/institute-management/institute-add-pa
 import FormStep4DocumentsInfo from 'features/institute-management/institute-add-page/steps/step4';
 import FormStep5AccountInfo from 'features/institute-management/institute-add-page/steps/step5';
 import { useNavigate } from 'react-router-dom';
+import { IconX } from '@tabler/icons';
 
 const steps = [
   {
@@ -366,7 +367,7 @@ const AddInstitutePage = () => {
 
   const onSubmit = async () => {
     const accountData = accountControl?._formValues;
-    console.log('accountData',accountData)
+    console.log('accountData', accountData);
     const personalData = personalControl?._formValues;
     console.log('personalData:', personalData);
     console.log('FormData:', FormData);
@@ -397,14 +398,14 @@ const AddInstitutePage = () => {
           address1: personalData?.address_line_one,
           address2: personalData?.address_line_two,
           state: personalData?.state,
-          city: String(personalData?.city || ""),
+          city: personalData?.city,
           pincode: personalData?.pin_code
         }
       },
       image: instituteImage,
       subscription: personalData?.subscription,
       logo: logo,
-      gallery_images: galleryImages.map((i) => i.file),
+      gallery_images: galleryImages.map((i) => i.file.file),
       registered_date: convertDateFormat(personalData?.registered_date),
       social_media: {
         twitter_id: socialData.twitter,
@@ -414,7 +415,7 @@ const AddInstitutePage = () => {
       },
       website: personalData.official_website
     };
-    console.log(institute,galleryImages)
+    console.log(institute, galleryImages);
     const branch = {
       is_primary: true,
       branch_identity: accountData.branch_name,
@@ -508,7 +509,7 @@ const AddInstitutePage = () => {
       const response = await handleFileUpload(form_data);
       console.log(response, 'response');
       setDocs((prev) => ({ ...prev, [name]: response?.data?.data?.file }));
-      console.log(docs,'doxs');
+      console.log(docs, 'doxs');
     } catch (error) {
       console.log(error, 'error');
     }
@@ -533,7 +534,6 @@ const AddInstitutePage = () => {
     const response = await handleFileUpload(data);
     setInstituteImage(response?.data?.data?.file);
   };
-  
 
   console.log('Gallery : ', galleryImages, 'Institute Image :', instituteImage, 'logo :', logo, logoSrc, instituteSrc, docs);
 
@@ -735,21 +735,22 @@ const AddInstitutePage = () => {
           <>
             <Box
               sx={{
-                color: '#c62828',
+                display: 'flex',
+                gap: '10px',
                 padding: '10px',
-                borderRadius: '4px',
+                backgroundColor: shows ? '#ffa8a8' : 'transparent',
+                color: '#ed1d24',
+                borderRadius: '8px',
                 marginBottom: '20px',
-                textAlign: 'center'
+                justifyContent: 'space-between'
               }}
             >
-              <Typography variant="body1">{berror}</Typography>
-            {shows ? (
-              <Button variant='contained' onClick={handleClose} sx={{ marginTop: '10px' }}>
-                Close
-              </Button>
-            ) : (
-              ''
-            )}
+              <Box sx={{ textAlign: 'justify' }}>
+                <Typography variant="body1" sx={{ my: '15px', fontWeight: 'bold', ms: '10px' }}>
+                  {berror}
+                </Typography>
+              </Box>
+              <Box>{shows && <IconX onClick={handleClose} stroke={2} />}</Box>
             </Box>
           </>
         )}

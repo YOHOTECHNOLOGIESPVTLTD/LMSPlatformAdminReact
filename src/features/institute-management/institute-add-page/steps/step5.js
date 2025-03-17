@@ -93,7 +93,8 @@ const FormStep5AccountInfo = (props) => {
   };
 
   return (
-    <form key={5} onSubmit={handleAccountSubmit(onSubmit)}>
+    <form key={5} onSubmit={
+      handleAccountSubmit(onSubmit)}>
       <Grid container spacing={5}>
         {/* Step Title */}
         <Grid item xs={12} textAlign="center">
@@ -109,7 +110,7 @@ const FormStep5AccountInfo = (props) => {
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-              Branch Details
+             Enter your Branch Details here
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -424,8 +425,8 @@ const FormStep5AccountInfo = (props) => {
         <Grid container item>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-              Contact Details
-            </Typography>
+              Enter your Contact Details here
+            </Typography> 
           </Grid>
           <Grid item xs={9}>
             <Paper elevation={3} sx={{ p: 3 }}>
@@ -592,11 +593,29 @@ const FormStep5AccountInfo = (props) => {
 
         {/* Navigation Buttons */}
         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button variant="contained" color="secondary" onClick={handleBack}>
+          <Button
+            variant="contained"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            onClick={handleBack}
+          >
             Back
           </Button>
-          <Button type="submit" variant="contained">
-            Submit
+          <Button
+            type="submit"
+            sx={{
+              width: '100px',
+              '&:hover': {
+                backgroundColor: 'orange'
+              }
+            }}
+            variant="contained"
+          >
+            Next
           </Button>
         </Grid>
       </Grid>

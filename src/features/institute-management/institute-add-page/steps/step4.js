@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { getImageUrl } from 'themes/imageUtlis';
 
 const FormStep4DocumentsInfo = (props) => {
-  const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docReset,docs} = props;
+  const { steps, handleBack, onSubmit, hanldeDocSubmit, docControl, docsErrors, CustomTextField, hanldeDocsUpload, docReset, docs } = props;
   const [formData, setFormData] = useState({});
   // const [docs, setDocs] = useState({ gst: '', pan: '', licence: '' });
 
@@ -31,11 +31,11 @@ const FormStep4DocumentsInfo = (props) => {
   const handleFileUpload = (type, e) => {
     const file = e.target.files[0];
     if (file) {
-      hanldeDocsUpload(type, e); 
+      hanldeDocsUpload(type, e);
       // setDocs((prev) => ({ ...prev, [type]: fileUrl }));
     }
   };
-  console.log("Uploaded docs",docs)
+  console.log('Uploaded docs', docs);
 
   return (
     <form key={3} onSubmit={hanldeDocSubmit(onSubmit)}>
@@ -106,8 +106,7 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.gst && (
             <Box sx={{ mt: 1 }}>
-              <PDFViewer url={getImageUrl(docs.gst)
-              } width="100%" height="400px" />
+              <PDFViewer url={getImageUrl(docs.gst)} width="100%" height="400px" />
             </Box>
           )}
         </Grid>
@@ -169,8 +168,7 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.pan && (
             <Box sx={{ mt: 1 }}>
-            <PDFViewer url={getImageUrl(docs.pan)
-              } width="100%" height="400px" />
+              <PDFViewer url={getImageUrl(docs.pan)} width="100%" height="400px" />
             </Box>
           )}
         </Grid>
@@ -232,18 +230,35 @@ const FormStep4DocumentsInfo = (props) => {
           />
           {docs.licence && (
             <Box sx={{ mt: 1 }}>
-            <PDFViewer url={getImageUrl(docs.licence)
-              } width="100%" height="400px" />
+              <PDFViewer url={getImageUrl(docs.licence)} width="100%" height="400px" />
             </Box>
           )}
         </Grid>
       </Grid>
 
-      <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-        <Button variant="contained" color="secondary" onClick={handleBack} sx={{ height: 40 }}>
+      <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between',mt:'10%'}}>
+        <Button
+          variant="contained"
+          sx={{
+            width: '100px',
+            '&:hover': {
+              backgroundColor: 'orange'
+            }
+          }}
+          onClick={handleBack}
+        >
           Back
         </Button>
-        <Button type="submit" variant="contained" sx={{ height: 40 }}>
+        <Button
+          type="submit"
+          sx={{
+            width: '100px',
+            '&:hover': {
+              backgroundColor: 'orange'
+            }
+          }}
+          variant="contained"
+        >
           Next
         </Button>
       </Grid>

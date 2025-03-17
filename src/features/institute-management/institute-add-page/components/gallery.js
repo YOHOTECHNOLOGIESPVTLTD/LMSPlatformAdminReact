@@ -13,15 +13,26 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
     for (const file of files) {
       data.append('files', file);
     }
-    const response = await handleMultipleFiles(data);
-    const gallery = Array.from(files).map((file) => ({
-      file,
-      preview: URL.createObjectURL(file)
-    }));
-    console.log(response,gallery,galleryImages)
 
-    setGalleryImages([...galleryImages, ...response.data.data]);
+    try {
+      const response = await handleMultipleFiles(data);
+      console.log('Response from handleMultipleFiles:', response); 
+
+      if (response && response.data && response.data.data) {
+        const uploadedImages = response.data.data.map((file) => ({
+          file,
+          preview: getImageUrl(file.file)
+        }));
+        setGalleryImages([...galleryImages, ...uploadedImages]);
+      } else {
+        console.error('No data returned from file upload');
+      }
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    }
   };
+  console.log('gallery Images',galleryImages);
+  
 
   const handleRemoveImage = (index) => {
     const updatedImages = [...galleryImages];
@@ -65,7 +76,7 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 2 }}>
         {galleryImages?.map((image, index) => (
           <Box key={index} sx={{ position: 'relative' }}>
-            <img src={getImageUrl(image.file)} alt={`preview-${index}`} style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '4px' }} />
+            <img src={image.preview} alt={`preview-${index}`} style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '4px' }} />
             <CustomCloseButton variant="contained" color="error" size="small" onClick={() => handleRemoveImage(index)}>
               <Icon icon="tabler:x" fontSize="1.25rem" />
             </CustomCloseButton>
