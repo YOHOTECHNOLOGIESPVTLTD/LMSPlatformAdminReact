@@ -40,7 +40,8 @@ import { useDispatch } from 'react-redux';
 
 // assets
 import { IconLogout, 
-//  IconSettings, IconUser, IconSearch
+  // IconSearch, IconSettings, 
+  // IconUser
  } from '@tabler/icons';
 // import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
@@ -52,9 +53,13 @@ const ProfileSection = () => {
   const dispatch = useDispatch();
 
   const [sdm, setSdm] = useState(true);
-  // const [value, setValue] = useState('');
+  const [value, setValue] = useState('');
+  console.log(value);
+  
   const [notification, setNotification] = useState(false);
-  // const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  console.log(selectedIndex);
+  
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
