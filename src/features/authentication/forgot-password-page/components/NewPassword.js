@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, Box, Paper, Alert } from '@mui/material';
 import { updatePassword } from '../service/forgotPasswordService';
 import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
 
 const PasswordResetForm = () => {
-  const [email, setEmail] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -15,7 +17,7 @@ const PasswordResetForm = () => {
     event.preventDefault();
     setError('');
     setSuccess('');
-    if(!email&&!newPassword&&!confirmPassword){
+    if(!oldPassword&&!newPassword&&!confirmPassword){
       setError('Please fill the all the feilds.')
       return;
     }
@@ -24,11 +26,21 @@ const PasswordResetForm = () => {
       setError('Passwords do not match');
       return;
     }
+    if(oldPassword===newPassword){
+      setError('Your new Password is same as your previous password')
+      return;
+    }
+     const otp_data = Cookies.get('otp_data');
+        const datas = JSON.parse(otp_data);
+        
+    
+    
 
     try {
-      const response = await updatePassword({email,newPassword,confirmPassword});
+      const response = await updatePassword({email:datas?.email,newPassword,confirmPassword});
       if (response.status==="success") {
         setSuccess('Password reset successfully');
+        toast.success("password reset successfully")
         navigate('/student/home')
       } else {
         setError(response.message || 'An error occurred');
@@ -45,7 +57,7 @@ const PasswordResetForm = () => {
           Reset Password
         </Typography>
         <Typography variant="body1" align="center" sx={{ mb: 3 }}>
-          Please enter your email and new password to reset your account.
+          Please enter your old and new password to reset your account.
         </Typography>
         {error && <Alert severity="error">{error}</Alert>}
         {success && <Alert severity="success">{success}</Alert>}
@@ -54,14 +66,14 @@ const PasswordResetForm = () => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="old password"
+            label="old password"
+            name="old password"
+            autoComplete="old password"
             autoFocus
             variant="outlined"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
           />
           <TextField
             margin="normal"

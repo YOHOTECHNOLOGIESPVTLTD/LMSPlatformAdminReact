@@ -93,8 +93,11 @@ const FormStep5AccountInfo = (props) => {
   };
 
   return (
-    <form key={5} onSubmit={
-      handleAccountSubmit(onSubmit)}>
+    <form key={5} onSubmit={()=>{
+      handleAccountSubmit(onSubmit)
+      localStorage.removeItem('institute_form','social_form','docs_form','acc_form')}
+      }
+      >
       <Grid container spacing={5}>
         {/* Step Title */}
         <Grid item xs={12} textAlign="center">
@@ -545,7 +548,8 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneIcon sx={{ color: '#3B4056' }} />
+                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length ? defaultCountry[0].phonecode : ''}
+                              
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }
@@ -615,7 +619,7 @@ const FormStep5AccountInfo = (props) => {
             }}
             variant="contained"
           >
-            Next
+            Submit
           </Button>
         </Grid>
       </Grid>
