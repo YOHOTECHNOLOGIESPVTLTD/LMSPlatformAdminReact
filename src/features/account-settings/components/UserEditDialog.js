@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 // import { updateUser } from '../../services/userServices';
 import { updateUser } from 'features/user-management/users-page/services/userServices';
 import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -39,7 +40,7 @@ const schema = yup.object().shape({
     .typeError('Contact Number field is required')
     .min(10, (obj) => showErrors('Contact Number', obj.value.length, obj.min))
     .required(),
-  designation: yup.string().required()
+  designation: yup.string().required("Full the Designation must be required ").min(5)
   // role: yup.string().required()
 });
 
@@ -114,7 +115,9 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     width: 100,
     height: 100,
     marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
+    borderRadius: '50%',
+    objectFit: 'cover',
+    // borderRadius: theme.shape.borderRadius
   }));
 
   const ButtonStyled = styled(Button)(({ theme }) => ({
@@ -140,7 +143,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   console.log(selectedImage);
 
   const onSubmit = async (data) => {
-    console.log(data);
+    console.log('Submitting form with data:', data);
     const InputData = new FormData();
     InputData.append('name', data.full_name);
     InputData.append('user_name', data.user_name);
@@ -151,6 +154,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     InputData.append('image', selectedImage);
     InputData.append('id', userData.id);
 
+    try {
     const result = await updateUser(InputData);
 
     if (result.success) {
@@ -160,6 +164,22 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     } else {
       toast.error(result.message);
     }
+  } catch (error) {
+    console.error('Error updating user:', error);
+    toast.error('An error occurred while updating. Please try again later.');
+  }
+  };
+  const handleRoleSelection = (selectedRole) => {
+    console.log("Selected Role:", selectedRole);
+  
+   
+    if (selectedRole === "teacher") {
+      alert("You selected the Teacher role!");
+    } else if (selectedRole === "fullstack") {
+      alert("You selected FullStack Developer!");
+    }
+  
+    
   };
 
   return (
@@ -189,8 +209,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
           }}
         >
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={12} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Grid item xs={12} sm={12} sx={{ alignItems: 'center', justifyContent: 'center' ,display: 'flex'}}>
+              <Box sx={{ display:  'inline-block',position: 'relative' }}>
                 {!selectedImage && (
                   <ImgStyled
                     src={
@@ -203,9 +223,23 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 )}
 
                 {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
-                <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload New Image
+               
+                
+                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image"  sx={{
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)', 
+        color: '#fff',
+        minWidth: 32,
+        height: 32,
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.8)' },
+      }}>
+                  <CameraAltIcon fontSize="small"/>
                     <input
                       hidden
                       type="file"
@@ -215,7 +249,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                       id="account-settings-upload-image"
                     />
                   </ButtonStyled>
-                </div>
+                
               </Box>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -231,7 +265,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     onChange={onChange}
                     placeholder="John Doe"
                     error={Boolean(errors.full_name)}
-                    {...(errors.full_name && { helperText: errors.full_name.message })}
+                    helperText={errors.full_name?.message }
+                    //  {...(errors.full_name && { helperText: errors.full_name.message })}
                   />
                 )}
               />
@@ -249,7 +284,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     onChange={onChange}
                     placeholder="John Doe"
                     error={Boolean(errors.user_name)}
-                    {...(errors.user_name && { helperText: errors.user_name.message })}
+                    helperText={errors.user_name?.message}
+                    // {...(errors.user_name && { helperText: errors.user_name.message })}
                   />
                 )}
               />
@@ -268,7 +304,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     onChange={onChange}
                     error={Boolean(errors.email)}
                     placeholder="johndoe@email.com"
-                    {...(errors.email && { helperText: errors.email.message })}
+                    helperText={errors.email?.message}
+                    //  {...(errors.email && { helperText: errors.email.message })}
                   />
                 )}
               />
@@ -287,7 +324,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     onChange={onChange}
                     placeholder="(397) 294-5153"
                     error={Boolean(errors.contact)}
-                    {...(errors.contact && { helperText: errors.contact.message })}
+                    helperText={errors.contact?.message  || 'Enter a valid contact number'}
+                    //  {...(errors.contact && { helperText: errors.contact.message })}
                   />
                 )}
               />
@@ -306,7 +344,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     onChange={onChange}
                     placeholder="Business Development Executive"
                     error={Boolean(errors.designation)}
-                    {...(errors.designation && { helperText: errors.designation.message })}
+                    helperText={errors.designation?.message ||  'Enter your job designation' }
+                    //  {...(errors.designation && { helperText: errors.designation.message })}
                   />
                 )}
               />
@@ -317,16 +356,24 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 name="role"
                 control={control}
                 rules={{ required: true }}
-                render={() => (
+                render={({field}) => (
                   <TextField
                     select
                     fullWidth
-                    defaultValue={userData?.role_groups?.role?.id}
+                    Value={field.value || userData?.role_groups?.role?.id || ""}
                     onChange={(e) => {
-                      setValue('role', e.target.value);
+                      const selectedRole = e.target.value;
+                      setValue("role", selectedRole);
+                      // setValue('role', e.target.value);
+                      handleRoleSelection(selectedRole);
                     }}
                   >
-                    {/* <MenuItem value="">Select Role</MenuItem> */}
+                     <MenuItem value="">FullStack  Developer</MenuItem> 
+                     <MenuItem value="">Mern Stack  Developer</MenuItem> 
+                     <MenuItem value="">software  Developer</MenuItem> 
+                     <MenuItem value="">  software testing</MenuItem> 
+                     <MenuItem value="">Teacher </MenuItem> 
+                     <MenuItem value="">student </MenuItem> 
                     {groups?.map((group, index) => (
                       <MenuItem key={index} value={group?.role?.id}>
                         {group?.role?.name}
@@ -345,10 +392,22 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
             pb: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(5)} !important`]
           }}
         >
-          <Button type="submit" variant="contained" sx={{ mr: 2 }}>
+          <Button type="submit" variant="contained" 
+          sx={{ mr: 2 , px: 3,
+          py: 1.5,
+          '&:hover': {
+           backgroundColor: 'primary.dark', 
+           }}}>
             Submit
           </Button>
-          <Button variant="tonal" color="secondary" onClick={handleClose}>
+          <Button variant="contained" color="primary" onClick={handleClose}  
+          sx={{
+         px: 3,
+         py: 1.5,
+        '&:hover': {
+         backgroundColor: 'primary.dark', 
+          }
+        }}>
             Cancel
           </Button>
         </DialogActions>

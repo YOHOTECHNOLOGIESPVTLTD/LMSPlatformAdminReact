@@ -26,7 +26,8 @@ const schema = yup.object().shape({
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required(),
-  description: yup.string().required('description field is required').min(10),
+  description: yup.string().required('Enter the description field must required').min(10),
+  sub_module: yup.string().required('Enter the  Sub-module must required').min(3, 'Sub-module must be at least 3 characters'),
   module: yup.string().required('must fill the module name').min(5)
 });
 
@@ -147,7 +148,8 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
                     onChange={onChange}
                     placeholder="John Doe"
                     error={Boolean(errors.title)}
-                    {...(errors.title && { helperText: errors.title.message })}
+                    helperText={errors.title?.message}
+                    //{...(errors.title && { helperText: errors.title.message })}
                   />
                 )}
               />
@@ -166,11 +168,29 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
                     placeholder="Enter the module"
                     label="module"
                     error={Boolean(errors.module)}
-                    {...(errors.module && { helperText: errors.module.message })}
+                    helperText={errors.module?.message}
+                   // {...(errors.module && { helperText: errors.module.message })}
                   />
                 )}
               />
             </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="sub_module"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                  sx={{ mb: 3 }}
+                    {...field}
+                    fullWidth
+                    label="Sub-Module"
+                    error={Boolean(errors.sub_module)}
+                    helperText={errors.sub_module?.message}
+                  />
+                )}
+              />
+            </Grid>
+
             <Grid>
               <Controller
                 name="description"
@@ -188,7 +208,8 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
                     placeholder="Enter the description"
                     label="description"
                     error={Boolean(errors.description)}
-                    {...(errors.description && { helperText: errors.description.message })}
+                    helperText={errors.description?.message}
+                  //  {...(errors.description && { helperText: errors.description.message })}
                   />
                 )}
               />

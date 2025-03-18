@@ -94,9 +94,9 @@ const UserViewSecurity = ({ id }) => {
           <CardContent>
             <Alert icon={false} severity="warning" sx={{ mb: 4 }}>
               <AlertTitle sx={{ fontWeight: 500, fontSize: '1.125rem', mb: (theme) => `${theme.spacing(2.5)} !important` }}>
-                Ensure that these requirements are met
+              Ensure the following requirements:
               </AlertTitle>
-              Minimum 8 characters long, uppercase & symbol
+              Password should be at least 8 characters long and contain an uppercase letter and a number.
             </Alert>
 
             <form onSubmit={handleSubmit}>

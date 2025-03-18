@@ -250,6 +250,23 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
           </Button>
         </Box>
       </Grid>
+        
+      <Grid container spacing={3} >
+        <Grid item sm={3} xs={12}>
+          <Typography sx={{ fontWeight: 'bold', textDecoration: 'underline' ,textDecorationColor: 'blue'}}>Get Started</Typography>
+        <Typography>To get started with creating a FAQ (Frequently Asked Questions) page, first identify the most common questions people have about your product, service, or topic by analyzing customer inquiries .</Typography>
+        </Grid>
+        <Grid item sm={3} xs={12}>
+          <Typography sx={{ fontWeight: 'bold', textDecoration: 'underline' ,textDecorationColor: 'blue'}}>Troubleshooting</Typography>
+          <Typography>Troubleshooting FAQs can include information on how to identify and fix common problems, such as connectivity issues .</Typography>
+        </Grid>
+        <Grid item sm={3} xs={12}>
+          <Typography sx={{ fontWeight: 'bold', textDecoration: 'underline' ,textDecorationColor: 'blue'}}>Copyright and Legal</Typography>
+          <Typography>A  Copyright and Legal  section in a FAQ would typically address questions about the intellectual property rights related to the content on a website . </Typography>
+          </Grid>
+      </Grid>
+        
+
     </>
   );
 };

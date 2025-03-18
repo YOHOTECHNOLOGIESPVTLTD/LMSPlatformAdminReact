@@ -78,14 +78,14 @@ const HelpHeader = ({ allArticles }) => {
         onInputChange={(event, value) => {
           setValue(value);
           setOpen(!!event.target.value);
-        }}
+        }}a
         renderInput={(params) => (
           <TextField
             {...params}
             size="medium"
             value={value}
             placeholder="Search a question..."
-            //onChange={(event) => setValue(event.target.value)}
+            onChange={(event) => setValue(event.target.value)}
             InputProps={{
               ...params.InputProps,
               startAdornment: (

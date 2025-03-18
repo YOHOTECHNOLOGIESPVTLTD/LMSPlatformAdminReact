@@ -187,7 +187,7 @@ const FaqDataGrid = () => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={4} align="center" sx={{ fontSize: "18px", fontFamily: "poppins" }}>
+                      <TableCell colSpan={4} align="center" sx={{ fontSize: "1.2rem", fontWeight: "bold" }} >
                         No Data Found
                       </TableCell>
                     </TableRow>

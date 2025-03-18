@@ -1,5 +1,5 @@
 // ** MUI Imports
-import { Button, Grid, Modal, Typography } from '@mui/material';
+import { Button, Grid, Modal, Typography, Skeleton  } from '@mui/material';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 // ** Third Party Imports
@@ -11,7 +11,7 @@ import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import { addFaqCategory } from '../services/faqCategoryServices';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 const schema = yup.object().shape({
   name: yup.string().required('Category Name is required').min(3, 'Category Name must be at least 3 characters'),
@@ -23,10 +23,22 @@ const defaultValues = {
   description: ''
 };
 
+const LoadingSkeleton = () => {
+  return (
+    <Box sx={{ padding: 2 }}>
+      <Skeleton variant="text" width="60%" height={40} />
+      <Skeleton variant="rectangular" height={100} sx={{ marginTop: 2 }} />
+      <Skeleton variant="text" width="80%" height={40} sx={{ marginTop: 2 }} />
+      <Skeleton variant="rectangular" height={100} sx={{ marginTop: 2 }} />
+    </Box>
+  );
+};
+
 const FaqCategoriesAddDrawer = (props) => {
   // ** Props
   const { open = false, toggle, setRefetch } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -38,6 +50,16 @@ const FaqCategoriesAddDrawer = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+
+  useEffect(() => {
+    if (open) {
+      setIsLoading(true);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 1000); 
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
 
   const onSubmit = async (data) => {
     const isConfirmed = window.confirm("Are you sure you want to submit the form?");
@@ -113,6 +135,9 @@ const FaqCategoriesAddDrawer = (props) => {
           <Typography variant="h3">Add Faq Categories</Typography>
         </Box>
         <Box>
+        {isLoading ? (
+          <LoadingSkeleton />
+        ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={12} sm={12}>
               <Controller
@@ -162,7 +187,7 @@ const FaqCategoriesAddDrawer = (props) => {
                   '&:hover': { backgroundColor: "#5a667a" }
                 }}
               >
-                {isSubmitting ? "Submitting..." : "Submit"}
+               {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
               <Button
                 variant="contained"
@@ -178,6 +203,7 @@ const FaqCategoriesAddDrawer = (props) => {
               </Button>
             </Box>
           </form>
+           )}
         </Box>
       </Box>
     </Modal>
