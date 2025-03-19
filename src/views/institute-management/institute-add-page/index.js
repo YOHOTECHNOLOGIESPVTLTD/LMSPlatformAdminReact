@@ -212,7 +212,7 @@ const gallerySchema = yup.object().shape({});
 
 const AddInstitutePage = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
   const plans = useSelector(selectPlans);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -700,7 +700,7 @@ const AddInstitutePage = () => {
               return (
                 <Step key={index}>
                   {/* <StepLabel {...labelProps} StepIconComponent={StepperCustomDot}> */}
-                  <StepLabel {...labelProps}>
+                  <StepLabel>
                     <div className="step-label" style={{ flexDirection: 'column', textAlign: 'center', gap: '5px' }}>
                       <Typography
                         sx={{
