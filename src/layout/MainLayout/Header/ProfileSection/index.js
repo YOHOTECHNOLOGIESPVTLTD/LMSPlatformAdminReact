@@ -53,12 +53,12 @@ const ProfileSection = () => {
   const dispatch = useDispatch();
 
   const [sdm, setSdm] = useState(true);
-  const [value, setValue] = useState('');
-  console.log(value);
+  // const [value, setValue] = useState('');
+  // console.log(value);
   
   const [notification, setNotification] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  console.log(selectedIndex);
+  // const [selectedIndex, setSelectedIndex] = useState(-1);
+  // console.log(selectedIndex);
   
   const [open, setOpen] = useState(false);
   /**
@@ -87,7 +87,7 @@ const ProfileSection = () => {
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
-  console.log(handleListItemClick);
+  
   
 
   const prevOpen = useRef(open);
@@ -185,7 +185,7 @@ const ProfileSection = () => {
                       startAdornment={
                         <InputAdornment position="start">
                           {/* <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} /> */}
-                        </InputAdornment>
+                        {/* </InputAdornment>
                       }
                       aria-describedby="search-helper-text"
                       inputProps={{
@@ -193,7 +193,7 @@ const ProfileSection = () => {
                       }}
                     />
                      <Divider /> 
-                  </Box> */}
+                  </Box> */} 
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>
                       {/* <UpgradePlanCard /> */}
@@ -322,5 +322,6 @@ const ProfileSection = () => {
     </>
   );
 };
+
 
 export default ProfileSection;
