@@ -208,7 +208,7 @@ const ProfileSection = () => {
                         <CardContent>
                           <Grid container spacing={3} direction="column">
                             <Grid item>
-                              <Grid item container alignItems="center" justifyContent="space-between">
+                              <Grid container alignItems="center" justifyContent="space-between">
                                 <Grid item>
                                   <Typography variant="subtitle1">Start DND Mode</Typography>
                                 </Grid>
@@ -224,7 +224,7 @@ const ProfileSection = () => {
                               </Grid>
                             </Grid>
                             <Grid item>
-                              <Grid item container alignItems="center" justifyContent="space-between">
+                              <Grid container alignItems="center" justifyContent="space-between">
                                 <Grid item>
                                   <Typography variant="subtitle1">Allow Notifications</Typography>
                                 </Grid>
@@ -232,7 +232,7 @@ const ProfileSection = () => {
                                   <Switch
                                     checked={notification}
                                     onChange={(e) => setNotification(e.target.checked)}
-                                    name="sdm"
+                                    name="notification"
                                     size="small"
                                   />
                                 </Grid>
@@ -258,51 +258,51 @@ const ProfileSection = () => {
                           }
                         }}
                       >
-                         {/* <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={selectedIndex === 0}
-                          // href="/profile-management/account-settings"
-                          onClick={(event) => {
-                            handleListItemClick(event, 0, '#');
-                            navigate('/profile-management/account-settings');
-                          }}
-                        >
-                          <ListItemIcon>
-                            <IconSettings stroke={1.5} size="1.3rem" />
-                          </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
-                        </ListItemButton>
+                        {/* <ListItemButton */}
+                        {/*   sx={{ borderRadius: `${customization.borderRadius}px` }} */}
+                        {/*   selected={selectedIndex === 0} */}
+                        {/*   // href="/profile-management/account-settings" */}
+                        {/*   onClick={(event) => { */}
+                        {/*     handleListItemClick(event, 0, '#'); */}
+                        {/*     navigate('/profile-management/account-settings'); */}
+                        {/*   }} */}
+                        {/* > */}
+                        {/*   <ListItemIcon> */}
+                        {/*     <IconSettings stroke={1.5} size="1.3rem" /> */}
+                        {/*   </ListItemIcon> */}
+                        {/*   <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} /> */}
+                        {/* </ListItemButton> */}
+                        {/* <ListItemButton */}
+                        {/*   sx={{ borderRadius: `${customization.borderRadius}px` }} */}
+                        {/*   selected={selectedIndex === 1} */}
+                        {/*   onClick={(event) => handleListItemClick(event, 1, '#')} */}
+                        {/* > */}
+                        {/*   <ListItemIcon> */}
+                        {/*     <IconUser stroke={1.5} size="1.3rem" /> */}
+                        {/*   </ListItemIcon> */}
+                        {/*   <ListItemText */}
+                        {/*     primary={ */}
+                        {/*       <Grid container spacing={1} justifyContent="space-between"> */}
+                        {/*         <Grid item> */}
+                        {/*           <Typography variant="body2">Social Profile</Typography> */}
+                        {/*         </Grid> */}
+                        {/*         <Grid item> */}
+                        {/*           <Chip */}
+                        {/*             label="02" */}
+                        {/*             size="small" */}
+                        {/*             sx={{ */}
+                        {/*               bgcolor: theme.palette.warning.dark, */}
+                        {/*               color: theme.palette.background.default */}
+                        {/*             }} */}
+                        {/*           /> */}
+                        {/*         </Grid> */}
+                        {/*       </Grid> */}
+                        {/*     } */}
+                        {/*   /> */}
+                        {/* </ListItemButton> */}
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={selectedIndex === 1}
-                          onClick={(event) => handleListItemClick(event, 1, '#')}
-                        >
-                          <ListItemIcon>
-                            <IconUser stroke={1.5} size="1.3rem" />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={
-                              <Grid container spacing={1} justifyContent="space-between">
-                                <Grid item>
-                                  <Typography variant="body2">Social Profile</Typography>
-                                </Grid>
-                                <Grid item>
-                                  <Chip
-                                    label="02"
-                                    size="small"
-                                    sx={{
-                                      bgcolor: theme.palette.warning.dark,
-                                      color: theme.palette.background.default
-                                    }}
-                                  />
-                                </Grid>
-                              </Grid>
-                            }
-                          />
-                        </ListItemButton>  */}
-                        <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={0 === 4}
+                          selected={false}
                           onClick={handleLogout}
                         >
                           <ListItemIcon>
@@ -318,6 +318,7 @@ const ProfileSection = () => {
             </Paper>
           </Transitions>
         )}
+
       </Popper>
     </>
   );
