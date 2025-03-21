@@ -39,10 +39,7 @@ import { logout } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 
 // assets
-import { IconLogout, 
-  // IconSearch, IconSettings, 
-  // IconUser
- } from '@tabler/icons';
+import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
 // import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -177,7 +174,7 @@ const ProfileSection = () => {
                       <Typography variant="subtitle2">Project Admin</Typography>
                     </Stack>
                     <OutlinedInput
-                      sx={{ width: '100%', pr: 1, pl: 2, my: 2, display: "none" }}
+                      sx={{ width: '100%', pr: 1, pl: 2, my: 2, display: 'none' }}
                       id="input-search-profile"
                       // value={value}
                       onChange={(e) => setValue(e.target.value)}
@@ -201,7 +198,7 @@ const ProfileSection = () => {
                       <Card
                         sx={{
                           bgcolor: theme.palette.primary.light,
-                          display: "none",
+                          display: 'none',
                           my: 2
                         }}
                       >
@@ -258,53 +255,52 @@ const ProfileSection = () => {
                           }
                         }}
                       >
-                        {/* <ListItemButton */}
-                        {/*   sx={{ borderRadius: `${customization.borderRadius}px` }} */}
-                        {/*   selected={selectedIndex === 0} */}
-                        {/*   // href="/profile-management/account-settings" */}
-                        {/*   onClick={(event) => { */}
-                        {/*     handleListItemClick(event, 0, '#'); */}
-                        {/*     navigate('/profile-management/account-settings'); */}
-                        {/*   }} */}
-                        {/* > */}
-                        {/*   <ListItemIcon> */}
-                        {/*     <IconSettings stroke={1.5} size="1.3rem" /> */}
-                        {/*   </ListItemIcon> */}
-                        {/*   <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} /> */}
-                        {/* </ListItemButton> */}
-                        {/* <ListItemButton */}
-                        {/*   sx={{ borderRadius: `${customization.borderRadius}px` }} */}
-                        {/*   selected={selectedIndex === 1} */}
-                        {/*   onClick={(event) => handleListItemClick(event, 1, '#')} */}
-                        {/* > */}
-                        {/*   <ListItemIcon> */}
-                        {/*     <IconUser stroke={1.5} size="1.3rem" /> */}
-                        {/*   </ListItemIcon> */}
-                        {/*   <ListItemText */}
-                        {/*     primary={ */}
-                        {/*       <Grid container spacing={1} justifyContent="space-between"> */}
-                        {/*         <Grid item> */}
-                        {/*           <Typography variant="body2">Social Profile</Typography> */}
-                        {/*         </Grid> */}
-                        {/*         <Grid item> */}
-                        {/*           <Chip */}
-                        {/*             label="02" */}
-                        {/*             size="small" */}
-                        {/*             sx={{ */}
-                        {/*               bgcolor: theme.palette.warning.dark, */}
-                        {/*               color: theme.palette.background.default */}
-                        {/*             }} */}
-                        {/*           /> */}
-                        {/*         </Grid> */}
-                        {/*       </Grid> */}
-                        {/*     } */}
-                        {/*   /> */}
-                        {/* </ListItemButton> */}
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={false}
-                          onClick={handleLogout}
+                          selected={selectedIndex === 0}
+                          // href="/profile-management/account-settings"
+                          onClick={(event) => {
+                            handleListItemClick(event, 0, '#');
+                            navigate('/profile-management/account-settings');
+                          }}
                         >
+                          <ListItemIcon>
+                            <IconSettings stroke={1.5} size="1.3rem" />
+                          </ListItemIcon>
+                          <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
+                        </ListItemButton>
+                        <ListItemButton
+                          sx={{ borderRadius: `${customization.borderRadius}px` }}
+                          selected={selectedIndex === 1}
+                          onClick={(event) => {
+                            handleListItemClick(event, 1, '#');
+
+                          }}
+                        >
+                          <ListItemIcon>
+                            <IconUser stroke={1.5} size="1.3rem" />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={
+                              <Grid container spacing={1} justifyContent="space-between">
+                                <Grid item>
+                                  <Typography variant="body2">Social Profile</Typography>
+                                </Grid>
+                                <Grid item>
+                                  <Chip
+                                    label="02"
+                                    size="small"
+                                    sx={{
+                                      bgcolor: theme.palette.warning.dark,
+                                      color: theme.palette.background.default
+                                    }}
+                                  />
+                                </Grid>
+                              </Grid>
+                            }
+                          />
+                        </ListItemButton>
+                        <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} selected={0 === 4} onClick={handleLogout}>
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="1.3rem" />
                           </ListItemIcon>

@@ -700,7 +700,7 @@ const AddInstitutePage = () => {
               return (
                 <Step key={index}>
                   {/* <StepLabel {...labelProps} StepIconComponent={StepperCustomDot}> */}
-                  <StepLabel {...labelProps}>
+                  <StepLabel>
                     <div className="step-label" style={{ flexDirection: 'column', textAlign: 'center', gap: '5px' }}>
                       <Typography
                         sx={{

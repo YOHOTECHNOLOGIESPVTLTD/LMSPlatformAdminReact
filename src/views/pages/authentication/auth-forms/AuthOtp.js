@@ -241,6 +241,12 @@ const AuthOtpForm = () => {
       hideSpinnerFn();
     }
   };
+  const otps=Cookies.get('otp_data')
+ 
+  
+  const otp_data=JSON.parse(otps)
+  
+  
 
   return (
     <Container maxWidth="sm">
@@ -251,6 +257,7 @@ const AuthOtpForm = () => {
         <Typography variant="body1" align="center" sx={{ mb: 3 }}>
           Please enter the OTP sent to your email.
         </Typography>
+        <Typography sx={{textAlign:'center',fontWeight:"bold"}}>Your OTP is {otp_data.otp}</Typography>
         {error && <Alert severity="error">{error}</Alert>}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mt: 2 }}>
           <OTP value={otp} onChange={setOtp} length={6} />
