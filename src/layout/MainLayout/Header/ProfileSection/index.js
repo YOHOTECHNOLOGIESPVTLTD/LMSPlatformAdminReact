@@ -39,10 +39,7 @@ import { logout } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 
 // assets
-import { IconLogout, 
-  // IconSearch, IconSettings, 
-  // IconUser
- } from '@tabler/icons';
+import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
 // import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -55,11 +52,11 @@ const ProfileSection = () => {
   const [sdm, setSdm] = useState(true);
   const [value, setValue] = useState('');
   console.log(value);
-  
+
   const [notification, setNotification] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   console.log(selectedIndex);
-  
+
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -88,7 +85,6 @@ const ProfileSection = () => {
     setOpen((prevOpen) => !prevOpen);
   };
   console.log(handleListItemClick);
-  
 
   const prevOpen = useRef(open);
   useEffect(() => {
@@ -177,14 +173,14 @@ const ProfileSection = () => {
                       <Typography variant="subtitle2">Project Admin</Typography>
                     </Stack>
                     <OutlinedInput
-                      sx={{ width: '100%', pr: 1, pl: 2, my: 2, display: "none" }}
+                      sx={{ width: '100%', pr: 1, pl: 2, my: 2, display: 'none' }}
                       id="input-search-profile"
                       // value={value}
                       onChange={(e) => setValue(e.target.value)}
                       placeholder="Search profile options"
                       startAdornment={
                         <InputAdornment position="start">
-                          {/* <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} /> */}
+                          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} />
                         </InputAdornment>
                       }
                       aria-describedby="search-helper-text"
@@ -192,7 +188,7 @@ const ProfileSection = () => {
                         'aria-label': 'weight'
                       }}
                     />
-                     <Divider /> 
+                    <Divider />
                   </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>
@@ -201,7 +197,7 @@ const ProfileSection = () => {
                       <Card
                         sx={{
                           bgcolor: theme.palette.primary.light,
-                          display: "none",
+                          display: 'none',
                           my: 2
                         }}
                       >
@@ -258,7 +254,7 @@ const ProfileSection = () => {
                           }
                         }}
                       >
-                         {/* <ListItemButton
+                        <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 0}
                           // href="/profile-management/account-settings"
@@ -275,7 +271,10 @@ const ProfileSection = () => {
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}
-                          onClick={(event) => handleListItemClick(event, 1, '#')}
+                          onClick={(event) => {
+                            handleListItemClick(event, 1, '#');
+
+                          }}
                         >
                           <ListItemIcon>
                             <IconUser stroke={1.5} size="1.3rem" />
@@ -299,12 +298,8 @@ const ProfileSection = () => {
                               </Grid>
                             }
                           />
-                        </ListItemButton>  */}
-                        <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={0 === 4}
-                          onClick={handleLogout}
-                        >
+                        </ListItemButton>
+                        <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} selected={0 === 4} onClick={handleLogout}>
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="1.3rem" />
                           </ListItemIcon>

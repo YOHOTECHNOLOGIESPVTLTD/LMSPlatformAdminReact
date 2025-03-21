@@ -3,17 +3,19 @@ import { Typography, TextField, Button, Box, Container, Paper } from '@mui/mater
 import { sendOtpForPasswordReset } from '../service/forgotPasswordService';
 import { useNavigate } from 'react-router';
 import Cookies from 'js-cookie';
-
+import { useSpinner } from 'context/spinnerContext';
 
 const UserNameAndEmailInput = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { showSpinnerFn, hideSpinnerFn } = useSpinner();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       console.log('email', email);
+      showSpinnerFn()
 
       const response = await sendOtpForPasswordReset(email);
       console.log('OTP sent successfully:', response);
@@ -30,6 +32,9 @@ const UserNameAndEmailInput = () => {
       console.error('Error sending OTP:', err);
       setError(err.message || 'Failed to send OTP');
     }
+    finally{
+      hideSpinnerFn()
+    }
   };
 
   return (
@@ -43,7 +48,7 @@ const UserNameAndEmailInput = () => {
             alignItems: 'center'
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h3">
             Forgot Password
           </Typography>
           <Typography variant="body1" sx={{ mt: 2 }}>
