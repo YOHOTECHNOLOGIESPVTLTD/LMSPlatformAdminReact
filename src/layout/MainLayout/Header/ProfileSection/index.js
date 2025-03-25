@@ -34,29 +34,33 @@ import MainCard from 'components/cards/MainCard';
 import Transitions from 'components/extended/Transitions';
 // import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { logout } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 
 // assets
-import { IconLogout, IconSettings, IconUser } from '@tabler/icons';
+import {
+  IconLogout,
+  IconSettings,
+  IconUser
+} from '@tabler/icons';
 // import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [sdm, setSdm] = useState(true);
   // const [value, setValue] = useState('');
   // console.log(value);
-  
+
   const [notification, setNotification] = useState(false);
-  // const [selectedIndex, setSelectedIndex] = useState(-1);
-  // console.log(selectedIndex);
-  
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  console.log(selectedIndex);
+
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -73,19 +77,18 @@ const ProfileSection = () => {
     setOpen(false);
   };
 
-  // const handleListItemClick = (event, index, route = '') => {
-  //   setSelectedIndex(index);
-  //   handleClose(event);
+  const handleListItemClick = (event, index, route = '') => {
+    setSelectedIndex(index);
+    handleClose(event);
 
-  //   if (route && route !== '') {
-  //     navigate(route);
-  //   }
-  // };
+    if (route && route !== '') {
+      navigate(route);
+    }
+  };
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
-  
-  
+  console.log(handleListItemClick);
 
   const prevOpen = useRef(open);
   useEffect(() => {
