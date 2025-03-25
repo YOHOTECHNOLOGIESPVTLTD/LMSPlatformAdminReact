@@ -24,11 +24,39 @@ export const updatePassword = async (data) => {
     throw error.response.data;
   }
 };
-export const resendOtp=async(email)=>{
-  try{
-    const response=await Client.auth.resend_otp({email});
+export const resendOtp = async (email) => {
+  try {
+    const response = await Client.auth.resend_otp({ email });
     return response.data;
-  }catch(error){
+  } catch (error) {
     throw error.response.data;
+  }
+};
+export const getProfileWithId = async (id) => {
+  try {
+    const response = await Client.auth.get_profile({id});
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+export const getUserActivity=async(data)=>{
+  try{
+    const response=await Client.auth.get_activity(data);
+    return response.data
+  }
+  catch(error){
+    throw error.response.data
+  }
+}
+
+export  const updateUserDetails=async(data)=>{
+  try{
+    const response=await Client.auth.edit_profile(data);
+    return response.data;
+  }
+  catch(error){
+    console.log(error,"error")
+    throw new Error(error)
   }
 }

@@ -236,7 +236,7 @@ const FormStep4DocumentsInfo = (props) => {
         </Grid>
       </Grid>
 
-      <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between',mt:'10%'}}>
+      <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: '10%' }}>
         <Button
           variant="contained"
           sx={{

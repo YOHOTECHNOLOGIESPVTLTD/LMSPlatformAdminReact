@@ -43,9 +43,9 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
       <Grid item xs={12}>
         <Card>
           <CardContent sx={{ pt: 8, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            {userData?.institution_users?.image ? (
+            {userData?.image ? (
               <CustomAvatar
-                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.institution_users?.image}`}
+                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.image}`}
                 variant="rounded"
                 alt={userData?.name}
                 sx={{ width: 100, height: 100, mb: 4 }}
@@ -76,16 +76,24 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
             </Typography>
             <Box sx={{ pt: 4 }}>
               <Box sx={{ display: 'flex', mb: 3 }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.name}</Typography>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>First name:</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.first_name}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', mb: 3 }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Last name:</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.last_name}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', mb: 3 }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>username:</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.username}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.email}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.email}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Designation:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.designation}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.designation??"Student"}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
@@ -103,7 +111,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
 
               <Box sx={{ display: 'flex' }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{9898765645}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.phone_number}</Typography>
               </Box>
             </Box>
           </CardContent>

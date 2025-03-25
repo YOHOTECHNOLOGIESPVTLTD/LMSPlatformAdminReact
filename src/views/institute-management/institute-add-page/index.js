@@ -392,8 +392,8 @@ const AddInstitutePage = () => {
         }
       },
       contact_info: {
-        phone_no: personalData?.phone,
-        alternate_no: personalData?.alt_phone,
+        phone_no: '+91' + personalData?.phone,
+        alternate_no: '+91' + personalData?.alt_phone,
         address: {
           address1: personalData?.address_line_one,
           address2: personalData?.address_line_two,
@@ -700,7 +700,7 @@ const AddInstitutePage = () => {
               return (
                 <Step key={index}>
                   {/* <StepLabel {...labelProps} StepIconComponent={StepperCustomDot}> */}
-                  <StepLabel {...labelProps}>
+                  <StepLabel>
                     <div className="step-label" style={{ flexDirection: 'column', textAlign: 'center', gap: '5px' }}>
                       <Typography
                         sx={{
