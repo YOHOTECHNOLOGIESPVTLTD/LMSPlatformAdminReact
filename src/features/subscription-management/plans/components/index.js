@@ -20,10 +20,10 @@ const PricingPlans = ({ page, setPage, plans }) => {
         }
   
         const response = await axios.get(
-          `http://localhost:3001/api/subscription/plans?page=${page}&perPage=3`,
+          `${process.env.REACT_APP_PUBLIC_API_URL}/api/subscription/plans?page=${page}&perPage=3`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Token ${token}`,
             },
           }
         );
