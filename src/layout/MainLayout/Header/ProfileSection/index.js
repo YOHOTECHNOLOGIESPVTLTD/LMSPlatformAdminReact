@@ -39,7 +39,7 @@ import { logout } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 
 // assets
-import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
+import { IconLogout, IconSettings, IconUser } from '@tabler/icons';
 // import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
 
