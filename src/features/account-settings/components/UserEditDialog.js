@@ -4,16 +4,16 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
+// import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
-// import { updateUser } from '../../services/userServices';
-import { updateUser } from 'features/user-management/users-page/services/userServices';
-import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
+// import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
+import { updateUserDetails } from 'features/authentication/forgot-password-page/service/forgotPasswordService';
+import { handleFileUpload } from 'features/fileUpload';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -24,34 +24,41 @@ const showErrors = (field, valueLen, min) => {
     return '';
   }
 };
+
 const schema = yup.object().shape({
-  full_name: yup
+  first_name: yup
     .string()
-    .min(3, (obj) => showErrors('Full name', obj.value.length, obj.min))
+    .min(3, (obj) => showErrors('First name', obj.value.length, obj.min))
     .required(),
-  user_name: yup
+  last_name: yup
+    .string()
+    .min(3, (obj) => showErrors('Last name', obj.value.length, obj.min))
+    .required(),
+  username: yup
     .string()
     .min(3, (obj) => showErrors('User name', obj.value.length, obj.min))
     .required(),
   email: yup.string().email().required(),
-  contact: yup
+  phone_number: yup
     .number()
-    .typeError('Contact Number field is required')
-    .min(10, (obj) => showErrors('Contact Number', obj.value.length, obj.min))
-    .required(),
-  designation: yup.string().required()
+    .typeError('Phone Number field is required')
+    .min(10, (obj) => showErrors('Phone Number', obj.value.length, obj.min))
+    .required()
+  // designation: yup.string().required(),
   // role: yup.string().required()
 });
 
 const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => {
   const defaultValues = {
-    full_name: '',
-    user_name: '',
+    first_name: '',
+    last_name: '',
+    username: '',
     email: '',
-    contact: Number(''),
-    designation: '',
-    role: ''
+    phone_number: Number('')
+    // designation: '',
+    // role: ''
   };
+
   const {
     reset,
     control,
@@ -63,24 +70,30 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
-  // Set form values when selectedBranch changes
+
   useEffect(() => {
     if (userData) {
-      setValue('full_name', userData.name || '');
-      setValue('user_name', userData.username || '');
+      const fullName = userData.name || '';
+      const [firstName, lastName] = fullName.split(' ');
+      setValue('first_name', firstName || '');
+      setValue('last_name', lastName || '');
+      setValue('username', userData?.username || '');
       setValue('email', userData?.institution_users?.email || '');
-      setValue('contact', userData?.institution_users?.mobile || '');
-      setValue('designation', userData?.institution_users?.designation || '');
-      setValue('role', userData?.role_groups?.role?.id || '');
+      setValue('phone_number', userData?.institution_users?.mobile || '');
+      // setValue('designation', userData?.institution_users?.designation || '');
+      // setValue('role', userData?.role_groups?.role?.id || '');
+      reset(userData);
     }
   }, [userData, setValue]);
+
   const handleClose = () => {
-    setValue('full_name', '');
-    setValue('user_name', '');
+    setValue('first_name', '');
+    setValue('last_name', '');
+    setValue('username', '');
     setValue('email', '');
-    setValue('contact', Number(''));
-    setValue('designation', '');
-    setValue('role', Number(''));
+    setValue('phone_number', Number(''));
+    // setValue('designation', '');
+    // setValue('role', '');
     handleEditClose();
     reset();
     setSelectedImage(null);
@@ -90,25 +103,24 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
-  const [groups, setGroups] = useState([]);
+  // const [groups, setGroups] = useState([]);
 
-  useEffect(() => {
-    getAllGroups();
-  }, []);
+  // useEffect(() => {
+  //   getAllGroups();
+  // }, []);
 
-  const getAllGroups = async () => {
-    try {
-      const result = await getAllActiveGroups();
-      if (result.success) {
-        console.log('User Data:', result.data);
-        setGroups(result.data);
-      } else {
-        console.log(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getAllGroups = async () => {
+  //   try {
+  //     const result = await getAllActiveGroups();
+  //     if (result.success) {
+  //       setGroups(result.data);
+  //     } else {
+  //       console.log(result.message);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -124,7 +136,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   }));
 
-  const handleInputImageChange = (file) => {
+  const handleInputImageChange = async(file) => {
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
@@ -134,34 +146,55 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       if (reader.result !== null) {
         setInputValue(reader.result);
       }
+      
+      const response = await handleFileUpload(files[0]);
+      console.log('img response',selectedImage);
+      console.log(response);
+      
+      
     }
   };
-
-  console.log(selectedImage);
+  console.log('selectedImage',selectedImage);
+  
 
   const onSubmit = async (data) => {
-    console.log(data);
+    console.log('Form submitted', data);
     const InputData = new FormData();
-    InputData.append('name', data.full_name);
-    InputData.append('user_name', data.user_name);
+    InputData.append('first_name', data.first_name);
+    InputData.append('last_name', data.last_name);
+    InputData.append('username', data.username);
     InputData.append('email', data.email);
-    InputData.append('mobile', data.contact);
+    InputData.append('phone_number', data.phone_number);
     InputData.append('designation', data.designation);
-    InputData.append('role_id', data.role);
-    InputData.append('image', selectedImage);
+    // InputData.append('role_id', data.role);
+    InputData.append('image', selectedImage.name);
     InputData.append('id', userData.id);
+    // console.log('INput DATA',InputData);
+    
 
-    const result = await updateUser(InputData);
-
-    if (result.success) {
-      toast.success(result.message);
-      setRefetch((state) => !state);
-      handleEditClose();
-    } else {
-      toast.error(result.message);
+    try {
+      const response = await updateUserDetails(InputData);
+      console.log('resulttt', response);
+      if (response.status==="success") {
+        toast.success(response.message);
+        setRefetch((state) => !state);
+        handleEditClose();
+      } else {
+        console.log(response,"result")
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log(error,"error")
+      if (error?.response) {
+        toast.error(error.response.data.message || 'An error occurred');
+        console.log('error',error);
+        
+      } else {
+        toast.error(error || 'An error occurred');
+      }
     }
   };
-
+  
   return (
     <Dialog
       open={openEdit}
@@ -194,14 +227,13 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 {!selectedImage && (
                   <ImgStyled
                     src={
-                      userData?.institution_users?.image
-                        ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.institution_users?.image}`
+                      userData?.image
+                        ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.image}`
                         : imgSrc
                     }
                     alt="Profile Pic"
                   />
                 )}
-
                 {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -220,36 +252,54 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="full_name"
+                name="first_name"
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    value={value}
-                    label="Full Name"
+                    value={value || userData.first_name}
+                    label="First Name"
                     onChange={onChange}
-                    placeholder="John Doe"
-                    error={Boolean(errors.full_name)}
-                    {...(errors.full_name && { helperText: errors.full_name.message })}
+                    placeholder="John"
+                    error={Boolean(errors.first_name)}
+                    {...(errors.first_name && { helperText: errors.first_name.message })}
                   />
                 )}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="user_name"
+                name="last_name"
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    defaultValue={value}
+                    value={value || userData.last_name}
+                    label="Last Name"
+                    onChange={onChange}
+                    placeholder="Doe"
+                    error={Boolean(errors.last_name)}
+                    {...(errors.last_name && { helperText: errors.last_name.message })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="username"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value || userData.username}
                     label="User Name"
                     onChange={onChange}
-                    placeholder="John Doe"
-                    error={Boolean(errors.user_name)}
-                    {...(errors.user_name && { helperText: errors.user_name.message })}
+                    placeholder="johndoe"
+                    error={Boolean(errors.username)}
+                    {...(errors.username && { helperText: errors.username.message })}
                   />
                 )}
               />
@@ -263,11 +313,11 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                   <TextField
                     fullWidth
                     type="email"
+                    value={value || userData.email}
                     label="Email"
-                    defaultValue={value}
                     onChange={onChange}
-                    error={Boolean(errors.email)}
                     placeholder="johndoe@email.com"
+                    error={Boolean(errors.email)}
                     {...(errors.email && { helperText: errors.email.message })}
                   />
                 )}
@@ -275,64 +325,20 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="contact"
+                name="phone_number"
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    type="number"
-                    defaultValue={value}
-                    label="Contact"
+                    type="text"
+                    value={value || userData.phone_number}
+                    label="Phone Number"
                     onChange={onChange}
                     placeholder="(397) 294-5153"
-                    error={Boolean(errors.contact)}
-                    {...(errors.contact && { helperText: errors.contact.message })}
+                    error={Boolean(errors.phone_number)}
+                    {...(errors.phone_number && { helperText: errors.phone_number.message })}
                   />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="designation"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    defaultValue={value}
-                    label="Designation"
-                    onChange={onChange}
-                    placeholder="Business Development Executive"
-                    error={Boolean(errors.designation)}
-                    {...(errors.designation && { helperText: errors.designation.message })}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="role"
-                control={control}
-                rules={{ required: true }}
-                render={() => (
-                  <TextField
-                    select
-                    fullWidth
-                    defaultValue={userData?.role_groups?.role?.id}
-                    onChange={(e) => {
-                      setValue('role', e.target.value);
-                    }}
-                  >
-                    {/* <MenuItem value="">Select Role</MenuItem> */}
-                    {groups?.map((group, index) => (
-                      <MenuItem key={index} value={group?.role?.id}>
-                        {group?.role?.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
                 )}
               />
             </Grid>

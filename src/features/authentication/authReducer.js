@@ -1,9 +1,18 @@
 // authReducer.js
+const getLocalStorageItem = (key) => {
+  try {
+    return JSON.parse(localStorage.getItem(key));
+  } catch (error) {
+    console.error(`Error parsing ${key} from localStorage`, error);
+    return null;
+  }
+};
+
 const initialState = {
-  isAuthenticated: localStorage.getItem('isAuthenticated') || false,
+  isAuthenticated: JSON.parse(localStorage.getItem('isAuthenticated')) || false,
   token: localStorage.getItem('token') || null,
-  userData: JSON.parse(localStorage.getItem('userData')) || null,
-  permissions: JSON.parse(localStorage.getItem('permissions')) || null,
+  userData: getLocalStorageItem('userData') || null,
+  permissions: getLocalStorageItem('permissions') || null,
   errorMessage: ''
 };
 
@@ -41,8 +50,8 @@ const authReducer = (state = initialState, action) => {
         ...state,
         isAuthenticated: true,
         token: localStorage.getItem('token') || null,
-        userData: JSON.parse(localStorage.getItem('userData')) || null,
-        permissions: JSON.parse(localStorage.getItem('userData')) || null,
+        userData: getLocalStorageItem('userData') || null,
+        permissions: getLocalStorageItem('permissions') || null,
         errorMessage: action.payload
       };
     default:

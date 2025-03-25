@@ -60,20 +60,27 @@ const ChatContent = (props) => {
               ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
             }}
           >
-            <MuiAvatar
+            <Box
               sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
                 mb: 6,
-                pt: 8,
-                pb: 7,
-                px: 7.5,
-                width: 110,
-                height: 110,
-                boxShadow: 3,
-                backgroundColor: 'background.paper'
               }}
             >
-              <Icon icon="tabler:message" fontSize="3.125rem" />
-            </MuiAvatar>
+              <MuiAvatar
+                sx={{
+                  width: 110,
+                  height: 110,
+                  boxShadow: 3,
+                  backgroundColor: 'background.paper'
+                }}
+              >
+                <Icon icon="tabler:message" fontSize="3.125rem" />
+              </MuiAvatar>
+              <Typography sx={{ fontWeight: 500, fontSize: '1.2rem', mt: 2 }}>Select Ticket</Typography>
+            </Box>
+
             <Box
               onClick={handleStartConversation}
               sx={{
@@ -160,13 +167,14 @@ const ChatContent = (props) => {
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <OptionsMenu
-                  menuProps={{ sx: { mt: 2 } }}
-                  icon={<Icon icon="tabler:dots-vertical" />}
-                  iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-                  options={['View Contact', 'Mute Notifications', 'Block Contact', 'Clear Chat', 'Report']}
-                />
-              </Box>
+                  <OptionsMenu
+                    menuProps={{ sx: { mt: 2 } }}
+                    icon={<Icon icon="tabler:dots-vertical" />}
+                    iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                    options={['Close Ticket']}
+                  />
+                </Box>
+
             </Box>
 
             {selectedChat && store.userProfile ? (

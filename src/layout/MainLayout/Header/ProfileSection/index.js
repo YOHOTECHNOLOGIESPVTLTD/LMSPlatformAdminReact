@@ -13,15 +13,15 @@ import {
   ClickAwayListener,
   Divider,
   Grid,
-  InputAdornment,
+  // InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  OutlinedInput,
+  // OutlinedInput,
   Paper,
   Popper,
-  Stack,
+  // Stack,
   Switch,
   Typography
 } from '@mui/material';
@@ -54,8 +54,8 @@ const ProfileSection = () => {
   const dispatch = useDispatch();
 
   const [sdm, setSdm] = useState(true);
-  const [value, setValue] = useState('');
-  console.log(value);
+  // const [value, setValue] = useState('');
+  // console.log(value);
 
   const [notification, setNotification] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -166,7 +166,7 @@ const ProfileSection = () => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
-                  <Box sx={{ p: 2 }}>
+                  {/* <Box sx={{ p: 2 }}>
                     <Stack>
                       <Stack direction="row" spacing={0.5} alignItems="center">
                         <Typography variant="h4">Good Morning,</Typography>
@@ -185,15 +185,15 @@ const ProfileSection = () => {
                       startAdornment={
                         <InputAdornment position="start">
                           {/* <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} /> */}
-                        </InputAdornment>
+                        {/* </InputAdornment>
                       }
                       aria-describedby="search-helper-text"
                       inputProps={{
                         'aria-label': 'weight'
                       }}
                     />
-                    <Divider />
-                  </Box>
+                     <Divider /> 
+                  </Box> */} 
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>
                       {/* <UpgradePlanCard /> */}
@@ -208,7 +208,7 @@ const ProfileSection = () => {
                         <CardContent>
                           <Grid container spacing={3} direction="column">
                             <Grid item>
-                              <Grid item container alignItems="center" justifyContent="space-between">
+                              <Grid container alignItems="center" justifyContent="space-between">
                                 <Grid item>
                                   <Typography variant="subtitle1">Start DND Mode</Typography>
                                 </Grid>
@@ -224,7 +224,7 @@ const ProfileSection = () => {
                               </Grid>
                             </Grid>
                             <Grid item>
-                              <Grid item container alignItems="center" justifyContent="space-between">
+                              <Grid container alignItems="center" justifyContent="space-between">
                                 <Grid item>
                                   <Typography variant="subtitle1">Allow Notifications</Typography>
                                 </Grid>
@@ -232,7 +232,7 @@ const ProfileSection = () => {
                                   <Switch
                                     checked={notification}
                                     onChange={(e) => setNotification(e.target.checked)}
-                                    name="sdm"
+                                    name="notification"
                                     size="small"
                                   />
                                 </Grid>
@@ -275,7 +275,10 @@ const ProfileSection = () => {
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}
-                          onClick={(event) => handleListItemClick(event, 1, '#')}
+                          onClick={(event) => {
+                            handleListItemClick(event, 1, '#');
+
+                          }}
                         >
                           <ListItemIcon>
                             <IconUser stroke={1.5} size="1.3rem" />
@@ -314,9 +317,11 @@ const ProfileSection = () => {
             </Paper>
           </Transitions>
         )}
+
       </Popper>
     </>
   );
 };
+
 
 export default ProfileSection;

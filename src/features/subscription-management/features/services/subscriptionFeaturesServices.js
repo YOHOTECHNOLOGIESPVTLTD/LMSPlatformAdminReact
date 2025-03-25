@@ -1,106 +1,107 @@
-// SubscriptionFeatureService.js
 import axios from 'axios';
 
-const SUBSCRIPTION_FEATURE_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/subscription-management/subscription-plans`;
-import Client from 'api/index';
-import { getErrorMessage } from 'utils/error-handler';
+const API_URL = "http://localhost:3001/api/subscription"; 
+
+export const addSubscriptionFeature = async (data) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authorization token found. Please log in again.");
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    const response = await axios.post(`${API_URL}/plan`, data, { headers });
+
+    return {
+      success: true,
+      message: "Subscription Plan created successfully",
+      data: response.data
+    };
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status === 401) {
+        localStorage.removeItem("token");
+        throw new Error("Session expired. Please log in again.");
+      }
+      throw new Error(error.response.data?.message || "Something went wrong.");
+    } else if (error.request) {
+      throw new Error("No response from server. Check your internet connection.");
+    } else {
+      throw new Error(error.message);
+    }
+  }
+};
+
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error("Authorization token is missing");
+  
+  return {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  };
+};
 
 export const getAllSubscriptionFeatures = async () => {
   try {
-    const response = await axios.get(`${SUBSCRIPTION_FEATURE_END_POINT}/read-by-branch-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+    const response = await axios.get(`${API_URL}/read-by-branch-id`, {
+      headers: getAuthHeaders(),
     });
-    
-    console.log(response);
 
-    // Check if the response status is successful
     if (response.data.status) {
-      return response;
+      return response.data; // Returning only the necessary data
     } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch SubscriptionFeatures. Status: ${response.status}`);
+      throw new Error(`Failed to fetch Subscription Features. Status: ${response.status}`);
     }
   } catch (error) {
-    // Log the error for debugging purposes
     console.error('Error in getAllSubscriptionFeatures:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw error.response?.data || new Error('Something went wrong while fetching subscription features.');
   }
 };
 
 export const searchSubscriptionFeatures = async (searchQuery) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
+    const response = await axios.get(`${API_URL}/search`, {
+      headers: getAuthHeaders(),
+      params: { search: searchQuery },
     });
 
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
+    return response.data ? { success: true, data: response.data } : { success: false, message: 'No results found' };
   } catch (error) {
     console.error('Error in searchSubscriptionFeatures:', error);
-    throw error;
-  }
-};
-
-export const addSubscriptionFeature = async (data) => {
-  try {
-    await Client.subscription.create(data)
-    return { success: true, message: 'SubscriptionFeature created successfully' }
-  } catch (error) {
-    const error_message = getErrorMessage(error)
-    throw new Error(error_message)
+    throw error.response?.data || new Error('Something went wrong while searching subscription features.');
   }
 };
 
 export const deleteSubscriptionFeature = async (SubscriptionFeatureId) => {
   try {
-    const response = await axios.delete(`${SUBSCRIPTION_FEATURE_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { id: SubscriptionFeatureId }
+    const response = await axios.delete(`${API_URL}/delete`, {
+      headers: getAuthHeaders(),
+      params: { id: SubscriptionFeatureId },
     });
 
-    if (response.data.status) {
-      return { success: true, message: 'SubscriptionFeature deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete SubscriptionFeature' };
-    }
+    return response.data.status
+      ? { success: true, message: 'Subscription Feature deleted successfully' }
+      : { success: false, message: 'Failed to delete Subscription Feature' };
   } catch (error) {
     console.error('Error in deleteSubscriptionFeature:', error);
-    throw error;
+    throw error.response?.data || new Error('Something went wrong while deleting the subscription feature.');
   }
 };
 
 export const updateSubscriptionFeature = async (data) => {
   try {
-    const response = await axios.post(`${SUBSCRIPTION_FEATURE_END_POINT}/update`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+    const response = await axios.post(`${API_URL}/update`, data, {
+      headers: getAuthHeaders(),
     });
 
-    if (response.data.status) {
-      console.log('response:',response);
-      return { success: true, message: 'SubscriptionFeature updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update SubscriptionFeature' };
-    }
+    return response.data.status
+      ? { success: true, message: 'Subscription Feature updated successfully' }
+      : { success: false, message: 'Failed to update Subscription Feature' };
   } catch (error) {
     console.error('Error in updateSubscriptionFeature:', error);
-    throw error;
+    throw error.response?.data || new Error('Something went wrong while updating the subscription feature.');
   }
 };

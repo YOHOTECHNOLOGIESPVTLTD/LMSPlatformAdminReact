@@ -8,7 +8,10 @@ class Client {
       resend_otp : (data) => httpClient.post(API_END_POINTS.auth.resend_otp,data),
       validate_otp : (data) =>httpClient.post(API_END_POINTS.auth.validate_otp,data),
       forget_password:(data)=>httpClient.post(API_END_POINTS.auth.forget_password,data),
-      update_password:(data)=>httpClient.post(API_END_POINTS.auth.update_password,data)
+      update_password:(data)=>httpClient.post(API_END_POINTS.auth.update_password,data),
+      get_profile:(data)=>httpClient.get(API_END_POINTS.auth.get_profile,data),
+      get_activity:(data)=>httpClient.get(API_END_POINTS.auth.get_activity,data),
+      edit_profile:(data)=>httpClient.patch(API_END_POINTS.auth.edit_profile,data)
    }
    institute = {
     all : (params) => httpClient.get(API_END_POINTS.institute.getAll,params),

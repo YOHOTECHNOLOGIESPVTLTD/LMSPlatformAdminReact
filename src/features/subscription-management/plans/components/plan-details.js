@@ -168,26 +168,24 @@ const PlanDetails = (props) => {
     setStatusValue(plans);
   };
 
-  // Render feature list with icons and animations
+  
   const renderFeatures = () => {
-    const featureList = [
-      { label: 'Admins', count: plans?.features[1]?.count || (plans?.features?.admin_is_unlimited === '1' ? 'Unlimited' : '0') },
-      { label: 'Batches', count: plans?.features[2]?.count || (plans?.features?.batches_is_unlimited === '1' ? 'Unlimited' : '0') },
-      { label: 'Classes', count: plans?.features?.no_of_classes || (plans?.features?.class_is_unlimited === '1' ? 'Unlimited' : '0') },
-      { label: 'Courses', count: plans?.features[7]?.count || (plans?.features?.course_is_unlimited === '1' ? 'Unlimited' : '0') },
-      { label: 'Staffs', count: plans?.features[6]?.count || (plans?.features?.staff_is_unlimited === '1' ? 'Unlimited' : '0') },
-      { label: 'Students', count: plans?.features[0]?.count || (plans?.features?.student_is_unlimited === '1' ? 'Unlimited' : '0') }
-    ];
-
-    return featureList.map((feature, index) => (
-      <FeatureGrid key={index} variants={fadeIn}  initial="hidden" animate="visible">
-        <FeatureIcon src={CheckIcon} />
-        <Typography style={{ color: '#333', fontSize: '1rem' }}>
-          {feature.label}: <strong>{feature.count}</strong>
-        </Typography>
-      </FeatureGrid>
-    ));
+    if (!plans?.features || plans.features.length === 0) return null;
+  
+    return plans.features.map((feature, index) => {
+      const uniqueKey = feature.feature?._id || feature.feature?.identity || feature.label || `feature-${index}`;
+  
+      return (
+        <FeatureGrid key={uniqueKey} variants={fadeIn} initial="hidden" animate="visible">
+          <FeatureIcon src={CheckIcon} />
+          <Typography style={{ color: '#333', fontSize: '1rem' }}>
+            {feature.feature?.identity || feature.label}: <strong>{feature.count || 'Unlimited'}</strong>
+          </Typography>
+        </FeatureGrid>
+      );
+    });
   };
+  
 
   const placeholderUrl = 'https://www.charitycomms.org.uk/wp-content/uploads/2019/02/placeholder-image-square.jpg';
 
