@@ -118,6 +118,7 @@ const InstituteProfile = ({ institute }) => {
     mode: 'onChange',
     resolver: yupResolver(personalSchema)
   });
+  
 
   useEffect(() => {
     if (institute) {

@@ -13,15 +13,15 @@ import {
   ClickAwayListener,
   Divider,
   Grid,
-  InputAdornment,
+  // InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  OutlinedInput,
+  // OutlinedInput,
   Paper,
   Popper,
-  Stack,
+  // Stack,
   Switch,
   Typography
 } from '@mui/material';
@@ -34,27 +34,33 @@ import MainCard from 'components/cards/MainCard';
 import Transitions from 'components/extended/Transitions';
 // import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
-// import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { logout } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 
 // assets
-import { IconLogout, 
-  IconSearch, IconSettings, IconUser
- } from '@tabler/icons';
+import {
+  IconLogout,
+  IconSettings,
+  IconUser
+} from '@tabler/icons';
 // import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [sdm, setSdm] = useState(true);
   // const [value, setValue] = useState('');
+  // console.log(value);
+
   const [notification, setNotification] = useState(false);
-  // const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  console.log(selectedIndex);
+
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -71,17 +77,18 @@ const ProfileSection = () => {
     setOpen(false);
   };
 
-  // const handleListItemClick = (event, index, route = '') => {
-  //   setSelectedIndex(index);
-  //   handleClose(event);
+  const handleListItemClick = (event, index, route = '') => {
+    setSelectedIndex(index);
+    handleClose(event);
 
-  //   if (route && route !== '') {
-  //     navigate(route);
-  //   }
-  // };
+    if (route && route !== '') {
+      navigate(route);
+    }
+  };
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
+  console.log(handleListItemClick);
 
   const prevOpen = useRef(open);
   useEffect(() => {
@@ -159,7 +166,7 @@ const ProfileSection = () => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
-                  <Box sx={{ p: 2 }}>
+                  {/* <Box sx={{ p: 2 }}>
                     <Stack>
                       <Stack direction="row" spacing={0.5} alignItems="center">
                         <Typography variant="h4">Good Morning,</Typography>
@@ -170,15 +177,15 @@ const ProfileSection = () => {
                       <Typography variant="subtitle2">Project Admin</Typography>
                     </Stack>
                     <OutlinedInput
-                      sx={{ width: '100%', pr: 1, pl: 2, my: 2, display: "none" }}
+                      sx={{ width: '100%', pr: 1, pl: 2, my: 2, display: 'none' }}
                       id="input-search-profile"
-                      value={value}
+                      // value={value}
                       onChange={(e) => setValue(e.target.value)}
                       placeholder="Search profile options"
                       startAdornment={
                         <InputAdornment position="start">
-                          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} />
-                        </InputAdornment>
+                          {/* <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} /> */}
+                        {/* </InputAdornment>
                       }
                       aria-describedby="search-helper-text"
                       inputProps={{
@@ -186,7 +193,7 @@ const ProfileSection = () => {
                       }}
                     />
                      <Divider /> 
-                  </Box>
+                  </Box> */} 
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>
                       {/* <UpgradePlanCard /> */}
@@ -194,14 +201,14 @@ const ProfileSection = () => {
                       <Card
                         sx={{
                           bgcolor: theme.palette.primary.light,
-                          display: "none",
+                          display: 'none',
                           my: 2
                         }}
                       >
                         <CardContent>
                           <Grid container spacing={3} direction="column">
                             <Grid item>
-                              <Grid item container alignItems="center" justifyContent="space-between">
+                              <Grid container alignItems="center" justifyContent="space-between">
                                 <Grid item>
                                   <Typography variant="subtitle1">Start DND Mode</Typography>
                                 </Grid>
@@ -217,7 +224,7 @@ const ProfileSection = () => {
                               </Grid>
                             </Grid>
                             <Grid item>
-                              <Grid item container alignItems="center" justifyContent="space-between">
+                              <Grid container alignItems="center" justifyContent="space-between">
                                 <Grid item>
                                   <Typography variant="subtitle1">Allow Notifications</Typography>
                                 </Grid>
@@ -225,7 +232,7 @@ const ProfileSection = () => {
                                   <Switch
                                     checked={notification}
                                     onChange={(e) => setNotification(e.target.checked)}
-                                    name="sdm"
+                                    name="notification"
                                     size="small"
                                   />
                                 </Grid>
@@ -251,7 +258,7 @@ const ProfileSection = () => {
                           }
                         }}
                       >
-                         <ListItemButton
+                        <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 0}
                           // href="/profile-management/account-settings"
@@ -268,7 +275,10 @@ const ProfileSection = () => {
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}
-                          onClick={(event) => handleListItemClick(event, 1, '#')}
+                          onClick={(event) => {
+                            handleListItemClick(event, 1, '#');
+
+                          }}
                         >
                           <ListItemIcon>
                             <IconUser stroke={1.5} size="1.3rem" />
@@ -292,12 +302,8 @@ const ProfileSection = () => {
                               </Grid>
                             }
                           />
-                        </ListItemButton> 
-                        <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={0 === 4}
-                          onClick={handleLogout}
-                        >
+                        </ListItemButton>
+                        <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} selected={0 === 4} onClick={handleLogout}>
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="1.3rem" />
                           </ListItemIcon>
@@ -311,9 +317,11 @@ const ProfileSection = () => {
             </Paper>
           </Transitions>
         )}
+
       </Popper>
     </>
   );
 };
+
 
 export default ProfileSection;

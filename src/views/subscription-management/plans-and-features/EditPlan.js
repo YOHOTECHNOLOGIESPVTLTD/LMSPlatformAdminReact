@@ -4,6 +4,7 @@
 import Grid from '@mui/material/Grid';
 // import Radio from '@mui/material/Radio';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';   
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 // import FormLabel from '@mui/material/FormLabel';
@@ -19,14 +20,13 @@ import { Typography } from '@mui/material';
 import CustomTextField from 'components/mui/text-field';
 
 // ** Third Party Imports
-import toast from 'react-hot-toast';
 import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 import { useEffect } from 'react';
 import { updateSubscriptionFeature } from 'features/subscription-management/features/services/subscriptionFeaturesServices';
 // import { addSubscriptionFeature } from '../services/subscriptionFeaturesServices';
-import { imagePlaceholder } from 'lib/placeholders';
+//import { imagePlaceholder } from 'lib/placeholders';
 // ** Icon Imports
 
 const defaultValues = {
@@ -163,27 +163,22 @@ const EditPlan = () => {
       marginTop: theme.spacing(2)
     }
   }));
+  const [errorMessage, setErrorMessage] = useState('');
+
   const onSubmit = async (data) => {
+    setErrorMessage(''); 
   
-    if (studentInputBoxChecked === false && studentInputChecked === false) {
-      setStudentError(true);
-    }
-    if (adminInputBoxChecked === false && adminInputChecked === false) {
-      setAdminError(true);
-    }
-    if (teachersInputBoxChecked === false && teachersInputChecked === false) {
-      setTeachersError(true);
-    }
-    if (batchesInputBoxChecked === false && batchesInputChecked === false) {
-      setBatchesError(true);
-    }
-    if (coursesInputBoxChecked === false && coursesInputChecked === false) {
-      setCoursesError(true);
-    }
-    if (classesInputBoxChecked === false && classesInputChecked === false) {
-      setClassesError(true);
-    }
+    if (!studentInputBoxChecked && !studentInputChecked) setStudentError(true);
+    if (!adminInputBoxChecked && !adminInputChecked) setAdminError(true);
+    if (!teachersInputBoxChecked && !teachersInputChecked) setTeachersError(true);
+    if (!batchesInputBoxChecked && !batchesInputChecked) setBatchesError(true);
+    if (!coursesInputBoxChecked && !coursesInputChecked) setCoursesError(true);
+    if (!classesInputBoxChecked && !classesInputChecked) setClassesError(true);
+  
+    if (studentError || adminError || teachersError || batchesError || coursesError || classesError) return;
+  
     var bodyFormData = new FormData();
+    bodyFormData.append('plan_id', planId); 
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('plan_name', data?.plan_name);
     bodyFormData.append('plan_price', data?.plan_price);
@@ -193,32 +188,29 @@ const EditPlan = () => {
     bodyFormData.append('description', data?.description);
     bodyFormData.append('no_of_students', data?.students);
     bodyFormData.append('no_of_admins', data?.admins);
-    bodyFormData.append('no_of_staffs', data?.teachers);
     bodyFormData.append('no_of_teachers', data?.teachers);
     bodyFormData.append('no_of_batches', data?.batches);
     bodyFormData.append('no_of_courses', data?.courses);
     bodyFormData.append('no_of_classes', data?.classes);
-    bodyFormData.append('student_is_unlimited', studentInputChecked === true ? '1' : '');
-    bodyFormData.append('teacher_is_unlimited', teachersInputChecked === true ? '1' : '');
-    bodyFormData.append('admin_is_unlimited', adminInputChecked === true ? '1' : '');
-    bodyFormData.append('course_is_unlimited', coursesInputChecked === true ? '1' : '');
-    bodyFormData.append('batches_is_unlimited', batchesInputChecked === true ? '1' : '');
-    bodyFormData.append('class_is_unlimited', classesInputChecked === true ? '1' : '');
-    // bodyFormData.append('staff_is_unlimited', classesInputChecked === true ? '1' : '');
-
+    bodyFormData.append('student_is_unlimited', studentInputChecked ? '1' : '');
+    bodyFormData.append('teacher_is_unlimited', teachersInputChecked ? '1' : '');
+    bodyFormData.append('admin_is_unlimited', adminInputChecked ? '1' : '');
+    bodyFormData.append('course_is_unlimited', coursesInputChecked ? '1' : '');
+    bodyFormData.append('batches_is_unlimited', batchesInputChecked ? '1' : '');
+    bodyFormData.append('class_is_unlimited', classesInputChecked ? '1' : '');
+  
     try {
       const result = await updateSubscriptionFeature(bodyFormData);
       if (result.success) {
-        toast.success(result.message);
         navigate(-1);
       } else {
-        toast.error(result.message);
+        setErrorMessage(result.message || 'Failed to update subscription.');
       }
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error.response?.data?.message || 'An unexpected error occurred while updating the subscription.');
     }
-    console.log('bodyFormdata:', bodyFormData);
   };
+  
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -244,596 +236,1141 @@ const EditPlan = () => {
 
   return (
     <Box p={1}>
+      {errorMessage && (
+        <Typography sx={{ color: 'red', fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
+          {errorMessage}
+        </Typography>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={5}>
-          <Grid item xs={12} sm={6}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {!selectedImage && (
-                <ImgStyled
-                  src={planData?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}${planData?.image}` : imagePlaceholder}
-                  alt="Profile Pic"
-                />
-              )}
-              {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
-              <div>
-                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                  Upload Profile picture
-                  <input
-                    hidden
-                    type="file"
-                    accept="image/png, image/jpeg"
-                    onChange={handleInputImageChange}
-                    id="account-settings-upload-image"
-                  />
-                </ButtonStyled>
-                <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
-                  Reset
-                </ResetButtonStyled>
-                <Typography sx={{ mt: 4, color: 'text.disabled', justifyContent: 'center', display: 'flex' }}>
-                  Allowed PNG or JPEG. Max size of 800K.
-                </Typography>
-              </div>
-            </Box>
-          </Grid>
+        <Grid item xs={12} sm={6}>
+  <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'center'}}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start', 
+        width: 180,
+        height: 200,
+        border: '2px dashed #1976d2',
+        borderRadius: '12px',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease-in-out',
+        backgroundColor: '#f9f9f9',
+        position: 'relative',
+        overflow: 'hidden',
+        padding: 3, 
+        ':hover': {
+          backgroundColor: '#e3f2fd',
+          borderColor: '#1565c0',
+          boxShadow: 3,
+          transform: 'scale(1.05)',
+        },
+        ':focus-within': {
+          transform: 'scale(1.1)',
+        },
+      }}
+    >
+      
+      {selectedImage || planData?.image ? (
+        <ImgStyled        
+        src={selectedImage ? imgSrc : `${process.env.REACT_APP_PUBLIC_API_URL.replace(/\/$/, '')}/${planData?.image.replace(/^\//, '')}`}
+          alt="Profile Pic"
+          sx={{
+            width: '70px',
+            height: '70px',
+            objectFit: 'cover',
+            borderRadius: '50%',
+            boxShadow: 2,
+            marginBottom: '12px', 
+          }}
+        />
+      ) : null}
+
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: '10px', 
+          marginTop: selectedImage ? 1 : 2, 
+        }}
+      >
+        <ButtonStyled
+          component="label"
+          variant="contained"
+          htmlFor="account-settings-upload-image"
+          sx={{
+            width: '75px',
+            height: '40px',   
+            left:'4%',         
+            fontSize: '0.875rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '8px', 
+          }}
+        >
+          Upload
+          <input
+            hidden
+            type="file"
+            accept="image/png, image/jpeg"
+            onChange={handleInputImageChange}
+            id="account-settings-upload-image"
+          />
+        </ButtonStyled>
+
+        <ResetButtonStyled
+          color="error"
+          variant="tonal"
+          onClick={handleInputImageReset}
+          sx={{
+            width: '65px',
+            right:'4%',
+            height: '40px',
+            fontSize: '0.875rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '8px', 
+          }}
+        >
+          Reset
+        </ResetButtonStyled>
+      </Box>
+
+      
+      {!selectedImage && !planData?.image && (
+        <Typography sx={{ mt: 2, color: 'text.disabled', fontSize: '12px', textAlign: 'center' }}>
+          Allowed PNG or JPEG. Max size of 800K.
+        </Typography>
+      )}
+    </Box>
+  </Box>
+</Grid>
 
           <Grid item xs={12} sm={6}>
-            <Controller
-              name="plan_name"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange } }) => (
-                <CustomTextField
-                  fullWidth
-                  // value={value}
-                  defaultValue={planData?.identity}
-                  label="Plan Name"
-                  onChange={onChange}
-                  placeholder=""
-                  error={Boolean(errors.plan_name)}
-                  aria-describedby="validation-basic-first-name"
-                  {...(errors.plan_name && { helperText: 'This field is required' })}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="plan_price"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange } }) => (
-                <CustomTextField
-                  fullWidth
-                  defaultValue={planData?.price}
-                  // value={value}
-                  label="Plan Price"
-                  onChange={onChange}
-                  error={Boolean(errors.plan_price)}
-                  aria-describedby="validation-basic-first-name"
-                  {...(errors.plan_price && { helperText: 'This field is required' })}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="support_level"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange } }) => (
-                <CustomTextField
-                  select
-                  fullWidth
-                  // defaultValue="premium"
-                  defaultValue={planData?.support_level}
-                  label="Support Level"
-                  SelectProps={{
-                    // value: value,
-                    onChange: (e) => onChange(e)
-                  }}
-                  id="validation-basic-select"
-                  error={Boolean(errors.select)}
-                  aria-describedby="validation-basic-select"
-                  {...(errors.select && { helperText: 'This field is required' })}
-                >
-                  <MenuItem value="basic">Basic</MenuItem>
-                  <MenuItem value="premium">Premium</MenuItem>
-                </CustomTextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Controller
-              name="description"
-              control={control}
-              rules={{ required: true }}
-              render={() => (
-                //   {
-                //    field
-                //  }
-                <CustomTextField
-                  rows={4}
-                  fullWidth
-                  multiline
-                  defaultValue={planData?.description}
-                  // {...field}
-                  label="Plan Description"
-                  error={Boolean(errors.textarea)}
-                  aria-describedby="validation-basic-textarea"
-                  {...(errors.textarea && { helperText: 'This field is required' })}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="plan_duration"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange } }) => (
-                <CustomTextField
-                  fullWidth
-                  type="number"
-                  // value={value}
-                  defaultValue={planData?.duration.value}
-                  label="Duration"
-                  onChange={onChange}
-                  placeholder="120"
-                  error={Boolean(errors.plan_duration)}
-                  aria-describedby="validation-basic-first-name"
-                  {...(errors.plan_duration && { helperText: 'This field is required' })}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="plan_duration_type"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { onChange } }) => (
-                <CustomTextField
-                  select
-                  fullWidth
-                  defaultValue={planData?.duration.unit}
-                  label="Duration Type"
-                  SelectProps={{
-                    // value: value,
-                    onChange: (e) => onChange(e)
-                  }}
-                  id="validation-basic-select"
-                  // defaultValue={planData?.features?.plan_duration_type}
-                  error={Boolean(errors.plan_duration_type)}
-                  aria-describedby="validation-basic-select"
-                  {...(errors.plan_duration_type && { helperText: 'This field is required' })}
-                >
-                  <MenuItem value="day">Days</MenuItem>
-                  <MenuItem value="monthly">Months</MenuItem>
-                  <MenuItem value="yearly">Year</MenuItem>
-                </CustomTextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="students"
-              control={control}
-              // rules={{ required: true }}
-              render={({ field: { value } }) => (
-                <CustomTextField
-                  fullWidth
-                  type="number"
-                  value={value}
-                  label="Number of Students"
-                  onChange={(e) => {
-                    setValue('students', e.target.value);
-                    if (e.target.value !== '') {
-                      setStudentInputBoxChecked(true);
-                      setStudentError(false);
-                    } else {
-                      setStudentInputBoxChecked(false);
-                    }
-                  }}
-                  placeholder="79"
-                  error={Boolean(errors.users)}
-                  aria-describedby="validation-basic-first-name"
-                  disabled={studentInputChecked}
-                  // {...(errors.students && { helperText: 'This field is required' })}
-                />
-              )}
-            />
-            <FormControl>
-              <Controller
-                name="students_checkbox"
-                control={control}
-                // rules={{ required: true }}
-                render={({ field }) => (
-                  <FormControlLabel
-                    label="Check for unlimited students"
-                    sx={errors.checkbox ? { color: 'error.main' } : null}
-                    control={
-                      <Checkbox
-                        {...field}
-                        name="validation-basic-checkbox"
-                        sx={errors.checkbox ? { color: 'error.main' } : null}
-                        onChange={() => {
-                          setStudentError(false);
-                          setStudentInputChecked((state) => !state);
-                        }}
-                        disabled={studentInputBoxChecked}
-                        checked={studentInputChecked}
-                      />
-                    }
-                  />
-                )}
-              />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
-              {studentError && (
-                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
-                  Student data cannot be empty
-                </Typography>
-              )}
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="admins"
-              control={control}
-              // rules={{ required: true }}
-              render={({ field: { value } }) => (
-                <CustomTextField
-                  fullWidth
-                  value={value}
-                  type="number"
-                  label="Number of Admins"
-                  onChange={(e) => {
-                    setValue('admins', e.target.value);
-                    if (e.target.value !== '') {
-                      setAdminInputBoxChecked(true);
-                      setAdminError(false);
-                    } else {
-                      setAdminInputBoxChecked(false);
-                    }
-                  }}
-                  placeholder="10"
-                  // error={Boolean(errors.admins)}
-                  aria-describedby="validation-basic-first-name"
-                  disabled={adminInputChecked}
-
-                  // {...(errors.admins && { helperText: 'This field is required' })}
-                />
-              )}
-            />
-            <FormControl>
-              <Controller
-                name="admins_checkbox"
-                control={control}
-                // rules={{ required: true }}
-                render={({ field }) => (
-                  <FormControlLabel
-                    label="Check for unlimited admins"
-                    sx={errors.checkbox ? { color: 'error.main' } : null}
-                    disabled={adminInputBoxChecked}
-                    control={
-                      <Checkbox
-                        {...field}
-                        onChange={() => {
-                          setAdminError(false);
-                          setAdminInputChecked((state) => !state);
-                        }}
-                        name="validation-basic-checkbox"
-                        sx={errors.checkbox ? { color: 'error.main' } : null}
-                        // checked={planData?.features?.admin_is_unlimited!== null}
-                        checked={adminInputChecked}
-                      />
-                    }
-                  />
-                )}
-              />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
-              {adminError && (
-                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
-                  Admin data cannot be empty
-                </Typography>
-              )}
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="teachers"
-              control={control}
-              // rules={{ required: true }}
-              render={({ field: { value } }) => (
-                <CustomTextField
-                  fullWidth
-                  value={value}
-                  type="number"
-                  label="Number of Teachers"
-                  onChange={(e) => {
-                    setValue('teachers', e.target.value);
-                    if (e.target.value !== '') {
-                      setTeachersInputBoxChecked(true);
-                      setTeachersError(false);
-                    } else {
-                      setTeachersInputBoxChecked(false);
-                    }
-                  }}
-                  disabled={teachersInputChecked}
-                  placeholder="10"
-                  error={Boolean(errors.teachers)}
-                  aria-describedby="validation-basic-first-name"
-                  // {...(errors.teachers && { helperText: 'This field is required' })}
-                />
-              )}
-            />
-            <FormControl>
-              <Controller
-                name="teachers_checkbox"
-                control={control}
-                // rules={{ required: true }}
-                render={({ field }) => (
-                  <FormControlLabel
-                    label="Check for unlimited teachers"
-                    sx={errors.checkbox ? { color: 'error.main' } : null}
-                    control={
-                      <Checkbox
-                        {...field}
-                        name="validation-basic-checkbox"
-                        onChange={() => {
-                          setTeachersError(false);
-                          setTeachersInputChecked((state) => !state);
-                        }}
-                        disabled={teachersInputBoxChecked}
-                        sx={errors.checkbox ? { color: 'error.main' } : null}
-                        // checked={planData?.features?.teacher_is_unlimited!==null}
-                      />
-                    }
-                  />
-                )}
-              />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
-              {teachersError && (
-                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
-                  Teacher data cannot be empty
-                </Typography>
-              )}
-            </FormControl>
-
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="batches"
-              control={control}
-              // rules={{ required: true }}
-              render={({ field: { value } }) => (
-                <CustomTextField
-                  fullWidth
-                  value={value}
-                  type="number"
-                  label="Number of Batches"
-                  onChange={(e) => {
-                    setValue('batches', e.target.value);
-                    if (e.target.value !== '') {
-                      setBatchesInputBoxChecked(true);
-                      setBatchesError(false);
-                    } else {
-                      setBatchesInputBoxChecked(false);
-                    }
-                  }}
-                  disabled={batchesInputChecked}
-                  placeholder="10"
-                  // error={Boolean(errors.batches)}
-                  aria-describedby="validation-basic-first-name"
-                  // {...(errors.batches && { helperText: 'This field is required' })}
-                />
-              )}
-            />
-            <FormControl>
-              <Controller
-                name="batches_checkbox"
-                control={control}
-                // rules={{ required: true }}
-                render={({ field }) => (
-                  <FormControlLabel
-                    label="Check for unlimited batches"
-                    sx={errors.checkbox ? { color: 'error.main' } : null}
-                    control={
-                      <Checkbox
-                        {...field}
-                        name="validation-basic-checkbox"
-                        sx={errors.checkbox ? { color: 'error.main' } : null}
-                        onChange={() => {
-                          setBatchesError(false);
-                          setBatchesInputChecked((state) => !state);
-                        }}
-                        disabled={batchesInputBoxChecked}
-                        // checked={planData?.features?.batches_is_unlimited!==null}
-                        checked={batchesInputChecked}
-                      />
-                    }
-                  />
-                )}
-              />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
-              {batchesError && (
-                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
-                  Teacher data cannot be empty
-                </Typography>
-              )}
-            </FormControl>
-          </Grid>
+  <Controller
+    name="plan_name"
+    control={control}
+    rules={{ required: true }}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        fullWidth
+        type="text"
+        label="Plan Name"
+        placeholder="Enter plan name here"
+        onChange={(e) => field.onChange(e.target.value)}
+        variant="standard"
+        inputProps={{ maxLength: 18 }}
+        InputLabelProps={{
+          shrink: true,
+          sx: { fontSize: "1.2rem", transition: "all 0.3s ease" },
+        }}
+        sx={{
+          transition: "transform 0.3s ease",
+          "&:focus-within": { transform: "scale(1.05)" },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": { color: "#FF6D00" },
+          "& .MuiInput-underline:before": {
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "&:hover .MuiInput-underline:before": { borderBottom: "2px solid #FF6D00" },
+          "& .MuiInput-underline:after": { borderBottom: "2px solid #FF6D00" },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.plan_name)}
+        helperText={errors.plan_name ? "This field is required" : ""}
+        aria-label="Enter plan name"
+      />
+    )}
+  />
+</Grid>
 
           <Grid item xs={12} sm={6}>
-            <Controller
-              name="courses"
-              control={control}
-              // rules={{ required: true }}
-              render={({ field: { value } }) => (
-                <CustomTextField
-                  fullWidth
-                  value={value}
-                  type="number"
-                  label="Number of Courses"
-                  onChange={(e) => {
-                    setValue('courses', e.target.value);
-                    if (e.target.value !== '') {
-                      setCoursesInputBoxChecked(true);
-                      setCoursesError(false);
-                    } else {
-                      setCoursesInputBoxChecked(false);
-                    }
-                  }}
-                  disabled={coursesInputChecked}
-                  placeholder="10"
-                  // error={Boolean(errors.courses)}
-                  aria-describedby="validation-basic-first-name"
-                  // {...(errors.courses && { helperText: 'This field is required' })}
-                />
-              )}
-            />
-            <FormControl>
-              <Controller
-                name="courses_checkbox"
-                control={control}
-                // rules={{ required: true }}
-                render={({ field }) => (
-                  <FormControlLabel
-                    label="Check for unlimited courses"
-                    sx={errors.checkbox ? { color: 'error.main' } : null}
-                    control={
-                      <Checkbox
-                        {...field}
-                        name="validation-basic-checkbox"
-                        sx={errors.checkbox ? { color: 'error.main' } : null}
-                        onChange={() => {
-                          setCoursesInputChecked((state) => !state);
-                          setCoursesError(false);
-                        }}
-                        disabled={coursesInputBoxChecked}
-                        // checked={planData?.features?.course_is_unlimited !== null ? planData.features.course_is_unlimited : false}
-                        checked={coursesInputChecked}
-                      />
-                    }
-                  />
-                )}
-              />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
-              {coursesError && (
-                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
-                  Course data cannot be empty
-                </Typography>
-              )}
-            </FormControl>
-          </Grid>
+  <Controller
+    name="plan_price"
+    control={control}
+    rules={{ required: true }}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        fullWidth
+        type="number"
+        label="Plan Price"
+        placeholder="Enter price"
+        onChange={(e) => field.onChange(e.target.value)}
+        variant="standard"
+        inputProps={{ min: 0 }}
+        onWheel={(e) => e.target.blur()}
+        InputLabelProps={{
+          shrink: true,
+          sx: { fontSize: "1.2rem", transition: "all 0.3s ease" },
+        }}
+        sx={{
+          transition: "transform 0.3s ease",
+          "&:focus-within": { transform: "scale(1.05)" },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": { color: "#FF6D00" },
+          "& .MuiInput-underline:before": {
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "&:hover .MuiInput-underline:before": { borderBottom: "2px solid #FF6D00" },
+          "& .MuiInput-underline:after": { borderBottom: "2px solid #FF6D00" },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.plan_price)}
+        helperText={errors.plan_price ? "This field is required" : ""}
+        aria-label="Enter plan price"
+      />
+    )}
+  />
+</Grid>
 
           <Grid item xs={12} sm={6}>
-            <Controller
-              name="classes"
-              control={control}
-              // rules={{ required: true }}
-              render={({ field: { value } }) => (
-                <CustomTextField
-                  fullWidth
-                  value={value}
-                  type="number"
-                  label="Number of Classes"
-                  onChange={(e) => {
-                    setValue('classes', e.target.value);
-                    if (e.target.value !== '') {
-                      setClassesInputBoxChecked(true);
-                      setClassesError(false);
-                    } else {
-                      setClassesInputBoxChecked(false);
-                    }
-                  }}
-                  disabled={classesInputChecked}
-                  placeholder="10"
-                  // error={Boolean(errors.classes)}
-                  aria-describedby="validation-basic-first-name"
-                  // {...(errors.classes && { helperText: 'This field is required' })}
-                />
-              )}
+  <Controller
+    name="support_level"
+    control={control}
+    rules={{ required: true }}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        select
+        fullWidth
+        label="Support Level"
+        value={field.value || "basic"}
+        onChange={(e) => field.onChange(e.target.value)}
+        variant="standard"
+        InputLabelProps={{
+          shrink: true,
+          sx: { fontSize: "1.2rem", transition: "all 0.3s ease" },
+        }}
+        sx={{
+          transition: "transform 0.3s ease",
+          "&:focus-within": { transform: "scale(1.05)" },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": { color: "#FF6D00" },
+          "&:hover .MuiInput-underline:before": { borderBottom: "2px solid #FF6D00" },
+          "& .MuiInput-underline:after": { borderBottom: "2px solid #FF6D00" },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.support_level)}
+        helperText={errors.support_level ? "This field is required" : ""}
+        aria-label="Select support level"
+      >
+        <MenuItem value="basic">Basic</MenuItem>
+        <MenuItem value="premium">Premium</MenuItem>
+      </TextField>
+    )}
+  />
+</Grid>
+
+<Grid item xs={12}>
+  <Controller
+    name="description"
+    control={control}
+    rules={{ required: true }}
+    render={({ field }) => (
+      <CustomTextField
+        rows={4}
+        fullWidth
+        inputProps={{ maxLength: 35 }}
+        multiline
+        {...field}
+        label="Plan Description"
+        placeholder="Enter plan description"
+        sx={{
+          borderRadius: "10px",
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "10px",
+            "& fieldset": {
+              transition: "border-color 0.3s ease-in-out",
+            },
+            "&:hover fieldset": {
+              borderColor: "black", 
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#FF6D00 !important", 
+            },
+          },
+          "& .MuiInputBase-input": {
+            color: "#000",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#333",
+            padding: "0 4px", 
+            transition: "color 0.3s ease-in-out, transform 0.2s ease-in-out",
+            "&.Mui-focused": {
+              color: "#FF6D00 !important", 
+              transform: "scale(1.1)", 
+            },
+          },
+          "& .MuiFormHelperText-root": {
+            color: "#d32f2f",
+          },
+        }}
+        error={Boolean(errors.description)}
+        helperText={errors.description ? "This field is required" : ""}
+      />
+    )}
+  />
+</Grid>
+          
+          <Grid item xs={12} sm={6}>
+  <Controller
+    name="plan_duration"
+    control={control}
+    rules={{ required: true }}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        fullWidth
+        type="number"
+        label="Duration"
+        placeholder="Enter duration"
+        onChange={(e) => field.onChange(e.target.value)}
+        variant="standard"
+        inputProps={{ min: 0, maxLength: 5 }}
+        onWheel={(e) => e.target.blur()}
+        InputLabelProps={{
+          shrink: true,
+          sx: { fontSize: "1.2rem", transition: "all 0.3s ease" },
+        }}
+        sx={{
+          transition: "transform 0.3s ease",
+          "&:focus-within": { transform: "scale(1.05)" },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": { color: "#FF6D00" },
+          "& .MuiInput-underline:before": {
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "&:hover .MuiInput-underline:before": { borderBottom: "2px solid #FF6D00" },
+          "& .MuiInput-underline:after": { borderBottom: "2px solid #FF6D00" },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.plan_duration)}
+        helperText={errors.plan_duration ? "This field is required" : ""}
+        aria-label="Enter plan duration"
+      />
+    )}
+  />
+</Grid>
+
+          <Grid item xs={12} sm={6}>
+  <Controller
+    name="plan_duration_type"
+    control={control}
+    rules={{ required: true }}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        select
+        fullWidth
+        label="Duration Type"
+        placeholder="Select duration type"
+        value={field.value || "day"}
+        onChange={(e) => field.onChange(e.target.value)}
+        variant="standard"
+        InputLabelProps={{
+          shrink: true,
+          sx: { fontSize: "1.2rem", transition: "all 0.3s ease" },
+        }}
+        sx={{
+          transition: "transform 0.3s ease",
+          "&:focus-within": { transform: "scale(1.05)" },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": { color: "#FF6D00" },
+          "&:hover .MuiInput-underline:before": { borderBottom: "2px solid #FF6D00" },
+          "& .MuiInput-underline:after": { borderBottom: "2px solid #FF6D00" },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.plan_duration_type)}
+        helperText={errors.plan_duration_type ? "This field is required" : ""}
+        aria-label="Select duration type"
+      >
+        <MenuItem value="day">Days</MenuItem>
+        <MenuItem value="monthly">Months</MenuItem>
+        <MenuItem value="yearly">Year</MenuItem>
+      </TextField>
+    )}
+  />
+</Grid>
+
+
+<Grid item xs={12} sm={6}>
+  <Controller
+    name="students"
+    control={control}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        fullWidth
+        type="number"
+        label="Number of Students"
+        placeholder="Enter number of students"
+        onChange={(e) => {
+          const value = e.target.value;
+          setValue('students', value); 
+          setStudentInputBoxChecked(value !== '');
+          setStudentError(false);
+        }}
+        disabled={false} 
+        inputProps={{ maxLength: 5, min: 0 }}
+        onWheel={(e) => e.target.blur()} 
+        variant="standard" 
+        InputLabelProps={{
+          shrink: true,
+          sx: {
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+        }}
+        sx={{
+          transition: "transform 0.3s ease", 
+          "&:focus-within": {
+            transform: "scale(1.05)", 
+          },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "#FF6D00", 
+          },
+          "& .MuiInput-underline:before": {
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "&:hover .MuiInput-underline:before": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInput-underline:after": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.students)}
+      />
+    )}
+  />
+
+  <FormControl sx={{ mt: 2 }}>
+    <Controller
+      name="students_checkbox"
+      control={control}
+      render={({ field }) => (
+        <FormControlLabel
+          label="Check for Unlimited Students"
+          sx={{
+            color: "#333",
+            fontSize: "1rem",
+            fontWeight: "500",
+            "&:hover": {
+              color: "#FF6D00",
+            },
+          }}
+          control={
+            <Checkbox
+              {...field}
+              checked={studentInputChecked}
+              onChange={(e) => {
+                const isChecked = e.target.checked;
+                setStudentInputChecked(isChecked);
+                field.onChange(isChecked);
+                setStudentError(false);
+              }}
+              sx={{
+                color: "#FF9800",
+                "&.Mui-checked": {
+                  color: "#E65100",
+                  transform: "scale(1.1)",
+                  transition: "0.2s",
+                },
+              }}
             />
-            <FormControl>
-              <Controller
-                name="classes_checkbox"
-                control={control}
-                // rules={{ required: true }}
-                render={({ field }) => (
-                  <FormControlLabel
-                    label="Check for unlimited classes"
-                    sx={errors.checkbox ? { color: 'error.main' } : null}
-                    control={
-                      <Checkbox
-                        {...field}
-                        name="validation-basic-checkbox"
-                        sx={errors.checkbox ? { color: 'error.main' } : null}
-                        onChange={() => {
-                          setClassesInputChecked((state) => !state);
-                          setClassesError(false);
-                        }}
-                        disabled={classesInputBoxChecked}
-                        // checked={planData?.features?.class_is_unlimited!==null}
-                        checked={classesInputChecked}
-                      />
-                    }
-                  />
-                )}
-              />
-              {/* {errors.checkbox && (
-                <FormHelperText
-                  id="validation-basic-checkbox"
-                  sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}
-                >
-                  This field is required
-                </FormHelperText>
-              )} */}
-              {classesError && (
-                <Typography sx={{ mx: 0, color: 'error.main', fontSize: (theme) => theme.typography.body2.fontSize }}>
-                  Class data cannot be empty
-                </Typography>
-              )}
-            </FormControl>
-          </Grid>
+          }
+        />
+      )}
+    />
+    {studentError && (
+      <Typography sx={{ color: 'error.main', fontSize: '0.85rem', mt: 1 }}>
+        Student data cannot be empty
+      </Typography>
+    )}
+  </FormControl>
+</Grid>
+
+<Grid item xs={12} sm={6}>
+  <Controller
+    name="admins"
+    control={control}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        fullWidth
+        type="number"
+        label="Number of Admins"
+        placeholder="Enter number of admins"
+        onChange={(e) => {
+          const value = e.target.value;
+          setValue('admins', value); 
+          setAdminInputBoxChecked(value !== '');
+          setAdminError(false);
+        }}
+        disabled={false} 
+        inputProps={{ maxLength: 5, min: 0 }}
+        onWheel={(e) => e.target.blur()} 
+        variant="standard" 
+        InputLabelProps={{
+          shrink: true,
+          sx: {
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+        }}
+        sx={{
+          transition: "transform 0.3s ease", 
+          "&:focus-within": {
+            transform: "scale(1.05)", 
+          },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "#FF6D00", 
+          },
+          "& .MuiInput-underline:before": {
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "&:hover .MuiInput-underline:before": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInput-underline:after": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.admins)}
+      />
+    )}
+  />
+
+  <FormControl sx={{ mt: 2 }}>
+    <Controller
+      name="admins_checkbox"
+      control={control}
+      render={({ field }) => (
+        <FormControlLabel
+          label="Check for Unlimited Admins"
+          sx={{
+            color: "#333",
+            fontSize: "1rem",
+            fontWeight: "500",
+            "&:hover": {
+              color: "#FF6D00",
+            },
+          }}
+          control={
+            <Checkbox
+              {...field}
+              checked={adminInputChecked}
+              onChange={(e) => {
+                const isChecked = e.target.checked;
+                setAdminInputChecked(isChecked);
+                field.onChange(isChecked);
+                setAdminError(false);
+              }}
+              sx={{
+                color: "#FF9800",
+                "&.Mui-checked": {
+                  color: "#E65100",
+                  transform: "scale(1.1)",
+                  transition: "0.2s",
+                },
+              }}
+            />
+          }
+        />
+      )}
+    />
+    {adminError && (
+      <Typography sx={{ color: 'error.main', fontSize: '0.85rem', mt: 1 }}>
+        Admin data cannot be empty
+      </Typography>
+    )}
+  </FormControl>
+</Grid>
+
+
+<Grid item xs={12} sm={6}>
+  <Controller
+    name="teachers"
+    control={control}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        fullWidth
+        type="number"
+        label="Number of Teachers"
+        placeholder="Enter number of teachers"
+        onChange={(e) => {
+          field.onChange(e);
+          if (e.target.value !== '') {
+            setTeachersInputBoxChecked(true);
+            setTeachersError(false);
+          } else {
+            setTeachersInputBoxChecked(false);
+          }
+        }}
+        disabled={false} 
+        inputProps={{ maxLength: 5, min: 0 }}
+        onWheel={(e) => e.target.blur()} 
+        variant="standard" 
+        InputLabelProps={{
+          shrink: true,
+          sx: {
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+        }}
+        sx={{
+          transition: "transform 0.3s ease", 
+          "&:focus-within": {
+            transform: "scale(1.05)", 
+          },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "#FF6D00", 
+          },
+          "& .MuiInput-underline:before": {
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "&:hover .MuiInput-underline:before": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInput-underline:after": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.teachers)}
+      />
+    )}
+  />
+
+  <FormControl sx={{ mt: 2 }}>
+    <Controller
+      name="teachers_checkbox"
+      control={control}
+      render={({ field }) => (
+        <FormControlLabel
+          label="Check for Unlimited Teachers"
+          sx={{
+            color: "#333",
+            fontSize: "1rem",
+            fontWeight: "500",
+            "&:hover": {
+              color: "#FF6D00",
+            },
+          }}
+          control={
+            <Checkbox
+              {...field}
+              checked={teachersInputChecked} 
+              onChange={(e) => {
+                const isChecked = e.target.checked;
+                setTeachersInputChecked(isChecked); 
+                field.onChange(isChecked);
+                setTeachersError(false);
+              }}
+              sx={{
+                color: "#FF9800",
+                "&.Mui-checked": {
+                  color: "#E65100",
+                  transform: "scale(1.1)",
+                  transition: "0.2s",
+                },
+              }}
+            />
+          }
+        />
+      )}
+    />
+    {teachersError && (
+      <Typography sx={{ color: 'error.main', fontSize: '0.85rem', mt: 1 }}>
+        Teacher data cannot be empty
+      </Typography>
+    )}
+  </FormControl>
+</Grid>
+
+
+<Grid item xs={12} sm={6}>
+  <Controller 
+    name="batches"
+    control={control}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        fullWidth
+        type="number"
+        label="Number of Batches"
+        placeholder="Enter number of batches"
+        onChange={(e) => {
+          field.onChange(e);
+          if (e.target.value !== '') {
+            setBatchesInputBoxChecked(true);
+            setBatchesError(false);
+          } else {
+            setBatchesInputBoxChecked(false);
+          }
+        }}
+        disabled={false} 
+        inputProps={{ maxLength: 5, min: 0 }}
+        onWheel={(e) => e.target.blur()} 
+        variant="standard" 
+        InputLabelProps={{
+          shrink: true,
+          sx: {
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+        }}
+        sx={{
+          transition: "transform 0.3s ease", 
+          "&:focus-within": {
+            transform: "scale(1.05)", 
+          },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "#FF6D00", 
+          },
+          "& .MuiInput-underline:before": {
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "&:hover .MuiInput-underline:before": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInput-underline:after": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.batches)}
+      />
+    )}
+  />
+
+  <FormControl sx={{ mt: 2 }}>
+    <Controller
+      name="batches_checkbox"
+      control={control}
+      render={({ field }) => (
+        <FormControlLabel
+          label="Check for Unlimited Batches"
+          sx={{
+            color: "#333",
+            fontSize: "1rem",
+            fontWeight: "500",
+            "&:hover": {
+              color: "#FF6D00",
+            },
+          }}
+          control={
+            <Checkbox
+              {...field}
+              checked={batchesInputChecked} 
+              onChange={(e) => {
+                const isChecked = e.target.checked;
+                setBatchesInputChecked(isChecked); 
+                field.onChange(isChecked);
+                setBatchesError(false);
+              }}
+              sx={{
+                color: "#FF9800",
+                "&.Mui-checked": {
+                  color: "#E65100",
+                  transform: "scale(1.1)",
+                  transition: "0.2s",
+                },
+              }}
+            />
+          }
+        />
+      )}
+    />
+    {batchesError && (
+      <Typography sx={{ color: 'error.main', fontSize: '0.85rem', mt: 1 }}>
+        Batch data cannot be empty
+      </Typography>
+    )}
+  </FormControl>
+</Grid>
+
+
+
+<Grid item xs={12} sm={6}>
+  <Controller
+    name="courses"
+    control={control}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        fullWidth
+        type="number"
+        label="Number of Courses"
+        placeholder="Enter number of courses"
+        onChange={(e) => {
+          field.onChange(e);
+          if (e.target.value !== '') {
+            setCoursesInputBoxChecked(true);
+            setCoursesError(false);
+          } else {
+            setCoursesInputBoxChecked(false);
+          }
+        }}
+        disabled={false} 
+        inputProps={{ maxLength: 5, min: 0 }}
+        onWheel={(e) => e.target.blur()} 
+        variant="standard" 
+        InputLabelProps={{
+          shrink: true,
+          sx: {
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+        }}
+        sx={{
+          transition: "transform 0.3s ease", 
+          "&:focus-within": {
+            transform: "scale(1.05)", 
+          },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "#FF6D00", 
+          },
+          "& .MuiInput-underline:before": {
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "&:hover .MuiInput-underline:before": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInput-underline:after": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.courses)}
+      />
+    )}
+  />
+
+  <FormControl sx={{ mt: 2 }}>
+    <Controller
+      name="courses_checkbox"
+      control={control}
+      render={({ field }) => (
+        <FormControlLabel
+          label="Check for Unlimited Courses"
+          sx={{
+            color: "#333",
+            fontSize: "1rem",
+            fontWeight: "500",
+            "&:hover": {
+              color: "#FF6D00",
+            },
+          }}
+          control={
+            <Checkbox
+              {...field}
+              checked={coursesInputChecked} 
+              onChange={(e) => {
+                const isChecked = e.target.checked;
+                setCoursesInputChecked(isChecked); 
+                field.onChange(isChecked);
+                setCoursesError(false);
+              }}
+              sx={{
+                color: "#FF9800",
+                "&.Mui-checked": {
+                  color: "#E65100",
+                  transform: "scale(1.1)",
+                  transition: "0.2s",
+                },
+              }}
+            />
+          }
+        />
+      )}
+    />
+    {coursesError && (
+      <Typography sx={{ color: 'error.main', fontSize: '0.85rem', mt: 1 }}>
+        Course data cannot be empty
+      </Typography>
+    )}
+  </FormControl>
+</Grid>
+
+
+
+<Grid item xs={12} sm={6}>
+  <Controller
+    name="classes"
+    control={control}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        fullWidth
+        type="number"
+        label="Number of Classes"
+        placeholder="Enter number of classes"
+        onChange={(e) => {
+          field.onChange(e);
+          if (e.target.value !== '') {
+            setClassesInputBoxChecked(true);
+            setClassesError(false);
+          } else {
+            setClassesInputBoxChecked(false);
+          }
+        }}
+        disabled={false} 
+        inputProps={{ maxLength: 5, min: 0 }}
+        onWheel={(e) => e.target.blur()} 
+        variant="standard" 
+        InputLabelProps={{
+          shrink: true,
+          sx: {
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+        }}
+        sx={{
+          transition: "transform 0.3s ease", 
+          "&:focus-within": {
+            transform: "scale(1.05)", 
+          },
+          "& .MuiInputBase-input": {
+            color: "#000",
+            padding: "8px 0px",
+            fontSize: "1rem",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#000",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            transition: "all 0.3s ease",
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color: "#FF6D00", 
+          },
+          "& .MuiInput-underline:before": {
+            borderBottom: "2px solid rgba(0, 0, 0, 0.5)",
+          },
+          "&:hover .MuiInput-underline:before": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInput-underline:after": {
+            borderBottom: "2px solid #FF6D00",
+          },
+          "& .MuiInputBase-input::placeholder": {
+            color: "#9E9E9E",
+            opacity: "1",
+            fontSize: "1rem",
+          },
+        }}
+        error={Boolean(errors.classes)}
+      />
+    )}
+  />
+
+  <FormControl sx={{ mt: 2 }}>
+    <Controller
+      name="classes_checkbox"
+      control={control}
+      render={({ field }) => (
+        <FormControlLabel
+          label="Check for Unlimited Classes"
+          sx={{
+            color: "#333",
+            fontSize: "1rem",
+            fontWeight: "500",
+            "&:hover": {
+              color: "#FF6D00",
+            },
+          }}
+          control={
+            <Checkbox
+              {...field}
+              checked={classesInputChecked} 
+              onChange={(e) => {
+                const isChecked = e.target.checked;
+                setClassesInputChecked(isChecked); 
+                field.onChange(isChecked);
+                setClassesError(false);
+              }}
+              sx={{
+                color: "#FF9800",
+                "&.Mui-checked": {
+                  color: "#E65100",
+                  transform: "scale(1.1)",
+                  transition: "0.2s",
+                },
+              }}
+            />
+          }
+        />
+      )}
+    />
+    {classesError && (
+      <Typography sx={{ color: 'error.main', fontSize: '0.85rem', mt: 1 }}>
+        Class data cannot be empty
+      </Typography>
+    )}
+  </FormControl>
+</Grid>
 
           <Grid item xs={12} display="flex" justifyContent="center">
             <Button type="submit" variant="contained">
-              Submit
+              Update
             </Button>
           </Grid>
         </Grid>

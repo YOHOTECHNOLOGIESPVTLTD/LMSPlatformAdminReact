@@ -13,7 +13,8 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import OptionsMenu from 'components/option-menu';
 import { useState, useEffect } from 'react';
-import { getUserActivityLog } from 'features/user-management/users-page/services/userServices';
+// import { getUserActivityLog } from 'features/user-management/users-page/services/userServices';
+import { getUserActivity } from 'features/authentication/forgot-password-page/service/forgotPasswordService';
 
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
@@ -33,7 +34,9 @@ const UserViewAccount = ({ id }) => {
       const data = {
         user_id: userId
       };
-      const result = await getUserActivityLog(data);
+      const result = await getUserActivity(data);
+      console.log('activity',result);
+      
       if (result.success) {
         console.log('ActivityLog:', result.data);
         setActivityLog(result.data);

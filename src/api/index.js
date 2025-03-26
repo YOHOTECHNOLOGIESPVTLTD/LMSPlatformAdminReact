@@ -4,7 +4,14 @@ import { API_END_POINTS } from "./http_end_points";
 
 class Client {
    auth = {
-      verify_otp : (data) => httpClient.post(API_END_POINTS.auth.verify_otp,data)
+      verify_otp : (data) => httpClient.post(API_END_POINTS.auth.verify_otp,data),
+      resend_otp : (data) => httpClient.post(API_END_POINTS.auth.resend_otp,data),
+      validate_otp : (data) =>httpClient.post(API_END_POINTS.auth.validate_otp,data),
+      forget_password:(data)=>httpClient.post(API_END_POINTS.auth.forget_password,data),
+      update_password:(data)=>httpClient.post(API_END_POINTS.auth.update_password,data),
+      get_profile:(data)=>httpClient.get(API_END_POINTS.auth.get_profile,data),
+      get_activity:(data)=>httpClient.get(API_END_POINTS.auth.get_activity,data),
+      edit_profile:(data)=>httpClient.patch(API_END_POINTS.auth.edit_profile,data)
    }
    institute = {
     all : (params) => httpClient.get(API_END_POINTS.institute.getAll,params),
@@ -17,7 +24,9 @@ class Client {
    subscription = {
     all : (params) => httpClient.get(API_END_POINTS.subscription.all,params),
     create : (data) => httpClient.post(API_END_POINTS.subscription.create,data),
-    get_all : (data) => httpClient.get(API_END_POINTS.subscription.get_all,data)
+    get_all : (data) => httpClient.get(API_END_POINTS.subscription.get_all,data),
+    getWidId : (params) => httpClient.get(API_END_POINTS.subscription.getWithId + params?.institute),
+    approve: (data) => httpClient.post(API_END_POINTS.subscription.approve,data),
    }
    notification = {
       create : (data) => httpClient.post(API_END_POINTS.notification.create,data),
@@ -26,7 +35,9 @@ class Client {
    }
    payments = {
       get_all : (params) => httpClient.get(API_END_POINTS.payments.getAll,params),
-      getWidId : (params) => httpClient.get(API_END_POINTS.payments.getWithId + params?.institute)
+      getWidId : (params) => httpClient.get(API_END_POINTS.payments.getWithId + params?.institute),
+      create : (data) => httpClient.post(API_END_POINTS.payments.create,data),
+      approve : (data) => httpClient.post(API_END_POINTS.payments.approve,data),
    }
    file ={
    upload : (data) => httpClient.uploadFile(API_END_POINTS.fileUpload,data),

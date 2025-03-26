@@ -19,10 +19,12 @@ import subscriptionPlansReducer from 'features/subscription-management/plans/red
 import subscriptionFeaturesReducer from 'features/subscription-management/features/redux/subscriptionFeaturesSlice';
 import openTicketSlice from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketSlice';
 import closedTicketSlice from 'features/ticket-management/your-tickets/redux/closed-tickets/yourClosedTicketSlice';
+import locationReducers from 'features/cities/redux/locationSlice'
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
   reducer: {
+    locations:locationReducers,
     customization: customizationReducer,
     chat: chats,
     groups: groupReducer,

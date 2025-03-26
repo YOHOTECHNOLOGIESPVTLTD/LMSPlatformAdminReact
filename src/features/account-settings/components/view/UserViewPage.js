@@ -13,13 +13,16 @@ import { useLocation } from 'react-router-dom';
 // import { getUserById } from 'features/user-management/users-page/services/userServices';
 
 
-import { getUserProfileById } from 'features/user-management/users-page/services/userServices';
+// import { getUserProfileById } from 'features/user-management/users-page/services/userServices';
+import { getProfileWithId } from 'features/authentication/forgot-password-page/service/forgotPasswordService';
 
 const UserView = () => {
   const location = useLocation();
 
   useEffect(() => {
     setUserId(location);
+    console.log('userId',userId);
+    
   }, [location]);
 
   const [userId, setUserId] = useState(location);
@@ -33,14 +36,15 @@ const UserView = () => {
 
   const getUserData = async (id) => {
     try {
-      const data = {
-        id: id
-      };
-      setLoading(false);
-      const result = await getUserProfileById(data);
-      if (result.success) {
+      // setLoading(true);
+      const result = await getProfileWithId(id);
+      console.log('result',result);
+      
+      if (result.status==="success") {
         console.log('User:', result.data);
         setUserData(result.data);
+        console.log('setUserData',userData);
+        
         setLoading(false);
       } else {
         console.log(result.message);
@@ -50,7 +54,8 @@ const UserView = () => {
       console.log(error);
     }
   };
-
+  console.log('userData',userData);
+  
   return (
     <>
       {loading ? (

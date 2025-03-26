@@ -14,15 +14,26 @@ export const API_END_POINTS ={
     },
     payments : {
       getAll : "/api/lms/platform/payments/subscription-management/all/",
-      getWithId : "/api/lms/platform/payments/subscription-management/payment/"
+      getWithId : "/api/lms/platform/payments/subscription-management/payment/",
+      create:"api/subscription/institute/upgrade-subscription/:instituteId/susbcriptionupdate",
+      approve:"api/lms/platform/payments/subscription-management/approval"
     },
     auth : {
-       verify_otp : "/api/auth/verify-otp/"
+       verify_otp : "/api/auth/verify-otp/",
+       resend_otp : "/api/auth/resend-otp/",
+       validate_otp:"/api/auth/validate-otp/",
+       forget_password:"/api/auth/forget-password/",
+       update_password:"/api/auth/update-password/",
+       get_profile:"/api/auth/me",
+       get_activity:"/api/auth/activity",
+       edit_profile:"/api/auth/edit-profile"
     },
     subscription : {
         all : "/api/subscription/plans",
         get_all : "/api/subscription/plans/all",
-        create : "/api/subscription/plan/"
+        create : "/api/subscription/plan/",
+          getWithId : "/api/subscription/institute/upgrade-subscription/request/",
+        approve:"/api/subscription/institute/upgrade-subscription/susbcriptionupdate"
     },
     help_center : {
         ticket : {
