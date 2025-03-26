@@ -49,6 +49,9 @@ class Client {
          get_all : (params) => httpClient.get(API_END_POINTS.help_center.ticket.get_all,params)
       }
    }
+   activity = {
+      get : (params) => httpClient.get(API_END_POINTS.activity.get,params)
+    }
 }
 
 export default new Client()

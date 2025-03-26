@@ -301,7 +301,7 @@ const InstituteProfile = ({ institute }) => {
                     <Grid container spacing={4}>
                       <Grid item xs={12} sm={6}>
                         <Controller
-                          name="name"
+                          name="namelll"
                           control={personalControl}
                           rules={{ required: true }}
                           render={({ field: { onChange } }) => (

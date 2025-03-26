@@ -5,6 +5,7 @@ import InstituteSocialmedia from './Profile/InstituteSocialmedia';
 import InstituteProfileimage from './Profile/InstituteProfileimage';
 import InstitutePassword from './Profile/InstitutePassword';
 import InstituteDocument from './Profile/InstituteDocument';
+import InstituteActivityLog from './InstituteActivityLog';
 
 const UserViewAccount = ({ institute }) => {
   const [selectedSection, setSelectedSection] = useState(0);
@@ -15,6 +16,7 @@ const UserViewAccount = ({ institute }) => {
     { label: 'Social Media', component: <InstituteSocialmedia institute={institute} /> },
     { label: 'Documents', component: <InstituteDocument institute={institute} /> },
     { label: 'Change Password', component: <InstitutePassword institute={institute} /> },
+    { label: 'InstituteActivityLog', component: <InstituteActivityLog institute={institute} /> },
   ];
 
   return (

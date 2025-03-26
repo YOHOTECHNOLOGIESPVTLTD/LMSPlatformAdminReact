@@ -33,6 +33,9 @@ export const API_END_POINTS ={
     all : "/api/lms/faq-category/",
     create : "/api/lms/faq-category/"
     },
+    activity : {
+        get : "/api/auth/activity",
+    },
     faq : "/api/lms/faq/",
     fileUpload : "/api/upload/",
     fileUploads : "/api/upload/mutiple/"

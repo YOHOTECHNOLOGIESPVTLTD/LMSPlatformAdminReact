@@ -64,6 +64,8 @@ export const InstituteGetById = async (data) => {
 };
 export const GetInstituteActivityLog = async (data) => {
   try {
+    console.log('am working');
+    
     const response = await axios.get(`${INSTITUTE_API_END_POINT}/activity-log`, {
       headers: {
         'Content-Type': 'application/json',
