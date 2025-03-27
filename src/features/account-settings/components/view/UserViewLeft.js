@@ -52,20 +52,12 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
               />
             ) : (
               <CustomAvatar skin="light" variant="rounded" sx={{ width: 100, height: 100, mb: 4, fontSize: '3rem' }}>
-                {userData?.name ? getInitials(userData?.name) : 'U'}
+                {userData?.first_name ? getInitials(userData?.first_name) : 'U'}
               </CustomAvatar>
             )}
             <Typography variant="h4" sx={{ mb: 2 }}>
-              {userData?.name}
+              {userData?.first_name+" "+userData?.last_name}
             </Typography>
-            <CustomChip
-              rounded
-              skin="light"
-              size="small"
-              label={userData?.role_groups?.role?.name}
-              color={'warning'}
-              sx={{ textTransform: 'capitalize' }}
-            />
           </CardContent>
 
           <Divider sx={{ my: '0 !important', mx: 6 }} />
@@ -75,7 +67,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
               Details
             </Typography>
             <Box sx={{ pt: 4 }}>
-              <Box sx={{ display: 'flex', mb: 3 }}>
+              <Box sx={{ display: 'flex', mb: 3}}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>First name:</Typography>
                 <Typography sx={{ color: 'text.secondary' }}>{userData?.first_name}</Typography>
               </Box>

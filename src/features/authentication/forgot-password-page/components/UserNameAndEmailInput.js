@@ -23,7 +23,7 @@ const UserNameAndEmailInput = () => {
       const otpData = {
         email: email,
         token: response.data,
-        otp: response.data.otp
+        otp: response?.data?.otp
       };
       Cookies.set('otp_data', JSON.stringify(otpData));
 

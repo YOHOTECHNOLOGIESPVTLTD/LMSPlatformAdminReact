@@ -232,6 +232,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                         : imgSrc
                     }
                     alt="Profile Pic"
+                    sx={{backgroundColor:'lightgrey'}}
                   />
                 )}
                 {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
@@ -262,6 +263,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     label="First Name"
                     onChange={onChange}
                     placeholder="John"
+                    sx={{ backgroundColor:'#f5f5f5' }}
                     error={Boolean(errors.first_name)}
                     {...(errors.first_name && { helperText: errors.first_name.message })}
                   />
@@ -279,6 +281,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     value={value || userData.last_name}
                     label="Last Name"
                     onChange={onChange}
+                    sx={{ backgroundColor:'#f5f5f5' }}
                     placeholder="Doe"
                     error={Boolean(errors.last_name)}
                     {...(errors.last_name && { helperText: errors.last_name.message })}
@@ -297,6 +300,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     value={value || userData.username}
                     label="User Name"
                     onChange={onChange}
+                    sx={{ backgroundColor:'#f5f5f5' }}
                     placeholder="johndoe"
                     error={Boolean(errors.username)}
                     {...(errors.username && { helperText: errors.username.message })}
@@ -316,6 +320,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     value={value || userData.email}
                     label="Email"
                     onChange={onChange}
+                    sx={{ backgroundColor:'#f5f5f5' }}
                     placeholder="johndoe@email.com"
                     error={Boolean(errors.email)}
                     {...(errors.email && { helperText: errors.email.message })}
@@ -335,6 +340,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     value={value || userData.phone_number}
                     label="Phone Number"
                     onChange={onChange}
+                    sx={{ backgroundColor:'#f5f5f5' }}
                     placeholder="(397) 294-5153"
                     error={Boolean(errors.phone_number)}
                     {...(errors.phone_number && { helperText: errors.phone_number.message })}
