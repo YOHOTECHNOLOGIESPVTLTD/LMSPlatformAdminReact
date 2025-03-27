@@ -1,7 +1,7 @@
 // SubscriptionPlanService.js
 import axios from 'axios';
 
-const SUBSCRIPTION_PLAN_END_POINT = "http://localhost:3001/api/subscription";
+const SUBSCRIPTION_PLAN_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/subscription`; 
 import Client from "../../../../api/index"
 
 export const getAllSubscriptionPlans = async (data) => {
@@ -40,7 +40,7 @@ export const searchSubscriptionPlans = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -58,34 +58,30 @@ export const searchSubscriptionPlans = async (searchQuery) => {
 
 export const addSubscriptionPlan = async (data) => {
   try {
-    console.log("🟢 Sending API Request to:", `${SUBSCRIPTION_PLAN_END_POINT}/create`);
-    console.log("🟢 Request Headers:", {
+    console.log(" Request Headers:", {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('token')}`
+      Authorization: `Token ${localStorage.getItem('token')}`
     });
-    console.log("🟢 Request Data:", data);
+    
 
     const response = await axios.post(`${SUBSCRIPTION_PLAN_END_POINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 
-    console.log("✅ API Response:", response.data);
 
     if (response.data.status === "success") {
       return { success: true, message: 'SubscriptionPlan created successfully' };
     } else {
-      console.error("❌ Backend Error Response:", response.data);
       return { success: false, message: response.data.message || 'Failed to create SubscriptionPlan' };
     }
   } catch (error) {
-    console.error("❌ Error in addSubscriptionPlan:", error);
 
     if (error.response) {
-      console.error("❌ Response Data:", error.response.data);
-      console.error("❌ Status Code:", error.response.status);
+      console.error("Response Data:", error.response.data);
+      console.error("Status Code:", error.response.status);
     }
 
     throw error;
@@ -98,7 +94,7 @@ export const deleteSubscriptionPlan = async (SubscriptionPlanId) => {
     const response = await axios.delete(`${SUBSCRIPTION_PLAN_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: { id: SubscriptionPlanId }
     });
@@ -119,7 +115,7 @@ export const updateSubscriptionPlan = async (data) => {
     const response = await axios.put(`${SUBSCRIPTION_PLAN_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 
@@ -140,7 +136,7 @@ export const changeSubscriptionPlanStatus = async (data) => {
     const response = await axios.post(`${SUBSCRIPTION_PLAN_END_POINT}/status`,data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       // params: data
     });

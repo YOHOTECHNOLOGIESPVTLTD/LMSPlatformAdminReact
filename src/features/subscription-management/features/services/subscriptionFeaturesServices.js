@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = "http://localhost:3001/api/subscription"; 
+const API_URL = `${process.env.REACT_APP_PUBLIC_API_URL}/api/subscription`; 
 
 export const addSubscriptionFeature = async (data) => {
   try {
@@ -9,7 +9,7 @@ export const addSubscriptionFeature = async (data) => {
 
     const headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Token ${token}`,
     };
 
     const response = await axios.post(`${API_URL}/plan`, data, { headers });
@@ -40,7 +40,7 @@ const getAuthHeaders = () => {
   
   return {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
+    Authorization: `Token ${token}`,
   };
 };
 
