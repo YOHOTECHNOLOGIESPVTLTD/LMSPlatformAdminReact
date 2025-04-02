@@ -48,7 +48,7 @@ const FaqDataGrid = () => {
   }, [dispatch, refetch, currentPage]);
 
   const getFaqCategories = async () => {
-    const result = await getAllFaqCategorywithFaq();
+    const result = await getAllFaqCategorywithFaq({all:true});
     setFaqCategories(result.data.data);
   };
 
@@ -203,21 +203,6 @@ const FaqDataGrid = () => {
               onChange={(e, page) => setCurrentPage(page)}
             />
           </Box>
-            {
-             faqs?.last_page > 1 &&  <Box sx={{ display: "flex", justifyContent: "flex-end", my: 1}} >
-                <Pagination
-                  count={faqs?.last_page}
-                  page={currentPage}
-                  onChange={(e,page) => {
-                    /*const data = {
-                      page : page 
-                    }
-                    dispatch(getAllFaqs(data))*/
-                    setCurrentPage(page)
-                  }}
-                />  
-              </Box>
-            }
           </Grid>
           <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories} setRefetch={setRefetch} />
           <FaqEdit

@@ -73,6 +73,9 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
+  const[addingItemId,setAddingItemId]=useState('')
+  console.log('addingItemId',addingItemId);
+  
 
   const handleAddClose = () => {
     setAddModalOpen(false);

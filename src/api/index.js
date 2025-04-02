@@ -50,7 +50,7 @@ class Client {
       delete : (data) => httpClient.delete(API_END_POINTS.faq_category.create+data.id) 
    }
    faq = {
-     get : () => httpClient.get(API_END_POINTS.faq),
+     get : (data) => httpClient.get(API_END_POINTS.faq,data),
      create : (data) => httpClient.post(API_END_POINTS.faq,data),
      update : (data) => httpClient.patch(API_END_POINTS.faq+data.id,data),
      delete : (data) => httpClient.delete(API_END_POINTS.faq+data.id)

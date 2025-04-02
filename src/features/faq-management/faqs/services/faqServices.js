@@ -32,9 +32,9 @@ export const getActivesByBranch = async (data) => {
   }
 };
 
-export const getAllFaqs = async () => {
+export const getAllFaqs = async (data) => {
   try {
-    const response = await Client.faq.get()
+    const response = await Client.faq.get(data)
 
     console.log(response);
 

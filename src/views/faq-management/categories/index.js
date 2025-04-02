@@ -38,12 +38,15 @@ const CategoriesDataGrid = () => {
 
   const dispatch = useDispatch();
   const faqCategories = useSelector(selectFaqCategories);
+  console.log('faqcategories',faqCategories)
   const faqCategoryLoading = useSelector(selectLoading);
+  // const[allFaqCategory,setAllFaqCategory]=useState([])
 
   // console.log(faqCategories);
   useEffect(() => {
     const data = { page };
     dispatch(getAllFaqCategories(data));
+   
   }, [dispatch, selectedBranchId, refetch, page]);
 
   const handlePageChange = (event, newPage) => {
