@@ -30,65 +30,86 @@ const UserViewAccount = ({ id }) => {
 
   const getUserLog = async (userId) => {
     try {
-      const data = {
-        user_id: userId
-      };
+      const data = { user_id: userId };
       const result = await getUserActivityLog(data);
       if (result.success) {
         console.log('ActivityLog:', result.data);
         setActivityLog(result.data);
       } else {
-        console.log(result.message);
+        console.error('Error fetching logs:', result.message);
       }
     } catch (error) {
-      console.log(error);
+      console.error('Fetch Error:', error);
     }
   };
 
-  console.log(activityLog);
+  const handleOptionClick = (option) => {
+    console.log(`Selected Option: ${option}`);
+    switch (option) {
+      case 'Share timeline':
+        alert('Sharing timeline...');
+        break;
+      case 'Suggest edits':
+        alert('Suggesting edits...');
+        break;
+      case 'Report bug':
+        alert('Reporting bug...');
+        break;
+      default:
+        alert('Unknown action');
+    }
+  };
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Card>
           <CardHeader
-            title="User Activity Timeline"
+            title={<Typography variant="h3" fontWeight="bold">User Activity Timeline</Typography>}
             action={
               <OptionsMenu
                 options={['Share timeline', 'Suggest edits', 'Report bug']}
+                onOptionSelect={handleOptionClick} 
                 iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
               />
             }
           />
           <CardContent>
             <Timeline>
-              {activityLog?.map((item, index) => (
-                <TimelineItem key={index}>
-                  <TimelineSeparator>
-                    <TimelineDot color="warning" />
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent sx={{ mb: (theme) => `${theme.spacing(3)} !important` }}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <Typography variant="h6" sx={{ mr: 2 }}>
-                        {item.title}
+              {activityLog.length > 0 ? (
+                activityLog.map((item, index) => (
+                  <TimelineItem key={index}>
+                    <TimelineSeparator>
+                      <TimelineDot color="warning" />
+                      {index < activityLog.length - 1 && <TimelineConnector />}
+                    </TimelineSeparator>
+                    <TimelineContent sx={{ mb: (theme) => `${theme.spacing(3)} !important` }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Typography variant="h6" sx={{ mr: 2 }}>
+                          {item.title}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                          Today
+                        </Typography>
+                      </Box>
+                      <Typography variant="body2" sx={{ mb: 3 }}>
+                        {item.description}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                        Today
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2" sx={{ mb: 3 }}>
-                      {item.description}
-                    </Typography>
-                  </TimelineContent>
-                </TimelineItem>
-              ))}
+                    </TimelineContent>
+                  </TimelineItem>
+                ))
+              ) : (
+                <Typography variant="body2" sx={{ textAlign: 'center', mt: 2,fontWeight:'bold' }}>
+                  No Activity Available.
+                </Typography>
+              )}
             </Timeline>
           </CardContent>
         </Card>

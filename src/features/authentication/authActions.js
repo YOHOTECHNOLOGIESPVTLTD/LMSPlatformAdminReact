@@ -131,3 +131,39 @@ export const logout = () => async (dispatch) => {
     });
   }
 };
+
+export const updateGroupStatus = (data) => async (dispatch) => {
+  try {
+    const response = await axios.put(
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/admin/institutes/groups/update-status/`,
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }
+    );
+
+    if (response.data.status) { 
+      toast.success('Group status updated successfully');
+      dispatch({
+        type: 'UPDATE_GROUP_STATUS_SUCCESS',
+        payload: response.data.data,
+      });
+      return { success: true, message: 'Group status updated successfully' };
+    } else {
+      toast.error('Failed to update group status');
+      return { success: false, message: 'Failed to update group status' };
+    }
+  } catch (error) {
+    console.error(error);
+    const message = error?.response?.data?.message || 'Update failed';
+    toast.error(message);
+    dispatch({
+      type: 'UPDATE_GROUP_STATUS_FAILURE',
+      payload: message,
+    });
+    return { success: false, message };
+  }
+};

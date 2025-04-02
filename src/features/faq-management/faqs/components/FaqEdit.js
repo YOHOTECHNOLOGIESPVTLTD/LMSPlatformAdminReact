@@ -181,6 +181,7 @@ const FaqEdit = (props) => {
   <Button 
     type="submit" 
     variant="contained" 
+    onClick={handleSubmit(onSubmit)}
     sx={{ 
       mr: 3, 
       backgroundColor: "#6d788d", 

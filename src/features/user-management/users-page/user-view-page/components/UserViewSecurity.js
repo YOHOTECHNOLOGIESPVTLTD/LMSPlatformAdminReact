@@ -51,6 +51,7 @@ const UserViewSecurity = ({ id }) => {
           c_password: values.newPassword
         };
         const result = await userChangePassword(data);
+        console.log(result, 'reset result')
         if (result.success) {
           toast.success(result.message);
           setValues({
@@ -90,7 +91,7 @@ const UserViewSecurity = ({ id }) => {
                   <TextField
                     fullWidth
                     label="New Password"
-                    placeholder="············"
+                    placeholder="Enter a new password"
                     value={values.newPassword}
                     id="user-view-security-new-password"
                     onChange={handleNewPasswordChange('newPassword')}
@@ -115,7 +116,7 @@ const UserViewSecurity = ({ id }) => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    placeholder="············"
+                    placeholder="Enter a password"
                     label="Confirm New Password"
                     value={values.confirmNewPassword}
                     id="user-view-security-confirm-new-password"
@@ -138,14 +139,14 @@ const UserViewSecurity = ({ id }) => {
                   />
                   {!passwordsMatch && (
                     <Typography variant="caption" color="error">
-                      Passwords do not match
+                       do not match
                     </Typography>
                   )}
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Button type="submit" variant="contained">
-                    Change Password
+                  <Button type="submit" variant="contained" onClick={handleSubmit}>
+                    Reset Password
                   </Button>
                 </Grid>
               </Grid>

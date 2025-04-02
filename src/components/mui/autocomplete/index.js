@@ -17,4 +17,4 @@ const CustomAutocomplete = forwardRef((props, ref) => {
   )
 })
 
-export default CustomAutocomplete
+export default CustomAutocomplete;

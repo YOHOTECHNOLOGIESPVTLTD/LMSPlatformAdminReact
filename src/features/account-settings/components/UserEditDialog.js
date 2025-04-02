@@ -4,7 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
+//import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
@@ -91,7 +91,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
-  const [groups, setGroups] = useState([]);
+ // const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     getAllGroups();
@@ -169,18 +169,18 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     toast.error('An error occurred while updating. Please try again later.');
   }
   };
-  const handleRoleSelection = (selectedRole) => {
-    console.log("Selected Role:", selectedRole);
+  // const handleRoleSelection = (selectedRole) => {
+  //   console.log("Selected Role:", selectedRole);
   
    
-    if (selectedRole === "teacher") {
-      alert("You selected the Teacher role!");
-    } else if (selectedRole === "fullstack") {
-      alert("You selected FullStack Developer!");
-    }
+  //   if (selectedRole === "teacher") {
+  //     alert("You selected the Teacher role!");
+  //   } else if (selectedRole === "fullstack") {
+  //     alert("You selected FullStack Developer!");
+  //   }
   
     
-  };
+  // };
 
   return (
     <Dialog
@@ -351,7 +351,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <Controller
                 name="role"
                 control={control}
@@ -365,24 +365,42 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                       const selectedRole = e.target.value;
                       setValue("role", selectedRole);
                       // setValue('role', e.target.value);
-                      handleRoleSelection(selectedRole);
+                     // handleRoleSelection(selectedRole);
                     }}
                   >
-                     <MenuItem value="">FullStack  Developer</MenuItem> 
-                     <MenuItem value="">Mern Stack  Developer</MenuItem> 
-                     <MenuItem value="">software  Developer</MenuItem> 
-                     <MenuItem value="">  software testing</MenuItem> 
-                     <MenuItem value="">Teacher </MenuItem> 
-                     <MenuItem value="">student </MenuItem> 
+                     <MenuItem 
+                      value="fullstack" 
+                       onClick={() => handleRoleSelection('fullstack')}>
+                      FullStack  Developer</MenuItem> 
+                     <MenuItem 
+                     value="mern" 
+                     onClick={() => handleRoleSelection('mern')}>
+                     Mern Stack  Developer</MenuItem> 
+                     <MenuItem 
+                     value="software" 
+                     onClick={() => handleRoleSelection('software')}>
+                     software  Developer</MenuItem> 
+                     <MenuItem 
+                     value="testing" 
+                     onClick={() => handleRoleSelection('testing')}> 
+                      software testing</MenuItem> 
+                     <MenuItem 
+                      value="teacher" 
+                      onClick={() => handleRoleSelection('teacher')}>
+                     Teacher </MenuItem> 
+                     <MenuItem
+                       value="student" 
+                       onClick={() => handleRoleSelection('student')}
+                       >student </MenuItem> 
                     {groups?.map((group, index) => (
-                      <MenuItem key={index} value={group?.role?.id}>
+                      <MenuItem key={index} value={group?.role?.id}  onClick={() => handleRoleSelection(group?.role?.id)}>
                         {group?.role?.name}
                       </MenuItem>
                     ))}
                   </TextField>
                 )}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </DialogContent>
         <DialogActions

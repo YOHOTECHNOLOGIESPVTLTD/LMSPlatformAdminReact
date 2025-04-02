@@ -78,7 +78,7 @@ const HelpHeader = ({ allArticles }) => {
         onInputChange={(event, value) => {
           setValue(value);
           setOpen(!!event.target.value);
-        }}a
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
