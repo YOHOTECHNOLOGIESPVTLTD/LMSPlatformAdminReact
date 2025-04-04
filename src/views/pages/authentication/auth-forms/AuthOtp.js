@@ -6,8 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // import { useDispatch } from "react-redux";
 import Cookies from 'js-cookie';
 import { useSpinner } from 'context/spinnerContext';
-import {resendOtp, validateOtp } from 'features/authentication/forgot-password-page/service/forgotPasswordService';
-
+import { resendOtp, validateOtp } from 'features/authentication/forgot-password-page/service/forgotPasswordService';
 
 const InputElement = styled('input')(
   ({ theme }) => `
@@ -209,10 +208,16 @@ const AuthOtpForm = () => {
     const response = await resendOtp(otp_data2.email);
     console.log('resended otp', response);
 
-    if (response.success) {
+    if (response) {
       setTimeLeft(20);
       setIsResendDisabled(true);
-      setError('')
+      setError('');
+      const otpData = {
+        email: response.email,
+        token: response.token,
+        otp: response.otp
+      };
+      Cookies.set('otp_data', JSON.stringify(otpData));
     }
   };
 
@@ -223,16 +228,16 @@ const AuthOtpForm = () => {
     }
     const otp_data = Cookies.get('otp_data');
     const otp_data2 = JSON.parse(otp_data);
-    console.log('otpppp', otp_data2.token);
+    console.log('otpppp', otp_data2);
 
     console.log('Entered otp', otp);
     setError('');
     try {
       showSpinnerFn();
       // const data = { "email": otp_data2?.email,"otp": otp,"token": otp_data2?.token.token };
-      const response = await validateOtp({ email: otp_data2?.email, otp: otp, token: otp_data2?.token.token });
+      const response = await validateOtp({ email: otp_data2?.email, otp: otp, token: otp_data2.token.token ? otp_data2.token.token:otp_data2.token});
       console.log('response', response);
-      if (response.status==="success") {
+      if (response.status === 'success') {
         navigate('/new-password');
       }
     } catch (error) {
@@ -241,12 +246,9 @@ const AuthOtpForm = () => {
       hideSpinnerFn();
     }
   };
-  const otps=Cookies.get('otp_data')
- 
-  
-  const otp_data=JSON.parse(otps)
-  
-  
+  const otps = Cookies.get('otp_data');
+
+  const otp_data = JSON.parse(otps);
 
   return (
     <Container maxWidth="sm">
@@ -257,7 +259,7 @@ const AuthOtpForm = () => {
         <Typography variant="body1" align="center" sx={{ mb: 3 }}>
           Please enter the OTP sent to your email.
         </Typography>
-        <Typography sx={{textAlign:'center',fontWeight:"bold"}}>Your OTP is {otp_data.otp}</Typography>
+        <Typography sx={{ textAlign: 'center', fontWeight: 'bold' }}>Your OTP is {otp_data.otp}</Typography>
         {error && <Alert severity="error">{error}</Alert>}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mt: 2 }}>
           <OTP value={otp} onChange={setOtp} length={6} />

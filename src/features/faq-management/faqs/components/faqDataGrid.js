@@ -37,7 +37,7 @@ const FaqDataGrid = () => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
   const [statusOpen, setStatusDialogOpen] = useState(false);
- 
+
   console.log(deletingItemId);
   const dispatch = useDispatch();
 
@@ -49,7 +49,6 @@ const FaqDataGrid = () => {
   const handleStatusChange = () => {
     setStatusDialogOpen(true);
   };
-
 
   const handleDelete = (itemId) => {
     console.log('Delete clicked for item ID:', itemId);
@@ -146,7 +145,7 @@ const FaqDataGrid = () => {
   ];
 
   // ** Hooks
-  
+
   const columns = [
     {
       flex: 0.5,
@@ -166,13 +165,13 @@ const FaqDataGrid = () => {
       headerName: 'Faq Name',
       renderCell: ({ row }) => {
         return (
-          <Box >
+          <Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 noWrap
                 sx={{
-                  textAlign:"justify",
-                  fontSize:"15px",
+                  textAlign: 'justify',
+                  fontSize: '15px',
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
@@ -181,9 +180,9 @@ const FaqDataGrid = () => {
               >
                 {row?.title}
               </Typography>
-              <Typography noWrap sx={{textAlign:"justify", color: 'text.secondary',mt:1.3,fontSize:"13px" }}>
-            {row?.description}
-          </Typography>
+              <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
+                {row?.description}
+              </Typography>
             </Box>
           </Box>
         );
@@ -196,7 +195,7 @@ const FaqDataGrid = () => {
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography noWrap sx={{textAlign:"justify", color: 'text.secondary', textTransform: 'capitalize' }}>
+            <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', textTransform: 'capitalize' }}>
               {row?.course_name}
             </Typography>
           </Box>
@@ -286,8 +285,8 @@ const FaqDataGrid = () => {
         <ContentSkeleton />
       ) : (
         <Grid container spacing={2}>
-            <Grid item xs={12}>
-        <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          <Grid item xs={12}>
+            <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
           </Grid>
           <Grid item xs={12}>
             <Card>
@@ -297,15 +296,17 @@ const FaqDataGrid = () => {
                 rows={studentCertificatesdata}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
+                pageSizeOptions={[5, 10, 20]}
+                paginationMode="client"
+                pagination
                 paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                onPaginationModelChange={(model) => setPaginationModel(model)}
                 onRowClick={handleRowClick}
               />
             </Card>
           </Grid>
           <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-          <FaqEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow}/>
+          <FaqEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
           <DeleteDialog
             open={isDeleteDialogOpen}
             setOpen={setDeleteDialogOpen}
@@ -313,10 +314,10 @@ const FaqDataGrid = () => {
             title="Delete"
           />
           <StatusDialog
-          open={statusOpen}
-          setOpen={setStatusDialogOpen}
-          description="Are you sure you want to Change Status"
-          title="Status"
+            open={statusOpen}
+            setOpen={setStatusDialogOpen}
+            description="Are you sure you want to Change Status"
+            title="Status"
           />
         </Grid>
       )}
