@@ -16,7 +16,9 @@ class Client {
    institute = {
     all : (params) => httpClient.get(API_END_POINTS.institute.getAll,params),
     getWithId : (params) => httpClient.get(API_END_POINTS.institute.get+params.id),
-    create : (data,params) => httpClient.post(API_END_POINTS.institute.create,data,params)
+    create : (data,params) => httpClient.post(API_END_POINTS.institute.create,data,params),
+    getCourseList : (data,params) => httpClient.get(API_END_POINTS.institute.get+data.institute_id+"/courses",params),
+    getCourseWithUserDetails : (data,params) => httpClient.get(API_END_POINTS.institute.courseWithUserDeatils+data.courseId,params)
    }
    branch = {
       get_all : (params) => httpClient.get(`/api/institutes/${params.institute}/branches/institute/all`)

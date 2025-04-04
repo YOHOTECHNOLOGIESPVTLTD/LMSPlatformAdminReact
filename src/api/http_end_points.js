@@ -2,7 +2,8 @@ export const API_END_POINTS ={
     institute : {
         getAll : "/api/lms/platform/getAll",
         create : "/api/lms/platform/",
-        get : "/api/lms/platform/"
+        get : "/api/lms/platform/",
+        courseWithUserDeatils : "/api/lms/platform/course/"
     },
     branch: {
         all : "/api/institutes/"

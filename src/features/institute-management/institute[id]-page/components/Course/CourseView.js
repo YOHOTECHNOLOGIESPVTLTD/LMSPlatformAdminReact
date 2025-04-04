@@ -1,35 +1,11 @@
 import React  ,{useEffect}from "react";
 import { styled } from "@mui/system";
-import { Card, CardMedia, CardContent, Typography, Button, Grid, Avatar, Chip, AvatarGroup, Box } from "@mui/material";
+import { Card, CardMedia, CardContent, Typography, Button, Grid, Chip, Box } from "@mui/material";
 import { useNavigate } from "react-router";
-import axios from "axios";
+import Client from "api/index";
+import { useState } from "react";
+import { getImageUrl } from "themes/imageUtlis";
 
-const courses = [
-    {
-        id: 1,
-        title: "Java Full Stack",
-        description: "By Rajalakshmi Institute",
-        learners: 120,
-        startDate: "09 Apr 24",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeJSO0DAPNNCxRRFyXKJCQ6ZD5xWRd4QXPBQ&s",
-    },
-    {
-        id: 2,
-        title: "SQL Courses",
-        description: "By Rajalakshmi Institute",
-        learners: 120,
-        startDate: "09 Apr 24",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR98GMV56tQOuDTws4MfY5VJTpO_lpzgnyC8w&s",
-    },
-    {
-        id: 3,
-        title: "Digital Marketing",
-        description: "By Rajalakshmi Institute",
-        learners: 120,
-        startDate: "09 Apr 24",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6OixYwhbf2wLBn-m-EyKZQcPT2GyruoRScg&s",
-    },
-];
 
 const StyledCard = styled(Card)(() => ({
     transition: "transform 0.4s ease, box-shadow 0.4s ease",
@@ -74,8 +50,9 @@ const Overlay = styled(Box)({
     },
 });
 
-const CourseView = () => {
+const CourseView = ({institute}) => {
     const navigate = useNavigate();
+    const [CourseList,setCourseList] = useState([])
 
     const handleViewDetails = (id) => {
         navigate(`/courseview/course-overview/${id}`);
@@ -89,13 +66,8 @@ const CourseView = () => {
      const getAllCourses = async() => {
        
         try {
-            const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/01d78342-5ebd-4c6e-9714-17a73467d36b/courses`,{
-               
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Token ${localStorage.getItem('token')}`
-                }
-            })
+            const response = await Client.institute.getCourseList({ institute_id: institute?.uuid})
+            setCourseList(response?.data?.data)
             if (response.data) {
                 console.log('ok');
                 return         
@@ -107,19 +79,19 @@ const CourseView = () => {
 
      }
         
-
+    console.log(CourseList,"courseList")
     return (
         <Box sx={{ p: 4 }}>
             <Grid container spacing={3}>
-                {courses.map((course) => (
+                {CourseList.map((course) => (
                     <Grid item xs={12} sm={6} md={4} key={course.id}>
                         <StyledCard>
                             <Box sx={{ position: "relative" }}>
                                 <CardMedia
                                     component="img"
                                     height="200"
-                                    image={course.image}
-                                    alt={course.title}
+                                    image={ getImageUrl(course.image)}
+                                    alt={course.course_name}
                                     sx={{
                                         borderRadius: "4px 4px 0 0",
                                     }}
@@ -134,13 +106,13 @@ const CourseView = () => {
                                             textAlign: "center",
                                         }}
                                     >
-                                        {course.title}
+                                        {course.course_name}
                                     </Typography>
                                 </Overlay>
                             </Box>
                             <CardContent>
                                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                                    {course.title}
+                                    {course.course_name}
                                 </Typography>
                                 <Typography
                                     variant="body2"
@@ -150,28 +122,16 @@ const CourseView = () => {
                                     {course.description}
                                 </Typography>
                                 <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                                    <AvatarGroup max={4}>
-                                        <Avatar
-                                            alt="Learner 1"
-                                            src="/static/images/avatar/1.jpg"
-                                            sx={{ width: 28, height: 28 }}
-                                        />
-                                        <Avatar
-                                            alt="Learner 2"
-                                            src="/static/images/avatar/2.jpg"
-                                            sx={{ width: 28, height: 28 }}
-                                        />
-                                    </AvatarGroup>
                                     <Typography variant="caption" sx={{ ml: 1 }}>
-                                        {course.learners}+ Learners
+                                        {course.coursemodules.length}+ Modules
                                     </Typography>
                                 </Box>
                                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                                     <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                                        Start Date:
+                                        Duration:
                                     </Typography>
                                     <Typography variant="body2">
-                                        {course.startDate}
+                                        {course.duration}
                                     </Typography>
                                 </Box>
                             </CardContent>
