@@ -332,7 +332,7 @@ const Institutes = () => {
         <Grid container spacing={3}>
           {/* User Header Section */}
           <Grid item xs={12}>
-            <InstituteHeaderSection users={allInstitutes} groups={allInstitutes} />
+            <InstituteHeaderSection users={allInstitutes?.data} groups={allInstitutes?.data} />
           </Grid>
 
           {/* User Filter Card */}
@@ -392,15 +392,16 @@ const Institutes = () => {
           {/* Display Skeleton or User Body Section based on loading state */}
 
           <Grid container spacing={3} sx={{ paddingLeft: '24px' }}>
-            {allInstitutes?.map((institute, index) => (
+            {allInstitutes?.data?.map((institute, index) => (
               <InstituteCard institute={institute} key={institute?._id} index={index} />
             ))}
           </Grid>
-          <Grid container spacing={3} sx={{ pl: 5, mt: 1 ,alignItems:'right' ,justifyContent:'right'}}>
+         { allInstitutes.last_page !== 1&& <Grid container spacing={3} sx={{ pl: 5, mt: 1 ,alignItems:'right' ,justifyContent:'right'}}>
             <Stack spacing={2}>
-              <Pagination count={allInstitutes.length>3 ? allInstitutes.length: 1 } color="primary" />
+              <Pagination count={allInstitutes.last_page } color="primary" />
             </Stack>
           </Grid>
+          }
 
           {instituteLoading ? (
             <UserSkeleton />

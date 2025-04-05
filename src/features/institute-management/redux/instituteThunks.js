@@ -7,7 +7,7 @@ export const getAllInstitutes = () => async (dispatch) => {
     dispatch(setLoading(true));
     const response = await fetchAllInstitutes(); 
     console.log(response,"response")
-    dispatch(setInstitutes(response?.data.data));
+    dispatch(setInstitutes(response?.data));
   } catch (error) {
     console.error(error);
   } finally {
