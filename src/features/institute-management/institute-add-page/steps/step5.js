@@ -93,10 +93,16 @@ const FormStep5AccountInfo = (props) => {
   };
 
   return (
-    <form key={5} onSubmit={()=>{
-      handleAccountSubmit(onSubmit)
-      localStorage.removeItem('institute_form','social_form','docs_form','acc_form')}
-      }
+    <form key={5} 
+    onSubmit={
+      handleAccountSubmit(onSubmit)}
+    // onSubmit={(e)=>{
+    //   console.log("useClikced")
+    //   e.preventDefault()
+
+    //   handleAccountSubmit(onSubmit)
+    //   localStorage.removeItem('institute_form','social_form','docs_form','acc_form')}
+    //   }
       >
       <Grid container spacing={5}>
         {/* Step Title */}

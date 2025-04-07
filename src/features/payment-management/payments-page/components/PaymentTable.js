@@ -240,9 +240,9 @@ const FeesTable = () => {
       field: 'actions',
       headerName: 'Actions',
       renderCell: ({ row }) => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }} >
           <Tooltip title="View">
-            <IconButton component={Link} state={{ id : row?.uuid }} size="small" sx={{ color: 'text.secondary' }} to={`/payment-management/payments/${row.uuid}/view`}>
+            <IconButton component={Link} state={{ id : row?.institute?.uuid }} size="small" sx={{ color: 'text.secondary' }} to={`/payment-management/payments/${row?.institute?.uuid}/view`}>
               <Icon icon="tabler:eye" />
             </IconButton>
           </Tooltip>

@@ -277,7 +277,7 @@ const AddInstitutePage = () => {
   const handleBack = () => {
     activeStep > 0 ? setActiveStep((prevActiveStep) => prevActiveStep - 1) : navigate('/');
   };
-
+  console.log(docsErrors,personalErrors,accountErrors,socialErrors,galleryErrors)
   const handleReset = () => {
     setActiveStep(0);
     socialReset({ instagram: '', twitter: '', facebook: '', linkedIn: '', pinterest: '' });
@@ -318,7 +318,7 @@ const AddInstitutePage = () => {
   // const location = useLocation();
   const [currentUrl, setCurrentUrl] = useState(window.location.pathname);
   // const [Globes,setGlobes]=useState([formSta])
-  console.log('url', currentUrl);
+  console.log('url', currentUrl,setCurrentUrl);
   // const location=useLocation()
 
   useEffect(() => {
@@ -360,7 +360,7 @@ const AddInstitutePage = () => {
       window.removeEventListener('hashchange', handleUrlChange);
     };
   }, [currentUrl, navigate]);
-  
+
   const [isSuccess, setIsSuccess] = useState(false);
   const [berror, setBerror] = useState('');
   console.log('Berror', berror);
