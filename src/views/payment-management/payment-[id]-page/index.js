@@ -17,7 +17,7 @@ const InstitutePaymentView = () => {
   const [subreqDetails, setsubreqDetails] = useState(null);
   const [clicked, setclicked] = useState(false);
 
-
+  console.log(instituteId,"instituteId",location.state)
   // const [open, setOpen] = useState(false);
   // const [selectedPayment, setSelectedPayment] = useState(null);
 

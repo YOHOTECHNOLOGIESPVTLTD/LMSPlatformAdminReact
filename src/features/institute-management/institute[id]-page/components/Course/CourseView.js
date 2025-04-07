@@ -1,7 +1,7 @@
 import React  ,{useEffect}from "react";
 import { styled } from "@mui/system";
-import { Card, CardMedia, CardContent, Typography, Button, Grid, Chip, Box } from "@mui/material";
-import { useNavigate } from "react-router";
+import { Card, CardMedia, CardContent, Typography,  Grid, Chip, Box } from "@mui/material";
+// import { useNavigate } from "react-router";
 import Client from "api/index";
 import { useState } from "react";
 import { getImageUrl } from "themes/imageUtlis";
@@ -51,12 +51,12 @@ const Overlay = styled(Box)({
 });
 
 const CourseView = ({institute}) => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [CourseList,setCourseList] = useState([])
 
-    const handleViewDetails = (id) => {
-        navigate(`/courseview/course-overview/${id}`);
-    };
+    // const handleViewDetails = (id) => {
+    //     navigate(`/courseview/course-overview/${id}`);
+    // };
 
     useEffect(() => {
         getAllCourses()
@@ -135,7 +135,7 @@ const CourseView = ({institute}) => {
                                     </Typography>
                                 </Box>
                             </CardContent>
-                            <Box sx={{ p: 2 }}>
+                            {/* <Box sx={{ p: 2 }}>
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -151,7 +151,7 @@ const CourseView = ({institute}) => {
                                 >
                                     View Details
                                 </Button>
-                            </Box>
+                            </Box> */}
                         </StyledCard>
                     </Grid>
                 ))}

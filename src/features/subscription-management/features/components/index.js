@@ -3,9 +3,9 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import { IconButton } from "@mui/material";
+// import AddCircleIcon from "@mui/icons-material/AddCircle";
+// import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+// import { IconButton } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Box } from '@mui/material';
@@ -58,22 +58,22 @@ const defaultValues = {
 // })
 
 const SubscriptionFeatures = () => {
-  const [customFields, setCustomFields] = useState([]);
+  // const [customFields, setCustomFields] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAddField = () => {
-    setCustomFields([...customFields, { id: Date.now(), name: "", value: "" }]);
-  };
+  // const handleAddField = () => {
+  //   setCustomFields([...customFields, { id: Date.now(), name: "", value: "" }]);
+  // };
 
-  const handleRemoveField = (id) => {
-    setCustomFields(customFields.filter((field) => field.id !== id));
-  };
+  // const handleRemoveField = (id) => {
+  //   setCustomFields(customFields.filter((field) => field.id !== id));
+  // };
 
-  const handleFieldChange = (id, key, value) => {
-    setCustomFields((prevFields) =>
-      prevFields.map((field) => (field.id === id ? { ...field, [key]: value } : field))
-    );
-  };
+  // const handleFieldChange = (id, key, value) => {
+  //   setCustomFields((prevFields) =>
+  //     prevFields.map((field) => (field.id === id ? { ...field, [key]: value } : field))
+  //   );
+  // };
 
   // ** StatesforInput
   const [studentInputChecked, setStudentInputChecked] = useState(false);
@@ -135,10 +135,19 @@ const SubscriptionFeatures = () => {
     }
   
     const formData = eventOrData?.target ? data : eventOrData; // Handle different call types
-  
-    if (isSubmitting) return; 
+    console.log(isSubmitting,"is")
+    // if (isSubmitting) return; 
     setIsSubmitting(true);
   
+    console.log(
+      !studentInputBoxChecked && !studentInputChecked,
+      !adminInputBoxChecked && !adminInputChecked,
+      !teachersInputBoxChecked && !teachersInputChecked,
+      !batchesInputBoxChecked && !batchesInputChecked,
+      !coursesInputBoxChecked && !coursesInputChecked,
+      !classesInputBoxChecked && !classesInputChecked
+    )
+
     // Error Handling for Required Fields
     if (!studentInputBoxChecked && !studentInputChecked) setStudentError(true);
     if (!adminInputBoxChecked && !adminInputChecked) setAdminError(true);
@@ -146,7 +155,7 @@ const SubscriptionFeatures = () => {
     if (!batchesInputBoxChecked && !batchesInputChecked) setBatchesError(true);
     if (!coursesInputBoxChecked && !coursesInputChecked) setCoursesError(true);
     if (!classesInputBoxChecked && !classesInputChecked) setClassesError(true);
-  
+    
     const allFeatures = [
       { feature: "Admins", count: formData?.admins },
       { feature: "Students", count: formData?.students },
@@ -154,10 +163,10 @@ const SubscriptionFeatures = () => {
       { feature: "Batches", count: formData?.batches },
       { feature: "Courses", count: formData?.courses },
       { feature: "Classes", count: formData?.classes },
-      ...customFields.map((field) => ({
-        feature: field.name,
-        count: field.value,
-      })),
+      // ...customFields.map((field) => ({
+      //   feature: field.name,
+      //   count: field.value,
+      // })),
     ];
   
     const subscription_data = {
@@ -221,7 +230,7 @@ const SubscriptionFeatures = () => {
   } = useForm({ defaultValues: defaultValues,
     //  resolver : yupResolver(new_plan_schema) 
     });
-
+  console.log(errors,"errors")
   return (
     <Box p={1}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -1333,7 +1342,7 @@ const SubscriptionFeatures = () => {
 </Grid>
 
 
-{customFields.map((field) => (
+{/* {customFields.map((field) => (
   <Grid container item xs={12} spacing={2} key={field.id} sx={{ position: "relative", paddingTop: 2 }}>
     
     <IconButton
@@ -1425,13 +1434,13 @@ const SubscriptionFeatures = () => {
       </Grid>
     </Grid>
   </Grid>
-))}
+))} */}
 
-            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            {/* <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <Button variant="outlined" startIcon={<AddCircleIcon />} onClick={handleAddField}>
                 Add Field
               </Button>
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12} sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <Button variant="contained" color="error" onClick={() => setCustomFields([])} sx={{ mx: 2 }}>

@@ -360,6 +360,7 @@ const AddInstitutePage = () => {
       window.removeEventListener('hashchange', handleUrlChange);
     };
   }, [currentUrl, navigate]);
+  
   const [isSuccess, setIsSuccess] = useState(false);
   const [berror, setBerror] = useState('');
   console.log('Berror', berror);

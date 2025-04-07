@@ -36,6 +36,9 @@ import { selectPayments,selectLoading } from '../redux/paymentSelectors';
 import { getAllPayments } from '../redux/paymentThunks';
 import { getImageUrl } from 'themes/imageUtlis';
 import { formateDate } from 'utils';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -103,6 +106,7 @@ const FeesTable = () => {
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
+  const [page,setPage] = useState(1)
 
   function convertDateFormat(input) {
     // Create a new Date object from the original date string
@@ -128,10 +132,11 @@ const FeesTable = () => {
   useEffect(() => {
     dispatch(
       getAllPayments({
-        branch_id: selectedBranchId
+        branch_id: selectedBranchId,
+        page : page
       })
     );
-  }, [dispatch, selectedBranchId, refetch]);
+  }, [dispatch, selectedBranchId, refetch,page]);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -237,7 +242,7 @@ const FeesTable = () => {
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Tooltip title="View">
-            <IconButton component={Link} state={{ id : row?.institute?.uuid }} size="small" sx={{ color: 'text.secondary' }} to={`/payment-management/payments/${row.uuid}/view`}>
+            <IconButton component={Link} state={{ id : row?.uuid }} size="small" sx={{ color: 'text.secondary' }} to={`/payment-management/payments/${row.uuid}/view`}>
               <Icon icon="tabler:eye" />
             </IconButton>
           </Tooltip>
@@ -396,6 +401,13 @@ const FeesTable = () => {
           </Card>
         </Grid>
       </Grid>
+
+      { payments.last_page !== 1&& <Grid container spacing={3} sx={{ pl: 5, mt: 1 ,alignItems:'right' ,justifyContent:'right'}}>
+                  <Stack spacing={2}>
+                    <Pagination page={page} onChange={(e,newPage) => {console.log(newPage);setPage(newPage)}} count={payments.last_page } color="primary" />
+                  </Stack>
+                </Grid>
+                }
 
       {/* <PaymentAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} /> */}
       <PaymentEditDrawer
