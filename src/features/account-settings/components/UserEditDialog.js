@@ -81,8 +81,13 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       setValue('username', userData?.username || '');
       setValue('email', userData?.institution_users?.email || '');
       setValue('phone_number', userData?.institution_users?.mobile || '');
-      // setValue('designation', userData?.institution_users?.designation || '');
-      // setValue('role', userData?.role_groups?.role?.id || '');
+
+      const existingImage = userData?.image;
+      if (existingImage) {
+        setResImage(existingImage); 
+        setImgSrc(getImageUrl(existingImage));
+      }
+
       reset(userData);
     }
   }, [userData, setValue]);
@@ -103,7 +108,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   const image = require('assets/images/avatar/1.png');
   // const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
-  const[resImage,setResImage]=useState('')
+  const [resImage, setResImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   // const [groups, setGroups] = useState([]);
 
@@ -142,7 +147,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
-      const file=files[0]
+      const file = files[0];
       reader.onload = () => {
         setImgSrc(reader.result);
         // setInputValue(reader.result);
@@ -155,14 +160,14 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       const formData = new FormData();
       formData.append('file', file);
       const response = await handleFileUpload(formData);
-      if(response?.data?.status==="success"){
-        setResImage(response?.data?.data?.file)
+      if (response?.data?.status === 'success') {
+        setResImage(response?.data?.data?.file);
       }
       // setValue('image',response?.data?.data?.file)
       if (response) console.log('profile upload', response);
     }
   };
-  console.log('resImgae',resImage)
+  console.log('resImgae', resImage);
 
   console.log('selectedImage', selectedImage);
 

@@ -36,7 +36,9 @@ const UserViewLeft = ({ userData, id }) => {
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true);
   const handleEditClose = () => setOpenEdit(false);
-
+  useEffect(() => {
+    console.log('userData.image:', userData?.image);
+  }, [userData]);
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -47,7 +49,7 @@ const UserViewLeft = ({ userData, id }) => {
                 src={`${process.env.REACT_APP_PUBLIC_API_URL}/public/${userData?.image}`}
                 variant="rounded"
                 alt={userData?.name}
-                sx={{ width: 100, height: 100, mb: 4}}
+                sx={{ width: 100, height: 100, mb: 4 }}
               />
             ) : (
               <CustomAvatar skin="light" variant="rounded" sx={{ width: 100, height: 100, mb: 4, fontSize: '3rem' }}>
