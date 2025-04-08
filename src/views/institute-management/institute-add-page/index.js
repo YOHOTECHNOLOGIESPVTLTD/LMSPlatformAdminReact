@@ -25,6 +25,7 @@ import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlin
 import { TextField as CustomTextField, InputAdornment, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useSpinner } from 'context/spinnerContext';
 
 import StepperWrapper from 'styles/mui/stepper';
 import { addInstitute } from 'features/institute-management/services/instituteService';
@@ -216,6 +217,7 @@ const AddInstitutePage = () => {
   const plans = useSelector(selectPlans);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showSpinnerFn, hideSpinnerFn } = useSpinner();
   // const loading = useSelector(selectLoading)
   // const [allDetails, setAllDetails] = useState([]);
   // ** Hooks
@@ -277,7 +279,7 @@ const AddInstitutePage = () => {
   const handleBack = () => {
     activeStep > 0 ? setActiveStep((prevActiveStep) => prevActiveStep - 1) : navigate('/');
   };
-  console.log(docsErrors,personalErrors,accountErrors,socialErrors,galleryErrors)
+  console.log(docsErrors, personalErrors, accountErrors, socialErrors, galleryErrors);
   const handleReset = () => {
     setActiveStep(0);
     socialReset({ instagram: '', twitter: '', facebook: '', linkedIn: '', pinterest: '' });
@@ -318,7 +320,7 @@ const AddInstitutePage = () => {
   // const location = useLocation();
   const [currentUrl, setCurrentUrl] = useState(window.location.pathname);
   // const [Globes,setGlobes]=useState([formSta])
-  console.log('url', currentUrl,setCurrentUrl);
+  console.log('url', currentUrl, setCurrentUrl);
   // const location=useLocation()
 
   useEffect(() => {
@@ -421,13 +423,13 @@ const AddInstitutePage = () => {
       is_primary: true,
       branch_identity: accountData.branch_name,
       contact_info: {
-        phone_no: Number(accountData.phone),
-        alternate_no: Number(accountData.alternate_phone),
+        phone_no: '+91' + accountData.phone,
+        alternate_no: '+91' + accountData.alternate_phone,
         address: accountData.address1,
         landmark: accountData.address2,
         state: accountData.state,
         city: accountData.city,
-        pincode: Number(accountData.pincode)
+        pincode: accountData.pincode
       }
     };
     const admin = {
@@ -441,12 +443,17 @@ const AddInstitutePage = () => {
 
     if (activeStep === steps.length - 1) {
       try {
+        showSpinnerFn();
         const result = await addInstitute({ institute, admin, branch });
         console.log('result', result);
         if (result.success) {
           toast.success(result.message);
           setIsSuccess(true);
           setActiveStep(activeStep + 1);
+          localStorage.removeItem('institute_form');
+          localStorage.removeItem('social_form');
+          localStorage.removeItem('docs_form');
+          localStorage.removeItem('acc_form');
         } else {
           setBerror(result.message || 'An Error occured on the server.');
         }
@@ -455,6 +462,8 @@ const AddInstitutePage = () => {
         setBerror(error?.response?.data?.message || 'An Error occured on the server.');
         console.log('Berororroro', error);
         setShows(true);
+      } finally {
+        hideSpinnerFn();
       }
     } else {
       setActiveStep(activeStep + 1);
@@ -521,7 +530,9 @@ const AddInstitutePage = () => {
       const { files } = e.target;
       const form_data = new FormData();
       form_data.append('file', files[0]);
+      console.log('form_data', files[0]);
       const response = await handleFileUpload(form_data);
+      console.log('response data', response);
       setValue('image', response?.data?.data?.file);
     } catch (error) {
       toast.error(error?.message);

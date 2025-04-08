@@ -21,6 +21,7 @@ import { getInitials } from 'utils/get-initials';
 // import { getUserById } from '../services/viewUserServices';
 
 import UserEditDialog from '../UserEditDialog';
+import { getImageUrl } from 'themes/imageUtlis';
 
 // import { MenuItem, TextField } from '@mui/material';
 
@@ -45,7 +46,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
           <CardContent sx={{ pt: 8, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             {userData?.image ? (
               <CustomAvatar
-                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.image}`}
+                src={getImageUrl(userData?.image)}
                 variant="rounded"
                 alt={userData?.name}
                 sx={{ width: 100, height: 100, mb: 4 }}

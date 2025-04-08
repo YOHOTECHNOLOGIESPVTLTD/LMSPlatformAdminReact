@@ -63,7 +63,7 @@ const HelpHeader = ({ allArticles }) => {
         open={open}
         disablePortal
         inputValue={value}
-        options={allArticles}
+        options={allArticles||[]}
         onClose={() => setOpen(false)}
         // sx={{
         //   mb: 4,

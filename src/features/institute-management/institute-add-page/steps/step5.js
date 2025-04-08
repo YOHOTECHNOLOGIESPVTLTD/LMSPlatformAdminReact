@@ -12,6 +12,7 @@ import { loadCitiesForFromB, loadCountries, loadStates } from 'features/cities/r
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCitiesForFormB, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
 
+
 const FormStep5AccountInfo = (props) => {
   const { handleAccountSubmit, onSubmit, accountControl, accountErrors, steps, handleBack, hanldeProfileImageChange, accountReset } = props;
   const [formData, setFormData] = useState({});
@@ -26,6 +27,7 @@ const FormStep5AccountInfo = (props) => {
   console.log('dc', defaultCountry);
   const [storedState, setStoredState] = useState('');
   const [storedCity, setStoredCity] = useState('');
+ 
 
   useEffect(() => {
     dispatch(loadCountries());
@@ -93,17 +95,8 @@ const FormStep5AccountInfo = (props) => {
   };
 
   return (
-    <form key={5} 
-    onSubmit={
-      handleAccountSubmit(onSubmit)}
-    // onSubmit={(e)=>{
-    //   console.log("useClikced")
-    //   e.preventDefault()
-
-    //   handleAccountSubmit(onSubmit)
-    //   localStorage.removeItem('institute_form','social_form','docs_form','acc_form')}
-    //   }
-      >
+    <form key={5} onSubmit={
+      handleAccountSubmit(onSubmit)}>
       <Grid container spacing={5}>
         {/* Step Title */}
         <Grid item xs={12} textAlign="center">
@@ -554,8 +547,7 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length ? defaultCountry[0].phonecode : ''}
-                              
+                              <PhoneIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }
@@ -625,7 +617,7 @@ const FormStep5AccountInfo = (props) => {
             }}
             variant="contained"
           >
-            Submit
+            Next
           </Button>
         </Grid>
       </Grid>

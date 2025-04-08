@@ -43,7 +43,7 @@ const Institutes = () => {
   // const [value, setValue] = useState('');
   // const [status, setStatus] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 1 });
   // const [allInstitutes, setAllInstitutes] = useState('');
  
 
@@ -396,7 +396,7 @@ const Institutes = () => {
               <InstituteCard institute={institute} key={institute?._id} index={index} />
             ))}
           </Grid>
-         { allInstitutes.last_page !== 1&& <Grid container spacing={3} sx={{ pl: 5, mt: 1 ,alignItems:'right' ,justifyContent:'right'}}>
+         { allInstitutes.last_page >=1&& <Grid container spacing={3} sx={{ pl: 5, mt: 1 ,alignItems:'right' ,justifyContent:'right'}}>
             <Stack spacing={2}>
               <Pagination count={allInstitutes.last_page } color="primary" />
             </Stack>

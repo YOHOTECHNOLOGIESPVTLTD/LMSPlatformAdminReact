@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 // import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
 import { updateUserDetails } from 'features/authentication/forgot-password-page/service/forgotPasswordService';
 import { handleFileUpload } from 'features/fileUpload';
+import { getImageUrl } from 'themes/imageUtlis';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -100,8 +101,9 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   };
 
   const image = require('assets/images/avatar/1.png');
-  const [inputValue, setInputValue] = useState('');
+  // const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
+  const[resImage,setResImage]=useState('')
   const [imgSrc, setImgSrc] = useState(image);
   // const [groups, setGroups] = useState([]);
 
@@ -136,26 +138,33 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   }));
 
-  const handleInputImageChange = async(file) => {
+  const handleInputImageChange = async (file) => {
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
+      const file=files[0]
+      reader.onload = () => {
+        setImgSrc(reader.result);
+        // setInputValue(reader.result);
+      };
+
+      const selectedFile = files[0];
+      setSelectedImage(selectedFile);
+      reader.readAsDataURL(selectedFile);
+
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await handleFileUpload(formData);
+      if(response?.data?.status==="success"){
+        setResImage(response?.data?.data?.file)
       }
-      
-      const response = await handleFileUpload(files[0]);
-      console.log('img response',selectedImage);
-      console.log(response);
-      
-      
+      // setValue('image',response?.data?.data?.file)
+      if (response) console.log('profile upload', response);
     }
   };
-  console.log('selectedImage',selectedImage);
-  
+  console.log('resImgae',resImage)
+
+  console.log('selectedImage', selectedImage);
 
   const onSubmit = async (data) => {
     console.log('Form submitted', data);
@@ -167,34 +176,32 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     InputData.append('phone_number', data.phone_number);
     InputData.append('designation', data.designation);
     // InputData.append('role_id', data.role);
-    InputData.append('image', selectedImage.name);
+    InputData.append('image', resImage);
     InputData.append('id', userData.id);
     // console.log('INput DATA',InputData);
-    
 
     try {
       const response = await updateUserDetails(InputData);
       console.log('resulttt', response);
-      if (response.status==="success") {
+      if (response.status === 'success') {
         toast.success(response.message);
         setRefetch((state) => !state);
         handleEditClose();
       } else {
-        console.log(response,"result")
+        console.log(response, 'result');
         toast.error(response.message);
       }
     } catch (error) {
-      console.log(error,"error")
+      console.log(error, 'error');
       if (error?.response) {
         toast.error(error.response.data.message || 'An error occurred');
-        console.log('error',error);
-        
+        console.log('error', error);
       } else {
         toast.error(error || 'An error occurred');
       }
     }
   };
-  
+
   return (
     <Dialog
       open={openEdit}
@@ -226,13 +233,9 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {!selectedImage && (
                   <ImgStyled
-                    src={
-                      userData?.image
-                        ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.image}`
-                        : imgSrc
-                    }
+                    src={userData?.image ? getImageUrl(userData?.image) : imgSrc}
                     alt="Profile Pic"
-                    sx={{backgroundColor:'lightgrey'}}
+                    sx={{ backgroundColor: 'lightgrey' }}
                   />
                 )}
                 {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
@@ -242,7 +245,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     <input
                       hidden
                       type="file"
-                      value={inputValue}
+                      // value={inputValue}Valu
                       accept="image/png, image/jpeg"
                       onChange={handleInputImageChange}
                       id="account-settings-upload-image"
@@ -259,11 +262,11 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    value={value || userData.first_name}
+                    value={value}
                     label="First Name"
                     onChange={onChange}
                     placeholder="John"
-                    sx={{ backgroundColor:'#f5f5f5' }}
+                    sx={{ backgroundColor: '#f5f5f5' }}
                     error={Boolean(errors.first_name)}
                     {...(errors.first_name && { helperText: errors.first_name.message })}
                   />
@@ -278,10 +281,10 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    value={value || userData.last_name}
+                    value={value}
                     label="Last Name"
                     onChange={onChange}
-                    sx={{ backgroundColor:'#f5f5f5' }}
+                    sx={{ backgroundColor: '#f5f5f5' }}
                     placeholder="Doe"
                     error={Boolean(errors.last_name)}
                     {...(errors.last_name && { helperText: errors.last_name.message })}
@@ -297,10 +300,10 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    value={value || userData.username}
+                    value={value}
                     label="User Name"
                     onChange={onChange}
-                    sx={{ backgroundColor:'#f5f5f5' }}
+                    sx={{ backgroundColor: '#f5f5f5' }}
                     placeholder="johndoe"
                     error={Boolean(errors.username)}
                     {...(errors.username && { helperText: errors.username.message })}
@@ -317,10 +320,10 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                   <TextField
                     fullWidth
                     type="email"
-                    value={value || userData.email}
+                    value={value}
                     label="Email"
                     onChange={onChange}
-                    sx={{ backgroundColor:'#f5f5f5' }}
+                    sx={{ backgroundColor: '#f5f5f5' }}
                     placeholder="johndoe@email.com"
                     error={Boolean(errors.email)}
                     {...(errors.email && { helperText: errors.email.message })}
@@ -337,10 +340,10 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                   <TextField
                     fullWidth
                     type="text"
-                    value={value || userData.phone_number}
+                    value={value}
                     label="Phone Number"
                     onChange={onChange}
-                    sx={{ backgroundColor:'#f5f5f5' }}
+                    sx={{ backgroundColor: '#f5f5f5' }}
                     placeholder="(397) 294-5153"
                     error={Boolean(errors.phone_number)}
                     {...(errors.phone_number && { helperText: errors.phone_number.message })}

@@ -24,9 +24,13 @@ const showErrors = (field, valueLen, min) => {
   }
 };
 const schema = yup.object().shape({
-  full_name: yup
+  first_name: yup
     .string()
-    .min(3, (obj) => showErrors('Full name', obj.value.length, obj.min))
+    .min(3, (obj) => showErrors('First name', obj.value.length, obj.min))
+    .required(),
+  last_name: yup
+    .string()
+    .min(3, (obj) => showErrors('First name', obj.value.length, obj.min))
     .required(),
   user_name: yup
     .string()
@@ -64,7 +68,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
     resolver: yupResolver(schema)
   });
   const handleClose = () => {
-    setValue('full_name', '');
+    setValue('first_name', '');
+    setValue('last_name', '');
     setValue('user_name', '');
     setValue('email', '');
     setValue('contact', Number(''));
@@ -127,7 +132,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
 
   const onSubmit = (data) => {
     const InputData = new FormData();
-    InputData.append('full_name', data.full_name);
+    InputData.append('first_name', data.first_name);
+    InputData.append('last_name', data.last_name);
     InputData.append('user_name', data.user_name);
     InputData.append('email', data.email);
     InputData.append('contact', data.contact);
@@ -192,7 +198,23 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="full_name"
+                name="first_name"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { onChange } }) => (
+                  <TextField
+                    fullWidth
+                    defaultValue={userData?.name}
+                    label="First Name"
+                    onChange={onChange}
+                    placeholder="John Doe"
+                    error={Boolean(errors.full_name)}
+                    {...(errors.full_name && { helperText: errors.full_name.message })}
+                  />
+                )}
+              />
+              <Controller
+                name="last_name"
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { onChange } }) => (

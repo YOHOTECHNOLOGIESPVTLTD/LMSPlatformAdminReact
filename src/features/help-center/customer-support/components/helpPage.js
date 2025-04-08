@@ -163,6 +163,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
                   >
                     <AccordionSummary expandIcon={<Icon fontSize="1.25rem" icon="tabler:chevron-down" />}>
                       <Typography sx={{ fontWeight: '500' }}>{item?.title}</Typography>
+                      
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography sx={{ color: 'text.secondary' }}>{item?.description}</Typography>

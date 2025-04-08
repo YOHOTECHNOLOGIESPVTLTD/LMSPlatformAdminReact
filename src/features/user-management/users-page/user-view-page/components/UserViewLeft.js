@@ -47,7 +47,7 @@ const UserViewLeft = ({ userData, id }) => {
                 src={`${process.env.REACT_APP_PUBLIC_API_URL}/public/${userData?.image}`}
                 variant="rounded"
                 alt={userData?.name}
-                sx={{ width: 100, height: 100, mb: 4 }}
+                sx={{ width: 100, height: 100, mb: 4}}
               />
             ) : (
               <CustomAvatar skin="light" variant="rounded" sx={{ width: 100, height: 100, mb: 4, fontSize: '3rem' }}>
