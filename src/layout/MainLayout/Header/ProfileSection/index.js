@@ -42,7 +42,6 @@ import { useDispatch } from 'react-redux';
 import {
   IconLogout,
   IconSettings,
-  IconUser
 } from '@tabler/icons';
 // import { useNavigate } from 'react-router-dom';
 // ==============================|| PROFILE MENU ||============================== //
@@ -272,7 +271,7 @@ const ProfileSection = () => {
                           </ListItemIcon>
                           <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
                         </ListItemButton>
-                        <ListItemButton
+                        {/* <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}
                           onClick={(event) => {
@@ -302,7 +301,7 @@ const ProfileSection = () => {
                               </Grid>
                             }
                           />
-                        </ListItemButton>
+                        </ListItemButton> */}
                         <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} selected={0 === 4} onClick={handleLogout}>
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="1.3rem" />
