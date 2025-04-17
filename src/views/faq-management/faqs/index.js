@@ -196,13 +196,13 @@ const FaqDataGrid = () => {
                  </TableBody>
                </Table>
             </TableContainer>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+            {/* <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
             <Pagination
               count={faqCategories?.last_page || 1}
               page={currentPage}
               onChange={(e, page) => setCurrentPage(page)}
             />
-          </Box>
+          </Box> */}
             {
              faqs?.last_page > 1 &&  <Box sx={{ display: "flex", justifyContent: "flex-end", my: 1}} >
                 <Pagination

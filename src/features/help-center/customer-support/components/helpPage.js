@@ -183,7 +183,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
   };
 
   const renderTabs = () => {
-    if (data !== null) {
+    if (data !== null) {    
       return helps?.map((tab, index) => {
         if (tab?.sub_module?.platformfaqs?.length) {
           return <Tab key={index} value={tab.module} label={tab.module} icon={<Icon icon={'tabler:credit-card'} />} />;
@@ -211,7 +211,12 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
                 gap: 45,
                 display: 'flex',
                 justifyContent: 'center',
-                '& img': { maxWidth: '100%', display: { xs: 'none', md: 'block' } }
+                '& img': { maxWidth: '100%', 
+                  display: { xs: 'none', md: 'block' },
+                  backgroundColor: 'transparent',
+                  borderRadius: 0,
+                  boxShadow: 'none',
+                 }
               }}
             >
               <img
@@ -223,7 +228,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
     src="https://img.freepik.com/free-vector/people-recording-listening-podcasts_23-2148792135.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid"
     alt="teamwork"
     width="230"
-  />
+  /> 
             </Box>
           </Box>
           {renderTabContent()}
@@ -266,7 +271,6 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
           </Grid>
       </Grid>
         
-
     </>
   );
 };

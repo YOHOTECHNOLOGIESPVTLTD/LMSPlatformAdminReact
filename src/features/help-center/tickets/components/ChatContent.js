@@ -164,7 +164,7 @@ const ChatContent = (props) => {
                   menuProps={{ sx: { mt: 2 } }}
                   icon={<Icon icon="tabler:dots-vertical" />}
                   iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-                  options={['View Contact', 'Mute Notifications', 'Block Contact', 'Clear Chat', 'Report']}
+                  options={['View Contact', 'Mute Notifications', 'Block Contact', 'Clear Chat', 'Report','Close Ticket']}
                 />
               </Box>
             </Box>

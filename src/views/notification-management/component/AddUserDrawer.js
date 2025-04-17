@@ -379,7 +379,8 @@ const SidebarAddUser = (props) => {
             />
           </Grid>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center"}}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
+        <Button type="submit" variant="contained" 
+            sx={{ mr: 3 }}>
               Submit
             </Button>
             <Button variant="contained" color="secondary" onClick={handleClose} 

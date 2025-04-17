@@ -35,10 +35,11 @@ const HelpHeader = ({ allArticles }) => {
   const navigate = useNavigate();
 
   const handleRedirection = (option) => {
-    if (option && option.slug) {
-      navigate(`/articles/${option.slug}`); // Navigate to article page
-    }
-  };  
+     if (option && option.slug) {
+       navigate(`/articles/${option.slug}`); // Navigate to article page
+     }
+   };  
+
   return (
     <CardContent
       sx={{
@@ -48,22 +49,24 @@ const HelpHeader = ({ allArticles }) => {
         flexDirection: 'column',
         backgroundSize: 'cover',
         py: (theme) => `${theme.spacing(6)} !important`,
-        backgroundImage: 'url(http://localhost:3000/images/pages/header-bg.png)'
+        backgroundImage: 'url(http://localhost:3000/images/pages/header-bg.png)',
+       // borderBottom: '2px solid #ccc',
+       // backgroundColor:'purple',
       }}
     >
-       <img 
-    src="https://img.freepik.com/premium-vector/human-health-logo-letter-h-letter-h-health-care-logo-template-medical-logo-template_754537-7120.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid" 
+        <img 
+    src="https://i.pinimg.com/736x/f0/b1/0a/f0b10a44e13870831839fe2f7d4d4631.jpg" 
     alt="logo" 
-    style={{ width: '190px', marginBottom: '16px' }} 
+    style={{ width: '120px', marginBottom: '16px' ,transform: 'rotate(90deg)'}} 
   />
 
-      <Typography sx={{ mb: 4, fontWeight: 'bold', fontSize: '1.625rem', lineHeight: 1.385, color: 'blue' }}>Hello, how can we help?</Typography>
+      <Typography sx={{ mb: 4, fontWeight: 'bold', fontSize: '1.625rem', lineHeight: 1.385, color: 'white' }}>Hello, how can we help?</Typography>
 
       <Autocomplete
         open={open}
         disablePortal
         inputValue={value}
-        options={allArticles}
+        options={allArticles || [] }
         onClose={() => setOpen(false)}
         // sx={{
         //   mb: 4,
@@ -99,13 +102,15 @@ const HelpHeader = ({ allArticles }) => {
         renderOption={(props, option) => {
           return value.length ? (
            // <ListItem {...props} sx={{ p: '0 !important' }} key={option.slug} onClick={() => handleRedirection(option)}>
-           <ListItem {...props} key={option.slug} onClick={() => handleRedirection(option)}>  
+           <ListItem {...props} key={option.slug}
+            onClick={() => handleRedirection(option) }
+           >  
            <ListItemButton sx={{ py: 1.5 }}>{option.title}</ListItemButton>
             </ListItem>
           ) : null;
         }}
       />
-      <Typography sx={{ color: 'text.secondary' }}>Common troubleshooting topics: eCommerce, Blogging to payment</Typography>
+      <Typography sx={{ color: 'white' }}>Common troubleshooting topics: eCommerce, Blogging to payment</Typography>
     </CardContent>
   );
 };

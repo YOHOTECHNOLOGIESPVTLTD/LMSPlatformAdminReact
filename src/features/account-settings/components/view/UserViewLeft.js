@@ -52,7 +52,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
               />
             ) : (
               <CustomAvatar skin="light" variant="rounded" sx={{ width: 100, height: 100, mb: 4, fontSize: '3rem' }}>
-                {userData?.name ? getInitials(userData?.name) : 'U'}
+                {userData?.name ? getInitials(userData?.name) : ''}
               </CustomAvatar>
             )}
             <Typography variant="h4" sx={{ mb: 2 }}>
@@ -80,7 +80,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
                 <Typography sx={{ color: 'text.secondary' }}>{userData?.name}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email   :</Typography>
                 <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.email}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
@@ -88,7 +88,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
                 <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.designation}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status :</Typography>
                 <CustomChip
                   rounded
                   skin="light"
@@ -107,7 +107,6 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
               </Box>
             </Box>
           </CardContent>
-
           <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
             <Button variant="contained" sx={{ mr: 2 }} onClick={handleEditClickOpen}>
               Edit Details
