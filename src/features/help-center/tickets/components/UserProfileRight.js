@@ -62,7 +62,9 @@ const UserProfileRight = (props) => {
     >
       {store && store.selectedChat ? (
         <Fragment>
-          <Box sx={{ position: 'relative' }}>
+          <Box sx={{ position: 'relative' ,
+            borderBottom: '1px solid #ccc',
+          }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', p: (theme) => theme.spacing(6, 6) }}>
               <Typography variant="h5" sx={{ textAlign: 'center',fontWeight: 'bold' }}>
                 {visitorInfo.fullName}
@@ -74,7 +76,7 @@ const UserProfileRight = (props) => {
           <Box sx={{ height: 'calc(100% - 13.3125rem)', px: 4 }}>
             <ScrollWrapper>
               <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" sx={{ mb: 3.5, fontSize: '16px', color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' ,fontWeight: 'bold'}}>
+                <Typography variant="body2" sx={{ mb: 3.5,mt: 3,  fontSize: '16px', color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' ,fontWeight: 'bold'}}>
                   Basic Details
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

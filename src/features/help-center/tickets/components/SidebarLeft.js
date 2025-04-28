@@ -96,8 +96,19 @@ const SidebarLeft = (props) => {
     if (store && store.data && store.data.length) {
       if (query.length && !filteredContacts.length) {
         return (
-          <ListItem>
-            <Typography sx={{ color: 'text.secondary' }}>No Contacts Found</Typography>
+          <ListItem sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%', 
+          }}> 
+            <Typography sx={{ 
+              color: 'text.secondary' ,
+             fontWeight: 'bold',
+             textAlign: 'center',
+             fontSize: '1.2rem',}}>
+               No Contacts Found 
+            </Typography>
           </ListItem>
         );
       } else {
