@@ -159,17 +159,31 @@ const SidebarLeft = (props) => {
     }
   };
 
+  // const handleFilter = (e) => {
+  //   setQuery(e.target.value);
+  //   if (store.chats !== null && store.contacts !== null) {
+  //     const searchFilterFunction = (contact) => contact.fullName.toLowerCase().includes(e.target.value.toLowerCase());
+  //     const filteredChatsArr = store.chats.filter(searchFilterFunction);
+  //     const filteredContactsArr = store.contacts.filter(searchFilterFunction);
+  //     setFilteredChat(filteredChatsArr);
+  //     setFilteredContacts(filteredContactsArr);
+  //   }
+  // };
   const handleFilter = (e) => {
-    setQuery(e.target.value);
-    if (store.chats !== null && store.contacts !== null) {
-      const searchFilterFunction = (contact) => contact.fullName.toLowerCase().includes(e.target.value.toLowerCase());
-      const filteredChatsArr = store.chats.filter(searchFilterFunction);
-      const filteredContactsArr = store.contacts.filter(searchFilterFunction);
-      setFilteredChat(filteredChatsArr);
-      setFilteredContacts(filteredContactsArr);
+    const searchQuery = e.target.value.toLowerCase();
+    setQuery(searchQuery);
+  
+    if (store && store.data) {
+      const filtered = store.data.filter((contact) => {
+        const fullName = `${contact?.user?.first_name || ''} ${contact?.user?.last_name || ''}`.toLowerCase();
+        const queryText = contact?.query?.toLowerCase() || '';
+        return fullName.includes(searchQuery) || queryText.includes(searchQuery);
+      });
+  
+      setFilteredContacts(filtered);
     }
   };
-
+  
   return (
     <div>
       <Drawer

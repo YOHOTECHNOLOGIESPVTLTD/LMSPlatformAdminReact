@@ -50,14 +50,14 @@ const HelpHeader = ({ allArticles }) => {
         backgroundSize: 'cover',
         py: (theme) => `${theme.spacing(6)} !important`,
         backgroundImage: 'url(http://localhost:3000/images/pages/header-bg.png)',
-       // borderBottom: '2px solid #ccc',
-       // backgroundColor:'purple',
+        borderBottom: '2px solid #ccc',
+        backgroundColor:'purple',
       }}
     >
         <img 
-    src="https://i.pinimg.com/736x/f0/b1/0a/f0b10a44e13870831839fe2f7d4d4631.jpg" 
+    src="https://img.freepik.com/free-vector/premium-vector/human-health-logo-letter-h-health-care-logo-template-medical-logo-template_754537-7120.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid%22" 
     alt="logo" 
-    style={{ width: '120px', marginBottom: '16px' ,transform: 'rotate(90deg)'}} 
+    style={{ width: '160px', marginBottom: '16px' ,borderRadius: '50%' }} 
   />
 
       <Typography sx={{ mb: 4, fontWeight: 'bold', fontSize: '1.625rem', lineHeight: 1.385, color: 'white' }}>Hello, how can we help?</Typography>

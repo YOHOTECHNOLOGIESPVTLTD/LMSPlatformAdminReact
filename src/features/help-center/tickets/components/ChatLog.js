@@ -35,6 +35,30 @@ const ChatLog = (props) => {
     }
   };
 
+  const formatMessageDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date(); 
+
+    const isToday = date.toDateString() === now.toDateString();
+    const yesterday = new Date();
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday = date.toDateString() === yesterday.toDateString();
+
+    if (isToday) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (isYesterday) {
+      return `Yesterday, ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    } else {
+      return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        //year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+  };
+
   // Function to render chat messages with WhatsApp-like styling
   const renderMessages = () => {
     if (selectedTicket && selectedTicket.messages && selectedTicket.messages.length > 0) {
@@ -88,11 +112,11 @@ const ChatLog = (props) => {
                     justifyContent: isCurrentUser ? 'flex-end' : 'flex-start',
                     mt: 1,
                   }}
-                >
-                  {new Date(message.date).toLocaleTimeString([], {
+                >{formatMessageDate(message.date)}
+                  {/* {new Date(message.date).toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',
-                  })}
+                  })} */}
                 </Typography>
               </CardContent>
             </Card>

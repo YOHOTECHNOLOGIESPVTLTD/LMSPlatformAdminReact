@@ -192,10 +192,10 @@ const FeesTable = () => {
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row.institute.institute_name}
+                {row.institute?.institute_name??""}
               </Typography>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 400,fontSize:"12px" ,mt:0.5}}>
-                {row.institute.email}
+                {row.institute?.email??""}
               </Typography>
             </Box>
           </Box>

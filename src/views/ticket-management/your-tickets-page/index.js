@@ -25,7 +25,7 @@ import { selectClosedTickets } from 'features/ticket-management/your-tickets/red
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-const YourTicketsPage = () => {
+const YourTicketsPage = () => { 
   // States
 
   const [value, setValue] = useState('open');
