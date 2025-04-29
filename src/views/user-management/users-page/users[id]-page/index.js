@@ -5,10 +5,12 @@ import UserViewRight from 'features/user-management/users-page/user-view-page/co
 import { getUserById } from 'features/user-management/users-page/services/userServices';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { setUsers } from 'features/user-management/users-page/redux/userSlices';
+import { useDispatch } from 'react-redux';
 
 const UserView = () => {
   const location = useLocation();
-
+  const dispatch = useDispatch();
   useEffect(() => {
     setUserId(location.state.id);
   }, [location]);
@@ -16,7 +18,6 @@ const UserView = () => {
   const [userId, setUserId] = useState(location?.state?.id);
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState([]);
-
 
   useEffect(() => {
     getUserData(userId);
@@ -32,6 +33,7 @@ const UserView = () => {
       if (result.success) {
         console.log('User:', result.data);
         setUserData(result.data);
+        dispatch(setUsers(result.data));
         setLoading(false);
       } else {
         console.log(result.message);

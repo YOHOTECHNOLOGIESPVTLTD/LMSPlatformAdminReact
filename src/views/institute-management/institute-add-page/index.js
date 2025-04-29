@@ -145,14 +145,50 @@ const accountSchema = yup.object().shape({
   email: yup.string().email().required(),
   branch_name: yup.string().required(),
   // contact: yup.().optional(),
-  phone: yup.number().required().min(10, 'Please Enter Valid Phone Number'),
-  alternate_phone: yup.number().required().min(10, 'Please Enter Valid Phone Number'),
+  phone: yup
+    .number()
+    .transform((value, originalValue) => {
+      return originalValue.trim() === '' ? undefined : value;
+    })
+    .typeError('phone number must be an number')
+    .required('phone number is required')
+    .test('len', 'phone number must be exactly 10 digits', (value) => {
+      return value.toString().length === 10;
+    }),
+  alternate_phone: yup
+    .number()
+    .transform((value, originalValue) => {
+      return originalValue.trim() === '' ? undefined : value;
+    })
+    .typeError('alt phone must be an number')
+    .required('alt phone number is required')
+    .test('len', 'phone number must be exactly 10 digits', (value) => {
+      return value.toString().length === 10;
+    }),
   address1: yup.string().required(),
   address2: yup.string().required(),
   state: yup.string().required(),
   city: yup.string().required(),
-  pincode: yup.number().required(),
-  phone_number: yup.number().required(),
+  pincode: yup
+    .number()
+    .transform((value, originalValue) => {
+      return originalValue.trim() === '' ? undefined : value;
+    })
+    .typeError('pincode must be an number')
+    .required('pin code is required')
+    .test('len', 'Pin code must be exactly 6 digits', (value) => {
+      return value.toString().length === 6;
+    }),
+  phone_number: yup
+    .number()
+    .transform((value, originalValue) => {
+      return originalValue.trim() === '' ? undefined : value;
+    })
+    .typeError('phone number must be an number')
+    .required('phone number is required')
+    .test('len', 'phone number must be exactly 10 digits', (value) => {
+      return value.toString().length === 10;
+    }),
   image: yup.string().required()
 });
 
@@ -166,17 +202,21 @@ const documentSchema = yup.object().shape({
 });
 
 const personalSchema = yup.object().shape({
-  state: yup.string().required('State is required'),
-  city: yup.string().required('City is required'),
+  state: yup.string().required('state is required'),
+  city: yup.string().required('city is required'),
   pin_code: yup
     .number()
-    .required('Pin code is required')
+    .transform((value, originalValue) => {
+      return originalValue.trim() === '' ? undefined : value;
+    })
+    .typeError('pincode must be an number')
+    .required('pin code is required')
     .test('len', 'Pin code must be exactly 6 digits', (value) => {
       return value.toString().length === 6;
     }),
   address_line_one: yup.string().required('Address line one required'),
-  address_line_two: yup.string().required(),
-  registered_date: yup.string().required(),
+  address_line_two: yup.string().required('Address line two is required'),
+  registered_date: yup.string().required('registered date is required'),
   institute_name: yup
     .string()
     .required('The institute name is required.')
@@ -185,14 +225,21 @@ const personalSchema = yup.object().shape({
     }),
   phone: yup
     .number()
-    .required()
-    .test('len', 'Phone number must be exactly 10 digits', (value) => {
+    .transform((value, originalValue) => {
+      return originalValue.trim() === '' ? undefined : value;
+    })
+    .required('phone number is required')
+    .test('len', 'phone number must be exactly 10 digits', (value) => {
       return value.toString().length === 10;
     }),
   alt_phone: yup
     .number()
-    .required()
-    .test('len', 'Phone number must be exactly 10 digits', (value) => {
+    .transform((value, originalValue) => {
+      return originalValue.trim() === '' ? undefined : value;
+    })
+    .typeError('alt phone must be an number')
+    .required('alt phone number is required')
+    .test('len', 'phone number must be exactly 10 digits', (value) => {
       return value.toString().length === 10;
     }),
   description: yup
@@ -203,9 +250,9 @@ const personalSchema = yup.object().shape({
       const wordCount = value.trim().split(/\s+/).length;
       return wordCount >= 50 && wordCount <= 100;
     }),
-  official_email: yup.string().required(),
-  official_website: yup.string().required(),
-  subscription: yup.string().required()
+  official_email: yup.string().required('offcial email is required'),
+  official_website: yup.string().trim().required('official website is required').url('Official website must be a valid URL'),
+  subscription: yup.string().required('subscription is required')
 });
 
 const socialSchema = yup.object().shape({});

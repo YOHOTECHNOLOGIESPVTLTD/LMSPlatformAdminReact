@@ -120,23 +120,23 @@ const FormStep1PersonalInfo = ({
       })}
     >
       <Grid container spacing={5}>
-        <Grid item xs={6} sx={{ml:'45%'}}>
+        <Grid item xs={6} sx={{ ml: '45%' }}>
           <Typography variant="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
             {steps[0].title}
           </Typography>
-          <Typography variant="caption" component="p" sx={{ml:'10px'}}>
+          <Typography variant="caption" component="p" sx={{ ml: '10px' }}>
             {steps[0].subtitle}
           </Typography>
         </Grid>
 
         {/* Group 1: Institute Information */}
-        <Grid container item>
-          <Grid xs={3}>
+        <Grid container item gap={10}>
+          <Grid xs={3} >
             <Typography variant="h4" sx={{ mt: 3 }}>
               Enter Your Institute Details Here
             </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Paper elevation={3} sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={12}>
@@ -158,6 +158,12 @@ const FormStep1PersonalInfo = ({
                         sx={{ backgroundColor: personalErrors['institute_name'] ? '#FFFFFF' : '#f5f5f5' }}
                         aria-describedby="stepper-linear-personal-institute_name"
                         {...(personalErrors['institute_name'] && { helperText: personalErrors?.institute_name?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -189,6 +195,12 @@ const FormStep1PersonalInfo = ({
                             aria-describedby="stepper-linear-personal-registered_date"
                             sx={{ backgroundColor: personalErrors['registered_date'] ? '#FFFFFF' : '#f5f5f5' }}
                             {...(personalErrors['registered_date'] && { helperText: personalErrors?.registered_date?.message })}
+                            FormHelperTextProps={{
+                              sx: {
+                                fontSize: '15px',
+                                color: 'red'
+                              }
+                            }}
                           />
                         }
                         onChange={(date) => {
@@ -221,6 +233,12 @@ const FormStep1PersonalInfo = ({
                         error={Boolean(personalErrors['description'])}
                         aria-describedby="stepper-linear-personal-description"
                         {...(personalErrors['description'] && { helperText: personalErrors?.description?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: <InputAdornment>{/* <DescriptionOutlinedIcon sx={{ color: '#3B4056' }} /> */}</InputAdornment>
                         }}
@@ -234,13 +252,13 @@ const FormStep1PersonalInfo = ({
         </Grid>
 
         {/* Group 2: Address Information */}
-        <Grid container item>
-          <Grid xs={3}>
+        <Grid container item gap={10}>
+          <Grid xs={3} >
             <Typography variant="h4" sx={{ mt: 3 }}>
               Enter your Address Information here
             </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Paper elevation={3} sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
@@ -262,6 +280,12 @@ const FormStep1PersonalInfo = ({
                         error={Boolean(personalErrors['address_line_one'])}
                         aria-describedby="stepper-linear-personal-address_line_one"
                         {...(personalErrors['address_line_one'] && { helperText: personalErrors?.address_line_one?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -292,6 +316,12 @@ const FormStep1PersonalInfo = ({
                         error={Boolean(personalErrors['address_line_two'])}
                         aria-describedby="stepper-linear-personal-address_line_two"
                         {...(personalErrors['address_line_two'] && { helperText: personalErrors?.address_line_two?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -324,6 +354,12 @@ const FormStep1PersonalInfo = ({
                         error={Boolean(personalErrors['phone'])}
                         aria-describedby="stepper-linear-personal-phone"
                         {...(personalErrors['phone'] && { helperText: personalErrors?.phone?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -356,6 +392,12 @@ const FormStep1PersonalInfo = ({
                         error={Boolean(personalErrors['alt_phone'])}
                         aria-describedby="stepper-linear-personal-alt_phone"
                         {...(personalErrors['alt_phone'] && { helperText: personalErrors?.alt_phone?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -384,9 +426,15 @@ const FormStep1PersonalInfo = ({
                         }}
                         placeholder="Enter country"
                         sx={{ backgroundColor: personalErrors['Country'] ? '#FFFFFF' : '#EBEBE4' }}
-                        error={Boolean(personalErrors.state)}
+                        // error={Boolean(personalErrors.state)}
                         aria-describedby="stepper-linear-personal-state-helper"
-                        {...(personalErrors.Country && { helperText: personalErrors?.Country?.message })}
+                        // {...(personalErrors.Country && { helperText: personalErrors?.Country?.message })}
+                        // FormHelperTextProps={{
+                        //   sx: {
+                        //     fontSize: '15px',
+                        //     color: 'red'
+                        //   }
+                        // }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -427,6 +475,12 @@ const FormStep1PersonalInfo = ({
                         error={Boolean(personalErrors.state)}
                         aria-describedby="stepper-linear-personal-state-helper"
                         {...(personalErrors['state'] && { helperText: personalErrors?.state?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -468,6 +522,12 @@ const FormStep1PersonalInfo = ({
                         error={Boolean(personalErrors.city)}
                         aria-describedby="stepper-linear-personal-city-helper"
                         {...(personalErrors['city'] && { helperText: personalErrors?.city?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -505,6 +565,12 @@ const FormStep1PersonalInfo = ({
                         error={Boolean(personalErrors['pin_code'])}
                         aria-describedby="stepper-linear-personal-pin_code"
                         {...(personalErrors['pin_code'] && { helperText: personalErrors?.pin_code?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -522,13 +588,13 @@ const FormStep1PersonalInfo = ({
         </Grid>
 
         {/* Group 3: Contact Information */}
-        <Grid container item>
+        <Grid container item gap={10}>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
               Enter your Contact Details here
             </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Paper elevation={3} sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={12}>
@@ -550,6 +616,12 @@ const FormStep1PersonalInfo = ({
                         error={Boolean(personalErrors['official_email'])}
                         aria-describedby="stepper-linear-personal-official_email"
                         {...(personalErrors['official_email'] && { helperText: personalErrors?.official_email?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -580,6 +652,12 @@ const FormStep1PersonalInfo = ({
                         error={Boolean(personalErrors['official_website'])}
                         aria-describedby="stepper-linear-personal-official_website"
                         {...(personalErrors['official_website'] && { helperText: personalErrors?.official_website?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -597,13 +675,13 @@ const FormStep1PersonalInfo = ({
         </Grid>
 
         {/* Group 4: Subscription Information */}
-        <Grid container item>
+        <Grid container item  gap={10}>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 2 }}>
               Enter your Subscription Information here
             </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Paper elevation={3} sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={12}>
@@ -611,7 +689,7 @@ const FormStep1PersonalInfo = ({
                     name="subscription"
                     control={personalControl}
                     defaultValue=""
-                    render={({field}) => (
+                    render={({ field }) => (
                       <TextField
                         {...field}
                         fullWidth
@@ -622,7 +700,13 @@ const FormStep1PersonalInfo = ({
                         id="custom-select"
                         error={Boolean(personalErrors['subscription'])}
                         aria-describedby="stepper-linear-personal-official_website"
-                        {...(personalErrors['subscription'] && { helperText: personalErrors?.official_website?.message })}
+                        {...(personalErrors['subscription'] && { helperText: personalErrors?.subscription?.message })}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">

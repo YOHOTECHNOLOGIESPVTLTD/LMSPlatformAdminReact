@@ -12,7 +12,6 @@ import { loadCitiesForFromB, loadCountries, loadStates } from 'features/cities/r
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCitiesForFormB, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
 
-
 const FormStep5AccountInfo = (props) => {
   const { handleAccountSubmit, onSubmit, accountControl, accountErrors, steps, handleBack, hanldeProfileImageChange, accountReset } = props;
   const [formData, setFormData] = useState({});
@@ -27,7 +26,6 @@ const FormStep5AccountInfo = (props) => {
   console.log('dc', defaultCountry);
   const [storedState, setStoredState] = useState('');
   const [storedCity, setStoredCity] = useState('');
- 
 
   useEffect(() => {
     dispatch(loadCountries());
@@ -95,8 +93,7 @@ const FormStep5AccountInfo = (props) => {
   };
 
   return (
-    <form key={5} onSubmit={
-      handleAccountSubmit(onSubmit)}>
+    <form key={5} onSubmit={handleAccountSubmit(onSubmit)}>
       <Grid container spacing={5}>
         {/* Step Title */}
         <Grid item xs={12} textAlign="center">
@@ -109,13 +106,13 @@ const FormStep5AccountInfo = (props) => {
         </Grid>
 
         {/* Group 1: Branch Details */}
-        <Grid container item>
+        <Grid container item gap={10}>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
-             Enter your Branch Details here
+              Enter your Branch Details here
             </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Paper elevation={3} sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 {/* Branch Name */}
@@ -135,7 +132,13 @@ const FormStep5AccountInfo = (props) => {
                         }}
                         placeholder="e.g. Carter Branch"
                         error={Boolean(accountErrors.branch_name)}
-                        helperText={accountErrors.branch_name && 'This field is required'}
+                        helperText={accountErrors.branch_name && 'branch name is required'}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -154,19 +157,24 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="phone"
                     control={accountControl}
-                    rules={{ required: true }}
                     render={({ field: { value, onChange } }) => (
                       <TextField
                         fullWidth
-                        value={value || formData.phone}
                         label="Phone"
+                        value={value || ''}
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('phone', e.target.value);
                         }}
-                        placeholder="e.g. 123-456-7890"
-                        error={Boolean(accountErrors.phone)}
-                        helperText={accountErrors.phone && 'This field is required'}
+                        placeholder="e.g. 1234567890"
+                        error={!!accountErrors.phone}
+                        helperText={accountErrors.phone?.message}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -179,6 +187,7 @@ const FormStep5AccountInfo = (props) => {
                     )}
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                   <Controller
                     name="alternate_phone"
@@ -187,14 +196,20 @@ const FormStep5AccountInfo = (props) => {
                       <TextField
                         fullWidth
                         label="Alternate Phone"
-                        value={value || formData.alt_phone}
+                        value={value || ''}
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('alternate_phone', e.target.value);
                         }}
-                        placeholder="e.g. 987-654-3210"
-                        error={Boolean(accountErrors.alternate_phone)}
-                        helperText={accountErrors.alternate_phone && 'Alternate Phone Number is required'}
+                        placeholder="e.g. 9876543210"
+                        error={!!accountErrors.alternate_phone}
+                        helperText={accountErrors.alternate_phone?.message}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -225,7 +240,13 @@ const FormStep5AccountInfo = (props) => {
                         }}
                         placeholder="e.g. 123 Main St"
                         error={Boolean(accountErrors.address1)}
-                        helperText={accountErrors.address1 && 'This field is required'}
+                        helperText={accountErrors.address1 && 'address 1 is required'}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -255,7 +276,13 @@ const FormStep5AccountInfo = (props) => {
                         }}
                         placeholder="e.g. Suite 101"
                         error={Boolean(accountErrors.address2)}
-                        helperText={accountErrors.address2 && 'This field is required'}
+                        helperText={accountErrors.address2 && 'address 2 is required'}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -286,8 +313,14 @@ const FormStep5AccountInfo = (props) => {
                           onChange(e);
                           handleCountryChange(e);
                         }}
-                        error={Boolean(accountErrors.country)}
-                        helperText={accountErrors.country && 'This field is required'}
+                        // error={Boolean(accountErrors.country)}
+                        // helperText={accountErrors.country && 'This field is required'}
+                        // FormHelperTextProps={{
+                        //   sx: {
+                        //     fontSize: '15px',
+                        //     color: 'red'
+                        //   }
+                        // }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -327,7 +360,13 @@ const FormStep5AccountInfo = (props) => {
                           handleStoredState(e);
                         }}
                         error={Boolean(accountErrors.state)}
-                        helperText={accountErrors.state && 'This field is required'}
+                        helperText={accountErrors.state && 'state is required'}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -368,7 +407,13 @@ const FormStep5AccountInfo = (props) => {
                           handleStoredCity(e);
                         }}
                         error={Boolean(accountErrors.city)}
-                        helperText={accountErrors.city && 'This field is required'}
+                        helperText={accountErrors.city && 'city is required'}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -393,19 +438,24 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="pincode"
                     control={accountControl}
-                    rules={{ required: true }}
                     render={({ field: { value, onChange } }) => (
                       <TextField
                         fullWidth
-                        value={value || formData.pincode}
+                        value={value || ''}
                         label="Pincode"
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('pincode', e.target.value);
                         }}
                         placeholder="e.g. 123456"
-                        error={Boolean(accountErrors.pincode)}
-                        helperText={accountErrors.pincode && 'This field is required'}
+                        error={!!accountErrors.pincode}
+                        helperText={accountErrors.pincode?.message}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -424,13 +474,13 @@ const FormStep5AccountInfo = (props) => {
         </Grid>
 
         {/* Group 2: Account Details */}
-        <Grid container item>
+        <Grid container item gap={10}>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
               Enter your Contact Details here
-            </Typography> 
+            </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Paper elevation={3} sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 {/* First Name */}
@@ -450,7 +500,13 @@ const FormStep5AccountInfo = (props) => {
                         }}
                         placeholder="e.g. John"
                         error={Boolean(accountErrors.first_name)}
-                        helperText={accountErrors.first_name && 'This field is required'}
+                        helperText={accountErrors.first_name && 'first name is required'}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -481,7 +537,13 @@ const FormStep5AccountInfo = (props) => {
                         }}
                         placeholder="e.g. Doe"
                         error={Boolean(accountErrors.last_name)}
-                        helperText={accountErrors.last_name && 'This field is required'}
+                        helperText={accountErrors.last_name && 'last name is required'}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -512,7 +574,13 @@ const FormStep5AccountInfo = (props) => {
                         }}
                         placeholder="e.g. john.doe@example.com"
                         error={Boolean(accountErrors.email)}
-                        helperText={accountErrors.email && 'This field is required'}
+                        helperText={accountErrors.email && 'email is required'}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -531,7 +599,6 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="phone_number"
                     control={accountControl}
-                    rules={{ required: true }}
                     render={({ field: { value, onChange } }) => (
                       <TextField
                         fullWidth
@@ -543,7 +610,13 @@ const FormStep5AccountInfo = (props) => {
                         }}
                         placeholder="e.g. 123-456-7890"
                         error={Boolean(accountErrors.phone_number)}
-                        helperText={accountErrors.phone_number && 'This field is required'}
+                        helperText={accountErrors?.phone_number?.message}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -569,7 +642,13 @@ const FormStep5AccountInfo = (props) => {
                         label="Profile Image"
                         onChange={hanldeProfileImageChange}
                         error={Boolean(accountErrors.image)}
-                        helperText={accountErrors.image && 'Profile image is required'}
+                        helperText={accountErrors.image && 'profile image is required'}
+                        FormHelperTextProps={{
+                          sx: {
+                            fontSize: '15px',
+                            color: 'red'
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">

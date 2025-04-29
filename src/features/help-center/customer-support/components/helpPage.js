@@ -20,11 +20,12 @@ import DeleteDialog from 'features/user-management/groups-page/components/GroupD
 import { useState } from 'react';
 import HelpAddModal from './Modal/helpAddModal';
 import HelpEditModal from './Modal/helpEditModal';
+import png from '../../../../assets/images/—Pngtree—flat meeting discussion people_5409602.png'
 
 const MuiBox = styled(Box)(({ theme }) => ({
   display: 'flex',
- // marginTop: theme.spacing(6),
- marginTop: 0,
+  // marginTop: theme.spacing(6),
+  marginTop: 0,
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column'
   }
@@ -73,9 +74,8 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
-  const[addingItemId,setAddingItemId]=useState('')
-  console.log('addingItemId',addingItemId);
-  
+  const [addingItemId, setAddingItemId] = useState('');
+  console.log('addingItemId', addingItemId);
 
   const handleAddClose = () => {
     setAddModalOpen(false);
@@ -163,7 +163,6 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
                   >
                     <AccordionSummary expandIcon={<Icon fontSize="1.25rem" icon="tabler:chevron-down" />}>
                       <Typography sx={{ fontWeight: '500' }}>{item?.title}</Typography>
-                      
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography sx={{ color: 'text.secondary' }}>{item?.description}</Typography>
@@ -202,7 +201,6 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
 
   return (
     <>
-     
       <MuiBox>
         <TabContext value={activeTab}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -211,7 +209,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
             </TabList>
             <Box
               sx={{
-               // mt: 1.0,
+                // mt: 1.0,
                 gap: 45,
                 display: 'flex',
                 justifyContent: 'center',
@@ -219,15 +217,15 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
               }}
             >
               <img
-                src="https://img.freepik.com/free-vector/employee-group-portrait-illustration_74855-5495.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid"
+                src={png}
                 alt="illustration"
                 width="230"
               />
               <img
-    src="https://img.freepik.com/free-vector/people-recording-listening-podcasts_23-2148792135.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid"
-    alt="teamwork"
-    width="230"
-  />
+                src="https://img.freepik.com/free-vector/people-recording-listening-podcasts_23-2148792135.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid"
+                alt="teamwork"
+                width="230"
+              />
             </Box>
           </Box>
           {renderTabContent()}
@@ -246,7 +244,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
         description="Are you sure you want to delete this item?"
         title="Delete"
       />
-       <Grid item sm={2} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', display: 'flex' }}>
+      <Grid item sm={2} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', display: 'flex' }}>
         <Box sx={{ rowGap: 2, flexWrap: 'wrap' }}>
           <Button onClick={() => handleAdd()} variant="contained" sx={{ '& svg': { mr: 2 } }}>
             <Icon fontSize="1.125rem" icon="tabler:plus" />

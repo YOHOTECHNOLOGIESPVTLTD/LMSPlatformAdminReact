@@ -42,13 +42,13 @@ const FormStep3SocialLinks = (props) => {
         </Grid>
 
         {/* Group 1: Social Links */}
-        <Grid container item>
+        <Grid container item gap={10}>
           <Grid item xs={3}>
             <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 3 }}>
               Give your Social Links here
             </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Paper elevation={3} sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 {/* Twitter */}
