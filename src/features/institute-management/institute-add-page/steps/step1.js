@@ -131,7 +131,7 @@ const FormStep1PersonalInfo = ({
 
         {/* Group 1: Institute Information */}
         <Grid container item gap={10}>
-          <Grid xs={3} >
+          <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
               Enter Your Institute Details Here
             </Typography>
@@ -144,11 +144,12 @@ const FormStep1PersonalInfo = ({
                     name="institute_name"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.institute_name}
                         label="Institute Name"
+                        onBlur={onBlur}
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('institute_name', e.target.value);
@@ -180,7 +181,7 @@ const FormStep1PersonalInfo = ({
                     name="registered_date"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange} }) => (
                       <DatePicker
                         id="issue-date"
                         maxDate={new Date()}
@@ -216,10 +217,11 @@ const FormStep1PersonalInfo = ({
                     name="description"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.description}
+                        onBlur={onBlur}
                         multiline
                         rows={3}
                         autoComplete={'off'}
@@ -253,7 +255,7 @@ const FormStep1PersonalInfo = ({
 
         {/* Group 2: Address Information */}
         <Grid container item gap={10}>
-          <Grid xs={3} >
+          <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 3 }}>
               Enter your Address Information here
             </Typography>
@@ -266,10 +268,11 @@ const FormStep1PersonalInfo = ({
                     name="address_line_one"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.address_line_one}
+                        onBlur={onBlur}
                         label="Address Line One"
                         onChange={(e) => {
                           onChange(e);
@@ -302,11 +305,12 @@ const FormStep1PersonalInfo = ({
                     name="address_line_two"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.address_line_two}
                         label="Address Line Two"
+                        onBlur={onBlur}
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('address_line_two', e.target.value);
@@ -338,11 +342,12 @@ const FormStep1PersonalInfo = ({
                     name="phone"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         type="text"
                         value={value || formData.phone}
+                        onBlur={onBlur}
                         label="Phone Number"
                         onChange={(e) => {
                           onChange(e);
@@ -376,10 +381,11 @@ const FormStep1PersonalInfo = ({
                     name="alt_phone"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.alt_phone}
+                        onBlur={onBlur}
                         type="text"
                         label="Alt Phone Number"
                         onChange={(e) => {
@@ -457,11 +463,12 @@ const FormStep1PersonalInfo = ({
                     name="state"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         select
                         value={value || formData.length ? formData.stateCode : ''}
+                        onBlur={onBlur}
                         label="State"
                         onChange={(e) => {
                           const selectedState = states.find((state) => state.iso2 === e.target.value);
@@ -503,11 +510,12 @@ const FormStep1PersonalInfo = ({
                     name="city"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         select
                         value={value || formData.lengh ? formData.cityCode : ''}
+                        onBlur={onBlur}
                         label="City"
                         onChange={(e) => {
                           const selectedCity = cities.find((city) => city.id === e.target.value);
@@ -550,10 +558,11 @@ const FormStep1PersonalInfo = ({
                     name="pin_code"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.pin_code}
+                        onBlur={onBlur}
                         label="Pin Code"
                         type="text"
                         onChange={(e) => {
@@ -602,10 +611,11 @@ const FormStep1PersonalInfo = ({
                     name="official_email"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.official_email}
+                        onBlur={onBlur}
                         label="Official Email"
                         onChange={(e) => {
                           onChange(e);
@@ -638,10 +648,11 @@ const FormStep1PersonalInfo = ({
                     name="official_website"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.official_website}
+                        onBlur={onBlur}
                         label="Official Website"
                         onChange={(e) => {
                           onChange(e);
@@ -675,7 +686,7 @@ const FormStep1PersonalInfo = ({
         </Grid>
 
         {/* Group 4: Subscription Information */}
-        <Grid container item  gap={10}>
+        <Grid container item gap={10}>
           <Grid xs={3}>
             <Typography variant="h4" sx={{ mt: 2 }}>
               Enter your Subscription Information here

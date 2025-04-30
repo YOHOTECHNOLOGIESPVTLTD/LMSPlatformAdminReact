@@ -46,6 +46,7 @@ import { IconLogout, IconSettings } from '@tabler/icons';
 import { selectUsers } from 'features/user-management/users-page/redux/userSelectors';
 // import { getUserById } from 'features/user-management/users-page/services/userServices';
 import { useNavigate } from 'react-router-dom';
+import { getImageUrl } from 'themes/imageUtlis';
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
@@ -53,8 +54,8 @@ const ProfileSection = () => {
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userDatat=useSelector(selectUsers)
-  console.log('users',userDatat);
+  const userData=useSelector(selectUsers)
+  console.log('users',userData);
   
 
   const [sdm, setSdm] = useState(true);
@@ -164,7 +165,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={User1}
+            src={getImageUrl(userData?.image)||User1}
             // sx={{
             //   ...theme.typography.mediumAvatar,
             //   margin: '8px 0 8px 8px !important',

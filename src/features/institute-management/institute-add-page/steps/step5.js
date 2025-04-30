@@ -121,10 +121,11 @@ const FormStep5AccountInfo = (props) => {
                     name="branch_name"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         value={value || formData.branch_name}
+                        onBlur={onBlur}
                         label="Branch Name"
                         onChange={(e) => {
                           onChange(e);
@@ -157,11 +158,12 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="phone"
                     control={accountControl}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         label="Phone"
                         value={value || ''}
+                        onBlur={onBlur}
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('phone', e.target.value);
@@ -192,11 +194,12 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="alternate_phone"
                     control={accountControl}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         label="Alternate Phone"
                         value={value || ''}
+                        onBlur={onBlur}
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('alternate_phone', e.target.value);
@@ -229,10 +232,11 @@ const FormStep5AccountInfo = (props) => {
                     name="address1"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         value={value || formData.address1}
+                        onBlur={onBlur}
                         label="Address Line 1"
                         onChange={(e) => {
                           onChange(e);
@@ -265,10 +269,11 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="address2"
                     control={accountControl}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         value={value || formData.address2}
+                        onBlur={onBlur}
                         label="Address Line 2"
                         onChange={(e) => {
                           onChange(e);
@@ -302,12 +307,13 @@ const FormStep5AccountInfo = (props) => {
                     name="country"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         select
                         disabled
                         value={value || defaultCountry.length ? defaultCountry[0].iso2 : ''}
+                        onBlur={onBlur}
                         label="Country"
                         onChange={(e) => {
                           onChange(e);
@@ -346,11 +352,12 @@ const FormStep5AccountInfo = (props) => {
                     name="state"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         select
                         value={value || formData.length ? formData.stateCode : ''}
+                        onBlur={onBlur}
                         label="State"
                         onChange={(e) => {
                           const selectedState = states.find((state) => state.iso2 === e.target.value);
@@ -392,11 +399,12 @@ const FormStep5AccountInfo = (props) => {
                     name="city"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         select
                         value={value || formData.length ? formData.cityCode : ''}
+                        onBlur={onBlur}
                         label="City"
                         onChange={(e) => {
                           const selectedCity = cities.find((city) => city.id === e.target.value);
@@ -438,10 +446,11 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="pincode"
                     control={accountControl}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         value={value || ''}
+                        onBlur={onBlur}
                         label="Pincode"
                         onChange={(e) => {
                           onChange(e);
@@ -489,10 +498,11 @@ const FormStep5AccountInfo = (props) => {
                     name="first_name"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         value={value || formData.first_name}
+                        onBlur={onBlur}
                         label="First Name"
                         onChange={(e) => {
                           onChange(e);
@@ -526,10 +536,11 @@ const FormStep5AccountInfo = (props) => {
                     name="last_name"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         value={value || formData.last_name}
+                        onBlur={onBlur}
                         label="Last Name"
                         onChange={(e) => {
                           onChange(e);
@@ -563,10 +574,11 @@ const FormStep5AccountInfo = (props) => {
                     name="email"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         value={value || formData.email}
+                        onBlur={onBlur}
                         label="Email"
                         onChange={(e) => {
                           onChange(e);
@@ -599,10 +611,11 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="phone_number"
                     control={accountControl}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <TextField
                         fullWidth
                         value={value || formData.phone_number}
+                        onBlur={onBlur}
                         label="Phone Number"
                         onChange={(e) => {
                           onChange(e);

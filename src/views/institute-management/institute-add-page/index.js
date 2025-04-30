@@ -260,7 +260,7 @@ const gallerySchema = yup.object().shape({});
 
 const AddInstitutePage = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(4);
   const plans = useSelector(selectPlans);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -277,7 +277,8 @@ const AddInstitutePage = () => {
     formState: { errors: accountErrors }
   } = useForm({
     defaultValues: defaultAccountValues,
-    resolver: yupResolver(accountSchema)
+    resolver: yupResolver(accountSchema),
+    mode:"onTouched",
   });
 
   const {
@@ -287,7 +288,8 @@ const AddInstitutePage = () => {
     formState: { errors: personalErrors }
   } = useForm({
     defaultValues: defaultPersonalValues,
-    resolver: yupResolver(personalSchema)
+    resolver: yupResolver(personalSchema),
+    mode:"onTouched"
   });
 
   const {
@@ -297,7 +299,8 @@ const AddInstitutePage = () => {
     formState: { errors: docsErrors }
   } = useForm({
     defaultValues: defaultDocValues,
-    resolver: yupResolver(documentSchema)
+    resolver: yupResolver(documentSchema),
+    mode:"onTouched"
   });
 
   const {
@@ -307,7 +310,8 @@ const AddInstitutePage = () => {
     formState: { errors: socialErrors }
   } = useForm({
     defaultValues: defaultSocialValues,
-    resolver: yupResolver(socialSchema)
+    resolver: yupResolver(socialSchema),
+    mode:"onTouched"
   });
   const {
     reset: galleryReset,
@@ -316,7 +320,8 @@ const AddInstitutePage = () => {
     formState: { errors: galleryErrors }
   } = useForm({
     defaultValues: defaultGalleryValues,
-    resolver: yupResolver(gallerySchema)
+    resolver: yupResolver(gallerySchema),
+    mode:"onTouched"
   });
 
   useEffect(() => {
@@ -625,6 +630,7 @@ const AddInstitutePage = () => {
             personalErrors={personalErrors}
             plans={plans}
             personalReset={personalReset}
+            
           />
           // </DatePickerWrapper>
         );
