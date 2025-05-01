@@ -69,7 +69,7 @@ const TableHeader = () => {
           }}
         >
           {/* <TextField value={searchValue} placeholder="Search Category" onChange={(e) => handleSearch(e)} /> */}
-          <Button sx={{backgroundColor:'#efe6e3', py:1}} onClick={handleOpen} startIcon={<FilterListIcon />}> Filter</Button>
+          <Button sx={{backgroundColor:' #002B38',color:"white", py:1}} onClick={handleOpen} startIcon={<FilterListIcon />}> Filter</Button>
         <Modal
         open={open}
         onClose={handleClose}
