@@ -260,7 +260,7 @@ const gallerySchema = yup.object().shape({});
 
 const AddInstitutePage = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState(4);
+  const [activeStep, setActiveStep] = useState(0);
   const plans = useSelector(selectPlans);
   const dispatch = useDispatch();
   const navigate = useNavigate();

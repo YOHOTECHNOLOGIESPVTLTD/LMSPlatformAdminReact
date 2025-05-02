@@ -306,24 +306,6 @@ const AuthOtpForm = () => {
               >
                 Verify
               </Button>
-              <Button
-                sx={{
-                  backgroundColor: '#0D6EFD',
-                  color: 'white',
-                  borderRadius: '36px',
-                  boxShadow: '0px 8.582px 26.405px -5.281px rgba(13, 110, 253, 0.23)',
-                  fontSize: '13px',
-                  fontWeight: 700,
-                  lineHeight: '15px',
-                  width: '101px',
-                  height: '37px',
-                  ml: 5,
-                  ':hover': { backgroundColor: '#0D6EFD' }
-                }}
-                onClick={() => navigate('/new-password')}
-              >
-                GO
-              </Button>
             </Box>
           </Box>
         </Box>
