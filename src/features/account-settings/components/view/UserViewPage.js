@@ -21,6 +21,7 @@ import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 const UserView = () => {
   const dispatch=useDispatch()
   const location = useLocation();
+  console.log('loc',location)
 
   useEffect(() => {
     setUserId(location);
@@ -59,6 +60,7 @@ const UserView = () => {
     }
   };
   console.log('userData',userData);
+  console.log('userID',userId)
   
   return (
     <>

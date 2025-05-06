@@ -43,7 +43,7 @@ import { useDispatch } from 'react-redux';
 
 // assets
 import { IconLogout, IconSettings } from '@tabler/icons';
-import { selectUsers } from 'features/user-management/users-page/redux/userSelectors';
+// import { selectUsers } from 'features/user-management/users-page/redux/userSelectors';
 // import { getUserById } from 'features/user-management/users-page/services/userServices';
 import { useNavigate } from 'react-router-dom';
 import { getImageUrl } from 'themes/imageUtlis';
@@ -54,8 +54,9 @@ const ProfileSection = () => {
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userData=useSelector(selectUsers)
-  console.log('users',userData);
+  const userDatas = useSelector((state) => state.auth.userData);
+
+  console.log('usersss',userDatas);
   
 
   const [sdm, setSdm] = useState(true);
@@ -165,7 +166,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={getImageUrl(userData?.image)||User1}
+            src={getImageUrl(userDatas?.image)||User1}
             // sx={{
             //   ...theme.typography.mediumAvatar,
             //   margin: '8px 0 8px 8px !important',
