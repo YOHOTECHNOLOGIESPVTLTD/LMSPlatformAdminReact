@@ -56,7 +56,7 @@ const HelpHeader = ({ allArticles }) => {
     >
         <img 
     src="https://img.freepik.com/free-vector/premium-vector/human-health-logo-letter-h-health-care-logo-template-medical-logo-template_754537-7120.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid%22" 
-    alt="logo" 
+    alt="helpcenterlogo" 
     style={{ width: '160px', marginBottom: '16px' ,borderRadius: '50%' }} 
   />
 

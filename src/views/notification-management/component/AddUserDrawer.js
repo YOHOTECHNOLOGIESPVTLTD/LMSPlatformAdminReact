@@ -36,11 +36,11 @@ const schema = yup.object().shape({
   title: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-    .required(),
+    .required(' Enter the Title field '),
   body: yup.string().required('Body field is required').min(2),
   institutes: yup.object().required('instituteList field is required'),
   branches : yup.array().min(1,"Select at least one branches").required("branch is required"),
-  link : yup.string().optional()
+  link : yup.string().optional().url('Enter a valid URL')
 });
 
 const defaultValues = {
@@ -61,7 +61,7 @@ const SidebarAddUser = (props) => {
   const dispatch = useDispatch()
   const instituteList = useSelector(selectInstitutes)
   const { showSpinnerFn , hideSpinnerFn } = useSpinner()
-
+ 
   useEffect(() => {
     dispatch(getAllInstitutes())
   }, [dispatch]);
@@ -356,11 +356,11 @@ const SidebarAddUser = (props) => {
                   {...(errors.body && { helperText: errors.body.message })}
                 />
               )}
-            />
+            />  
           </Grid>
           <Grid>
             <Controller 
-             name="link"
+             name="link" 
              control={control}
              rules={{ required: false }}
              render={({ field : { value, onChange}}) => (
@@ -373,19 +373,26 @@ const SidebarAddUser = (props) => {
                value={value}
                error={Boolean(errors?.link)}
                helperText={errors?.link?.message || ''}
-              // {...(errors?.link) && { helperText: errors?.link?.message} }
+               {...(errors?.link) && { helperText: errors?.link?.message} }
               />
              )}
             />
           </Grid>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center"}}>
         <Button type="submit" variant="contained" 
-            sx={{ mr: 3 }}>
+            sx={{ mr: 3, 
+                  padding: '12px 24px',
+                  fontSize: '1rem',
+                  minWidth: '120px' 
+                 }}>
               Submit
             </Button>
             <Button variant="contained" color="secondary" onClick={handleClose} 
              sx={{
               border: '1px solid',
+              padding: '12px 24px', 
+              fontSize: '1rem',
+               minWidth: '120px' ,
               borderColor: 'secondary.main',
               '&:hover': {
                 backgroundColor: 'secondary.orange'
