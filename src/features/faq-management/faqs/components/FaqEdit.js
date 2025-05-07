@@ -31,7 +31,7 @@ const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(6),
-  justifyContent: 'space-between',
+  justifyContent: 'space-between'
 }));
 
 const schema = yup.object().shape({
@@ -45,7 +45,7 @@ const schema = yup.object().shape({
 
 const FaqEdit = (props) => {
   // ** Props
-  const { open, toggle, setRefetch } = props;
+  const { open, toggle, setRefetch,selectedRow} = props;
   // ** State
   const defaultValues = {
     description: '',
@@ -73,7 +73,8 @@ const FaqEdit = (props) => {
   }, [open, reset, props.initialValues]);
 
   const onSubmit = async (data) => {
-    const inputData = { identity: data.title, description: data.description, id: props.initialValues.id };
+    const inputData = { identity: data.title, description: data.description,id:selectedRow?.id};
+    console.log('ipData',inputData)
     const result = await updateFaq(inputData);
     if (result.success) {
       toast.success(result.message);
@@ -91,7 +92,7 @@ const FaqEdit = (props) => {
     toggle();
     reset();
   };
- // console.log(props,defaultValues)
+  // console.log(props,defaultValues)
   return (
     <Drawer
       open={open}
@@ -99,11 +100,12 @@ const FaqEdit = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 },
-      } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>Edit Faq </Typography>
+        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+          Edit Faq{' '}
+        </Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -178,34 +180,33 @@ const FaqEdit = (props) => {
               />
             )}
           /> */}
-<Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
-  <Button 
-    type="submit" 
-    variant="contained" 
-    sx={{ 
-      mr: 3, 
-      backgroundColor: "#6d788d", 
-      color: "#fff", 
-      '&:hover': { backgroundColor: "#5a667a" } 
-    }}
-  >
-    Save Changes
-  </Button>
-  <Button 
-    variant="contained" 
-    size="medium" 
-    sx={{ 
-      color: "#fff", 
-      border: "1px solid #6d788d", 
-      backgroundColor: "#6d788d", 
-      '&:hover': { backgroundColor: "#5a667a", borderColor: "#5a667a" } 
-    }} 
-    onClick={handleClose}
-  >
-    Cancel
-  </Button>
-</Box>
-
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: 'center' }}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                mr: 3,
+                backgroundColor: '#6d788d',
+                color: '#fff',
+                '&:hover': { backgroundColor: '#5a667a' }
+              }}
+            >
+              Save Changes
+            </Button>
+            <Button
+              variant="contained"
+              size="medium"
+              sx={{
+                color: '#fff',
+                border: '1px solid #6d788d',
+                backgroundColor: '#6d788d',
+                '&:hover': { backgroundColor: '#5a667a', borderColor: '#5a667a' }
+              }}
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+          </Box>
         </form>
       </Box>
     </Drawer>

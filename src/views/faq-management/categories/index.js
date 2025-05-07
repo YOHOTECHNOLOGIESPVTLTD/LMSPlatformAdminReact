@@ -34,11 +34,11 @@ const CategoriesDataGrid = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const[searchQuery,setSearchQuery]=useState('')
+  const [searchQuery, setSearchQuery] = useState('');
 
   const dispatch = useDispatch();
   const faqCategories = useSelector(selectFaqCategories);
-  console.log('faqcategories',faqCategories)
+  console.log('faqcategories', faqCategories);
   const faqCategoryLoading = useSelector(selectLoading);
   // const[allFaqCategory,setAllFaqCategory]=useState([])
 
@@ -46,7 +46,6 @@ const CategoriesDataGrid = () => {
   useEffect(() => {
     const data = { page };
     dispatch(getAllFaqCategories(data));
-   
   }, [dispatch, selectedBranchId, refetch, page]);
 
   const handlePageChange = (event, newPage) => {
@@ -145,6 +144,7 @@ const CategoriesDataGrid = () => {
   // if (!faqCategories) {
   //   return null;
   // }
+  console.log('selectedROw', selectedRow);
 
   return (
     <>
@@ -203,13 +203,13 @@ const CategoriesDataGrid = () => {
                                 ':hover': { backgroundColor: '#5f71fa80', transition: '.2s ease-in-out', transform: 'scale(1.2)' }
                               }}
                               onClick={() => {
-                                setSelectedRow(
-                                  setSelectedRow({
-                                    id: category.uuid,
-                                    title: category.identity,
-                                    description: category.description
-                                  })
-                                );
+                                setSelectedRow({
+                                  id: category.uuid,
+                                  title: category.identity,
+                                  description: category.description
+                                });
+
+                                console.log('r', selectedRow);
                                 toggleEditUserDrawer();
                               }}
                             >
@@ -271,6 +271,7 @@ const CategoriesDataGrid = () => {
           toggle={() => setEditUserOpen(!editUserOpen)}
           initialValues={selectedRow}
           setRefetch={setRefetch}
+          selectedRow={selectedRow}
         />
         <DeleteDialog
           open={isDeleteDialogOpen}

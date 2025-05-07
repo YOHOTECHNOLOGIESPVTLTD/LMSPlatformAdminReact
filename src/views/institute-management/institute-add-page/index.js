@@ -251,7 +251,7 @@ const personalSchema = yup.object().shape({
       return wordCount >= 50 && wordCount <= 100;
     }),
   official_email: yup.string().required('offcial email is required'),
-  official_website: yup.string().trim().required('official website is required').url('Official website must be a valid URL'),
+  official_website: yup.string().trim().required('official website is required'),
   subscription: yup.string().required('subscription is required')
 });
 

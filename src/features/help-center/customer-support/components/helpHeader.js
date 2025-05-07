@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 import IconifyIcon from 'components/icon';
 import CustomAutocomplete from 'components/mui/autocomplete';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 const Autocomplete = styled(CustomAutocomplete)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
@@ -29,16 +29,31 @@ const Autocomplete = styled(CustomAutocomplete)(({ theme }) => ({
   }
 }));
 
-const HelpHeader = ({ allArticles }) => {
+const HelpHeader = () => {
   const [value, setValue] = useState('');
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const handleRedirection = (option) => {
-    if (option && option.slug) {
-      navigate(`/articles/${option.slug}`); // Navigate to article page
-    }
-  };  
+  // const navigate = useNavigate();
+  const allArticles = [
+    { title: 'How to reset your password?', slug: 'reset-password' },
+    { title: 'How to update your profile?', slug: 'update-profile' },
+    { title: 'How to manage your subscriptions?', slug: 'manage-subscriptions' },
+    { title: 'How to contact support?', slug: 'contact-support' },
+    { title: 'How to delete your account?', slug: 'delete-account' },
+    { title: 'How to change your email address?', slug: 'change-email' },
+    { title: 'How to enable two-factor authentication?', slug: 'enable-2fa' },
+    { title: 'How to recover a deleted account?', slug: 'recover-account' },
+    { title: 'How to view your payment history?', slug: 'view-payment-history' },
+    { title: 'How to cancel a subscription?', slug: 'cancel-subscription' },
+    { title: 'How to troubleshoot login issues?', slug: 'troubleshoot-login' },
+    { title: 'How to update your billing information?', slug: 'update-billing' },
+    { title: 'How to access advanced settings?', slug: 'access-advanced-settings' },
+    { title: 'How to report a bug or issue?', slug: 'report-bug' }
+  ];
+  // const handleRedirection = (option) => {
+  //   if (option && option.slug) {
+  //     navigate(`/articles/${option.slug}`); // Navigate to article page
+  //   }
+  // };
   return (
     <CardContent
       sx={{
@@ -51,19 +66,21 @@ const HelpHeader = ({ allArticles }) => {
         backgroundImage: 'url(http://localhost:3000/images/pages/header-bg.png)'
       }}
     >
-       <img 
-    src="https://img.freepik.com/premium-vector/human-health-logo-letter-h-letter-h-health-care-logo-template-medical-logo-template_754537-7120.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid" 
-    alt="logo" 
-    style={{ width: '190px', marginBottom: '16px' }} 
-  />
+      <img
+        src="https://img.freepik.com/premium-vector/human-health-logo-letter-h-letter-h-health-care-logo-template-medical-logo-template_754537-7120.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid"
+        alt="logo"
+        style={{ width: '190px', marginBottom: '16px' }}
+      />
 
-      <Typography sx={{ mb: 4, fontWeight: 'bold', fontSize: '1.625rem', lineHeight: 1.385, color: 'blue' }}>Hello, how can we help?</Typography>
+      <Typography sx={{ mb: 4, fontWeight: 'bold', fontSize: '1.625rem', lineHeight: 1.385, color: 'blue' }}>
+        Hello, how can we help?
+      </Typography>
 
       <Autocomplete
         open={open}
         disablePortal
         inputValue={value}
-        options={allArticles||[]}
+        options={allArticles || []}
         onClose={() => setOpen(false)}
         // sx={{
         //   mb: 4,
@@ -74,7 +91,7 @@ const HelpHeader = ({ allArticles }) => {
         // }}
         getOptionLabel={(option) => option.title || ''}
         isOptionEqualToValue={(option, value) => value === option}
-        onChange={(event, option) => handleRedirection(option)}
+        // onChange={(event, option) => handleRedirection(option)}
         onInputChange={(event, value) => {
           setValue(value);
           setOpen(!!event.target.value);
@@ -98,9 +115,12 @@ const HelpHeader = ({ allArticles }) => {
         )}
         renderOption={(props, option) => {
           return value.length ? (
-           // <ListItem {...props} sx={{ p: '0 !important' }} key={option.slug} onClick={() => handleRedirection(option)}>
-           <ListItem {...props} key={option.slug} onClick={() => handleRedirection(option)}>  
-           <ListItemButton sx={{ py: 1.5 }}>{option.title}</ListItemButton>
+            // <ListItem {...props} sx={{ p: '0 !important' }} key={option.slug} onClick={() => handleRedirection(option)}>
+            // <ListItem {...props} key={option.slug} onClick={() => handleRedirection(option)}>
+            //   <ListItemButton sx={{ py: 1.5 }}>{option.title}</ListItemButton>
+            // </ListItem>
+            <ListItem {...props} key={option.slug}>
+              <ListItemButton sx={{ py: 1.5 }}>{option.title}</ListItemButton>
             </ListItem>
           ) : null;
         }}

@@ -22,7 +22,7 @@ const showErrors = (field, valueLen, min) => {
   }
 };
 const schema = yup.object().shape({
-  title: yup
+  identity: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required(),
@@ -53,7 +53,7 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('id', itemId);
-    bodyFormData.append('title', data.title);
+    bodyFormData.append('identity', data.identity);
     bodyFormData.append('description', data.description);
     bodyFormData.append('module', data.module);
     bodyFormData.append('sub_module', data.sub_module);
@@ -61,9 +61,9 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/platform-management/platform-faqs/create`,
+      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/lms/faq`,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       data: bodyFormData
     };
@@ -112,19 +112,19 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
         >
           Add Help Information
           <IconButton
-    aria-label="close"
-    onClick={handleClose}
-    sx={{
-      position: 'absolute',
-      right: 8,
-      top: 8,
-      color: (theme) => theme.palette.grey[500]
-    }}
-  >
-    <CloseIcon />
-  </IconButton>
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500]
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
-        
+
         <DialogContent
           sx={{
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(2)} !important`],
@@ -135,7 +135,7 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid>
               <Controller
-                name="title"
+                name="identity"
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -143,11 +143,11 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
                     fullWidth
                     value={value}
                     sx={{ mb: 4 }}
-                    label="Title"
+                    label="identity"
                     onChange={onChange}
                     placeholder="John Doe"
                     error={Boolean(errors.title)}
-                    {...(errors.title && { helperText: errors.title.message })}
+                    {...(errors.identity && { helperText: errors.identity.message })}
                   />
                 )}
               />
@@ -194,12 +194,12 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
               />
             </Grid>
             <Box display="flex" justifyContent="center" mt={2}>
-            <Button type="submit" variant="contained" sx={{ mr: 3,width: '150px', fontWeight: 'bold', }}>
-              Submit
-            </Button>
-            <Button variant="contained" color="secondary" onClick={handleClose} sx={{ mr: 3,width: '150px', fontWeight: 'bold', }}>
-              Cancel
-            </Button>
+              <Button type="submit" variant="contained" sx={{ mr: 3, width: '150px', fontWeight: 'bold' }}>
+                Submit
+              </Button>
+              <Button variant="contained" color="secondary" onClick={handleClose} sx={{ mr: 3, width: '150px', fontWeight: 'bold' }}>
+                Cancel
+              </Button>
             </Box>
           </form>
         </DialogContent>

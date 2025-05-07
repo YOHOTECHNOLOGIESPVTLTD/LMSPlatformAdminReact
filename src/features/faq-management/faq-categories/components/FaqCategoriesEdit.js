@@ -27,7 +27,7 @@ const schema = yup.object().shape({
 });
 
 const FaqCategoriesEdit = (props) => {
-  const { open, toggle, setRefetch, initialValues } = props;
+  const { open, toggle, setRefetch, initialValues,selectedRow} = props;
 
   const [formValues, setFormValues] = useState(initialValues);
 
@@ -59,7 +59,7 @@ const FaqCategoriesEdit = (props) => {
     const inputData = {
       identity: data.identity,
       description: data.description,
-      id: initialValues.uuid
+      id: selectedRow?.id
     };
 
     try{
