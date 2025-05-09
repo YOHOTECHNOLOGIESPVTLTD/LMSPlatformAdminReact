@@ -3,7 +3,7 @@ export const API_END_POINTS ={
         getAll : "/api/lms/platform/getAll",
         create : "/api/lms/platform/",
         get : "/api/lms/platform/",
-        courseWithUserDeatils : "/api/lms/platform/course/"
+        courseWithUserDeatils : "/api/lms/platform/course/",
     },
     branch: {
         all : "/api/institutes/"

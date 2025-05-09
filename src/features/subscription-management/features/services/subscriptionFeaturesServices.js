@@ -93,7 +93,7 @@ export const deleteSubscriptionFeature = async (SubscriptionFeatureId) => {
 
 export const updateSubscriptionFeature = async (data) => {
   try {
-    const response = await axios.post(`${API_URL}/update`, data, {
+    const response = await axios.put(`${API_URL}/plan/${data.get('planId')}`, data, {
       headers: getAuthHeaders(),
     });
 

@@ -127,43 +127,48 @@ const InstituteProfile = ({ institute }) => {
       setValue('address_line_2', institute?.contact_info.address.address2 || '');
       setValue('phone', institute?.contact_info.phone_no || '');
       setValue('alternate_number', institute?.contact_info.alternate_no || '');
-      setValue('official_email', institute?.admin?.email || '');
-      setValue('official_website', institute?.official_website || '');
+      setValue('official_email', institute?.email || '');
+      setValue('official_website', institute?.website || '');
       setValue('description', institute?.description || '');
-      setValue('instagram', institute?.contact_info.instagram_id || '');
-      setValue('facebook', institute?.contact_info.facebook_id || '');
+      setValue('instagram', institute?.social_media?.instagram_id || '');
+      setValue('facebook', institute?.social_media?.facebook_id || '');
       setValue('email', institute?.email || '');
-      setValue('linkedin', institute?.contact_info.linkedin_id || '');
-      setValue('twitter', institute?.contact_info.twitter_id || '');
+      setValue('linkedin', institute?.social_media.linkedin_id || '');
+      setValue('twitter', institute?.social_media.twitter_id || '');
     }
   }, [institute, setValue]);
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('name', data.name);
-    bodyFormData.append('email', data.email);
-    bodyFormData.append('phone', data.phone);
-    bodyFormData.append('alternate_number', data.alternate_number);
-    bodyFormData.append('registered_date', convertDateFormat(data.registered_date));
-    bodyFormData.append('state', data.state);
-    bodyFormData.append('address_line_1', data.address_line_1);
-    bodyFormData.append('address_line_2', data.address_line_2);
-    bodyFormData.append('official_website', data.official_website);
-    bodyFormData.append('instagram', data.instagram);
-    bodyFormData.append('facebook', data.facebook);
-    bodyFormData.append('linkedin', data.linkedin);
-    bodyFormData.append('twitter', data.twitter);
-    bodyFormData.append('pinterest', data.pinterest);
-    bodyFormData.append('city', data.city);
-    bodyFormData.append('pincode', data.pincode);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('id', institute?.id);
+    console.log('submitteddd data', data);
+    const payload = {
+      institute_name: data.name,
+      email: data.email,
+      registered_date: convertDateFormat(data.registered_date),
+      official_website: data.official_website,
+      description: data.description,
+      id: institute?.id,
+      uuid: institute?.uuid,
+      contact_info: {
+        phone_no: data.phone?String(data.phone):"",
+        alternate_no: data.alternate_number?String(data.alternate_number):'',
+        address: {
+          address1: data.address_line_1,
+          address2: data.address_line_2,
+          state: data.state,
+          city: data.city,
+          pincode: data.pincode
+        }
+      },
+      social_media: {
+        twitter_id: data.twitter,
+        facebook_id: data.facebook,
+        instagram_id: data.instagram,
+        linkedin_id: data.linkedin,
+        pinterest_id: data.pinterest
+      }
+    };
 
-    // bodyFormData.append('instagram', data.instagram);
-    // bodyFormData.append('id', props.initialValues.id);
-    console.log(bodyFormData);
-
-    const result = await updateInstitute(bodyFormData);
+    const result = await updateInstitute(payload);
 
     if (result.success) {
       toast.success(result.message);
@@ -289,14 +294,15 @@ const InstituteProfile = ({ institute }) => {
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
                     <Controller
-                      name="namelll"
+                      name="name"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
                           // value={value}
-                          defaultValue={institute?.institute_name}
+                          // defaultValue={institute?.institute_name}
+                          value={value}
                           label="Institute Name"
                           onChange={onChange}
                           placeholder="Leonard"
@@ -316,7 +322,8 @@ const InstituteProfile = ({ institute }) => {
                         <DatePicker
                           id="issue-date"
                           dateFormat={'dd/MM/yyyy'}
-                          defaultValue={institute?.registered_date}
+                          // defaultValue={institute?.registered_date}
+                          value={value}
                           selected={value}
                           customInput={
                             <CustomInput
@@ -340,8 +347,9 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          value={value}
+                          // value={value}
                           // defaultValue={institute?.contact_info.address.state}
+                          value={value}
                           label="State"
                           onChange={onChange}
                           error={Boolean(personalErrors.state)}
@@ -356,10 +364,11 @@ const InstituteProfile = ({ institute }) => {
                       name="city"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.contact_info.address.city}
+                          // defaultValue={institute?.contact_info.address.city}
+                          value={value}
                           label="City"
                           onChange={onChange}
                           error={Boolean(personalErrors.city)}
@@ -377,8 +386,8 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          value={value}
                           // defaultValue={institute?.contact_info?.address?.pincode}
+                          value={value}
                           label="Pin Code"
                           type="text"
                           onChange={onChange}
@@ -395,10 +404,11 @@ const InstituteProfile = ({ institute }) => {
                       name="address_line_1"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange,value} }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.contact_info.address.address1}
+                          // defaultValue={institute?.contact_info.address.address1}
+                          value={value}
                           label="Address Line One"
                           onChange={onChange}
                           placeholder="Carter"
@@ -414,10 +424,11 @@ const InstituteProfile = ({ institute }) => {
                       name="address_line_2"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.contact_info.address.address2}
+                          // defaultValue={institute?.contact_info.address.address2}
+                          value={value}
                           label="Address Line Two"
                           onChange={onChange}
                           placeholder="Carter"
@@ -433,11 +444,12 @@ const InstituteProfile = ({ institute }) => {
                       name="phone"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
                           type="text"
-                          defaultValue={institute?.contact_info?.phone_no}
+                          // defaultValue={institute?.contact_info?.phone_no}
+                          value={value}
                           label="Phone Number"
                           onChange={onChange}
                           placeholder="Carter"
@@ -453,10 +465,11 @@ const InstituteProfile = ({ institute }) => {
                       name="alternate_number"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.contact_info?.alternate_no}
+                          // defaultValue={institute?.contact_info?.alternate_no}
+                          value={value}
                           type="text"
                           label="Alt Phone Number"
                           onChange={onChange}
@@ -474,10 +487,11 @@ const InstituteProfile = ({ institute }) => {
                       name="official_email"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.email}
+                          // defaultValue={institute?.email}
+                          value={value}
                           label="Official Email"
                           onChange={onChange}
                           placeholder="Carter"
@@ -493,10 +507,11 @@ const InstituteProfile = ({ institute }) => {
                       name="official_website"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.website}
+                          // defaultValue={institute?.website}
+                          value={value}
                           label="Official Website"
                           onChange={onChange}
                           placeholder="Carter"
@@ -540,12 +555,13 @@ const InstituteProfile = ({ institute }) => {
                       name="description"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
                           multiline
                           rows={3}
-                          defaultValue={institute?.description}
+                          // defaultValue={institute?.description}
+                          value={value}
                           label="description"
                           onChange={onChange}
                           placeholder="Carter"
@@ -561,10 +577,11 @@ const InstituteProfile = ({ institute }) => {
                       name="instagram"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.social_media?.instagram_id}
+                          // defaultValue={institute?.social_media?.instagram_id}
+                          value={value}
                           label="Insta"
                           onChange={onChange}
                           placeholder="INSTA"
@@ -580,10 +597,11 @@ const InstituteProfile = ({ institute }) => {
                       name="facebook"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.social_media?.facebook_id}
+                          value={value}
+                          // defaultValue={institute?.social_media?.facebook_id}
                           label="Facebook URL"
                           onChange={onChange}
                           placeholder="FbLink"
@@ -600,10 +618,11 @@ const InstituteProfile = ({ institute }) => {
                       name="email"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.email}
+                          value={value}
+                          // defaultValue={institute?.email}
                           label="Email"
                           onChange={onChange}
                           placeholder="Carter"
@@ -619,10 +638,11 @@ const InstituteProfile = ({ institute }) => {
                       name="linkedin"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.social_media?.linkedin_id}
+                          // defaultValue={institute?.social_media?.linkedin_id}
+                          value={value}
                           label="LinkedIn"
                           onChange={onChange}
                           placeholder="Carter"
@@ -638,10 +658,11 @@ const InstituteProfile = ({ institute }) => {
                       name="twitter"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { onChange } }) => (
+                      render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          defaultValue={institute?.social_media?.twitter_id}
+                          value={value}
+                          // defaultValue={institute?.social_media?.twitter_id}
                           label="Twitter URL"
                           onChange={onChange}
                           placeholder="Carter"

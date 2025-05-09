@@ -1,12 +1,12 @@
 // SubscriptionPlanService.js
 import axios from 'axios';
 
-const SUBSCRIPTION_PLAN_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/subscription`; 
-import Client from "../../../../api/index"
+const SUBSCRIPTION_PLAN_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/subscription`;
+import Client from '../../../../api/index';
 
 export const getAllSubscriptionPlans = async (data) => {
   try {
-    const response = await  Client.subscription.all(data)
+    const response = await Client.subscription.all(data);
     if (response.data.status) {
       return response;
     } else {
@@ -22,7 +22,7 @@ export const getAllSubscriptionPlans = async (data) => {
 
 export const getSubscriptionsPlansallList = async (data) => {
   try {
-    const response = await  Client.subscription.get_all(data)
+    const response = await Client.subscription.get_all(data);
     if (response.data.status) {
       return response;
     } else {
@@ -33,7 +33,7 @@ export const getSubscriptionsPlansallList = async (data) => {
 
     throw error;
   }
-}
+};
 
 export const searchSubscriptionPlans = async (searchQuery) => {
   try {
@@ -58,11 +58,10 @@ export const searchSubscriptionPlans = async (searchQuery) => {
 
 export const addSubscriptionPlan = async (data) => {
   try {
-    console.log(" Request Headers:", {
+    console.log(' Request Headers:', {
       'Content-Type': 'application/json',
       Authorization: `Token ${localStorage.getItem('token')}`
     });
-    
 
     const response = await axios.post(`${SUBSCRIPTION_PLAN_END_POINT}/create`, data, {
       headers: {
@@ -71,32 +70,28 @@ export const addSubscriptionPlan = async (data) => {
       }
     });
 
-
-    if (response.data.status === "success") {
+    if (response.data.status === 'success') {
       return { success: true, message: 'SubscriptionPlan created successfully' };
     } else {
       return { success: false, message: response.data.message || 'Failed to create SubscriptionPlan' };
     }
   } catch (error) {
-
     if (error.response) {
-      console.error("Response Data:", error.response.data);
-      console.error("Status Code:", error.response.status);
+      console.error('Response Data:', error.response.data);
+      console.error('Status Code:', error.response.status);
     }
 
     throw error;
   }
 };
 
-
 export const deleteSubscriptionPlan = async (SubscriptionPlanId) => {
   try {
-    const response = await axios.delete(`${SUBSCRIPTION_PLAN_END_POINT}/delete`, {
+    const response = await axios.delete(`${SUBSCRIPTION_PLAN_END_POINT}/plan/${SubscriptionPlanId}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
       },
-      params: { id: SubscriptionPlanId }
     });
 
     if (response.data.status) {
@@ -112,7 +107,7 @@ export const deleteSubscriptionPlan = async (SubscriptionPlanId) => {
 
 export const updateSubscriptionPlan = async (data) => {
   try {
-    const response = await axios.put(`${SUBSCRIPTION_PLAN_END_POINT}/update`, data, {
+    const response = await axios.put(`${SUBSCRIPTION_PLAN_END_POINT}/plan/`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
@@ -133,11 +128,11 @@ export const updateSubscriptionPlan = async (data) => {
 
 export const changeSubscriptionPlanStatus = async (data) => {
   try {
-    const response = await axios.post(`${SUBSCRIPTION_PLAN_END_POINT}/status`,data, {
+    const response = await axios.put(`${SUBSCRIPTION_PLAN_END_POINT}/subscription-status/${data?.id}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
-      },
+      }
       // params: data
     });
 

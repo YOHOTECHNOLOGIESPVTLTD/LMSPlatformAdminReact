@@ -72,7 +72,7 @@ const PricingPlans = ({ page, setPage, plans }) => {
         {plansData?.last_page && plansData?.last_page > 1 && (
           <Pagination
             page={page}
-            count={plansData.last_page}
+            count={plansData?.last_page}
             onChange={(e, value) => {
               console.log('🔹 Page changed to:', value);
               if (typeof setPage === 'function') {

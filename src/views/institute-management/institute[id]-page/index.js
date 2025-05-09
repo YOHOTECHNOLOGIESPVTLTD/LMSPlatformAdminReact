@@ -28,7 +28,7 @@ const InstituteViewPage = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={12} lg={12}>
-        <InstituteViewTop institute={institute} />
+        <InstituteViewTop institute={institute} set/>
       </Grid>
     </Grid>
   );
