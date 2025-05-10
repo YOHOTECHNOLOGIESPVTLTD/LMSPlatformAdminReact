@@ -5,9 +5,9 @@ const INSTITUTE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/lms
 
 const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/Institute/search`;
 const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/platform-user/user-name-check`;
-export const getAllInstitutes = async () => {
+export const getAllInstitutes = async (data) => {
   try {
-    const response = await Client.institute.all();
+    const response = await Client.institute.all(data);
     console.log(response);
     // Check if the response status is successful
     if (response.data.status) {

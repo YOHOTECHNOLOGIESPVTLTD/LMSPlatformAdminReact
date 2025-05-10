@@ -61,7 +61,7 @@ const Institutes = () => {
 
   useEffect(() => {
     showSpinnerFn();
-    dispatch(getAllInstitutes({ page: currentPage }));
+    dispatch(getAllInstitutes({ page: currentPage,perPage:10 }));
     hideSpinnerFn();
   }, [dispatch, currentPage, getAllInstitutes, selectedBranchId, refetch]);
 

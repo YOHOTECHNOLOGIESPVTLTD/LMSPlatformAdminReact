@@ -32,7 +32,7 @@ import { updateSubscriptionFeature } from 'features/subscription-management/feat
 const defaultValues = {
   plan_name: '',
   plan_price: '',
-  support_level: null,
+  support_level: 'basic',
   description: '',
   plan_duration: '',
   plan_duration_type: null,
@@ -52,9 +52,16 @@ const defaultValues = {
 };
 
 const EditPlan = () => {
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors }
+  } = useForm({ defaultValues });
+
   const location = useLocation();
   const planId = location.state.id;
-  console.log('planId',planId)
+  console.log('planId', planId);
   const planData = location.state.plans;
   console.log('plans:', planData);
   console.log('planId:', planId);
@@ -84,68 +91,51 @@ const EditPlan = () => {
 
   const filteredData = (key) => {
     const response = planData?.features?.filter((item) => item.feature.identity === key);
-    // console.log('res', response[0].count);
+    console.log('res', response[0].count);
     return response[0]?.count;
+  };
+
+  const filteredId = (key) => {
+    const response = planData?.features?.filter((item) => item?.feature?.identity === key);
+    console.log('ressss', response[0]?.feature?.identity);
+    return response[0].feature.identity;
   };
 
   useEffect(() => {
     if (planData) {
-      setValue('id',planId)
+      setValue('id', planId);
       setValue('plan_duration_type', planData?.duration.unit);
       setValue('plan_name', planData?.identity);
       setValue('plan_price', planData?.price);
       setValue('description', planData?.description);
       setValue('support_level', planData?.support_level);
       setValue('plan_duration', planData?.duration?.value);
-      setValue(
-        'students',
-        planData?.features?.filter((item) => item.feature.identity === 'Admin')
-      );
-      setValue('admins', filteredData('Admins'));
-      // setValue('staffs', planData?.features?.no_of_staffs);
-      setValue('students', filteredData('Students'));
-      setValue('batches', filteredData('Teachers'));
-      setValue('courses', filteredData('Courses'));
-      setValue('classes', filteredData('Batches'));
-      if (planData?.features?.no_of_students) {
-        setStudentInputBoxChecked(true);
-      }
-      if (planData?.features?.no_of_teachers) {
-        setTeachersInputBoxChecked(true);
-      }
-      if (planData?.features?.no_of_classes) {
-        setClassesInputBoxChecked(true);
-      }
-      if (planData?.features?.no_of_courses) {
-        setCoursesInputBoxChecked(true);
-      }
-      if (planData?.features?.no_of_admins) {
-        setAdminInputBoxChecked(true);
-      }
-      if (planData?.features?.no_of_batches) {
-        setBatchesInputBoxChecked(true);
-      }
-    }
-    if (planData?.features?.student_is_unlimited) {
-      setStudentInputChecked(true);
-    }
-    if (planData?.features?.teacher_is_unlimited) {
-      setTeachersInputChecked(true);
-    }
-    if (planData?.features?.class_is_unlimited) {
-      setClassesInputChecked(true);
-    }
-    if (planData?.features?.admin_is_unlimited) {
-      setAdminInputChecked(true);
-    }
-    if (planData?.features?.batches_is_unlimited) {
-      setBatchesInputChecked(true);
-    }
-    if (planData?.features?.course_is_unlimited) {
-      setCoursesInputChecked(true);
-    }
-  }, [planData]);
 
+      // Set values for all features
+      setValue('admins', filteredData('Admins') || '');
+      setValue('students', filteredData('Students') || '');
+      setValue('teachers', filteredData('Teachers') || '');
+      setValue('batches', filteredData('Batches') || '');
+      setValue('courses', filteredData('Courses') || '');
+      setValue('classes', filteredData('Classes') || '');
+
+      // Set checkbox states based on whether values exist
+      setStudentInputBoxChecked(!!filteredData('Students'));
+      setAdminInputBoxChecked(!!filteredData('Admins'));
+      setTeachersInputBoxChecked(!!filteredData('Teachers'));
+      setBatchesInputBoxChecked(!!filteredData('Batches'));
+      setCoursesInputBoxChecked(!!filteredData('Courses'));
+      setClassesInputBoxChecked(!!filteredData('Classes'));
+
+      // Set unlimited checkboxes
+      setStudentInputChecked(planData?.features?.student_is_unlimited || false);
+      setAdminInputChecked(planData?.features?.admin_is_unlimited || false);
+      setTeachersInputChecked(planData?.features?.teacher_is_unlimited || false);
+      setBatchesInputChecked(planData?.features?.batches_is_unlimited || false);
+      setCoursesInputChecked(planData?.features?.course_is_unlimited || false);
+      setClassesInputChecked(planData?.features?.class_is_unlimited || false);
+    }
+  }, [planData, setValue]);
   // const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState('https://www.charitycomms.org.uk/wp-content/uploads/2019/02/placeholder-image-square.jpg');
@@ -180,43 +170,79 @@ const EditPlan = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const onSubmit = async (data) => {
-    console.log('submitted data',data);
-    
+    console.log('submitted data', data);
+
     setErrorMessage('');
 
-    if (!studentInputBoxChecked && !studentInputChecked) setStudentError(true);
-    if (!adminInputBoxChecked && !adminInputChecked) setAdminError(true);
-    if (!teachersInputBoxChecked && !teachersInputChecked) setTeachersError(true);
-    if (!batchesInputBoxChecked && !batchesInputChecked) setBatchesError(true);
-    if (!coursesInputBoxChecked && !coursesInputChecked) setCoursesError(true);
-    if (!classesInputBoxChecked && !classesInputChecked) setClassesError(true);
+    if (!studentInputBoxChecked && !studentInputChecked && !data.students) {
+      setStudentError(true);
+    }
+    if (!adminInputBoxChecked && !adminInputChecked && !data.admins) {
+      setAdminError(true);
+    }
+    if (!teachersInputBoxChecked && !teachersInputChecked && !data.teachers) {
+      setTeachersError(true);
+    }
+    if (!batchesInputBoxChecked && !batchesInputChecked && !data.batches) {
+      setBatchesError(true);
+    }
+    if (!coursesInputBoxChecked && !coursesInputChecked && !data.courses) {
+      setCoursesError(true);
+    }
+    if (!classesInputBoxChecked && !classesInputChecked && !data.classes) {
+      setClassesError(true);
+    }
 
     if (studentError || adminError || teachersError || batchesError || coursesError || classesError) return;
+    const allFeatures = [
+      { feature: filteredId('Admins'), count: Number(data?.admins) },
+      { feature: filteredId('Students'), count: data?.students },
+      { feature: filteredId('Teachers'), count: data?.teachers },
+      { feature: filteredId('Batches'), count: data?.batches },
+      { feature: filteredId('Courses'), count: data?.courses },
+      { feature: filteredId('Classes'), count: data?.classes }
+      // ...customFields.map((field) => ({
+      //   feature: field.name,
+      //   count: field.value,
+      // })),
+    ];
+    console.log('fe', allFeatures);
+    const subscription_data = {
+      identity: data?.plan_name,
+      planId: planId,
+      image: selectedImage,
+      description: data?.description,
+      features: allFeatures,
+      duration: { value: data?.plan_duration, unit: data?.plan_duration_type },
+      price: data?.plan_price
+    };
 
-    var bodyFormData = new FormData();
-    bodyFormData.append('planId', planId);
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('plan_name', data?.plan_name);
-    bodyFormData.append('plan_price', data?.plan_price);
-    bodyFormData.append('support_level', data?.support_level);
-    bodyFormData.append('plan_duration', data?.plan_duration);
-    bodyFormData.append('plan_duration_type', data?.plan_duration_type);
-    bodyFormData.append('description', data?.description);
-    bodyFormData.append('no_of_students', data?.students);
-    bodyFormData.append('no_of_admins', data?.admins);
-    bodyFormData.append('no_of_teachers', data?.teachers);
-    bodyFormData.append('no_of_batches', data?.batches);
-    bodyFormData.append('no_of_courses', data?.courses);
-    bodyFormData.append('no_of_classes', data?.classes);
-    bodyFormData.append('student_is_unlimited', studentInputChecked ? '1' : '');
-    bodyFormData.append('teacher_is_unlimited', teachersInputChecked ? '1' : '');
-    bodyFormData.append('admin_is_unlimited', adminInputChecked ? '1' : '');
-    bodyFormData.append('course_is_unlimited', coursesInputChecked ? '1' : '');
-    bodyFormData.append('batches_is_unlimited', batchesInputChecked ? '1' : '');
-    bodyFormData.append('class_is_unlimited', classesInputChecked ? '1' : '');
+    // var bodyFormData = new FormData();
+    // bodyFormData.append('planId', planId);
+    // bodyFormData.append('image', selectedImage);
+    // bodyFormData.append('plan_name', data?.plan_name);
+    // bodyFormData.append('plan_price', data?.plan_price);
+    // bodyFormData.append('support_level', data?.support_level);
+    // bodyFormData.append('plan_duration', data?.plan_duration);
+    // bodyFormData.append('plan_duration_type', data?.plan_duration_type);
+    // bodyFormData.append('description', data?.description);
+    // bodyFormData.append('no_of_students', data?.students);
+    // bodyFormData.append('no_of_admins', data?.admins);
+    // bodyFormData.append('no_of_teachers', data?.teachers);
+    // bodyFormData.append('no_of_batches', data?.batches);
+    // bodyFormData.append('no_of_courses', data?.courses);
+    // bodyFormData.append('no_of_classes', data?.classes);
+    // bodyFormData.append('student_is_unlimited', studentInputChecked ? '1' : '');
+    // bodyFormData.append('teacher_is_unlimited', teachersInputChecked ? '1' : '');
+    // bodyFormData.append('admin_is_unlimited', adminInputChecked ? '1' : '');
+    // bodyFormData.append('course_is_unlimited', coursesInputChecked ? '1' : '');
+    // bodyFormData.append('batches_is_unlimited', batchesInputChecked ? '1' : '');
+    // bodyFormData.append('class_is_unlimited', classesInputChecked ? '1' : '');
 
     try {
-      const result = await updateSubscriptionFeature(bodyFormData);
+      const result = await updateSubscriptionFeature(subscription_data);
+      console.log('api', result);
+
       if (result.success) {
         navigate(-1);
       } else {
@@ -241,12 +267,6 @@ const EditPlan = () => {
   };
   // console.log(studentInputChecked);
   // ** Hooks
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors }
-  } = useForm({ defaultValues });
 
   // const onSubmit = () => toast.success('Form Submitted');
 
@@ -476,14 +496,13 @@ const EditPlan = () => {
             <Controller
               name="support_level"
               control={control}
-              rules={{ required: true }}
               render={({ field }) => (
                 <TextField
                   {...field}
                   select
                   fullWidth
                   label="Support Level"
-                  value={field.value || 'basic'}
+                  value={field.value || defaultValues.support_level}
                   onChange={(e) => field.onChange(e.target.value)}
                   variant="standard"
                   InputLabelProps={{
@@ -689,6 +708,7 @@ const EditPlan = () => {
             <Controller
               name="students"
               control={control}
+              rules={{ required: false }}
               render={({ field }) => (
                 <TextField
                   {...field}
