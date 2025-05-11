@@ -32,6 +32,7 @@ import {
 } from '@mui/material';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { searchUsers } from 'features/user-management/users-page/services/userServices';
 
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');

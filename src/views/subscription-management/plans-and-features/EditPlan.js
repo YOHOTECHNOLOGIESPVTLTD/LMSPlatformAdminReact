@@ -22,9 +22,11 @@ import CustomTextField from 'components/mui/text-field';
 // ** Third Party Imports
 import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useEffect } from 'react';
 import { updateSubscriptionFeature } from 'features/subscription-management/features/services/subscriptionFeaturesServices';
+import toast from 'react-hot-toast';
+import { useSpinner } from 'context/spinnerContext';
 // import { addSubscriptionFeature } from '../services/subscriptionFeaturesServices';
 //import { imagePlaceholder } from 'lib/placeholders';
 // ** Icon Imports
@@ -52,6 +54,7 @@ const defaultValues = {
 };
 
 const EditPlan = () => {
+  const navigate=useNavigate()
   const {
     control,
     handleSubmit,
@@ -88,7 +91,7 @@ const EditPlan = () => {
   const [classesError, setClassesError] = useState('');
   // const counts = planData?.features.map((feature) => feature.count);
   // console.log('counts', counts);
-
+  const { showSpinnerFn, hideSpinnerFn } = useSpinner();
   const filteredData = (key) => {
     const response = planData?.features?.filter((item) => item.feature.identity === key);
     console.log('res', response[0].count);
@@ -240,16 +243,23 @@ const EditPlan = () => {
     // bodyFormData.append('class_is_unlimited', classesInputChecked ? '1' : '');
 
     try {
+      showSpinnerFn();
       const result = await updateSubscriptionFeature(subscription_data);
+      console.log('result from edit',result)
+      if (result.success===true) {
+        toast.success(result.message);
+      }
       console.log('api', result);
 
-      if (result.success) {
+      if (result.success===true) {
         navigate(-1);
       } else {
         setErrorMessage(result.message || 'Failed to update subscription.');
       }
     } catch (error) {
       setErrorMessage(error.response?.data?.message || 'An unexpected error occurred while updating the subscription.');
+    } finally {
+      hideSpinnerFn();
     }
   };
 

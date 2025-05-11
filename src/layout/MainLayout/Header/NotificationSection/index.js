@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -55,6 +55,7 @@ const status = [
 // ==============================|| NOTIFICATION ||============================== //
 
 const NotificationSection = () => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -88,6 +89,9 @@ const NotificationSection = () => {
     if (event?.target.value) setValue(event?.target.value);
   };
 
+  const handleNavigate=()=>{
+    navigate('/notification-management/notifications')
+  }
   return (
     <>
       <Box
@@ -202,7 +206,7 @@ const NotificationSection = () => {
                   </Grid>
                   <Divider />
                   <CardActions sx={{ p: 1.25, justifyContent: 'center' }}>
-                    <Button size="small" disableElevation>
+                    <Button onClick={handleNavigate} size="small" disableElevation>
                       View All
                     </Button>
                   </CardActions>

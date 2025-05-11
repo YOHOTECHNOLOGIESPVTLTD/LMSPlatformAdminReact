@@ -96,8 +96,10 @@ export const updateSubscriptionFeature = async (data) => {
     const response = await axios.put(`${API_URL}/plan/${data.planId}`, data, {
       headers: getAuthHeaders(),
     });
+    console.log('responsefeature',response);
+    
 
-    return response.data.status
+    return response?.data?.status
       ? { success: true, message: 'Subscription Feature updated successfully' }
       : { success: false, message: 'Failed to update Subscription Feature' };
   } catch (error) {
