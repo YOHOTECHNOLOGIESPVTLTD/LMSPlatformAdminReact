@@ -8,7 +8,7 @@ import DeleteDialog from 'components/modal/DeleteModel';
 import StatusDialog from 'components/modal/DeleteModel';
 import FaqAddDrawer from 'features/faq-management/faqs/components/FaqAddDrawer';
 import FaqEdit from 'features/faq-management/faqs/components/FaqEdit';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FaqTableHeader from 'features/faq-management/faqs/components/FaqTableHeader';
 import { getAllFaqs } from 'features/faq-management/faqs/redux/faqThunks';
@@ -32,10 +32,10 @@ import {
 } from '@mui/material';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { searchUsers } from 'features/user-management/users-page/services/userServices';
+// import { searchUsers } from 'features/user-management/users-page/services/userServices';
 
 const FaqDataGrid = () => {
-  const [value, setValue] = useState('');
+  // const [value, setValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -45,13 +45,16 @@ const FaqDataGrid = () => {
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [faqCategories, setFaqCategories] = useState([]);
   const [refetch, setRefetch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [selectedFaqStatus, setSelectedFaqStatus] = useState(null);
+  const [filteredFaqss, setFilteredFaqss] = useState([]);
   // const [editId, setEditId] = useState(null);
   // const[lastPage,setLastPage]=useState(1)
   const dispatch = useDispatch();
 
   const faqs = useSelector(selectFaqs);
+  console.log('faqs', faqs);
   const faqLoading = useSelector(selectLoading);
   useEffect(() => {
     getFaqCategories();
@@ -70,13 +73,18 @@ const FaqDataGrid = () => {
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
-  console.log('faqqqq', faqs);
 
   const handleDelete = (itemId) => {
     console.log('Delete clicked for item ID:', itemId);
     setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
   };
+  useEffect(() => {
+    if (faqs?.data) {
+      const filteredFaqs = faqs.data.filter((category) => category?.identity?.toLowerCase().includes(searchQuery.toLowerCase()));
+      setFilteredFaqss(filteredFaqs);
+    }
+  }, [faqs,searchQuery]);
 
   const handleDeleteApi = async () => {
     const data = {
@@ -137,24 +145,25 @@ const FaqDataGrid = () => {
 
   // ** Hooks
 
-  const handleFilter = useCallback(
-    async (val) => {
-      try {
-        setValue(val);
-        const result = await searchUsers(val);
-        if (result.success) {
-          console.log('Search results:', result.data);
-          dispatch(setUsers(result.data));
-        } else {
-          console.log(result.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
-
+  // const handleFilter = useCallback(
+  //   async (val) => {
+  //     try {
+  //       setValue(val);
+  //       const result = await searchUsers(val);
+  //       if (result.success) {
+  //         console.log('Search results:', result.data);
+  //         dispatch(setUsers(result.data));
+  //       } else {
+  //         console.log(result.message);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   },
+  //   [dispatch]
+  // );
+  console.log('lterd',filteredFaqss);
+  
   return (
     <>
       {faqLoading || !faqs ? (
@@ -165,7 +174,13 @@ const FaqDataGrid = () => {
           <FaqAccordian faqCategories={faqCategories}/>
         </Grid> */}
           <Grid item xs={12}>
-            <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+            <FaqTableHeader
+              faqs={faqs}
+              searchQuery={searchQuery}
+              handleFilter={(val) => setSearchQuery(val)}
+              // value={value}
+              toggle={toggleAddUserDrawer}
+            />
           </Grid>
 
           <Grid item xs={12}>
@@ -181,8 +196,8 @@ const FaqDataGrid = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {faqs?.data?.length > 0 ? (
-                    faqs?.data?.map((faq) => (
+                  {filteredFaqss.length > 0 ? (
+                    filteredFaqss.map((faq) => (
                       <TableRow
                         key={faq._id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 }, '&:hover': { backgroundColor: '#f0f0f0' } }}

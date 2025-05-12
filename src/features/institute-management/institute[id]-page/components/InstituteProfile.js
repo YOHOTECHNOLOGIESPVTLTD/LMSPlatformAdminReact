@@ -149,8 +149,8 @@ const InstituteProfile = ({ institute }) => {
       id: institute?.id,
       uuid: institute?.uuid,
       contact_info: {
-        phone_no: data.phone?String(data.phone):"",
-        alternate_no: data.alternate_number?String(data.alternate_number):'',
+        phone_no: data.phone ? String(data.phone) : '',
+        alternate_no: data.alternate_number ? String(data.alternate_number) : '',
         address: {
           address1: data.address_line_1,
           address2: data.address_line_2,
@@ -304,6 +304,9 @@ const InstituteProfile = ({ institute }) => {
                           // defaultValue={institute?.institute_name}
                           value={value}
                           label="Institute Name"
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           onChange={onChange}
                           placeholder="Leonard"
                           error={Boolean(personalErrors['name'])}
@@ -328,6 +331,9 @@ const InstituteProfile = ({ institute }) => {
                           customInput={
                             <CustomInput
                               label="Registered Date"
+                              sx={{
+                                '& .MuiInputBase-input': { color: 'black' }
+                              }}
                               error={Boolean(personalErrors['registered_date'])}
                               aria-describedby="stepper-linear-personal-registered_date"
                               {...(personalErrors['registered_date'] && { helperText: 'This field is required' })}
@@ -347,6 +353,9 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // value={value}
                           // defaultValue={institute?.contact_info.address.state}
                           value={value}
@@ -367,6 +376,9 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.contact_info.address.city}
                           value={value}
                           label="City"
@@ -386,12 +398,15 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.contact_info?.address?.pincode}
                           value={value}
                           label="Pin Code"
                           type="text"
                           onChange={onChange}
-                          placeholder="Carter"
+                          placeholder="631001"
                           error={Boolean(personalErrors['pin_code'])}
                           aria-describedby="stepper-linear-personal-pin_code"
                           {...(personalErrors['pin_code'] && { helperText: 'This field is required' })}
@@ -407,6 +422,9 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.contact_info.address.address1}
                           value={value}
                           label="Address Line One"
@@ -427,6 +445,9 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.contact_info.address.address2}
                           value={value}
                           label="Address Line Two"
@@ -448,6 +469,9 @@ const InstituteProfile = ({ institute }) => {
                         <TextField
                           fullWidth
                           type="text"
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.contact_info?.phone_no}
                           value={value}
                           label="Phone Number"
@@ -468,6 +492,7 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          sx={{ '& .MuiInputBase-input': { color: 'black' } }}
                           // defaultValue={institute?.contact_info?.alternate_no}
                           value={value}
                           type="text"
@@ -490,6 +515,9 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.email}
                           value={value}
                           label="Official Email"
@@ -510,6 +538,9 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.website}
                           value={value}
                           label="Official Website"
@@ -561,6 +592,9 @@ const InstituteProfile = ({ institute }) => {
                           multiline
                           rows={3}
                           // defaultValue={institute?.description}
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           value={value}
                           label="description"
                           onChange={onChange}
@@ -580,6 +614,9 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.social_media?.instagram_id}
                           value={value}
                           label="Insta"
@@ -601,6 +638,9 @@ const InstituteProfile = ({ institute }) => {
                         <TextField
                           fullWidth
                           value={value}
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.social_media?.facebook_id}
                           label="Facebook URL"
                           onChange={onChange}
@@ -622,6 +662,9 @@ const InstituteProfile = ({ institute }) => {
                         <TextField
                           fullWidth
                           value={value}
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.email}
                           label="Email"
                           onChange={onChange}
@@ -641,6 +684,9 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.social_media?.linkedin_id}
                           value={value}
                           label="LinkedIn"
@@ -662,6 +708,9 @@ const InstituteProfile = ({ institute }) => {
                         <TextField
                           fullWidth
                           value={value}
+                          sx={{
+                            '& .MuiInputBase-input': { color: 'black' }
+                          }}
                           // defaultValue={institute?.social_media?.twitter_id}
                           label="Twitter URL"
                           onChange={onChange}

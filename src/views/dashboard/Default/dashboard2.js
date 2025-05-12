@@ -29,10 +29,6 @@ const Dashboard2 = () => {
   const [subscriptionData, setSubscriptionData] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, [month, year]);
-
   const fetchDashboardData = async () => {
     try {
       const response = await axios.get(DASHBOARD_API_ENDPOINT, {
@@ -108,6 +104,10 @@ const Dashboard2 = () => {
       console.error('Error fetching dashboard data:', error);
     }
   };
+  useEffect(() => {
+    fetchDashboardData();
+  }, [month, year]);
+
   const handleMonthChange = (event) => {
     setMonth(event.target.value);
   };
@@ -168,6 +168,8 @@ const Dashboard2 = () => {
                     Year
                   </Typography>
                   <TextField select fullWidth value={year} onChange={handleYearChange} variant="outlined">
+                    <MenuItem value="2025">2025</MenuItem>
+                    <MenuItem value="2024">2024</MenuItem>
                     <MenuItem value="2023">2023</MenuItem>
                     <MenuItem value="2022">2022</MenuItem>
                     <MenuItem value="2021">2021</MenuItem>
@@ -417,9 +419,9 @@ const Dashboard2 = () => {
                     />
                     <YAxis
                       // Make YAxis labels bold
-                      tick={{ fontSize: 13, fontWeight: 'bold'}}
+                      tick={{ fontSize: 13, fontWeight: 'bold' }}
                     />
-                    <Tooltip sx={{}}  />
+                    <Tooltip sx={{}} />
                     <Area
                       type="monotone"
                       dataKey="revenue"

@@ -35,6 +35,7 @@ const CategoriesDataGrid = () => {
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filteredCategories, setFilteredCategories] = useState([]);
 
   const dispatch = useDispatch();
   const faqCategories = useSelector(selectFaqCategories);
@@ -54,6 +55,12 @@ const CategoriesDataGrid = () => {
   };
 
   useEffect(() => {
+    if (faqCategories?.data) {
+      const filtered = faqCategories?.data?.filter((category) => category.identity.toLowerCase().includes(searchQuery.toLowerCase()));
+      setFilteredCategories(filtered);
+    }
+  }, [faqCategories, searchQuery]);
+  useEffect(() => {
     if (faqCategories?.data?.length === 0 && currentPage > 1) {
       setCurrentPage(1);
     }
@@ -72,6 +79,7 @@ const CategoriesDataGrid = () => {
     setSelectedFaqCategoryStatus(e.target.value);
     setStatusDialogOpen(true);
   };
+  console.log('filterdcsgs', filteredCategories);
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -152,9 +160,10 @@ const CategoriesDataGrid = () => {
         {/* Category filter and header */}
         <Grid item xs={12} sx={{ marginLeft: '15px' }}>
           <FaqCategoriesTableHeader
+            faqCategories={faqCategories}
             // value={value}
             // handleFilter={handleFilter}
-            value={searchQuery}
+            searchQuery={searchQuery}
             handleFilter={(val) => setSearchQuery(val)}
             toggle={toggleAddUserDrawer}
             selectedBranchId={selectedBranchId}
@@ -175,8 +184,8 @@ const CategoriesDataGrid = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {faqCategories?.data?.length > 0 ? (
-                    faqCategories?.data?.map((category) => (
+                  {filteredCategories?.length > 0 ? (
+                    filteredCategories?.map((category) => (
                       <TableRow
                         key={category._id}
                         sx={{

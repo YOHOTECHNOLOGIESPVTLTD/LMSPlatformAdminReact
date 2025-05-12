@@ -94,7 +94,10 @@ const SidebarAddUser = (props) => {
         institute_id: data?.institutes?._id,
         branches: filterbranches
       };
-      await createInstituteNotification(new_notification);
+      const response = createInstituteNotification(new_notification);
+      if (response.status === 'success') {
+        toast.success(response.message);
+      }
       setError('');
       toggle();
       reset();
@@ -104,7 +107,7 @@ const SidebarAddUser = (props) => {
       hideSpinnerFn();
     }
   };
-  console.log(instituteList, 'instituteList', errors, control);
+  console.log(instituteList?.data, 'instituteList', errors, control);
   // const ImgStyled = styled('img')(({ theme }) => ({
   //   width: 100,
   //   height: 100,
@@ -195,8 +198,8 @@ const SidebarAddUser = (props) => {
                   // multiple
                   id="select-multiple-chip"
                   sx={{ mb: 4 }}
-                  options={instituteList}
-                  getOptionLabel={(option) => option?.institute_name}
+                  options={Array.isArray(instituteList?.data) ? instituteList?.data : []}
+                  getOptionLabel={(option) => option?.institute_name || ''}
                   value={value}
                   onChange={async (e, newValue) => {
                     console.log(newValue);
@@ -206,9 +209,9 @@ const SidebarAddUser = (props) => {
                       const data = { institute: newValue?.uuid };
                       console.log(data, newValue, 'data and new value');
                       const response = await getInstituteBrancheswithId(data);
+
                       console.log(response, 'response');
                       setBranchList(response?.data?.data);
-                      
                     } catch (error) {
                       toast.error(error?.message);
                     } finally {
