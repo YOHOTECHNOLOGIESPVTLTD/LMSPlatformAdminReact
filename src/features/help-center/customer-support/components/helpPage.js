@@ -20,6 +20,8 @@ import DeleteDialog from 'features/user-management/groups-page/components/GroupD
 import { useState } from 'react';
 import HelpAddModal from './Modal/helpAddModal';
 import HelpEditModal from './Modal/helpEditModal';
+import pngImg from '../../../../assets/images/—Pngtree—flat meeting discussion people_5409602.png'
+import pngImgs from '../../../../assets/images/—Pngtree—people working in a table_7537097 (1).png'
 
 const MuiBox = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -220,12 +222,12 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
               }}
             >
               <img
-                src="https://img.freepik.com/free-vector/employee-group-portrait-illustration_74855-5495.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid"
+                src={pngImg}
                 alt="illustration"
                 width="230"
               />
               <img
-    src="https://img.freepik.com/free-vector/people-recording-listening-podcasts_23-2148792135.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid"
+    src={pngImgs}
     alt="teamwork"
     width="230"
   /> 

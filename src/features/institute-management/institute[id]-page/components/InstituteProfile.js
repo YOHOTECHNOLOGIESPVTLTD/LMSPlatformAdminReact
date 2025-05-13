@@ -281,10 +281,10 @@ const InstituteProfile = ({ institute }) => {
              
 
               <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="contained" sx={{ mr: 2 }} onClick={handleEditClickOpen}>
+                <Button variant="contained" sx={{ mr: 2,minWidth: 100 }} onClick={handleEditClickOpen}>
                   Edit
                 </Button>
-                <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>
+                <Button color="error" variant="contained" sx={{ minWidth: 100 }} onClick={() => setSuspendDialogOpen(true)}>
                   Suspend
                 </Button>
               </CardActions>
@@ -310,13 +310,42 @@ const InstituteProfile = ({ institute }) => {
                 </DialogTitle>
                 <DialogContent
                   sx={{
-                    pt: (theme) => [`${theme.spacing(8)} !important`, `${theme.spacing(2)} !important`],
-                    pb: (theme) => `${theme.spacing(2)} !important`,
-                    px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
+                    //pt: (theme) => [`${theme.spacing(8)} !important`, `${theme.spacing(2)} !important`],
+                    pb: (theme) => `${theme.spacing(3)} !important`,
+                    px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(6)} !important`]
                   }}
                 >
-                  <form onSubmit={handlePersonalSubmit(onSubmit)}>
-                    <Grid container spacing={4}>
+                  <form onSubmit={handlePersonalSubmit(onSubmit)} >
+                    <Grid container spacing={4} sx={{
+                            // Text color inside the input
+                            input: {
+                              color: 'black', // Indigo
+                            },
+
+                            // Label color
+                            label: {
+                              color: 'black',
+                            },
+
+                            // Label when focused
+                            '& label.Mui-focused': {
+                              color: '#3949ab', // Darker Indigo
+                            },
+
+                            // Outline color
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: 'black',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: '#3949ab',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: '#3949ab',
+                                borderWidth: '2px',
+                              },
+                            },
+                          }}>
                       <Grid item xs={12} sm={6}>
                         <Controller
                           name="name"
@@ -324,16 +353,17 @@ const InstituteProfile = ({ institute }) => {
                           rules={{ required: true }}
                           render={({ field: { onChange } }) => (
                             <TextField
-                              fullWidth
-                              // value={value}
-                              defaultValue={institute?.institute_name}
-                              label="Institute Name"
-                              onChange={onChange}
-                              placeholder="Leonard"
-                              error={Boolean(personalErrors['name'])}
-                              aria-describedby="stepper-linear-personal-name"
-                              {...(personalErrors['name'] && { helperText: 'This field is required' })}
-                            />
+                            fullWidth
+                            defaultValue={institute?.institute_name}
+                            label="Institute Name"
+                            onChange={onChange}
+                            placeholder="doe"
+                            error={Boolean(personalErrors['name'])}
+                            aria-describedby="stepper-linear-personal-name"
+                            {...(personalErrors['name'] && { helperText: 'This field is required' })}
+                            
+                          />
+                          
                           )}
                         />
                       </Grid>
@@ -371,8 +401,10 @@ const InstituteProfile = ({ institute }) => {
                             <TextField
                               fullWidth
                               // value={value}
+                             
                               defaultValue={institute?.contact_info.address.state}
                               label="State"
+                               placeholder="state"
                               onChange={onChange}
                               error={Boolean(personalErrors.state)}
                               aria-describedby="stepper-linear-personal-state-helper"
@@ -411,7 +443,7 @@ const InstituteProfile = ({ institute }) => {
                               label="Pin Code"
                               type="number"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder="600076"
                               error={Boolean(personalErrors['pin_code'])}
                               aria-describedby="stepper-linear-personal-pin_code"
                               {...(personalErrors['pin_code'] && { helperText: 'This field is required' })}
@@ -430,7 +462,7 @@ const InstituteProfile = ({ institute }) => {
                               defaultValue={institute?.contact_info.address.address1}
                               label="Address Line One"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder=".........."
                               error={Boolean(personalErrors['address_line_1'])}
                               aria-describedby="stepper-linear-personal-address_line_1"
                               {...(personalErrors['address_line_1'] && { helperText: 'This field is required' })}
@@ -449,7 +481,7 @@ const InstituteProfile = ({ institute }) => {
                               defaultValue={institute?.contact_info.address.address2}
                               label="Address Line Two"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder=".........."
                               error={Boolean(personalErrors['address_line_2'])}
                               aria-describedby="stepper-linear-personal-address_line_2"
                               {...(personalErrors['address_line_2'] && { helperText: 'This field is required' })}
@@ -489,7 +521,7 @@ const InstituteProfile = ({ institute }) => {
                               type="number"
                               label="Alt Phone Number"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder="9876543211"
                               error={Boolean(personalErrors['alternate_number'])}
                               aria-describedby="stepper-linear-personal-alternate_number"
                               {...(personalErrors['alternate_number'] && { helperText: 'This field is required' })}
@@ -509,7 +541,7 @@ const InstituteProfile = ({ institute }) => {
                               defaultValue={institute?.admin?.email}
                               label="Official Email"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder="jhon@gmail.com"
                               error={Boolean(personalErrors['official_email'])}
                               aria-describedby="stepper-linear-personal-official_email"
                               {...(personalErrors['official_email'] && { helperText: 'This field is required' })}
@@ -528,7 +560,7 @@ const InstituteProfile = ({ institute }) => {
                               defaultValue={institute?.official_website}
                               label="Official Website"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder="website"
                               error={Boolean(personalErrors['official_website'])}
                               aria-describedby="stepper-linear-personal-official_website"
                               {...(personalErrors['official_website'] && { helperText: 'This field is required' })}
@@ -577,7 +609,7 @@ const InstituteProfile = ({ institute }) => {
                               defaultValue={institute?.description}
                               label="description"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder="enter the somethings"
                               error={Boolean(personalErrors['description'])}
                               aria-describedby="stepper-linear-personal-description"
                               {...(personalErrors['description'] && { helperText: 'This field is required' })}
@@ -635,7 +667,7 @@ const InstituteProfile = ({ institute }) => {
                               defaultValue={institute?.email}
                               label="Email"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder="mail"
                               error={Boolean(personalErrors['email'])}
                               aria-describedby="stepper-linear-personal-email"
                               {...(personalErrors['email'] && { helperText: 'This field is required' })}
@@ -654,7 +686,7 @@ const InstituteProfile = ({ institute }) => {
                               defaultValue={institute?.social_media?.linkedin_id}
                               label="LinkedIn"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder="in"
                               error={Boolean(personalErrors['linkedin'])}
                               aria-describedby="stepper-linear-personal-linkedin"
                               {...(personalErrors['linkedIn'] && { helperText: 'This field is required' })}
@@ -673,14 +705,14 @@ const InstituteProfile = ({ institute }) => {
                               defaultValue={institute?.social_media?.twitter_id}
                               label="Twitter URL"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder="twitter"
                               error={Boolean(personalErrors['twitter'])}
                               aria-describedby="stepper-linear-personal-twitter"
                               {...(personalErrors['twitter'] && { helperText: 'This field is required' })}
                             />
                           )}
                         />
-                      </Grid>
+                      </Grid> 
                       <Grid item xs={12} sm={6}>
                         <Controller
                           name="pinterest"
@@ -692,7 +724,7 @@ const InstituteProfile = ({ institute }) => {
                               defaultValue={institute?.social_media?.pinterest_id}
                               label="Pinterest URL"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder="pin"
                               error={Boolean(personalErrors['pinterest'])}
                               aria-describedby="stepper-linear-personal-pinterest"
                               {...(personalErrors['pinterest'] && { helperText: 'This field is required' })}
@@ -701,9 +733,9 @@ const InstituteProfile = ({ institute }) => {
                         />
                       </Grid>
                       <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                        <Button variant="tonal" color="secondary" onClick={handleEditClose}>
+                        <Button variant="contained" color="secondary" onClick={handleEditClose}>
                           Cancel
-                        </Button>
+                        </Button> 
                         <Button type="submit" variant="contained">
                           Submit
                         </Button>

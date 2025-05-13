@@ -88,7 +88,7 @@ const NotificationList = () => {
           <ListItemAvatar>
             <Avatar alt="John Doe" src={User1} />
           </ListItemAvatar>
-          <ListItemText primary="John Doe" />
+          <ListItemText primary="John Do" fontWeight="bold"/>
           <ListItemSecondaryAction>
             <Grid container justifyContent="flex-end">
               <Grid item xs={12}>
@@ -224,7 +224,7 @@ const NotificationList = () => {
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={12}>
-                <Card
+                <Card 
                   sx={{
                     backgroundColor: theme.palette.secondary.light
                   }}

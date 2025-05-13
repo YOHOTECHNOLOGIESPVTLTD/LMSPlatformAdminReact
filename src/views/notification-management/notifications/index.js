@@ -169,14 +169,17 @@ const Notifications = () => {
   const getList = async (data) => {
     dispath(getAllInstituteNotifications(data))
   }
+  useEffect(() => {
+  getList({ page });
+}, [page]);
 
   // useEffect(() => {
   //   getList({ page: page})
   // },[dispath])
 
-   useEffect(() => {
-    getList({ page });
-  }, [getList, page]);
+  //  useEffect(() => {
+  //   getList({ page });
+  // }, [getList, page]);
 
   
   const handleFilter = useCallback((val) => {
@@ -364,16 +367,17 @@ const columns = [
                    borderRight: "none",
                    backgroundColor: "#4caf50",  
                    color: "white",
+                   fontWeight: "bold" ,   
               }
                  }}
-                autoHeight
+                autoHeight 
                 rowHeight={62}
                 rows={notifications_list?.data ?? []}
                 columns={columns}
                 disableRowSelectionOnClick
-                hideFooterPagination
-                hideFooter
-                pageSizeOptions={[10, 25, 50]}
+               // hideFooterPagination
+               // hideFooter
+                pageSizeOptions={[5,10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 disableColumnFilter={true}
@@ -387,9 +391,9 @@ const columns = [
           {
             notifications_list?.last_page !== 1 && !loading && 
             <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: "flex-end"}}>
-               <Pagination
-               count={notifications_list?.last_page}
-                //rowCount={100}
+                <Pagination
+               count={notifications_list?.last_page }
+                rowCount={100}
                page={page}
                color="primary"
                onChange={async(e,page) => {
@@ -397,7 +401,13 @@ const columns = [
                  setPage(page)
                  getList(data)
                }}
-               />
+               /> 
+                {/* <Pagination
+        count={notifications_list?.last_page ?? 1}
+        page={page}
+        onChange={(event, value) => setPage(value)}
+        color="primary"
+      /> */}
             </Grid>
           }
           <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />

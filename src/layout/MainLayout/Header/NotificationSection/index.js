@@ -151,7 +151,12 @@ const NotificationSection = () => {
                       <Grid container alignItems="center" justifyContent="space-between" sx={{ pt: 2, px: 2 }}>
                         <Grid item>
                           <Stack direction="row" spacing={2}>
-                            <Typography variant="subtitle1">All Notification</Typography>
+                            <Typography variant="subtitle1" 
+                            sx={{
+                              fontWeight: 'bold',
+                              color: '#1976d2' 
+                            }}
+                            > All Notification </Typography>
                             <Chip
                               size="small"
                               label="01"
