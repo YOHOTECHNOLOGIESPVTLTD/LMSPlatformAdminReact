@@ -10,7 +10,7 @@ import axios from 'axios';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-const DASHBOARD_API_ENDPOINT = 'http://localhost:3001/api/institutes/platform/report';
+const DASHBOARD_API_ENDPOINT = `http://localhost:3002/api/institutes/platform/report`;
 
 const Dashboard2 = () => {
   const theme = useTheme();

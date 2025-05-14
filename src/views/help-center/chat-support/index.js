@@ -39,6 +39,7 @@ const ChatSupport = () => {
   const dispatch = useDispatch();
   const hidden = useMediaQuery(theme.breakpoints.down('lg'));
   const store = useSelector((state) => state.chat);
+  console.log('store',store)
 
   // ** Vars
   const skin = 'default';

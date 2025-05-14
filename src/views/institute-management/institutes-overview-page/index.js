@@ -38,6 +38,7 @@ import UserSkeleton from 'components/cards/Skeleton/UserSkeleton';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
+
 const Institutes = () => {
   // const [plan, setPlan] = useState('');
   // const [value, setValue] = useState('');
@@ -61,11 +62,12 @@ const Institutes = () => {
 
   useEffect(() => {
     showSpinnerFn();
-    dispatch(getAllInstitutes({ page: currentPage,perPage:10 }));
+    dispatch(getAllInstitutes({ page: currentPage, perPage: 10 }));
     hideSpinnerFn();
   }, [dispatch, currentPage, getAllInstitutes, selectedBranchId, refetch]);
 
   console.log(allInstitutes);
+  
 
   // const handleFilter = useCallback((val) => {
   //   setValue(val);
@@ -332,7 +334,7 @@ const Institutes = () => {
         <Grid container spacing={3}>
           {/* User Header Section */}
           <Grid item xs={12}>
-            <InstituteHeaderSection users={allInstitutes?.data} groups={allInstitutes?.data} />
+            <InstituteHeaderSection allInstitutes={allInstitutes?.data} groups={allInstitutes?.data} />
           </Grid>
 
           {/* User Filter Card */}

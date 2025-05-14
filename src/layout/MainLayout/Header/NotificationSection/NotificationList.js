@@ -16,11 +16,12 @@ import {
 // assets
 // import { IconBrandTelegram, IconBuildingStore, IconMailbox, IconPhoto } from '@tabler/icons';
 import User1 from 'assets/images/users/user-round.svg';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectInstituteNotifications } from 'features/notification-management/notifications/redux/instituteNotificationSelectors';
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
-
+import { useEffect } from 'react';
+import { getAllInstituteNotifications } from 'features/notification-management/notifications/services/instituteNotificationServices';
 
 // styles
 const ListItemWrapper = styled('div')(({ theme }) => ({
@@ -37,12 +38,21 @@ const ListItemWrapper = styled('div')(({ theme }) => ({
 // ==============================|| NOTIFICATION LIST ITEM ||============================== //
 
 const NotificationList = () => {
+  const dispatch = useDispatch();
   const nList = useSelector(selectInstituteNotifications);
   console.log('Nlist', nList);
   const notifications = nList?.data.map((item) => item);
   console.log('notify', notifications);
 
   const theme = useTheme();
+
+  const getList = async (data) => {
+    dispatch(getAllInstituteNotifications(data));
+  };
+
+  useEffect(() => {
+    getList({ page: 1 });
+  }, [dispatch]);
 
   const chipSX = {
     height: 24,
@@ -60,8 +70,6 @@ const NotificationList = () => {
     color: theme.palette.warning.dark,
     backgroundColor: theme.palette.warning.light
   };
-
-  
 
   return (
     <List
@@ -96,7 +104,7 @@ const NotificationList = () => {
                 <Grid container justifyContent="flex-end">
                   <Grid item xs={12}>
                     <Typography variant="caption" display="block" gutterBottom>
-                      {formatDistanceToNow(new Date(notification.createdAt),{ addSuffix: true })}
+                      {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
                     </Typography>
                   </Grid>
                 </Grid>
