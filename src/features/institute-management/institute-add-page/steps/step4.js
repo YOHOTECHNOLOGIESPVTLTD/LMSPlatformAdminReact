@@ -57,10 +57,11 @@ const FormStep4DocumentsInfo = (props) => {
           <Controller
             name="gst_number"
             control={docControl}
-            render={({ field: { value, onChange } }) => (
+            render={({ field: { value, onChange,onBlur } }) => (
               <CustomTextField
                 fullWidth
                 value={value || formData.gst_number}
+                onBlur={onBlur}
                 label="GST Number"
                 onChange={(e) => {
                   onChange(e);
@@ -119,10 +120,11 @@ const FormStep4DocumentsInfo = (props) => {
           <Controller
             name="pan_number"
             control={docControl}
-            render={({ field: { value, onChange } }) => (
+            render={({ field: { value, onChange,onBlur} }) => (
               <CustomTextField
                 fullWidth
                 value={value || formData.pan_number}
+                onBlur={onBlur}
                 label="PAN Number"
                 onChange={(e) => {
                   onChange(e);
@@ -181,10 +183,11 @@ const FormStep4DocumentsInfo = (props) => {
           <Controller
             name="licence_number"
             control={docControl}
-            render={({ field: { value, onChange } }) => (
+            render={({ field: { value, onChange,onBlur} }) => (
               <CustomTextField
                 fullWidth
                 value={value || formData.licence_number}
+                onBlur={onBlur}
                 label="License Number"
                 onChange={(e) => {
                   onChange(e);

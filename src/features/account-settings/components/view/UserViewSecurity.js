@@ -16,6 +16,8 @@ import toast from 'react-hot-toast';
 import { userChangePassword } from 'features/user-management/users-page/services/userServices';
 
 const UserViewSecurity = ({ id }) => {
+  console.log(id);
+  
   const [values, setValues] = useState({
     newPassword: '',
     showNewPassword: false,
@@ -24,12 +26,15 @@ const UserViewSecurity = ({ id }) => {
   });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [passwordStrength, setPasswordStrength] = useState('');
+  const user = localStorage.getItem('userData');
+  const userData = JSON.parse(user);
+  console.log('usersssss', userData);
 
   const handleNewPasswordChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
     if (prop === 'newPassword') {
       checkPasswordStrength(event.target.value);
-  }
+    }
   };
 
   const handleClickShowNewPassword = () => {
@@ -61,9 +66,10 @@ const UserViewSecurity = ({ id }) => {
     if (values.newPassword === values.confirmNewPassword && values.newPassword !== '' && values.confirmNewPassword !== '') {
       try {
         let data = {
-          user_id: id,
-          c_password: values.confirmNewPassword,
-          password: values.newPassword
+          user_id: userData?._id,
+          email:userData?.email,
+          confirmPassword: values.confirmNewPassword,
+          newPassword: values.newPassword
         };
         const result = await userChangePassword(data);
         if (result.success) {
@@ -134,7 +140,7 @@ const UserViewSecurity = ({ id }) => {
                     placeholder="············"
                     label="Confirm New Password"
                     value={values.confirmNewPassword}
-                   // id="user-view-security-confirm-new-password"
+                    // id="user-view-security-confirm-new-password"
                     type={values.showConfirmNewPassword ? 'text' : 'password'}
                     onChange={handleConfirmNewPasswordChange('confirmNewPassword')}
                     InputProps={{
@@ -160,7 +166,7 @@ const UserViewSecurity = ({ id }) => {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Button type="submit" variant="contained"  disabled={!passwordsMatch}>
+                  <Button type="submit" variant="contained" disabled={!passwordsMatch}>
                     Change Password
                   </Button>
                 </Grid>

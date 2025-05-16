@@ -193,12 +193,12 @@ const accountSchema = yup.object().shape({
 });
 
 const documentSchema = yup.object().shape({
-  // gst_number: yup.string().required(),
-  // // gst_doc: yup.string().required(),
-  // pan_number: yup.string().required(),
-  // // pan_doc: yup.string().required(),
-  // licence_number: yup.string().required()
-  // // licence_doc: yup.string().required()
+  gst_number: yup.string().required(),
+  // gst_doc: yup.string().required(),
+  pan_number: yup.string().required(),
+  // pan_doc: yup.string().required(),
+  licence_number: yup.string().required()
+  // licence_doc: yup.string().required()
 });
 
 const personalSchema = yup.object().shape({
@@ -252,10 +252,17 @@ const personalSchema = yup.object().shape({
     }),
   official_email: yup.string().required('offcial email is required'),
   official_website: yup.string().trim().required('official website is required'),
-  subscription: yup.string().required('subscription is required')
+  subscription: yup.string().required('subscription is required'),
 });
 
-const socialSchema = yup.object().shape({});
+const socialSchema = yup.object().shape({
+  twitter:yup.string().required('twitter is required'),
+  facebook:yup.string().required('facebook is required'),
+  instagram:yup.string().required("instagram is required"),
+  linkedIn:yup.string().required("linkedIn is required"),
+  pinterest:yup.string().required("pinterest is required")
+
+});
 const gallerySchema = yup.object().shape({});
 
 const AddInstitutePage = () => {

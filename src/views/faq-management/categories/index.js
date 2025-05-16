@@ -286,6 +286,8 @@ const CategoriesDataGrid = () => {
           open={isDeleteDialogOpen}
           setOpen={setDeleteDialogOpen}
           description="Are you sure you want to delete this item?"
+          successDescription="Deleted successfully"
+          failureDescription="failed"
           title="Delete"
           handleSubmit={handleDeleteApi}
         />

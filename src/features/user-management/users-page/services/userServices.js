@@ -121,16 +121,16 @@ export const updateUserStatus = async (data) => {
     throw error;
   }
 };
-export const userChangePassword = async (data,id) => {
+export const userChangePassword = async (data, id) => {
   try {
-    const response = await axios.put(`${USER_API_ENDPOINT}/reset-password`, data, {
+    const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/auth/update-password`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
-      params:{
-        data:data,
-        id:id
+      params: {
+        data: data,
+        id: id
       }
     });
     console.log(response);

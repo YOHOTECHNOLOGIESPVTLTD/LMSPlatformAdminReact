@@ -44,6 +44,12 @@ const FormStep5AccountInfo = (props) => {
       accountReset(parsedData);
     }
   }, [accountReset]);
+
+  useEffect(() => {
+    if (formData.stateCode && defaultCountry.length) {
+      dispatch(loadCitiesForFromB(defaultCountry[0].iso2, formData.stateCode));
+    }
+  }, [formData.stateCode, defaultCountry.length]);
   const handleStateChange = (e) => {
     const stateCode = e.target.value;
     if (defaultCountry.length) {
@@ -121,7 +127,7 @@ const FormStep5AccountInfo = (props) => {
                     name="branch_name"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         value={value || formData.branch_name}
@@ -158,7 +164,7 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="phone"
                     control={accountControl}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         label="Phone"
@@ -194,7 +200,7 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="alternate_phone"
                     control={accountControl}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         label="Alternate Phone"
@@ -232,7 +238,7 @@ const FormStep5AccountInfo = (props) => {
                     name="address1"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         value={value || formData.address1}
@@ -269,7 +275,7 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="address2"
                     control={accountControl}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         value={value || formData.address2}
@@ -307,7 +313,7 @@ const FormStep5AccountInfo = (props) => {
                     name="country"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         select
@@ -352,7 +358,7 @@ const FormStep5AccountInfo = (props) => {
                     name="state"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         select
@@ -399,7 +405,7 @@ const FormStep5AccountInfo = (props) => {
                     name="city"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         select
@@ -446,7 +452,7 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="pincode"
                     control={accountControl}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         value={value || ''}
@@ -498,7 +504,7 @@ const FormStep5AccountInfo = (props) => {
                     name="first_name"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         value={value || formData.first_name}
@@ -536,7 +542,7 @@ const FormStep5AccountInfo = (props) => {
                     name="last_name"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         value={value || formData.last_name}
@@ -574,7 +580,7 @@ const FormStep5AccountInfo = (props) => {
                     name="email"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         value={value || formData.email}
@@ -611,7 +617,7 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="phone_number"
                     control={accountControl}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         value={value || formData.phone_number}

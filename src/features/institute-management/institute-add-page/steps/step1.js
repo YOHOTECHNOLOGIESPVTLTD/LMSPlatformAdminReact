@@ -45,6 +45,16 @@ const FormStep1PersonalInfo = ({
   useEffect(() => {
     dispatch(loadCountries());
   }, [dispatch]);
+  useEffect(() => {
+    if (formData.stateCode && defaultCountry.length) {
+      dispatch(loadCitiesForFromA(defaultCountry[0].iso2, formData.stateCode));
+    }
+    // eslint-disable-next-line
+  }, [formData.stateCode, defaultCountry.length]);
+
+  // useEffect(()=>{
+  //   dispatch(loadCitiesForFromA(defaultCountry[0].iso2,storedState.iso2))
+  // },[])
 
   useEffect(() => {
     if (defaultCountry.length) {
@@ -59,6 +69,8 @@ const FormStep1PersonalInfo = ({
       if (parsedData.registered_date) {
         parsedData.registered_date = new Date(parsedData.registered_date);
       }
+      // console.log('parseddata',parsedData);
+
       setFormData(parsedData);
       personalReset(parsedData);
     }
@@ -111,6 +123,7 @@ const FormStep1PersonalInfo = ({
   };
   console.log('sssn', storedState);
   console.log('stcc', storedCity);
+  console.log('formData', formData);
 
   return (
     <form
@@ -181,7 +194,7 @@ const FormStep1PersonalInfo = ({
                     name="registered_date"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange} }) => (
+                    render={({ field: { value, onChange } }) => (
                       <DatePicker
                         id="issue-date"
                         maxDate={new Date()}
@@ -217,7 +230,7 @@ const FormStep1PersonalInfo = ({
                     name="description"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.description}
@@ -268,7 +281,7 @@ const FormStep1PersonalInfo = ({
                     name="address_line_one"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.address_line_one}
@@ -305,7 +318,7 @@ const FormStep1PersonalInfo = ({
                     name="address_line_two"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.address_line_two}
@@ -342,7 +355,7 @@ const FormStep1PersonalInfo = ({
                     name="phone"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
                         fullWidth
                         type="text"
@@ -381,7 +394,7 @@ const FormStep1PersonalInfo = ({
                     name="alt_phone"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.alt_phone}
@@ -463,7 +476,7 @@ const FormStep1PersonalInfo = ({
                     name="state"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         select
@@ -510,11 +523,11 @@ const FormStep1PersonalInfo = ({
                     name="city"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.lengh ? formData.cityCode : ''}
+                        value={value || formData.lengh ? formData?.cityCode : ''}
                         onBlur={onBlur}
                         label="City"
                         onChange={(e) => {
@@ -558,7 +571,7 @@ const FormStep1PersonalInfo = ({
                     name="pin_code"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.pin_code}
@@ -611,7 +624,7 @@ const FormStep1PersonalInfo = ({
                     name="official_email"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.official_email}
@@ -648,7 +661,7 @@ const FormStep1PersonalInfo = ({
                     name="official_website"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange,onBlur} }) => (
+                    render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.official_website}
@@ -700,13 +713,17 @@ const FormStep1PersonalInfo = ({
                     name="subscription"
                     control={personalControl}
                     defaultValue=""
-                    render={({ field }) => (
+                    render={({ field: { value, onChange } }) => (
                       <TextField
-                        {...field}
                         fullWidth
                         select
                         label="subscription"
                         placeholder="Select subscription plan"
+                        value={value}
+                        onChange={(e) => {
+                          onChange(e);
+                          handleFormChange('subscription', e.target.value);
+                        }}
                         sx={{ backgroundColor: personalErrors['subscription'] ? '#FFFFFF' : '#f5f5f5' }}
                         id="custom-select"
                         error={Boolean(personalErrors['subscription'])}

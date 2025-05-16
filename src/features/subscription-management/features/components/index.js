@@ -174,7 +174,8 @@ const SubscriptionFeatures = () => {
       description: formData?.description,
       features: allFeatures,
       duration: { value: formData?.plan_duration, unit: formData?.plan_duration_type },
-      price: formData.plan_price
+      price: formData.plan_price,
+      support_level:formData?.support_level
     };
 
     console.log('subData :', subscription_data);
