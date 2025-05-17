@@ -3,12 +3,11 @@ import { Controller } from 'react-hook-form';
 import AddBusinessOutlinedIcon from '@mui/icons-material/AddBusinessOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import AddLocationAltOutlinedIcon from '@mui/icons-material/AddLocationAltOutlined';
-import LocalPostOfficeOutlinedIcon from '@mui/icons-material/LocalPostOfficeOutlined';
 import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
+import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
 import LocationCityOutlinedIcon from '@mui/icons-material/LocationCityOutlined';
 import LanguageOutlinedIcon from '@mui/icons-material/LanguageOutlined';
 import SubscriptionsOutlinedIcon from '@mui/icons-material/SubscriptionsOutlined';
-import ContactMailOutlinedIcon from '@mui/icons-material/ContactMailOutlined';
 import DatePicker from 'react-datepicker';
 import './index.css';
 import MenuItem from '@mui/material/MenuItem';
@@ -16,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadCitiesForFromA, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
 import { selectCitiesForFormA, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
 import { useEffect, useState } from 'react';
+import { IconMail, IconMapPin } from '@tabler/icons-react';
 
 const FormStep1PersonalInfo = ({
   personalControl,
@@ -504,7 +504,7 @@ const FormStep1PersonalInfo = ({
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PublicOutlinedIcon sx={{ color: '#3B4056' }} />
+                              <IconMapPin stroke={2} sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           )
                         }}
@@ -596,7 +596,7 @@ const FormStep1PersonalInfo = ({
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <LocalPostOfficeOutlinedIcon sx={{ color: '#3B4056' }} />
+                              <PersonPinCircleIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           )
                         }}
@@ -648,7 +648,7 @@ const FormStep1PersonalInfo = ({
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <ContactMailOutlinedIcon sx={{ color: '#3B4056' }} />
+                              <IconMail stroke={2} sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           )
                         }}

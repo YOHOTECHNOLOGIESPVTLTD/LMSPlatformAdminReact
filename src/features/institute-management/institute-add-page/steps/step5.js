@@ -1,16 +1,21 @@
 import { Grid, Typography, Button, TextField, InputAdornment, IconButton, MenuItem, Paper } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import LocationCityOutlinedIcon from '@mui/icons-material/LocationCityOutlined';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import HomeIcon from '@mui/icons-material/Home';
+import ApartmentIcon from '@mui/icons-material/Apartment';
 import { imagePlaceholder } from 'lib/placeholders';
 import { getImageUrl } from 'themes/imageUtlis';
 import { useState, useEffect } from 'react';
 import { loadCitiesForFromB, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCitiesForFormB, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
+import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
+// import LocalPostOfficeOutlinedIcon from '@mui/icons-material/LocalPostOfficeOutlined';
+import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle';
 
 const FormStep5AccountInfo = (props) => {
   const { handleAccountSubmit, onSubmit, accountControl, accountErrors, steps, handleBack, hanldeProfileImageChange, accountReset } = props;
@@ -149,7 +154,7 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <AccountCircleIcon sx={{ color: '#3B4056' }} />
+                              <ApartmentIcon />
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }
@@ -336,7 +341,7 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <LocationOnIcon sx={{ color: '#3B4056' }} />
+                              <PublicOutlinedIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }
@@ -431,7 +436,7 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <LocationOnIcon sx={{ color: '#3B4056' }} />
+                              <LocationCityOutlinedIcon sx={{ color: '#3B4056' }} />
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }
@@ -474,7 +479,8 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <LocationOnIcon sx={{ color: '#3B4056' }} />
+                              <PersonPinCircleIcon sx={{ color: '#3B4056' }} />
+                              {/* <LocalPostOfficeOutlinedIcon sx={{ color: '#3B4056' }} /> */}
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }

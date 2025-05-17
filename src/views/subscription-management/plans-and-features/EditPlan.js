@@ -27,6 +27,8 @@ import { useEffect } from 'react';
 import { updateSubscriptionFeature } from 'features/subscription-management/features/services/subscriptionFeaturesServices';
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 // import { addSubscriptionFeature } from '../services/subscriptionFeaturesServices';
 //import { imagePlaceholder } from 'lib/placeholders';
 // ** Icon Imports
@@ -34,7 +36,7 @@ import { useSpinner } from 'context/spinnerContext';
 const defaultValues = {
   plan_name: '',
   plan_price: '',
-  support_level: 'basic',
+  support_level: null,
   description: '',
   plan_duration: '',
   plan_duration_type: null,
@@ -50,17 +52,67 @@ const defaultValues = {
   courses_checkbox: false,
   classes: '',
   classes_checkbox: false
-  //   checkbox: false
 };
 
+const update_plan_schema = yup.object().shape({
+
+  students: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('students_checkbox', {
+      is: false, // Only validate when checkbox is not checked
+      then: (schema) => schema.required('No of students is required'),
+      otherwise: (schema) => schema.notRequired()
+    }),
+  admins: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('admins_checkbox', {
+      is: false,
+      then: (schema) => schema.required('No of admins is required'),
+      otherwise: (schema) => schema.notRequired()
+    }),
+  teachers: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('teachers_checkbox', {
+      is: false,
+      then: (schema) => schema.required('No of teachers is required'),
+      otherwise: (schema) => schema.notRequired()
+    }),
+  batches: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('batches_checkbox', {
+      is: false,
+      then: (schema) => schema.required('No of batches is required'),
+      otherwise: (schema) => schema.notRequired()
+    }),
+  courses: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('courses_checkbox', {
+      is: false,
+      then: (schema) => schema.required('No of courses is required'),
+      otherwise: (schema) => schema.notRequired()
+    }),
+  classes: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('classes_checkbox', {
+      is: false,
+      then: (schema) => schema.required('No of classes is required'),
+      otherwise: (schema) => schema.notRequired()
+    })
+});
 const EditPlan = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors }
-  } = useForm({ defaultValues });
+  } = useForm({ defaultValues: defaultValues, resolver: yupResolver(update_plan_schema) });
 
   const location = useLocation();
   const planId = location.state.id;
@@ -113,24 +165,18 @@ const EditPlan = () => {
       setValue('description', planData?.description);
       setValue('support_level', planData?.support_level);
       setValue('plan_duration', planData?.duration?.value);
-
-      // Set values for all features
       setValue('admins', filteredData('Admins') || '');
       setValue('students', filteredData('Students') || '');
       setValue('teachers', filteredData('Teachers') || '');
       setValue('batches', filteredData('Batches') || '');
       setValue('courses', filteredData('Courses') || '');
       setValue('classes', filteredData('Classes') || '');
-
-      // Set checkbox states based on whether values exist
-      setStudentInputBoxChecked(!!filteredData('Students'));
-      setAdminInputBoxChecked(!!filteredData('Admins'));
-      setTeachersInputBoxChecked(!!filteredData('Teachers'));
-      setBatchesInputBoxChecked(!!filteredData('Batches'));
-      setCoursesInputBoxChecked(!!filteredData('Courses'));
-      setClassesInputBoxChecked(!!filteredData('Classes'));
-
-      // Set unlimited checkboxes
+      setStudentInputBoxChecked(filteredData('Students'));
+      setAdminInputBoxChecked(filteredData('Admins'));
+      setTeachersInputBoxChecked(filteredData('Teachers'));
+      setBatchesInputBoxChecked(filteredData('Batches'));
+      setCoursesInputBoxChecked(filteredData('Courses'));
+      setClassesInputBoxChecked(filteredData('Classes'));
       setStudentInputChecked(planData?.features?.student_is_unlimited || false);
       setAdminInputChecked(planData?.features?.admin_is_unlimited || false);
       setTeachersInputChecked(planData?.features?.teacher_is_unlimited || false);
@@ -217,7 +263,8 @@ const EditPlan = () => {
       description: data?.description,
       features: allFeatures,
       duration: { value: data?.plan_duration, unit: data?.plan_duration_type },
-      price: data?.plan_price
+      price: data?.plan_price,
+      support_level: data?.support_level
     };
 
     // var bodyFormData = new FormData();
@@ -245,13 +292,13 @@ const EditPlan = () => {
     try {
       showSpinnerFn();
       const result = await updateSubscriptionFeature(subscription_data);
-      console.log('result from edit',result)
-      if (result.success===true) {
+      console.log('result from edit', result);
+      if (result.success === true) {
         toast.success(result.message);
       }
       console.log('api', result);
 
-      if (result.success===true) {
+      if (result.success === true) {
         navigate(-1);
       } else {
         setErrorMessage(result.message || 'Failed to update subscription.');
@@ -441,7 +488,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.plan_name)}
-                  helperText={errors.plan_name ? 'This field is required' : ''}
+                  helperText={errors.plan_name ? errors?.plan_name?.message : ''}
                   aria-label="Enter plan name"
                 />
               )}
@@ -495,7 +542,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.plan_price)}
-                  helperText={errors.plan_price ? 'This field is required' : ''}
+                  helperText={errors.plan_price ? errors?.plan_price?.message : ''}
                   aria-label="Enter plan price"
                 />
               )}
@@ -512,7 +559,7 @@ const EditPlan = () => {
                   select
                   fullWidth
                   label="Support Level"
-                  value={field.value || defaultValues.support_level}
+                  value={field.value || ''}
                   onChange={(e) => field.onChange(e.target.value)}
                   variant="standard"
                   InputLabelProps={{
@@ -544,7 +591,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.support_level)}
-                  helperText={errors.support_level ? 'This field is required' : ''}
+                  helperText={errors.support_level ? errors?.support_level?.message : ''}
                   aria-label="Select support level"
                 >
                   <MenuItem value="basic">Basic</MenuItem>
@@ -599,7 +646,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.description)}
-                  helperText={errors.description ? 'This field is required' : ''}
+                  helperText={errors.description ? errors.description.message : ''}
                 />
               )}
             />
@@ -652,7 +699,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.plan_duration)}
-                  helperText={errors.plan_duration ? 'This field is required' : ''}
+                  helperText={errors.plan_duration ? errors.plan_duration.message : ''}
                   aria-label="Enter plan duration"
                 />
               )}
@@ -703,7 +750,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.plan_duration_type)}
-                  helperText={errors.plan_duration_type ? 'This field is required' : ''}
+                  helperText={errors.plan_duration_type ? errors.plan_duration_type?.message : ''}
                   aria-label="Select duration type"
                 >
                   <MenuItem value="day">Days</MenuItem>
@@ -727,10 +774,13 @@ const EditPlan = () => {
                   label="Number of Students"
                   placeholder="Enter number of students"
                   onChange={(e) => {
-                    const value = e.target.value;
-                    setValue('students', value);
-                    setStudentInputBoxChecked(value !== '');
-                    setStudentError(false);
+                    field.onChange(e);
+                    if (e.target.value !== '') {
+                      setStudentInputBoxChecked(true);
+                      setStudentError(false);
+                    } else {
+                      setStudentInputBoxChecked(false);
+                    }
                   }}
                   disabled={false}
                   inputProps={{ maxLength: 5, min: 0 }}
@@ -778,6 +828,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.students)}
+                  helperText={errors.students ? errors?.students?.message : ''}
                 />
               )}
             />
@@ -838,10 +889,13 @@ const EditPlan = () => {
                   label="Number of Admins"
                   placeholder="Enter number of admins"
                   onChange={(e) => {
-                    const value = e.target.value;
-                    setValue('admins', value);
-                    setAdminInputBoxChecked(value !== '');
-                    setAdminError(false);
+                    field.onChange(e);
+                    if (e.target.value !== '') {
+                      setAdminInputBoxChecked(true);
+                      setStudentError(false);
+                    } else {
+                      setAdminInputBoxChecked(false);
+                    }
                   }}
                   disabled={false}
                   inputProps={{ maxLength: 5, min: 0 }}
@@ -889,6 +943,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.admins)}
+                  helperText={errors.admins ? errors?.admins?.message : ''}
                 />
               )}
             />
@@ -1001,6 +1056,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.teachers)}
+                  helperText={errors.teachers ? errors?.teachers?.message : ''}
                 />
               )}
             />
@@ -1115,6 +1171,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.batches)}
+                  helperText={errors.batches ? errors?.batches?.message : ''}
                 />
               )}
             />
@@ -1227,6 +1284,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.courses)}
+                  helperText={errors.courses ? errors?.courses?.message : ''}
                 />
               )}
             />
@@ -1341,6 +1399,7 @@ const EditPlan = () => {
                     }
                   }}
                   error={Boolean(errors.classes)}
+                  helperText={errors.classes ? errors?.classes?.message : ''}
                 />
               )}
             />

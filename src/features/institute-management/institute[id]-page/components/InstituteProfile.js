@@ -77,11 +77,26 @@ function convertDateFormat(input) {
 }
 
 const personalSchema = yup.object().shape({
-  state: yup.string().required(),
-  city: yup.string().required(),
-  pin_code: yup.number().required(),
-  address_line_1: yup.string().required(),
-  address_line_2: yup.string().required(),
+  state: yup.string().required('state is required'),
+  city: yup.string().required('city is required'),
+  pin_code: yup
+    .number()
+    .transform((value, originalValue) => {
+      return originalValue.trim() === '' ? undefined : value;
+    })
+    .typeError('pincode must be an number')
+    .required('pin code is required')
+    .test('len', 'Pin code must be exactly 6 digits', (value) => {
+      return value.toString().length === 6;
+    }),
+  address_line_1: yup
+    .string()
+    .required()
+    .matches(/^[a-zA-Z0-9\s,.-]+$/, 'Address cannot contain special symbols'),
+  address_line_2: yup
+    .string()
+    .required()
+    .matches(/^[a-zA-Z0-9\s,.-]+$/, 'Address cannot contain special symbols'),
   registered_date: yup.date().nullable().required(),
   name: yup.string().required(),
   phone: yup.number().required(),
@@ -89,7 +104,12 @@ const personalSchema = yup.object().shape({
   description: yup.string().required(),
   official_email: yup.string().required(),
   email: yup.string().required(),
-  official_website: yup.string().required(),
+  official_website: yup
+    .string()
+    .trim()
+    .matches(/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})(\/\S*)?$/, 'Enter a valid website URL')
+    .notOneOf([yup.ref('@')], 'URL must not contain "@"')
+    .required('Website is required'),
   instagram: yup.string().required(),
   facebook: yup.string().required()
   // subscription: yup.string().required()
@@ -143,8 +163,9 @@ const InstituteProfile = ({ institute }) => {
     const payload = {
       institute_name: data.name,
       email: data.email,
+      official_email: data.offcial_email,
       registered_date: convertDateFormat(data.registered_date),
-      official_website: data.official_website,
+      website: data?.official_website,
       description: data.description,
       id: institute?.id,
       uuid: institute?.uuid,
@@ -156,7 +177,7 @@ const InstituteProfile = ({ institute }) => {
           address2: data.address_line_2,
           state: data.state,
           city: data.city,
-          pincode: data.pincode
+          pincode: data.pin_code
         }
       },
       social_media: {
@@ -311,7 +332,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="Leonard"
                           error={Boolean(personalErrors['name'])}
                           aria-describedby="stepper-linear-personal-name"
-                          {...(personalErrors['name'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['name'] && { helperText: personalErrors.name?.message })}
                         />
                       )}
                     />
@@ -336,7 +357,7 @@ const InstituteProfile = ({ institute }) => {
                               }}
                               error={Boolean(personalErrors['registered_date'])}
                               aria-describedby="stepper-linear-personal-registered_date"
-                              {...(personalErrors['registered_date'] && { helperText: 'This field is required' })}
+                              {...(personalErrors['registered_date'] && { helperText: personalErrors?.registered_date?.message })}
                             />
                           }
                           onChange={onChange}
@@ -363,7 +384,7 @@ const InstituteProfile = ({ institute }) => {
                           onChange={onChange}
                           error={Boolean(personalErrors.state)}
                           aria-describedby="stepper-linear-personal-state-helper"
-                          {...(personalErrors.state && { helperText: 'This field is required' })}
+                          {...(personalErrors.state && { helperText: personalErrors?.state?.message })}
                         />
                       )}
                     />
@@ -385,7 +406,7 @@ const InstituteProfile = ({ institute }) => {
                           onChange={onChange}
                           error={Boolean(personalErrors.city)}
                           aria-describedby="stepper-linear-personal-city-helper"
-                          {...(personalErrors?.city && { helperText: 'This field is required' })}
+                          {...(personalErrors?.city && { helperText: personalErrors?.city?.message })}
                         />
                       )}
                     />
@@ -404,12 +425,12 @@ const InstituteProfile = ({ institute }) => {
                           // defaultValue={institute?.contact_info?.address?.pincode}
                           value={value}
                           label="Pin Code"
-                          type="text"
+                          type="number"
                           onChange={onChange}
                           placeholder="631001"
                           error={Boolean(personalErrors['pin_code'])}
                           aria-describedby="stepper-linear-personal-pin_code"
-                          {...(personalErrors['pin_code'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['pin_code'] && { helperText: personalErrors?.pin_code?.message })}
                         />
                       )}
                     />
@@ -432,7 +453,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="Carter"
                           error={Boolean(personalErrors['address_line_1'])}
                           aria-describedby="stepper-linear-personal-address_line_1"
-                          {...(personalErrors['address_line_1'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['address_line_1'] && { helperText: personalErrors?.address_line_1?.message })}
                         />
                       )}
                     />
@@ -455,7 +476,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="Carter"
                           error={Boolean(personalErrors['address_line_2'])}
                           aria-describedby="stepper-linear-personal-address_line_2"
-                          {...(personalErrors['address_line_2'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['address_line_2'] && { helperText: personalErrors?.address_line_2.message })}
                         />
                       )}
                     />
@@ -468,7 +489,7 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
-                          type="text"
+                          type="number"
                           sx={{
                             '& .MuiInputBase-input': { color: 'black' }
                           }}
@@ -479,7 +500,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="Carter"
                           error={Boolean(personalErrors['phone'])}
                           aria-describedby="stepper-linear-personal-phone"
-                          {...(personalErrors['phone'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['phone'] && { helperText: personalErrors?.phone?.message })}
                         />
                       )}
                     />
@@ -495,37 +516,13 @@ const InstituteProfile = ({ institute }) => {
                           sx={{ '& .MuiInputBase-input': { color: 'black' } }}
                           // defaultValue={institute?.contact_info?.alternate_no}
                           value={value}
-                          type="text"
+                          type="number"
                           label="Alt Phone Number"
                           onChange={onChange}
                           placeholder="Carter"
                           error={Boolean(personalErrors['alternate_number'])}
                           aria-describedby="stepper-linear-personal-alternate_number"
-                          {...(personalErrors['alternate_number'] && { helperText: 'This field is required' })}
-                        />
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="official_email"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.email}
-                          value={value}
-                          label="Official Email"
-                          onChange={onChange}
-                          placeholder="Carter"
-                          error={Boolean(personalErrors['official_email'])}
-                          aria-describedby="stepper-linear-personal-official_email"
-                          {...(personalErrors['official_email'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['alternate_number'] && { helperText: personalErrors?.alternate_number?.message })}
                         />
                       )}
                     />
@@ -548,7 +545,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="Carter"
                           error={Boolean(personalErrors['official_website'])}
                           aria-describedby="stepper-linear-personal-official_website"
-                          {...(personalErrors['official_website'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['official_website'] && { helperText: personalErrors?.official_website?.message })}
                         />
                       )}
                     />
@@ -601,7 +598,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="Carter"
                           error={Boolean(personalErrors['description'])}
                           aria-describedby="stepper-linear-personal-description"
-                          {...(personalErrors['description'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['description'] && { helperText: personalErrors?.description?.message })}
                         />
                       )}
                     />
@@ -624,7 +621,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="INSTA"
                           error={Boolean(personalErrors['instagram'])}
                           aria-describedby="stepper-linear-personal-instagram"
-                          {...(personalErrors['instagram'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['instagram'] && { helperText: personalErrors?.instagram?.message })}
                         />
                       )}
                     />
@@ -647,7 +644,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="FbLink"
                           error={Boolean(personalErrors['facebook'])}
                           aria-describedby="stepper-linear-personal-facebook"
-                          {...(personalErrors['facebook'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['facebook'] && { helperText: personalErrors?.facebook?.message })}
                         />
                       )}
                     />
@@ -671,7 +668,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="Carter"
                           error={Boolean(personalErrors['email'])}
                           aria-describedby="stepper-linear-personal-email"
-                          {...(personalErrors['email'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['email'] && { helperText: personalErrors?.email?.message })}
                         />
                       )}
                     />
@@ -694,7 +691,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="Carter"
                           error={Boolean(personalErrors['linkedin'])}
                           aria-describedby="stepper-linear-personal-linkedin"
-                          {...(personalErrors['linkedIn'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['linkedIn'] && { helperText: personalErrors?.linkedIn?.message })}
                         />
                       )}
                     />
@@ -717,7 +714,7 @@ const InstituteProfile = ({ institute }) => {
                           placeholder="Carter"
                           error={Boolean(personalErrors['twitter'])}
                           aria-describedby="stepper-linear-personal-twitter"
-                          {...(personalErrors['twitter'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['twitter'] && { helperText: personalErrors?.twitter?.message })}
                         />
                       )}
                     />

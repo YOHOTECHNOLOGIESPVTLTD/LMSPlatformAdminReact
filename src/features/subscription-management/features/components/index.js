@@ -12,7 +12,7 @@ import { Box } from '@mui/material';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
-// import * as yup from "yup"
+import * as yup from 'yup';
 
 import CustomTextField from 'components/mui/text-field';
 
@@ -21,17 +21,17 @@ import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
 import { addSubscriptionFeature } from '../services/subscriptionFeaturesServices';
 import { handleFileUpload } from 'features/fileUpload';
-// import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useSpinner } from 'context/spinnerContext';
 import { getImageUrl } from 'themes/imageUtlis';
 
 const defaultValues = {
   plan_name: '',
   plan_price: '',
-  support_level: null,
+  support_level: 'basic',
   description: '',
   plan_duration: '',
-  plan_duration_type: null,
+  plan_duration_type: 'day',
   students: '',
   students_checkbox: false,
   admins: '',
@@ -47,15 +47,56 @@ const defaultValues = {
   //   checkbox: false
 };
 
-// const new_plan_schema = yup.object().shape({
-//   plan_name : yup.string().required("plan name is required"),
-//   price : yup.number().required("plan price is required"),
-//   support_level : yup.string().required("support is required"),
-//   description : yup.string().required("description is required"),
-//   duration : yup.number().required("duration is required"),
-
-// })
-
+const new_plan_schema = yup.object().shape({
+  students: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('students_checkbox', {
+      is: false, // Only validate when checkbox is not checked
+      then: (schema) => schema.required('No of students is required'),
+      otherwise: (schema) => schema.notRequired()
+    }),
+  admins: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('admins_checkbox', {
+      is: false,
+      then: (schema) => schema.required('No of admins is required'),
+      otherwise: (schema) => schema.notRequired()
+    }),
+  teachers: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('teachers_checkbox', {
+      is: false,
+      then: (schema) => schema.required('No of teachers is required'),
+      otherwise: (schema) => schema.notRequired()
+    }),
+  batches: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('batches_checkbox', {
+      is: false,
+      then: (schema) => schema.required('No of batches is required'),
+      otherwise: (schema) => schema.notRequired()
+    }),
+  courses: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('courses_checkbox', {
+      is: false,
+      then: (schema) => schema.required('No of courses is required'),
+      otherwise: (schema) => schema.notRequired()
+    }),
+  classes: yup
+    .number()
+    .transform((value, originalValue) => (String(originalValue).trim() === '' ? undefined : value))
+    .when('classes_checkbox', {
+      is: false,
+      then: (schema) => schema.required('No of classes is required'),
+      otherwise: (schema) => schema.notRequired()
+    })
+});
 const SubscriptionFeatures = () => {
   // const [customFields, setCustomFields] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -175,7 +216,7 @@ const SubscriptionFeatures = () => {
       features: allFeatures,
       duration: { value: formData?.plan_duration, unit: formData?.plan_duration_type },
       price: formData.plan_price,
-      support_level:formData?.support_level
+      support_level: formData?.support_level
     };
 
     console.log('subData :', subscription_data);
@@ -219,11 +260,10 @@ const SubscriptionFeatures = () => {
   const {
     control,
     handleSubmit,
-    setValue,
     formState: { errors }
   } = useForm({
-    defaultValues: defaultValues
-    //  resolver : yupResolver(new_plan_schema)
+    defaultValues: defaultValues,
+    resolver: yupResolver(new_plan_schema)
   });
   console.log(errors, 'errors');
   return (
@@ -366,7 +406,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.plan_name)}
-                  helperText={errors.plan_name ? 'This field is required' : ''}
+                  helperText={errors.plan_name ? errors.plan_name?.message : ''}
                   aria-label="Enter plan name"
                 />
               )}
@@ -420,7 +460,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.plan_price)}
-                  helperText={errors.plan_price ? 'This field is required' : ''}
+                  helperText={errors.plan_price ? errors.plan_price?.message : ''}
                   aria-label="Enter plan price"
                 />
               )}
@@ -470,7 +510,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.support_level)}
-                  helperText={errors.support_level ? 'This field is required' : ''}
+                  helperText={errors.support_level ? errors.support_level.message : ''}
                   aria-label="Select support level"
                 >
                   <MenuItem value="basic">Basic</MenuItem>
@@ -525,7 +565,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.description)}
-                  helperText={errors.description ? 'This field is required' : ''}
+                  helperText={errors.description ? errors?.description?.message : ''}
                 />
               )}
             />
@@ -578,7 +618,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.plan_duration)}
-                  helperText={errors.plan_duration ? 'This field is required' : ''}
+                  helperText={errors.plan_duration ? errors.plan_duration.message : ''}
                   aria-label="Enter plan duration"
                 />
               )}
@@ -597,7 +637,7 @@ const SubscriptionFeatures = () => {
                   fullWidth
                   label="Duration Type"
                   placeholder="Select duration type"
-                  value={field.value || 'day'}
+                  value={field.value || 'Day'}
                   onChange={(e) => field.onChange(e.target.value)}
                   variant="standard"
                   InputLabelProps={{
@@ -629,7 +669,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.plan_duration_type)}
-                  helperText={errors.plan_duration_type ? 'This field is required' : ''}
+                  helperText={errors.plan_duration_type ? errors.plan_duration_type.message : ''}
                   aria-label="Select duration type"
                 >
                   <MenuItem value="day">Days</MenuItem>
@@ -652,10 +692,13 @@ const SubscriptionFeatures = () => {
                   label="Number of Students"
                   placeholder="Enter number of students"
                   onChange={(e) => {
-                    const value = e.target.value;
-                    setValue('students', value);
-                    setStudentInputBoxChecked(value !== '');
-                    setStudentError(false);
+                    field.onChange(e);
+                    if (e.target.value !== '') {
+                      setStudentInputBoxChecked(true);
+                      setStudentError(false);
+                    } else {
+                      setStudentInputBoxChecked(false);
+                    }
                   }}
                   disabled={false}
                   inputProps={{ maxLength: 5, min: 0 }}
@@ -703,6 +746,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.students)}
+                  helperText={errors.students ? errors?.students?.message : ''}
                 />
               )}
             />
@@ -763,10 +807,13 @@ const SubscriptionFeatures = () => {
                   label="Number of Admins"
                   placeholder="Enter number of admins"
                   onChange={(e) => {
-                    const value = e.target.value;
-                    setValue('admins', value);
-                    setAdminInputBoxChecked(value !== '');
-                    setAdminError(false);
+                    field.onChange(e);
+                    if (e.target.value !== '') {
+                      setAdminInputBoxChecked(true);
+                      setStudentError(false);
+                    } else {
+                      setAdminInputBoxChecked(false);
+                    }
                   }}
                   disabled={false}
                   inputProps={{ maxLength: 5, min: 0 }}
@@ -814,6 +861,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.admins)}
+                  helperText={errors.admins ? errors?.admins?.message : ''}
                 />
               )}
             />
@@ -926,6 +974,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.teachers)}
+                  helperText={errors.teachers ? errors?.teachers?.message : ''}
                 />
               )}
             />
@@ -1040,6 +1089,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.batches)}
+                  helperText={errors.batches ? errors?.batches?.message : ''}
                 />
               )}
             />
@@ -1152,6 +1202,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.courses)}
+                  helperText={errors.courses ? errors?.courses?.message : ''}
                 />
               )}
             />
@@ -1266,6 +1317,7 @@ const SubscriptionFeatures = () => {
                     }
                   }}
                   error={Boolean(errors.classes)}
+                  helperText={errors.classes ? errors?.classes?.message : ''}
                 />
               )}
             />
