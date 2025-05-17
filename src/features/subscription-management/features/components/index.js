@@ -197,12 +197,12 @@ const SubscriptionFeatures = () => {
     if (!classesInputBoxChecked && !classesInputChecked) setClassesError(true);
 
     const allFeatures = [
-      { feature: 'Admins', count: formData?.admins },
-      { feature: 'Students', count: formData?.students },
-      { feature: 'Teachers', count: formData?.teachers },
-      { feature: 'Batches', count: formData?.batches },
-      { feature: 'Courses', count: formData?.courses },
-      { feature: 'Classes', count: formData?.classes }
+      { feature: 'Admins', count: formData?.admins||'' },
+      { feature: 'Students', count: formData?.students||'' },
+      { feature: 'Teachers', count: formData?.teachers||'' },
+      { feature: 'Batches', count: formData?.batches||'' },
+      { feature: 'Courses', count: formData?.courses||'' },
+      { feature: 'Classes', count: formData?.classes||'' }
       // ...customFields.map((field) => ({
       //   feature: field.name,
       //   count: field.value,
