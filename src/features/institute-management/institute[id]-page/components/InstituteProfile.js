@@ -20,7 +20,10 @@ import * as yup from 'yup';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 import { updateInstitute } from 'features/institute-management/services/instituteService';
 import toast from 'react-hot-toast';
-import { Card, CardContent, Chip, Divider } from '@mui/material';
+import { Card, CardContent, Chip, Divider, MenuItem } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCitiesForFormA, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
+import { loadCitiesForFromA, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
 
 const data = {
   id: 1,
@@ -77,8 +80,8 @@ function convertDateFormat(input) {
 }
 
 const personalSchema = yup.object().shape({
-  state: yup.string().required('state is required'),
-  city: yup.string().required('city is required'),
+  state: yup.mixed().required('state is required'),
+  city: yup.mixed().required('city is required'),
   pin_code: yup
     .number()
     .transform((value, originalValue) => {
@@ -116,10 +119,47 @@ const personalSchema = yup.object().shape({
 });
 
 const InstituteProfile = ({ institute }) => {
+  const dispatch = useDispatch();
+  const countries = useSelector(selectCountries);
+  const defaultCountry = countries.filter((country) => country.iso2 === 'IN');
+  const states = useSelector(selectStates);
+  const selectedState = states.filter((state) => state.name === institute?.contact_info?.address.state);
+  console.log('seless', selectedState);
+  const cities = useSelector(selectCitiesForFormA);
+  console.log('citis', cities);
+
+  console.log('statesp', states);
+  console.log('coutry', countries);
+  useEffect(() => {
+    dispatch(loadCountries());
+  }, [dispatch]);
+  useEffect(() => {
+    if (defaultCountry.length) {
+      dispatch(loadStates(defaultCountry[0].iso2));
+    }
+  }, [countries]);
+
+  useEffect(() => {
+    if (selectedState.length > 0) {
+      dispatch(loadCitiesForFromA(defaultCountry[0].iso2, selectedState[0]?.iso2));
+    }
+  }, [states, countries]);
+  const handleStateChange = (e) => {
+    const stateCode = e.target.value;
+    if (defaultCountry.length) {
+      dispatch(loadCitiesForFromA(defaultCountry[0].iso2, stateCode));
+    }
+  };
+
+  const existingCity = cities.find((city) => city.name === institute?.contact_info?.address?.city);
+  console.log('existing City', existingCity);
+
   // ** States
   const [openEdit, setOpenEdit] = useState(false);
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
+  const [sname, setSname] = useState('');
+  const [cname, setCname] = useState('');
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true);
   const handleEditClose = () => setOpenEdit(false);
@@ -140,8 +180,8 @@ const InstituteProfile = ({ institute }) => {
     if (institute) {
       setValue('name', institute?.institute_name || '');
       setValue('registered_date', new Date(institute?.registered_date) || new Date());
-      setValue('state', institute?.contact_info.address.state || '');
-      setValue('city', institute?.contact_info.address.city || '');
+      setValue('state', selectedState[0]?.iso2 || '');
+      setValue('city', existingCity?.id || '');
       setValue('pin_code', institute?.contact_info?.address?.pincode || '');
       setValue('address_line_1', institute?.contact_info.address.address1 || '');
       setValue('address_line_2', institute?.contact_info.address.address2 || '');
@@ -156,7 +196,7 @@ const InstituteProfile = ({ institute }) => {
       setValue('linkedin', institute?.social_media.linkedin_id || '');
       setValue('twitter', institute?.social_media.twitter_id || '');
     }
-  }, [institute, setValue]);
+  }, [institute]);
 
   const onSubmit = async (data) => {
     console.log('submitteddd data', data);
@@ -175,8 +215,8 @@ const InstituteProfile = ({ institute }) => {
         address: {
           address1: data.address_line_1,
           address2: data.address_line_2,
-          state: data.state,
-          city: data.city,
+          state: sname ||'Tamil Nadu',
+          city: cname ||'Tiruchirappalli',
           pincode: data.pin_code
         }
       },
@@ -374,18 +414,30 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          select
                           sx={{
                             '& .MuiInputBase-input': { color: 'black' }
                           }}
                           // value={value}
                           // defaultValue={institute?.contact_info.address.state}
-                          value={value}
+                          value={value || selectedState[0]?.iso2}
                           label="State"
-                          onChange={onChange}
+                          onChange={(e) => {
+                            const ssState = states.find((state) => state.iso2 === e.target.value);
+                            onChange(ssState.iso2);
+                            setSname(ssState.name);
+                            handleStateChange(e);
+                          }}
                           error={Boolean(personalErrors.state)}
                           aria-describedby="stepper-linear-personal-state-helper"
                           {...(personalErrors.state && { helperText: personalErrors?.state?.message })}
-                        />
+                        >
+                          {states.map((state) => (
+                            <MenuItem key={state.iso2} value={state.iso2}>
+                              {state.name}
+                            </MenuItem>
+                          ))}
+                        </TextField>
                       )}
                     />
                   </Grid>
@@ -397,17 +449,29 @@ const InstituteProfile = ({ institute }) => {
                       render={({ field: { onChange, value } }) => (
                         <TextField
                           fullWidth
+                          select
                           sx={{
                             '& .MuiInputBase-input': { color: 'black' }
                           }}
                           // defaultValue={institute?.contact_info.address.city}
-                          value={value}
+                          value={value || existingCity?.id}
                           label="City"
-                          onChange={onChange}
+                          onChange={(e) => {
+                            const ccity = cities.find((city) => city.id === e.target.value);
+                            console.log('ccity', ccity);
+                            onChange(ccity.id);
+                            setCname(ccity.name);
+                          }}
                           error={Boolean(personalErrors.city)}
                           aria-describedby="stepper-linear-personal-city-helper"
                           {...(personalErrors?.city && { helperText: personalErrors?.city?.message })}
-                        />
+                        >
+                          {cities.map((city) => (
+                            <MenuItem key={city.id} value={city.id}>
+                              {city.name}
+                            </MenuItem>
+                          ))}
+                        </TextField>
                       )}
                     />
                   </Grid>

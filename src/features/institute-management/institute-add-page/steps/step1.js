@@ -358,7 +358,7 @@ const FormStep1PersonalInfo = ({
                     render={({ field: { value, onChange, onBlur } }) => (
                       <CustomTextField
                         fullWidth
-                        type="text"
+                        type="number"
                         value={value || formData.phone}
                         onBlur={onBlur}
                         label="Phone Number"
@@ -399,7 +399,7 @@ const FormStep1PersonalInfo = ({
                         fullWidth
                         value={value || formData.alt_phone}
                         onBlur={onBlur}
-                        type="text"
+                        type="number"
                         label="Alt Phone Number"
                         onChange={(e) => {
                           onChange(e);
@@ -577,7 +577,7 @@ const FormStep1PersonalInfo = ({
                         value={value || formData.pin_code}
                         onBlur={onBlur}
                         label="Pin Code"
-                        type="text"
+                        type="number"
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('pin_code', e.target.value);

@@ -165,8 +165,14 @@ const accountSchema = yup.object().shape({
     .test('len', 'phone number must be exactly 10 digits', (value) => {
       return value.toString().length === 10;
     }),
-  address1: yup.string().required(),
-  address2: yup.string().required(),
+  address1: yup
+    .string()
+    .required('address 1 is required')
+    .matches(/^[a-zA-Z0-9\s,.-]+$/, 'Address 1 cannot contain special symbols'),
+  address2: yup
+    .string()
+    .required('addresss 2 is required')
+    .matches(/^[a-zA-Z0-9\s,.-]+$/, 'Address 2 cannot contain special symbols'),
   state: yup.string().required(),
   city: yup.string().required(),
   pincode: yup
@@ -214,8 +220,14 @@ const personalSchema = yup.object().shape({
     .test('len', 'Pin code must be exactly 6 digits', (value) => {
       return value.toString().length === 6;
     }),
-  address_line_one: yup.string().required('Address line one required'),
-  address_line_two: yup.string().required('Address line two is required'),
+  address_line_one: yup
+    .string()
+    .required('Address line one required')
+    .matches(/^[a-zA-Z0-9\s,.-]+$/, 'Address cannot contain special symbols'),
+  address_line_two: yup
+    .string()
+    .required('Address line two is required')
+    .matches(/^[a-zA-Z0-9\s,.-]+$/, 'Address cannot contain special symbols'),
   registered_date: yup.string().required('registered date is required'),
   institute_name: yup
     .string()
@@ -251,17 +263,21 @@ const personalSchema = yup.object().shape({
       return wordCount >= 50 && wordCount <= 100;
     }),
   official_email: yup.string().required('offcial email is required'),
-  official_website: yup.string().trim().required('official website is required'),
-  subscription: yup.string().required('subscription is required'),
+  official_website: yup
+    .string()
+    .trim()
+    .matches(/^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})(\/\S*)?$/, 'Enter a valid website URL')
+    .notOneOf([yup.ref('@')], 'URL must not contain "@"')
+    .required('Website is required'),
+  subscription: yup.string().required('subscription is required')
 });
 
 const socialSchema = yup.object().shape({
-  twitter:yup.string().required('twitter is required'),
-  facebook:yup.string().required('facebook is required'),
-  instagram:yup.string().required("instagram is required"),
-  linkedIn:yup.string().required("linkedIn is required"),
-  pinterest:yup.string().required("pinterest is required")
-
+  twitter: yup.string().required('twitter is required'),
+  facebook: yup.string().required('facebook is required'),
+  instagram: yup.string().required('instagram is required'),
+  linkedIn: yup.string().required('linkedIn is required'),
+  pinterest: yup.string().required('pinterest is required')
 });
 const gallerySchema = yup.object().shape({});
 
@@ -285,7 +301,7 @@ const AddInstitutePage = () => {
   } = useForm({
     defaultValues: defaultAccountValues,
     resolver: yupResolver(accountSchema),
-    mode:"onTouched",
+    mode: 'onTouched'
   });
 
   const {
@@ -296,7 +312,7 @@ const AddInstitutePage = () => {
   } = useForm({
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema),
-    mode:"onTouched"
+    mode: 'onTouched'
   });
 
   const {
@@ -307,7 +323,7 @@ const AddInstitutePage = () => {
   } = useForm({
     defaultValues: defaultDocValues,
     resolver: yupResolver(documentSchema),
-    mode:"onTouched"
+    mode: 'onTouched'
   });
 
   const {
@@ -318,7 +334,7 @@ const AddInstitutePage = () => {
   } = useForm({
     defaultValues: defaultSocialValues,
     resolver: yupResolver(socialSchema),
-    mode:"onTouched"
+    mode: 'onTouched'
   });
   const {
     reset: galleryReset,
@@ -328,7 +344,7 @@ const AddInstitutePage = () => {
   } = useForm({
     defaultValues: defaultGalleryValues,
     resolver: yupResolver(gallerySchema),
-    mode:"onTouched"
+    mode: 'onTouched'
   });
 
   useEffect(() => {
@@ -637,7 +653,6 @@ const AddInstitutePage = () => {
             personalErrors={personalErrors}
             plans={plans}
             personalReset={personalReset}
-            
           />
           // </DatePickerWrapper>
         );

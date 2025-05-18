@@ -173,6 +173,7 @@ const FormStep5AccountInfo = (props) => {
                       <TextField
                         fullWidth
                         label="Phone"
+                        type='number'
                         value={value || ''}
                         onBlur={onBlur}
                         onChange={(e) => {
@@ -211,6 +212,7 @@ const FormStep5AccountInfo = (props) => {
                         label="Alternate Phone"
                         value={value || ''}
                         onBlur={onBlur}
+                        type='number'
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('alternate_phone', e.target.value);
@@ -255,7 +257,7 @@ const FormStep5AccountInfo = (props) => {
                         }}
                         placeholder="e.g. 123 Main St"
                         error={Boolean(accountErrors.address1)}
-                        helperText={accountErrors.address1 && 'address 1 is required'}
+                        helperText={accountErrors.address1 && accountErrors?.address1?.message}
                         FormHelperTextProps={{
                           sx: {
                             fontSize: '15px',
@@ -292,7 +294,7 @@ const FormStep5AccountInfo = (props) => {
                         }}
                         placeholder="e.g. Suite 101"
                         error={Boolean(accountErrors.address2)}
-                        helperText={accountErrors.address2 && 'address 2 is required'}
+                        helperText={accountErrors.address2 && accountErrors?.address2?.message}
                         FormHelperTextProps={{
                           sx: {
                             fontSize: '15px',
@@ -461,6 +463,7 @@ const FormStep5AccountInfo = (props) => {
                       <TextField
                         fullWidth
                         value={value || ''}
+                        type='number'
                         onBlur={onBlur}
                         label="Pincode"
                         onChange={(e) => {
@@ -629,6 +632,7 @@ const FormStep5AccountInfo = (props) => {
                         value={value || formData.phone_number}
                         onBlur={onBlur}
                         label="Phone Number"
+                        type='number'
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('phone_number', e.target.value);
