@@ -39,8 +39,6 @@ const FormStep1PersonalInfo = ({
   console.log('cities', cities);
 
   const defaultCountry = countries.filter((country) => country.iso2 === 'IN');
-  const [storedState, setStoredState] = useState('');
-  const [storedCity, setStoredCity] = useState('');
 
   useEffect(() => {
     dispatch(loadCountries());
@@ -62,6 +60,7 @@ const FormStep1PersonalInfo = ({
     }
   }, [countries]);
 
+  // Modify the useEffect that loads saved data
   useEffect(() => {
     const savedData = localStorage.getItem('institute_form');
     if (savedData) {
@@ -69,23 +68,20 @@ const FormStep1PersonalInfo = ({
       if (parsedData.registered_date) {
         parsedData.registered_date = new Date(parsedData.registered_date);
       }
-      // console.log('parseddata',parsedData);
+      if (parsedData.stateCode && defaultCountry.length) {
+        dispatch(loadCitiesForFromA(defaultCountry[0].iso2, parsedData.stateCode));
+      }
 
       setFormData(parsedData);
       personalReset(parsedData);
     }
-  }, [personalReset]);
+  }, [personalReset, defaultCountry.length, dispatch]);
   const handleStateChange = (e) => {
     const stateCode = e.target.value;
     if (defaultCountry.length) {
       dispatch(loadCitiesForFromA(defaultCountry[0].iso2, stateCode));
     }
   };
-  const handleCityChange = (e) => {
-    const cityId = e.target.value;
-    console.log('city Id', cityId);
-  };
-
   const handleFormChange = (name, value) => {
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: value };
@@ -93,36 +89,7 @@ const FormStep1PersonalInfo = ({
       return updatedData;
     });
   };
-  useEffect(() => {
-    if (storedState.length > 0) {
-      handleFormChange('state', storedState);
-    }
-  }, [storedState]);
 
-  const handleStoredState = (e) => {
-    const ss = states.find((state) => state.iso2 === e.target.value);
-    console.log('ss', ss);
-    setStoredState(ss.name);
-    if (storedState.length > 0) {
-      handleFormChange('state', storedState);
-    }
-  };
-  useEffect(() => {
-    if (storedCity.length > 0) {
-      handleFormChange('city', storedCity);
-    }
-  }, [storedCity]);
-
-  const handleStoredCity = (e) => {
-    const stc = cities.filter((city) => city.id === e.target.value);
-    console.log('stc', stc);
-    setStoredCity(stc[0].name);
-    if (storedCity.length) {
-      handleFormChange('city', storedCity);
-    }
-  };
-  console.log('sssn', storedState);
-  console.log('stcc', storedCity);
   console.log('formData', formData);
 
   return (
@@ -476,41 +443,80 @@ const FormStep1PersonalInfo = ({
                     name="state"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange, onBlur } }) => (
+                    render={({ field: { onChange, onBlur} }) => (
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.length ? formData.stateCode : ''}
-                        onBlur={onBlur}
+                        value={formData.stateCode || ''}
                         label="State"
                         onChange={(e) => {
                           const selectedState = states.find((state) => state.iso2 === e.target.value);
                           onChange(selectedState.name);
                           handleStateChange(e);
                           handleFormChange('stateCode', e.target.value);
-                          handleStoredState(e);
+                          handleFormChange('state', selectedState.name);
                         }}
-                        placeholder="Enter state"
-                        sx={{ backgroundColor: personalErrors['state'] ? '#FFFFFF' : '#f5f5f5' }}
+                        onBlur={onBlur}
+                        placeholder="Select state"
+                        sx={{
+                          backgroundColor: personalErrors['state'] ? '#FFFFFF' : '#f5f5f5',
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: personalErrors['state'] ? '#f44336' : 'rgba(0, 0, 0, 0.23)'
+                            },
+                            '&:hover fieldset': {
+                              borderColor: personalErrors['state'] ? '#f44336' : 'rgba(0, 0, 0, 0.5)'
+                            }
+                          }
+                        }}
                         error={Boolean(personalErrors.state)}
                         aria-describedby="stepper-linear-personal-state-helper"
-                        {...(personalErrors['state'] && { helperText: personalErrors?.state?.message })}
+                        helperText={personalErrors?.state?.message}
                         FormHelperTextProps={{
                           sx: {
                             fontSize: '15px',
                             color: 'red'
                           }
                         }}
+                        SelectProps={{
+                          onClose: () => onBlur(),
+                          MenuProps: {
+                            PaperProps: {
+                              sx: {
+                                maxHeight: 300,
+                                '& .MuiMenuItem-root': {
+                                  padding: '8px 16px',
+                                  '&:hover': {
+                                    backgroundColor: 'rgba(63, 81, 181, 0.08)'
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <IconMapPin stroke={2} sx={{ color: '#3B4056' }} />
+                              <IconMapPin stroke={2} sx={{ color: personalErrors['state'] ? '#f44336' : '#3B4056' }} />
                             </InputAdornment>
                           )
                         }}
                       >
                         {states.map((state) => (
-                          <MenuItem key={state.iso2} value={state.iso2}>
+                          <MenuItem
+                            key={state.iso2}
+                            value={state.iso2}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onChange(state.name);
+                              handleFormChange('stateCode', state.iso2);
+                              handleFormChange('state', state.name);
+                            }}
+                            sx={{
+                              fontSize: '0.875rem',
+                              minHeight: '36px'
+                            }}
+                          >
                             {state.name}
                           </MenuItem>
                         ))}
@@ -523,42 +529,81 @@ const FormStep1PersonalInfo = ({
                     name="city"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange, onBlur } }) => (
+                    render={({ field: { onChange, onBlur} }) => (
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.lengh ? formData?.cityCode : ''}
-                        onBlur={onBlur}
+                        value={formData.cityCode || ''}
                         label="City"
                         onChange={(e) => {
                           const selectedCity = cities.find((city) => city.id === e.target.value);
-                          console.log(selectedCity.name, 'selectedCIty');
-                          onChange(selectedCity.name);
-                          handleCityChange(e);
-                          handleFormChange('cityCode', e.target.value);
-                          handleStoredCity(e);
+                          if (selectedCity) {
+                            onChange(selectedCity.name);
+                            handleFormChange('cityCode', e.target.value);
+                            handleFormChange('city', selectedCity.name);
+                          }
                         }}
-                        placeholder="Enter city"
-                        sx={{ backgroundColor: personalErrors['city'] ? '#FFFFFF' : '#f5f5f5' }}
+                        onBlur={onBlur}
+                        placeholder="Select city"
+                        sx={{
+                          backgroundColor: personalErrors['city'] ? '#FFFFFF' : '#f5f5f5',
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: personalErrors['city'] ? '#f44336' : 'rgba(0, 0, 0, 0.23)'
+                            },
+                            '&:hover fieldset': {
+                              borderColor: personalErrors['city'] ? '#f44336' : 'rgba(0, 0, 0, 0.5)'
+                            }
+                          }
+                        }}
                         error={Boolean(personalErrors.city)}
                         aria-describedby="stepper-linear-personal-city-helper"
-                        {...(personalErrors['city'] && { helperText: personalErrors?.city?.message })}
+                        helperText={personalErrors?.city?.message}
                         FormHelperTextProps={{
                           sx: {
                             fontSize: '15px',
                             color: 'red'
                           }
                         }}
+                        SelectProps={{
+                          onClose: () => onBlur(),
+                          MenuProps: {
+                            PaperProps: {
+                              sx: {
+                                maxHeight: 300,
+                                '& .MuiMenuItem-root': {
+                                  padding: '8px 16px',
+                                  '&:hover': {
+                                    backgroundColor: 'rgba(63, 81, 181, 0.08)'
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <LocationCityOutlinedIcon sx={{ color: '#3B4056' }} />
+                              <LocationCityOutlinedIcon sx={{ color: personalErrors['city'] ? '#f44336' : '#3B4056' }} />
                             </InputAdornment>
                           )
                         }}
                       >
                         {cities.map((city) => (
-                          <MenuItem key={city.id} value={city.id}>
+                          <MenuItem
+                            key={city.id}
+                            value={city.id}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onChange(city.name);
+                              handleFormChange('cityCode', city.id);
+                              handleFormChange('city', city.name);
+                            }}
+                            sx={{
+                              fontSize: '0.875rem',
+                              minHeight: '36px'
+                            }}
+                          >
                             {city.name}
                           </MenuItem>
                         ))}

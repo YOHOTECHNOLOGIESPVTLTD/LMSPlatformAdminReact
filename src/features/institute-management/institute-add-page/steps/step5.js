@@ -29,8 +29,7 @@ const FormStep5AccountInfo = (props) => {
   console.log('cities', cities);
   const defaultCountry = countries.filter((country) => country.iso2 === 'IN');
   console.log('dc', defaultCountry);
-  const [storedState, setStoredState] = useState('');
-  const [storedCity, setStoredCity] = useState('');
+  
 
   useEffect(() => {
     dispatch(loadCountries());
@@ -41,14 +40,26 @@ const FormStep5AccountInfo = (props) => {
     }
   }, [countries]);
 
+  // useEffect(() => {
+  //   const savedData = localStorage.getItem('acc_form');
+  //   if (savedData) {
+  //     const parsedData = JSON.parse(savedData);
+  //     setFormData(parsedData);
+  //     accountReset(parsedData);
+  //   }
+  // }, [accountReset]);
   useEffect(() => {
     const savedData = localStorage.getItem('acc_form');
     if (savedData) {
       const parsedData = JSON.parse(savedData);
+      if (parsedData.stateCode && defaultCountry.length) {
+        dispatch(loadCitiesForFromB(defaultCountry[0].iso2, parsedData.stateCode));
+      }
+
       setFormData(parsedData);
       accountReset(parsedData);
     }
-  }, [accountReset]);
+  }, [accountReset, defaultCountry.length, dispatch]);
 
   useEffect(() => {
     if (formData.stateCode && defaultCountry.length) {
@@ -61,40 +72,7 @@ const FormStep5AccountInfo = (props) => {
       dispatch(loadCitiesForFromB(defaultCountry[0].iso2, stateCode));
     }
   };
-  const handleCityChange = (e) => {
-    const cityId = e.target.value;
-    console.log(cityId);
-  };
-  useEffect(() => {
-    if (storedState.length > 0) {
-      handleFormChange('state', storedState);
-    }
-  }, [storedState]);
-
-  const handleStoredState = (e) => {
-    const ss = states.find((state) => state.iso2 === e.target.value);
-    console.log('ss', ss);
-    setStoredState(ss.name);
-    if (storedState.length > 0) {
-      handleFormChange('state', storedState);
-    }
-  };
-  useEffect(() => {
-    if (storedCity.length > 0) {
-      handleFormChange('city', storedCity);
-    }
-  }, [storedCity]);
-
-  const handleStoredCity = (e) => {
-    const stc = cities.filter((city) => city.id === e.target.value);
-    console.log('stc', stc);
-    setStoredCity(stc[0].name);
-    if (storedCity.length) {
-      handleFormChange('city', storedCity);
-    }
-  };
-  console.log('sssn', storedState);
-  console.log('stcc', storedCity);
+  
   const handleFormChange = (name, value) => {
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: value };
@@ -173,7 +151,7 @@ const FormStep5AccountInfo = (props) => {
                       <TextField
                         fullWidth
                         label="Phone"
-                        type='number'
+                        type="number"
                         value={value || ''}
                         onBlur={onBlur}
                         onChange={(e) => {
@@ -212,7 +190,7 @@ const FormStep5AccountInfo = (props) => {
                         label="Alternate Phone"
                         value={value || ''}
                         onBlur={onBlur}
-                        type='number'
+                        type="number"
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('alternate_phone', e.target.value);
@@ -365,39 +343,78 @@ const FormStep5AccountInfo = (props) => {
                     name="state"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange, onBlur } }) => (
+                    render={({ field: {  onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.length ? formData.stateCode : ''}
-                        onBlur={onBlur}
+                        value={formData.stateCode || ''}
                         label="State"
                         onChange={(e) => {
                           const selectedState = states.find((state) => state.iso2 === e.target.value);
-                          onChange(selectedState.name);
-                          handleStateChange(e);
-                          handleFormChange('stateCode', e.target.value);
-                          handleStoredState(e);
+                          if (selectedState) {
+                            onChange(selectedState.name);
+                            handleStateChange(e);
+                            handleFormChange('stateCode', e.target.value);
+                            handleFormChange('state', selectedState.name);
+                          }
                         }}
+                        onBlur={onBlur}
                         error={Boolean(accountErrors.state)}
-                        helperText={accountErrors.state && 'state is required'}
+                        helperText={accountErrors.state && 'State is required'}
                         FormHelperTextProps={{
                           sx: {
                             fontSize: '15px',
                             color: 'red'
                           }
                         }}
+                        SelectProps={{
+                          onClose: () => onBlur(),
+                          MenuProps: {
+                            PaperProps: {
+                              sx: {
+                                maxHeight: 300,
+                                '& .MuiMenuItem-root': {
+                                  padding: '8px 16px',
+                                  '&:hover': {
+                                    backgroundColor: 'rgba(63, 81, 181, 0.08)'
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <LocationOnIcon sx={{ color: '#3B4056' }} />
+                              <LocationOnIcon sx={{ color: accountErrors.state ? '#f44336' : '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' }
+                          sx: {
+                            backgroundColor: '#f5f5f5',
+                            '& fieldset': {
+                              borderColor: accountErrors.state ? '#f44336' : 'rgba(0, 0, 0, 0.23)'
+                            },
+                            '&:hover fieldset': {
+                              borderColor: accountErrors.state ? '#f44336' : 'rgba(0, 0, 0, 0.5)'
+                            }
+                          }
                         }}
                       >
                         {states?.map((state) => (
-                          <MenuItem value={state.iso2} key={state.iso2}>
+                          <MenuItem
+                            value={state.iso2}
+                            key={state.iso2}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onChange(state.name);
+                              handleFormChange('stateCode', state.iso2);
+                              handleFormChange('state', state.name);
+                            }}
+                            sx={{
+                              fontSize: '0.875rem',
+                              minHeight: '36px'
+                            }}
+                          >
                             {state.name}
                           </MenuItem>
                         ))}
@@ -405,47 +422,83 @@ const FormStep5AccountInfo = (props) => {
                     )}
                   />
                 </Grid>
-
                 {/* City */}
                 <Grid item xs={12} sm={6}>
                   <Controller
                     name="city"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange, onBlur } }) => (
+                    render={({ field: { onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         select
-                        value={value || formData.length ? formData.cityCode : ''}
-                        onBlur={onBlur}
+                        value={formData.cityCode || ''}
                         label="City"
                         onChange={(e) => {
                           const selectedCity = cities.find((city) => city.id === e.target.value);
-                          console.log(selectedCity.name, 'selectedCIty');
-                          onChange(selectedCity.name);
-                          handleCityChange(e);
-                          handleFormChange('cityCode', e.target.value);
-                          handleStoredCity(e);
+                          if (selectedCity) {
+                            onChange(selectedCity.name);
+                            handleFormChange('cityCode', e.target.value);
+                            handleFormChange('city', selectedCity.name);
+                          }
                         }}
+                        onBlur={onBlur}
                         error={Boolean(accountErrors.city)}
-                        helperText={accountErrors.city && 'city is required'}
+                        helperText={accountErrors.city && 'City is required'}
                         FormHelperTextProps={{
                           sx: {
                             fontSize: '15px',
                             color: 'red'
                           }
                         }}
+                        SelectProps={{
+                          onClose: () => onBlur(),
+                          MenuProps: {
+                            PaperProps: {
+                              sx: {
+                                maxHeight: 300,
+                                '& .MuiMenuItem-root': {
+                                  padding: '8px 16px',
+                                  '&:hover': {
+                                    backgroundColor: 'rgba(63, 81, 181, 0.08)'
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <LocationCityOutlinedIcon sx={{ color: '#3B4056' }} />
+                              <LocationCityOutlinedIcon sx={{ color: accountErrors.city ? '#f44336' : '#3B4056' }} />
                             </InputAdornment>
                           ),
-                          sx: { backgroundColor: '#f5f5f5' }
+                          sx: {
+                            backgroundColor: '#f5f5f5',
+                            '& fieldset': {
+                              borderColor: accountErrors.city ? '#f44336' : 'rgba(0, 0, 0, 0.23)'
+                            },
+                            '&:hover fieldset': {
+                              borderColor: accountErrors.city ? '#f44336' : 'rgba(0, 0, 0, 0.5)'
+                            }
+                          }
                         }}
                       >
                         {cities?.map((city) => (
-                          <MenuItem value={city.id} key={city.id}>
+                          <MenuItem
+                            value={city.id}
+                            key={city.id}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onChange(city.name);
+                              handleFormChange('cityCode', city.id);
+                              handleFormChange('city', city.name);
+                            }}
+                            sx={{
+                              fontSize: '0.875rem',
+                              minHeight: '36px'
+                            }}
+                          >
                             {city.name}
                           </MenuItem>
                         ))}
@@ -463,7 +516,7 @@ const FormStep5AccountInfo = (props) => {
                       <TextField
                         fullWidth
                         value={value || ''}
-                        type='number'
+                        type="number"
                         onBlur={onBlur}
                         label="Pincode"
                         onChange={(e) => {
@@ -632,7 +685,7 @@ const FormStep5AccountInfo = (props) => {
                         value={value || formData.phone_number}
                         onBlur={onBlur}
                         label="Phone Number"
-                        type='number'
+                        type="number"
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('phone_number', e.target.value);
