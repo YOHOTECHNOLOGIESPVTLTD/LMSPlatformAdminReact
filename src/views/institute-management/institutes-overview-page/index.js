@@ -38,7 +38,6 @@ import UserSkeleton from 'components/cards/Skeleton/UserSkeleton';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
-
 const Institutes = () => {
   // const [plan, setPlan] = useState('');
   // const [value, setValue] = useState('');
@@ -408,9 +407,13 @@ const Institutes = () => {
           {/* Display Skeleton or User Body Section based on loading state */}
 
           <Grid container spacing={3} sx={{ paddingLeft: '24px' }}>
-            {filteredInstitutes?.length > 0
-              ? filteredInstitutes?.map((institute, index) => <InstituteCard institute={institute} key={institute?._id} index={index} />)
-              : 'No Institutes Found'}
+            {filteredInstitutes?.length > 0 ? (
+              filteredInstitutes?.map((institute, index) => <InstituteCard institute={institute} key={institute?._id} index={index} />)
+            ) : (
+              <Box sx={{width:"100%",textAlign: 'center',mt:5}}>
+                <Typography >No Institutes Found</Typography>
+              </Box>
+            )}
           </Grid>
           {allInstitutes.last_page >= 1 && (
             <Grid container spacing={3} sx={{ pl: 5, mt: 1, alignItems: 'right', justifyContent: 'right' }}>

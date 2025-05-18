@@ -61,6 +61,7 @@ const NotificationSection = () => {
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
+  const [page, setPage] = useState(1);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
@@ -91,6 +92,8 @@ const NotificationSection = () => {
 
   const handleNavigate=()=>{
     navigate('/notification-management/notifications')
+    handleToggle()
+    setPage(2)
   }
   return (
     <>
@@ -200,7 +203,7 @@ const NotificationSection = () => {
                             <Divider sx={{ my: 0 }} />
                           </Grid>
                         </Grid>
-                        <NotificationList />
+                        <NotificationList page={page}/>
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>

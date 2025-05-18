@@ -16,12 +16,12 @@ import {
 // assets
 // import { IconBrandTelegram, IconBuildingStore, IconMailbox, IconPhoto } from '@tabler/icons';
 import User1 from 'assets/images/users/user-round.svg';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectInstituteNotifications } from 'features/notification-management/notifications/redux/instituteNotificationSelectors';
+import { useDispatch} from 'react-redux';
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { useEffect } from 'react';
 import { getAllInstituteNotifications } from 'features/notification-management/notifications/services/instituteNotificationServices';
+import { useState } from 'react';
 
 // styles
 const ListItemWrapper = styled('div')(({ theme }) => ({
@@ -37,23 +37,26 @@ const ListItemWrapper = styled('div')(({ theme }) => ({
 
 // ==============================|| NOTIFICATION LIST ITEM ||============================== //
 
-const NotificationList = () => {
+const NotificationList = ({page}) => {
   const dispatch = useDispatch();
-  const nList = useSelector(selectInstituteNotifications);
-  console.log('Nlist', nList);
-  const notifications = nList?.data.map((item) => item);
+  const [nList,setNlist]=useState([])
+  
+
+  const notifications = nList?.data ?? [];
   console.log('notify', notifications);
-
+  
   const theme = useTheme();
-
+  
   const getList = async (data) => {
-    dispatch(getAllInstituteNotifications(data));
+    const response =await getAllInstituteNotifications(data);
+    console.log('res came from header notification', response);
+    setNlist(response.data.data.data)
   };
-
+  console.log('Nlist', nList);
+  
   useEffect(() => {
-    getList({ page: 1 });
+    getList({ page: page });
   }, [dispatch]);
-
   const chipSX = {
     height: 24,
     padding: '0 6px'
@@ -70,6 +73,7 @@ const NotificationList = () => {
     color: theme.palette.warning.dark,
     backgroundColor: theme.palette.warning.light
   };
+
 
   return (
     <List
@@ -92,7 +96,7 @@ const NotificationList = () => {
         }
       }}
     >
-      {notifications.map((notification) => (
+      {nList.map((notification) => (
         <React.Fragment key={notification._id}>
           <ListItemWrapper>
             <ListItem alignItems="center">
