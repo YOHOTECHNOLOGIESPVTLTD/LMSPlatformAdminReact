@@ -54,6 +54,8 @@ const Institutes = () => {
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const { showSpinnerFn, hideSpinnerFn } = useSpinner();
+  const [filteredInstitutes, setFilteredInstitutes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const dispatch = useDispatch();
   const allInstitutes = useSelector(selectInstitutes);
@@ -67,8 +69,15 @@ const Institutes = () => {
   }, [dispatch, currentPage, getAllInstitutes, selectedBranchId, refetch]);
 
   console.log(allInstitutes);
-  
 
+  useEffect(() => {
+    if (allInstitutes?.data) {
+      const fInstitute = allInstitutes?.data?.filter((institute) =>
+        institute?.institute_name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredInstitutes(fInstitute);
+    }
+  }, [allInstitutes, searchTerm]);
   // const handleFilter = useCallback((val) => {
   //   setValue(val);
   // }, []);
@@ -388,15 +397,20 @@ const Institutes = () => {
         </Grid> */}
 
           <Grid item xs={12}>
-            <TableHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
+            <TableHeader
+              searchTerm={searchTerm}
+              handleFilter={(val) => setSearchTerm(val)}
+              toggle={toggleAddUserDrawer}
+              selectedBranchId={selectedBranchId}
+            />
           </Grid>
 
           {/* Display Skeleton or User Body Section based on loading state */}
 
           <Grid container spacing={3} sx={{ paddingLeft: '24px' }}>
-            {allInstitutes?.data?.map((institute, index) => (
-              <InstituteCard institute={institute} key={institute?._id} index={index} />
-            ))}
+            {filteredInstitutes?.length > 0
+              ? filteredInstitutes?.map((institute, index) => <InstituteCard institute={institute} key={institute?._id} index={index} />)
+              : 'No Institutes Found'}
           </Grid>
           {allInstitutes.last_page >= 1 && (
             <Grid container spacing={3} sx={{ pl: 5, mt: 1, alignItems: 'right', justifyContent: 'right' }}>
@@ -421,7 +435,7 @@ const Institutes = () => {
                   autoHeight
                   // rowHeight={90}
                   getRowHeight={() => 'auto'}
-                  rows={allInstitutes}
+                  rows={filteredInstitutes || []}
                   columns={columns}
                   disableRowSelectionOnClick
                   pageSizeOptions={[10, 25, 50]}
