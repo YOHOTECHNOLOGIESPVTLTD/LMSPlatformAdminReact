@@ -60,7 +60,6 @@ const FormStep1PersonalInfo = ({
     }
   }, [countries]);
 
-  // Modify the useEffect that loads saved data
   useEffect(() => {
     const savedData = localStorage.getItem('institute_form');
     if (savedData) {
@@ -334,7 +333,13 @@ const FormStep1PersonalInfo = ({
                           handleFormChange('phone', e.target.value);
                         }}
                         placeholder="12345 67890"
-                        sx={{ backgroundColor: personalErrors['phone'] ? '#FFFFFF' : '#f5f5f5' }}
+                        sx={{
+                          backgroundColor: personalErrors['phone'] ? '#FFFFFF' : '#f5f5f5',
+                          '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                            WebkitAppearance: 'none',
+                            margin: 0
+                          }
+                        }}
                         autoComplete="off"
                         error={Boolean(personalErrors['phone'])}
                         aria-describedby="stepper-linear-personal-phone"
@@ -374,7 +379,13 @@ const FormStep1PersonalInfo = ({
                         }}
                         placeholder="12345 67890"
                         autoComplete="off"
-                        sx={{ backgroundColor: personalErrors['alt_phone'] ? '#FFFFFF' : '#f5f5f5' }}
+                        sx={{
+                          backgroundColor: personalErrors['alt_phone'] ? '#FFFFFF' : '#f5f5f5',
+                          '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                            WebkitAppearance: 'none',
+                            margin: 0
+                          }
+                        }}
                         error={Boolean(personalErrors['alt_phone'])}
                         aria-describedby="stepper-linear-personal-alt_phone"
                         {...(personalErrors['alt_phone'] && { helperText: personalErrors?.alt_phone?.message })}
@@ -443,7 +454,7 @@ const FormStep1PersonalInfo = ({
                     name="state"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { onChange, onBlur} }) => (
+                    render={({ field: { onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         select
@@ -529,7 +540,7 @@ const FormStep1PersonalInfo = ({
                     name="city"
                     control={personalControl}
                     rules={{ required: true }}
-                    render={({ field: { onChange, onBlur} }) => (
+                    render={({ field: { onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         select
@@ -628,7 +639,13 @@ const FormStep1PersonalInfo = ({
                           handleFormChange('pin_code', e.target.value);
                         }}
                         placeholder="123 456"
-                        sx={{ backgroundColor: personalErrors['pin_code'] ? '#FFFFFF' : '#f5f5f5' }}
+                        sx={{
+                          backgroundColor: personalErrors['pin_code'] ? '#FFFFFF' : '#f5f5f5',
+                          '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                            WebkitAppearance: 'none',
+                            margin: 0
+                          }
+                        }}
                         error={Boolean(personalErrors['pin_code'])}
                         aria-describedby="stepper-linear-personal-pin_code"
                         {...(personalErrors['pin_code'] && { helperText: personalErrors?.pin_code?.message })}

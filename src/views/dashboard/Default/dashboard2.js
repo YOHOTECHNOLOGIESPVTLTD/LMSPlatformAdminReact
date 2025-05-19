@@ -16,7 +16,7 @@ const Dashboard2 = () => {
   const theme = useTheme();
 
   const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
+  const [year, setYear] = useState(2024);
   const [metrics, setMetrics] = useState({
     totalInstitutes: 0,
     totalUsers: 0,
@@ -74,20 +74,18 @@ const Dashboard2 = () => {
 
       let revenueData;
       if (month === '') {
-        // If no specific month is selected, show data for all months
         revenueData = monthData.map((item, index) => ({
           month: item.month,
-          revenue: data.revenue[index]
+          revenue: data.revenue[index] || 0 
         }));
       } else {
-        // Map revenue data for the selected month
-        const revenueTrends = data.revenue.filter((item, index) => index === monthData.find((item2) => item2.month === month).index);
-        console.log(revenueTrends[0]);
+        const monthIndex = monthData.find((item) => item.month === month)?.index;
+        const monthlyRevenue = monthIndex !== undefined ? data.revenue[monthIndex] : 0;
 
         revenueData = [
           {
             month: month,
-            revenue: revenueTrends[0]
+            revenue: monthlyRevenue
           }
         ];
       }
@@ -396,7 +394,7 @@ const Dashboard2 = () => {
                   <AreaChart
                     width={500}
                     height={400}
-                    data={revenueData ? revenueData : data.revenue}
+                    data={revenueData}
                     margin={{
                       top: 10,
                       right: 30,

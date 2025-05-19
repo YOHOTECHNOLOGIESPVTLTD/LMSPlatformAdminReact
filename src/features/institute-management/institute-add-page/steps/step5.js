@@ -29,7 +29,6 @@ const FormStep5AccountInfo = (props) => {
   console.log('cities', cities);
   const defaultCountry = countries.filter((country) => country.iso2 === 'IN');
   console.log('dc', defaultCountry);
-  
 
   useEffect(() => {
     dispatch(loadCountries());
@@ -72,7 +71,7 @@ const FormStep5AccountInfo = (props) => {
       dispatch(loadCitiesForFromB(defaultCountry[0].iso2, stateCode));
     }
   };
-  
+
   const handleFormChange = (name, value) => {
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: value };
@@ -158,6 +157,12 @@ const FormStep5AccountInfo = (props) => {
                           onChange(e);
                           handleFormChange('phone', e.target.value);
                         }}
+                        sx={{
+                          '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                            WebkitAppearance: 'none',
+                            margin: 0
+                          }
+                        }}
                         placeholder="e.g. 1234567890"
                         error={!!accountErrors.phone}
                         helperText={accountErrors.phone?.message}
@@ -195,13 +200,23 @@ const FormStep5AccountInfo = (props) => {
                           onChange(e);
                           handleFormChange('alternate_phone', e.target.value);
                         }}
+                        sx={{
+                          '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                            WebkitAppearance: 'none',
+                            margin: 0
+                          }
+                        }}
                         placeholder="e.g. 9876543210"
                         error={!!accountErrors.alternate_phone}
                         helperText={accountErrors.alternate_phone?.message}
                         FormHelperTextProps={{
                           sx: {
                             fontSize: '15px',
-                            color: 'red'
+                            color: 'red',
+                            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                              WebkitAppearance: 'none',
+                              margin: 0
+                            }
                           }
                         }}
                         InputProps={{
@@ -343,7 +358,7 @@ const FormStep5AccountInfo = (props) => {
                     name="state"
                     control={accountControl}
                     rules={{ required: true }}
-                    render={({ field: {  onChange, onBlur } }) => (
+                    render={({ field: { onChange, onBlur } }) => (
                       <TextField
                         fullWidth
                         select
@@ -519,6 +534,12 @@ const FormStep5AccountInfo = (props) => {
                         type="number"
                         onBlur={onBlur}
                         label="Pincode"
+                        sx={{
+                          '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                            WebkitAppearance: 'none',
+                            margin: 0
+                          }
+                        }}
                         onChange={(e) => {
                           onChange(e);
                           handleFormChange('pincode', e.target.value);
@@ -529,7 +550,11 @@ const FormStep5AccountInfo = (props) => {
                         FormHelperTextProps={{
                           sx: {
                             fontSize: '15px',
-                            color: 'red'
+                            color: 'red',
+                            '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                              WebkitAppearance: 'none',
+                              margin: 0
+                            }
                           }
                         }}
                         InputProps={{
@@ -691,6 +716,15 @@ const FormStep5AccountInfo = (props) => {
                           handleFormChange('phone_number', e.target.value);
                         }}
                         placeholder="e.g. 123-456-7890"
+                        sx={{
+                          '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+                            WebkitAppearance: 'none',
+                            margin: 0
+                          },
+                          '& input[type=number]': {
+                            MozAppearance: 'textfield'
+                          }
+                        }}
                         error={Boolean(accountErrors.phone_number)}
                         helperText={accountErrors?.phone_number?.message}
                         FormHelperTextProps={{
@@ -702,7 +736,7 @@ const FormStep5AccountInfo = (props) => {
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <PhoneIcon sx={{ color: '#3B4056' }} />
+                              <PhoneIcon sx={{ color: '#3B4056' }} />+{defaultCountry.length ? defaultCountry[0].phonecode : ''}
                             </InputAdornment>
                           ),
                           sx: { backgroundColor: '#f5f5f5' }
@@ -717,11 +751,12 @@ const FormStep5AccountInfo = (props) => {
                   <Controller
                     name="image"
                     control={accountControl}
-                    render={({ field: { value } }) => (
+                    render={({ field: { value, onBlur } }) => (
                       <TextField
                         fullWidth
                         type="file"
                         label="Profile Image"
+                        onBlur={onBlur}
                         onChange={hanldeProfileImageChange}
                         error={Boolean(accountErrors.image)}
                         helperText={accountErrors.image && 'profile image is required'}
