@@ -21,7 +21,7 @@ import { useState } from 'react';
 import HelpAddModal from './Modal/helpAddModal';
 import HelpEditModal from './Modal/helpEditModal';
 import pngImg from '../../../../assets/images/—Pngtree—flat meeting discussion people_5409602.png'
-import pngImgs from '../../../../assets/images/—Pngtree—people working in a table_7537097 (1).png'
+
 
 const MuiBox = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -227,11 +227,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
                 alt="illustration"
                 width="230"
               />
-              <img
-    src={pngImgs}
-    alt="teamwork"
-    width="230"
-  /> 
+ 
             </Box>
           </Box>
           {renderTabContent()}

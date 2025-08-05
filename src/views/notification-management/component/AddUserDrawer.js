@@ -373,7 +373,7 @@ const SidebarAddUser = (props) => {
                fullWidth
                sx={{ mb: 4}}
                label="Link"
-               placeholder='https://www.{some_notification_related_links}.com'
+               placeholder='https://www.&#123;some_notification_related_links&#125;.com'
                onChange={onChange}
                value={value}
                error={Boolean(errors?.link)}
@@ -405,7 +405,7 @@ const SidebarAddUser = (props) => {
             }}>
               Cancel
             </Button>
-          </Box> */}
+          </Box>
         </form>
       </Box>
     </Drawer>
