@@ -32,7 +32,7 @@ const Notifications = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [page,setPage] = useState(1)
   const { showSpinnerFn,hideSpinnerFn } = useSpinner()
-  const dispath = useDispatch()
+  const dispatch = useDispatch()
   const notifications_list = useSelector(selectInstituteNotifications)
   console.log(notifications_list,"notification list")
  
@@ -165,12 +165,12 @@ const Notifications = () => {
   };
 
   const getList = async (data) => {
-    dispath(getAllInstituteNotifications(data))
+    dispatch(getAllInstituteNotifications(data))
   }
 
   useEffect(() => {
     getList({ page: page})
-  },[dispath])
+  },[dispatch])
 
   
   const handleFilter = useCallback((val) => {

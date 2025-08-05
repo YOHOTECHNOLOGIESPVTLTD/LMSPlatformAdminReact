@@ -34,11 +34,12 @@ const CategoriesDataGrid = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const[searchQuery,setSearchQuery]=useState('')
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredCategories, setFilteredCategories] = useState([]);
 
   const dispatch = useDispatch();
   const faqCategories = useSelector(selectFaqCategories);
-  console.log('faqcategories',faqCategories)
+  console.log('faqcategories', faqCategories);
   const faqCategoryLoading = useSelector(selectLoading);
   // const[allFaqCategory,setAllFaqCategory]=useState([])
 
@@ -46,7 +47,6 @@ const CategoriesDataGrid = () => {
   useEffect(() => {
     const data = { page };
     dispatch(getAllFaqCategories(data));
-   
   }, [dispatch, selectedBranchId, refetch, page]);
 
   const handlePageChange = (event, newPage) => {
@@ -54,6 +54,12 @@ const CategoriesDataGrid = () => {
     setRefetch((prev) => !prev);
   };
 
+  useEffect(() => {
+    if (faqCategories?.data) {
+      const filtered = faqCategories?.data?.filter((category) => category.identity.toLowerCase().includes(searchQuery.toLowerCase()));
+      setFilteredCategories(filtered);
+    }
+  }, [faqCategories, searchQuery]);
   useEffect(() => {
     if (faqCategories?.data?.length === 0 && currentPage > 1) {
       setCurrentPage(1);
@@ -73,6 +79,7 @@ const CategoriesDataGrid = () => {
     setSelectedFaqCategoryStatus(e.target.value);
     setStatusDialogOpen(true);
   };
+  console.log('filterdcsgs', filteredCategories);
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -145,6 +152,7 @@ const CategoriesDataGrid = () => {
   // if (!faqCategories) {
   //   return null;
   // }
+  console.log('selectedROw', selectedRow);
 
   return (
     <>
@@ -152,9 +160,10 @@ const CategoriesDataGrid = () => {
         {/* Category filter and header */}
         <Grid item xs={12} sx={{ marginLeft: '15px' }}>
           <FaqCategoriesTableHeader
+            faqCategories={faqCategories}
             // value={value}
             // handleFilter={handleFilter}
-            value={searchQuery}
+            searchQuery={searchQuery}
             handleFilter={(val) => setSearchQuery(val)}
             toggle={toggleAddUserDrawer}
             selectedBranchId={selectedBranchId}
@@ -175,8 +184,8 @@ const CategoriesDataGrid = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {faqCategories?.data?.length > 0 ? (
-                    faqCategories?.data?.map((category) => (
+                  {filteredCategories?.length > 0 ? (
+                    filteredCategories?.map((category) => (
                       <TableRow
                         key={category._id}
                         sx={{
@@ -203,13 +212,13 @@ const CategoriesDataGrid = () => {
                                 ':hover': { backgroundColor: '#5f71fa80', transition: '.2s ease-in-out', transform: 'scale(1.2)' }
                               }}
                               onClick={() => {
-                                setSelectedRow(
-                                  setSelectedRow({
-                                    id: category.uuid,
-                                    title: category.identity,
-                                    description: category.description
-                                  })
-                                );
+                                setSelectedRow({
+                                  id: category.uuid,
+                                  title: category.identity,
+                                  description: category.description
+                                });
+
+                                console.log('r', selectedRow);
                                 toggleEditUserDrawer();
                               }}
                             >
@@ -271,11 +280,14 @@ const CategoriesDataGrid = () => {
           toggle={() => setEditUserOpen(!editUserOpen)}
           initialValues={selectedRow}
           setRefetch={setRefetch}
+          selectedRow={selectedRow}
         />
         <DeleteDialog
           open={isDeleteDialogOpen}
           setOpen={setDeleteDialogOpen}
           description="Are you sure you want to delete this item?"
+          successDescription="Deleted successfully"
+          failureDescription="failed"
           title="Delete"
           handleSubmit={handleDeleteApi}
         />

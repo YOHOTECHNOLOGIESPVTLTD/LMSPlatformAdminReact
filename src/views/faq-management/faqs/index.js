@@ -8,7 +8,7 @@ import DeleteDialog from 'components/modal/DeleteModel';
 import StatusDialog from 'components/modal/DeleteModel';
 import FaqAddDrawer from 'features/faq-management/faqs/components/FaqAddDrawer';
 import FaqEdit from 'features/faq-management/faqs/components/FaqEdit';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FaqTableHeader from 'features/faq-management/faqs/components/FaqTableHeader';
 import { getAllFaqs } from 'features/faq-management/faqs/redux/faqThunks';
@@ -17,13 +17,25 @@ import { getAllFaqCategorywithFaq } from 'features/faq-management/faq-categories
 // import FaqAccordian from 'features/faq-management/faqs/components/FaqAccordian';
 import { updateStatusFaq, deleteFaq } from 'features/faq-management/faqs/services/faqServices';
 import toast from 'react-hot-toast';
-import { IconButton, Paper, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip , Pagination} from '@mui/material';
+import {
+  IconButton,
+  Paper,
+  Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Pagination
+} from '@mui/material';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+// import { searchUsers } from 'features/user-management/users-page/services/userServices';
 
 const FaqDataGrid = () => {
-  const [value, setValue] = useState('');
+  // const [value, setValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -33,35 +45,46 @@ const FaqDataGrid = () => {
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [faqCategories, setFaqCategories] = useState([]);
   const [refetch, setRefetch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [selectedFaqStatus, setSelectedFaqStatus] = useState(null);
+  const [filteredFaqss, setFilteredFaqss] = useState([]);
+  // const [editId, setEditId] = useState(null);
+  // const[lastPage,setLastPage]=useState(1)
   const dispatch = useDispatch();
 
   const faqs = useSelector(selectFaqs);
+  console.log('faqs', faqs);
   const faqLoading = useSelector(selectLoading);
   useEffect(() => {
     getFaqCategories();
   }, []);
 
   useEffect(() => {
-    dispatch(getAllFaqs({page: currentPage}));
+    dispatch(getAllFaqs({ page: currentPage }));
   }, [dispatch, refetch, currentPage]);
 
   const getFaqCategories = async () => {
-    const result = await getAllFaqCategorywithFaq({all:true});
+    const result = await getAllFaqCategorywithFaq({ all: true });
     setFaqCategories(result.data.data);
   };
-
- // console.log(deletingItemId,faqCategories);
+  console.log('sf', faqCategories);
+  // console.log(deletingItemId,faqCategories);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
- 
+
 
   const handleDelete = (itemId) => {
     console.log('Delete clicked for item ID:', itemId);
-    setDeletingItemId(itemId?.uuid);
+    setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
   };
+  useEffect(() => {
+    if (faqs?.data) {
+      const filteredFaqs = faqs.data.filter((category) => category?.identity?.toLowerCase().includes(searchQuery.toLowerCase()));
+      setFilteredFaqss(filteredFaqs);
+    }
+  }, [faqs,searchQuery]);
 
   const handleDeleteApi = async () => {
     const data = {
@@ -76,6 +99,23 @@ const FaqDataGrid = () => {
       toast.error(response.message);
     }
   };
+  // const handleEdit = (itemId) => {
+  //   setEditId(itemId);
+  //   setEditUserOpen(true);
+  // };
+  // const handleEditApi = async () => {
+  //   const data = {
+  //     data:selectedRow
+  //   };
+  //   const response = await updateFaq(data);
+  //   if (response.success) {
+  //     toast.success(response.message);
+  //     //setRefetch((state) => !state);
+  //     setRefetch(!refetch);
+  //   } else {
+  //     toast.error(response.message);
+  //   }
+  // };
 
   const handleStatusChange = (e, row) => {
     setSelectedFaq(row);
@@ -100,31 +140,30 @@ const FaqDataGrid = () => {
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-   // console.log('Toggle drawer');
+    // console.log('Toggle drawer');
   };
 
   // ** Hooks
 
-
-  const handleFilter = useCallback(
-    async (val) => {
-      try {
-        setValue(val);
-        const result = await searchUsers(val);
-        if (result.success) {
-          console.log('Search results:', result.data);
-          dispatch(setUsers(result.data));
-        } else {
-          console.log(result.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
-
-
+  // const handleFilter = useCallback(
+  //   async (val) => {
+  //     try {
+  //       setValue(val);
+  //       const result = await searchUsers(val);
+  //       if (result.success) {
+  //         console.log('Search results:', result.data);
+  //         dispatch(setUsers(result.data));
+  //       } else {
+  //         console.log(result.message);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   },
+  //   [dispatch]
+  // );
+  console.log('lterd',filteredFaqss);
+  
   return (
     <>
       {faqLoading || !faqs ? (
@@ -135,74 +174,97 @@ const FaqDataGrid = () => {
           <FaqAccordian faqCategories={faqCategories}/>
         </Grid> */}
           <Grid item xs={12}>
-            <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+            <FaqTableHeader
+              faqs={faqs}
+              searchQuery={searchQuery}
+              handleFilter={(val) => setSearchQuery(val)}
+              // value={value}
+              toggle={toggleAddUserDrawer}
+            />
           </Grid>
-         
+
           <Grid item xs={12}>
             {/* Display categories */}
-            <TableContainer component={Paper} sx={{ "& .MuiTableCell-root": { color: "#474747", borderBottom: '1px solid #ddd' } }} >
-               <Table size="medium">
-                 <TableHead sx={{ backgroundColor: "#1976D2"}} >
-                   <TableRow sx={{ "& .MuiTableCell-head": {  fontWeight: "bold", color: "white" } }} >
-                     <TableCell sx={{fontFamily:"poppins"}}>FAQ Name</TableCell>
-                     <TableCell sx={{fontFamily:"poppins"}}>Category</TableCell>
-                      <TableCell sx={{ fontFamily: "poppins" }}>Status</TableCell>
-                      <TableCell sx={{ fontFamily: "poppins" }}>Action</TableCell>
-                   </TableRow>
-                 </TableHead>
-                 <TableBody>
-                   {
-                    faqs?.data?.length > 0 ? (
-                    faqs?.data?.map((faq) => (
+            <TableContainer component={Paper} sx={{ '& .MuiTableCell-root': { color: '#474747', borderBottom: '1px solid #ddd' } }}>
+              <Table size="medium">
+                <TableHead sx={{ backgroundColor: '#1976D2' }}>
+                  <TableRow sx={{ '& .MuiTableCell-head': { fontWeight: 'bold', color: 'white' } }}>
+                    <TableCell sx={{ fontFamily: 'poppins' }}>FAQ Name</TableCell>
+                    <TableCell sx={{ fontFamily: 'poppins' }}>Category</TableCell>
+                    <TableCell sx={{ fontFamily: 'poppins' }}>Status</TableCell>
+                    <TableCell sx={{ fontFamily: 'poppins' }}>Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredFaqss.length > 0 ? (
+                    filteredFaqss.map((faq) => (
                       <TableRow
-                      key={faq._id}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 },
-                      '&:hover': { backgroundColor: "#f0f0f0" } }}
+                        key={faq._id}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 }, '&:hover': { backgroundColor: '#f0f0f0' } }}
                       >
-                        <TableCell sx={{fontSize:"16px", fontFamily: "poppins" }}>{faq?.identity}</TableCell>
-                        <TableCell sx={{ fontSize: "16px", fontFamily: "poppins" }}>{faq?.category?.identity}</TableCell>
+                        <TableCell sx={{ fontSize: '16px', fontFamily: 'poppins' }}>{faq?.identity}</TableCell>
+                        <TableCell sx={{ fontSize: '16px', fontFamily: 'poppins' }}>{faq?.category?.identity}</TableCell>
                         <TableCell>
-                          <Switch value={!faq?.is_active} checked={faq?.is_active} onChange={(e) => handleStatusChange(e,faq)} />
+                          <Switch value={!faq?.is_active} checked={faq?.is_active} onChange={(e) => handleStatusChange(e, faq)} />
                         </TableCell>
-                        <TableCell sx={{ display: 'flex', gap: "5px"}}>
-                          <Tooltip title={"Edit"} >
-                           <IconButton  sx={{ backgroundColor: "#5f71fa33", width: "36px", height: "36px",borderRadius: "18px", ":hover": {  backgroundColor: "#5f71fa80", transition: ".2s ease-in-out",transform: "scale(1.2)"}}} onClick={()=>{
-                             setSelectedRow(setSelectedRow({
-                              id: faq.uuid, 
-                              title: faq.identity, 
-                              description: faq.description 
-                            }))
-                            toggleEditUserDrawer();
-                           }} >
-                             <EditOutlinedIcon sx={{ width: "18px", height: "18px",color:"#5f71fa"}} />
-                           </IconButton>
+                        <TableCell sx={{ display: 'flex', gap: '5px' }}>
+                          <Tooltip title={'Edit'}>
+                            <IconButton
+                              sx={{
+                                backgroundColor: '#5f71fa33',
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: '18px',
+                                ':hover': { backgroundColor: '#5f71fa80', transition: '.2s ease-in-out', transform: 'scale(1.2)' }
+                              }}
+                              onClick={() => {
+                                setSelectedRow({
+                                  id: faq.uuid,
+                                  title: faq.identity,
+                                  description: faq.description
+                                });
+
+                                // handleEdit(selectedRow?.id)
+                                toggleEditUserDrawer();
+                              }}
+                            >
+                              <EditOutlinedIcon sx={{ width: '18px', height: '18px', color: '#5f71fa' }} />
+                            </IconButton>
                           </Tooltip>
-                          <Tooltip title={"Delete"} >
-                           <IconButton onClick={() => handleDelete(faq?.uuid)} sx={{ backgroundColor: "#ff462633", width: "36px", height: "36px", borderRadius: "18px", ":hover" : { backgroundColor: "#ff462680", transform: "scale(1.2)", transition: "transform 0.3s ease background-color 0.3s ease"  } }} >
-                             <DeleteIcon sx={{ width: "23px", height: "23px",color: "#ff4626"}} />
-                           </IconButton>
+                          <Tooltip title={'Delete'}>
+                            <IconButton
+                              onClick={() => handleDelete(faq?.uuid)}
+                              sx={{
+                                backgroundColor: '#ff462633',
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: '18px',
+                                ':hover': {
+                                  backgroundColor: '#ff462680',
+                                  transform: 'scale(1.2)',
+                                  transition: 'transform 0.3s ease background-color 0.3s ease'
+                                }
+                              }}
+                            >
+                              <DeleteIcon sx={{ width: '23px', height: '23px', color: '#ff4626' }} />
+                            </IconButton>
                           </Tooltip>
                         </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={4} align="center" sx={{ fontSize: "18px", fontFamily: "poppins" }}>
+                      <TableCell colSpan={4} align="center" sx={{ fontSize: '18px', fontFamily: 'poppins' }}>
                         No Data Found
                       </TableCell>
                     </TableRow>
-                  )
-                   }
-                 </TableBody>
-               </Table>
+                  )}
+                </TableBody>
+              </Table>
             </TableContainer>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
-            <Pagination
-              count={faqCategories?.last_page || 1}
-              page={currentPage}
-              onChange={(e, page) => setCurrentPage(page)}
-            />
-          </Box>
+              <Pagination count={faqs.last_page || 1} page={currentPage} onChange={(e, page) => setCurrentPage(page)} />
+            </Box>
           </Grid>
           <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories} setRefetch={setRefetch} />
           <FaqEdit
@@ -211,11 +273,15 @@ const FaqDataGrid = () => {
             initialValues={selectedRow}
             faqCategories={faqCategories}
             setRefetch={setRefetch}
+            // handleSubmit={handleEditApi}
+            selectedRow={selectedRow}
           />
           <DeleteDialog
             open={isDeleteDialogOpen}
             setOpen={setDeleteDialogOpen}
             description="Are you sure you want to delete this item?"
+            successDescription="faq deleted successfully"
+            failureDescription="failed"
             title="Delete"
             handleSubmit={handleDeleteApi}
           />

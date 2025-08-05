@@ -34,7 +34,7 @@ const UserViewAccount = ({ id }) => {
         user_id: userId
       };
       const result = await getUserActivityLog(data);
-      if (result.success) {
+      if (result.status===success) {
         console.log('ActivityLog:', result.data);
         setActivityLog(result.data);
       } else {
@@ -45,7 +45,7 @@ const UserViewAccount = ({ id }) => {
     }
   };
 
-  console.log(activityLog);
+  console.log('activityLog',activityLog);
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>

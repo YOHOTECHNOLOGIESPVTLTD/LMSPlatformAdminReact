@@ -53,7 +53,7 @@ const SidebarLeft = (props) => {
   const [query, setQuery] = useState('');
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [active, setActive] = useState(null);
-  console.log(store);
+  console.log('store',store);
 
   useEffect(() => {
     if (store && store.chats) {

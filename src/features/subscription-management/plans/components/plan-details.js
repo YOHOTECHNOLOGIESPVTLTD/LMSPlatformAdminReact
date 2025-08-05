@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { getAllSubscriptionPlans } from '../redux/subscriptionPlansThunks';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import CheckIcon from "../../../../assets/images/subscription/check.png"
+import CheckIcon from '../../../../assets/images/subscription/check.png';
 import { getImageUrl } from 'themes/imageUtlis';
 
 // Styled component for the plan card wrapper
@@ -20,7 +20,7 @@ const BoxWrapper = styled(motion(Box))(({ theme }) => ({
   position: 'relative',
   padding: theme.spacing(3),
   borderRadius: theme.shape.borderRadius,
-  boxShadow: "0 0 6px rgba(0, 0, 0, 0.3)",
+  boxShadow: '0 0 6px rgba(0, 0, 0, 0.3)',
   backgroundColor: '#fff',
   overflow: 'hidden',
   transition: 'box-shadow 0.3s ease, transform 0.3s ease',
@@ -28,7 +28,7 @@ const BoxWrapper = styled(motion(Box))(({ theme }) => ({
   '&:hover': {
     boxShadow: '0 0.5rem 1rem rgba(0, 0, 0, 0.2)',
     transform: 'scale(1.02) translateY(-10px)', // slight scale and lift
-    background: 'linear-gradient(135deg, #f0f4f8 30%, #d1e3ff 90%)',
+    background: 'linear-gradient(135deg, #f0f4f8 30%, #d1e3ff 90%)'
   },
   '&::before': {
     content: '""',
@@ -39,16 +39,16 @@ const BoxWrapper = styled(motion(Box))(({ theme }) => ({
     height: '100%',
     // background: 'linear-gradient(135deg, #0CCE7F 0%, #bdc8f0 100%)',
     opacity: 0.4,
-    transition: 'opacity 0.3s ease',
+    transition: 'opacity 0.3s ease'
   },
   '&:hover::before': {
-    opacity: 0.2, // subtle background fade
+    opacity: 0.2 // subtle background fade
   }
 }));
 
 // Framer Motion animation variants for initial fade-in
 const fadeInVariants = {
-  hidden: { opacity: 0, y: 20 },  // start slightly below and faded
+  hidden: { opacity: 0, y: 20 }, // start slightly below and faded
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeInOut' } }
 };
 
@@ -59,14 +59,14 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
     backgroundColor: '#f0f4f8',
     transition: 'background-color 0.3s ease',
     '&:hover': {
-      backgroundColor: '#e0e7ff',
+      backgroundColor: '#e0e7ff'
     },
     '&.Mui-focused': {
-      backgroundColor: '#d0d8ff',
-    },
+      backgroundColor: '#d0d8ff'
+    }
   },
   '& .MuiSelect-icon': {
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   }
 }));
 
@@ -80,7 +80,7 @@ const PriceBox = styled(motion.div)(({ theme }) => ({
     fontWeight: 600,
     color: theme.palette.primary.main,
     marginRight: '4px',
-    fontSize: '1.5rem',
+    fontSize: '1.5rem'
   },
   '& .price': {
     fontWeight: 700,
@@ -90,14 +90,14 @@ const PriceBox = styled(motion.div)(({ theme }) => ({
     textShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // subtle shadow
     transition: 'transform 0.3s ease', // smooth scaling animation
     '&:hover': {
-      transform: 'scale(1.1)', // scale up slightly on hover
+      transform: 'scale(1.1)' // scale up slightly on hover
     }
   },
   '& .month': {
     fontWeight: 500,
     color: theme.palette.grey[600],
     marginLeft: '4px',
-    fontSize: '1.125rem',
+    fontSize: '1.125rem'
   }
 }));
 
@@ -106,20 +106,20 @@ const FeatureGrid = styled(motion(Grid))(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   marginBottom: theme.spacing(2),
-  gap: "10px",
-  marginLeft: "20%",
+  gap: '10px',
+  marginLeft: '20%',
   opacity: 0,
-  transition: 'opacity 0.5s ease-in-out',
+  transition: 'opacity 0.5s ease-in-out'
 }));
 
 // Framer Motion animation variants
 const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
+  visible: { opacity: 1, transition: { duration: 0.5 } }
 };
 
 // Styled component for feature icons
-const FeatureIcon = styled("img")(({ theme }) => ({
+const FeatureIcon = styled('img')(({ theme }) => ({
   marginRight: theme.spacing(1)
 }));
 
@@ -127,7 +127,8 @@ const FeatureIcon = styled("img")(({ theme }) => ({
 const PlanDetails = (props) => {
   const dispatch = useDispatch();
   const { plans } = props;
-  
+  console.log(plans);
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState('');
   const [statusValue, setStatusValue] = useState('');
@@ -137,7 +138,8 @@ const PlanDetails = (props) => {
   const handleDeletePlan = async () => {
     try {
       const result = await deleteSubscriptionPlan(selectedPlanId);
-      if (result.success) {
+      console.log('resultPaymnet', result);
+      if (result.success === true) {
         toast.success(result.message);
         dispatch(getAllSubscriptionPlans());
       } else {
@@ -151,8 +153,8 @@ const PlanDetails = (props) => {
   // Handle status change
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      status: statusValue?.is_active === true ? false : true,
+      id: statusValue?.uuid
     };
     const response = await changeSubscriptionPlanStatus(data);
     if (response.success) {
@@ -168,13 +170,14 @@ const PlanDetails = (props) => {
     setStatusValue(plans);
   };
 
-  
+  console.log('status value', statusValue);
+
   const renderFeatures = () => {
     if (!plans?.features || plans.features.length === 0) return null;
-  
+
     return plans.features.map((feature, index) => {
       const uniqueKey = feature.feature?._id || feature.feature?.identity || feature.label || `feature-${index}`;
-  
+
       return (
         <FeatureGrid key={uniqueKey} variants={fadeIn} initial="hidden" animate="visible">
           <FeatureIcon src={CheckIcon} />
@@ -185,16 +188,11 @@ const PlanDetails = (props) => {
       );
     });
   };
-  
 
   const placeholderUrl = 'https://www.charitycomms.org.uk/wp-content/uploads/2019/02/placeholder-image-square.jpg';
 
   return (
-    <BoxWrapper
-    initial="hidden"
-    animate="visible"
-    variants={fadeInVariants}
-    >
+    <BoxWrapper initial="hidden" animate="visible" variants={fadeInVariants}>
       <Box
         sx={{
           mb: 4,
@@ -214,14 +212,11 @@ const PlanDetails = (props) => {
           style={{ borderRadius: '0.5rem' }}
         />
       </Box>
-      
-      
-      <Box sx={{ textAlign: 'center', my: "5px" }}>
-        <Typography sx={{ mb: 1.5, fontWeight: 600, lineHeight: 1.385, fontSize: '1.625rem' }}>
-          {plans?.identity}
-        </Typography>
+
+      <Box sx={{ textAlign: 'center', my: '5px' }}>
+        <Typography sx={{ mb: 1.5, fontWeight: 600, lineHeight: 1.385, fontSize: '1.625rem' }}>{plans?.identity}</Typography>
         <Typography sx={{ color: 'text.secondary' }}>{plans?.description}</Typography>
-        
+
         {/* Price Section */}
         <PriceBox initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
           <Typography className="currency">$</Typography>
@@ -229,20 +224,13 @@ const PlanDetails = (props) => {
           <Typography className="month">month</Typography>
         </PriceBox>
       </Box>
-      
+
       {/* Render Features */}
       {renderFeatures()}
 
       {/* Status and Options */}
       <Grid sx={{ display: 'flex', justifyContent: 'space-between' }} mt={3}>
-        <CustomTextField
-          size="small"
-          select
-          label="Status"
-          value={plans?.is_active}
-          onChange={(e) => handleStatusValue(e, plans)}
-
-        >
+        <CustomTextField size="small" select label="Status" value={plans?.is_active} onChange={(e) => handleStatusValue(e, plans)}>
           <MenuItem value="true">Active</MenuItem>
           <MenuItem value="false">Inactive</MenuItem>
         </CustomTextField>
@@ -267,11 +255,12 @@ const PlanDetails = (props) => {
                   setDeleteDialogOpen(true);
                 }
               }
-            }, {
-              text: 'View', 
+            },
+            {
+              text: 'View',
               menuItemProps: {
                 component: Link,
-                to: `view/${plans?.uuid}`, 
+                to: `view/${plans?.uuid}`,
                 state: { id: plans?.uuid, plans: plans }
               }
             }

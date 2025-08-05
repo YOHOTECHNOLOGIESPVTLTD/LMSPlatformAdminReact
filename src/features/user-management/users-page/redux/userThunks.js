@@ -5,7 +5,8 @@ import { setUsers, setLoading } from './userSlices';
 export const getAllUsers = (selectedBranchId) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const response = await fetchAllUsers(selectedBranchId); // Implement this function in your services
+    const response = await fetchAllUsers(selectedBranchId);
+    console.log('ressss',response) // Implement this function in your services
     dispatch(setUsers(response?.data?.data?.data));
   } catch (error) {
     console.error(error);

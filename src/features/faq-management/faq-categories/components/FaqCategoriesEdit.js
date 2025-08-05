@@ -12,22 +12,22 @@ import Icon from 'components/icon';
 import { updateFaqCategory } from '../services/faqCategoryServices';
 import toast from 'react-hot-toast';
 
-
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(6),
   justifyContent: 'space-between',
-  textAlign: "flex-start",
+  textAlign: 'flex-start'
 }));
 
 const schema = yup.object().shape({
   description: yup.string().required('Enter the Description must required').min(10, 'Description must be at least 10 characters long'),
-  identity: yup.string().min(3,'Title  must be at least 3 characters').required('Full Up the title ')
+  title: yup.string().min(3, 'Title  must be at least 3 characters').required('Full Up the title ')
 });
 
 const FaqCategoriesEdit = (props) => {
-  const { open, toggle, setRefetch, initialValues } = props;
+  const { open, toggle, setRefetch, initialValues, selectedRow } = props;
+  console.log('initial', initialValues);
 
   const [formValues, setFormValues] = useState(initialValues);
 
@@ -47,33 +47,32 @@ const FaqCategoriesEdit = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
- 
+
   useEffect(() => {
     reset(formValues);
   }, [formValues, reset]);
- 
+
   const onSubmit = async (data) => {
-    const isConfirmed = window.confirm("Are you sure you want to save changes?");
+    const isConfirmed = window.confirm('Are you sure you want to save changes?');
     if (!isConfirmed) return;
-    
+
     const inputData = {
-      identity: data.identity,
+      identity: data.title,
       description: data.description,
-      id: initialValues.uuid
+      id: selectedRow?.id
     };
 
-    try{
-    const result = await updateFaqCategory(inputData);
-    if (result.success) {
-      toast.success(result.message);
-      reset();
-      toggle();
-      setRefetch((state) => !state);
-    } else {
-      toast.error(result.message);
-    }
-  }
-    catch (error) {
+    try {
+      const result = await updateFaqCategory(inputData);
+      if (result.success) {
+        toast.success(result.message);
+        reset();
+        toggle();
+        setRefetch((state) => !state);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
       toast.error('An error occurred while updating the FAQ category. Please try again.');
     }
   };
@@ -81,7 +80,7 @@ const FaqCategoriesEdit = (props) => {
   const handleClose = () => {
     toggle();
   };
- // console.log(formValues,"formValues")
+  // console.log(formValues,"formValues")
   return (
     <Drawer
       open={open}
@@ -89,11 +88,12 @@ const FaqCategoriesEdit = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } , 
-    } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>Edit Faq Categories</Typography>
+        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+          Edit Faq Categories
+        </Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -106,34 +106,30 @@ const FaqCategoriesEdit = (props) => {
               backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
             },
             position: 'absolute',
-            top: '16px',  
-            right: '16px',
+            top: '16px',
+            right: '16px'
           }}
         >
           <Icon icon="tabler:x" fontSize="1.125rem" />
         </IconButton>
       </Header>
-      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) ,display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate 
-        style={{ width: '100%',
-            maxWidth: '400px',
-            padding: '16px',
-            }}> 
+      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6), display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ width: '100%', maxWidth: '400px', padding: '16px' }}>
           <Controller
-            name="identity"
+            name="title"
             control={control}
-           //rules={{ required: true }}
+            //rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
                 value={value}
                 sx={{ mb: 4 }}
-                label="Title"
+               
                 onChange={onChange}
                 placeholder="Enter the FAQ Title"
                 error={Boolean(errors.title)}
                 helperText={errors.identity?.message}
-               // {...(errors.title && { helperText: errors.title.message })}
+                // {...(errors.title && { helperText: errors.title.message })}
               />
             )}
           />
@@ -156,35 +152,33 @@ const FaqCategoriesEdit = (props) => {
               />
             )}
           />
-   <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
-  <Button 
-    type="submit" 
-    variant="contained" 
-    sx={{ 
-      mr: 3, 
-      backgroundColor: "#6d788d", 
-      color: "#fff", 
-      '&:hover': { backgroundColor: "#5a667a" } 
-    }}
-  >
-    Save Changes
-  </Button>
-  <Button 
-    variant="contained" 
-    size="medium" 
-    sx={{ 
-      color: "#fff", 
-      border: "1px solid #6d788d", 
-      backgroundColor: "#6d788d", 
-      '&:hover': { backgroundColor: "#5a667a", borderColor: "#5a667a" } 
-    }} 
-    onClick={handleClose}
-  >
-    Cancel
-  </Button>
-</Box>
-
-         
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: 'center' }}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                mr: 3,
+                backgroundColor: '#6d788d',
+                color: '#fff',
+                '&:hover': { backgroundColor: '#5a667a' }
+              }}
+            >
+              Save Changes
+            </Button>
+            <Button
+              variant="contained"
+              size="medium"
+              sx={{
+                color: '#fff',
+                border: '1px solid #6d788d',
+                backgroundColor: '#6d788d',
+                '&:hover': { backgroundColor: '#5a667a', borderColor: '#5a667a' }
+              }}
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+          </Box>
         </form>
       </Box>
     </Drawer>

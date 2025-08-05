@@ -93,11 +93,13 @@ export const deleteSubscriptionFeature = async (SubscriptionFeatureId) => {
 
 export const updateSubscriptionFeature = async (data) => {
   try {
-    const response = await axios.post(`${API_URL}/update`, data, {
+    const response = await axios.put(`${API_URL}/plan/${data.planId}`, data, {
       headers: getAuthHeaders(),
     });
+    console.log('responsefeature',response);
+    
 
-    return response.data.status
+    return response?.data?.status
       ? { success: true, message: 'Subscription Feature updated successfully' }
       : { success: false, message: 'Failed to update Subscription Feature' };
   } catch (error) {

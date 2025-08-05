@@ -23,7 +23,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
   const drawer = (
     <>
       <Box sx={{ display: { xs: 'block' } }}>
-        <Box sx={{ display: 'flex', p: 2, mx: 'auto', justifyContent: "center" }}>
+        <Box sx={{ display: 'flex', p: 2, mx: 'auto', justifyContent: 'center' }}>
           <LogoSection />
         </Box>
       </Box>
@@ -65,8 +65,8 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
         sx={{
           '& .MuiDrawer-paper': {
             width: drawerWidth,
-            background: "white",
-            color: "black",
+            background: 'white',
+            color: 'black',
             borderRight: 'none',
             [theme.breakpoints.up('md')]: {
               top: '0px'

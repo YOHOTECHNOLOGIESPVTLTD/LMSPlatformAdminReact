@@ -32,13 +32,12 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
-import { selectPayments,selectLoading } from '../redux/paymentSelectors';
+import { selectPayments, selectLoading } from '../redux/paymentSelectors';
 import { getAllPayments } from '../redux/paymentThunks';
 import { getImageUrl } from 'themes/imageUtlis';
 import { formateDate } from 'utils';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -55,7 +54,7 @@ const CustomNoRowsOverlay = () => {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
-        fontSize: '18px',
+        fontSize: '18px'
       }}
     >
       <Typography variant="body1" color="textSecondary">
@@ -106,7 +105,7 @@ const FeesTable = () => {
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
-  const [page,setPage] = useState(1)
+  const [page, setPage] = useState(1);
 
   function convertDateFormat(input) {
     // Create a new Date object from the original date string
@@ -122,7 +121,6 @@ const FeesTable = () => {
     return formattedDateString;
   }
 
-
   const dispatch = useDispatch();
   const payments = useSelector(selectPayments);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -133,22 +131,20 @@ const FeesTable = () => {
     dispatch(
       getAllPayments({
         branch_id: selectedBranchId,
-        page : page
+        page: page
       })
     );
-  }, [dispatch, selectedBranchId, refetch,page]);
+  }, [dispatch, selectedBranchId, refetch, page]);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
     console.log('Toggle drawer');
   };
 
-
-
   const handleRowClick = (rowData) => {
     setSelectedRows(rowData);
   };
-
+  
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
     if (start !== null && end !== null) {
@@ -192,15 +188,16 @@ const FeesTable = () => {
       field: 'institute_name',
       headerName: 'Institute Name',
       renderCell: ({ row }) => {
+        console.log("Row id",row)
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row?.institute?.institute_name??""}
+                {row?.institute?.institute_name ?? ''}
               </Typography>
-              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 400,fontSize:"12px" ,mt:0.5}}>
-                {row?.institute?.email??""}
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 400, fontSize: '12px', mt: 0.5 }}>
+                {row?.institute?.email ?? ''}
               </Typography>
             </Box>
           </Box>
@@ -219,16 +216,19 @@ const FeesTable = () => {
       minWidth: 150,
       field: 'issuedDate',
       headerName: 'Issued Date',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{ formateDate(row?.currentSubscriptionPlan?.startDate)} - {formateDate(row?.currentSubscriptionPlan?.endDate)}</Typography>
+      renderCell: ({ row }) => (
+        <Typography sx={{ color: 'text.secondary' }}>
+          {formateDate(row?.currentSubscriptionPlan?.startDate)} - {formateDate(row?.currentSubscriptionPlan?.endDate)}
+        </Typography>
+      )
     },
     {
       flex: 1.25,
       minWidth: 100,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) =>
-       <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
-    },
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
+    }
   ];
 
   const columns = [
@@ -240,9 +240,15 @@ const FeesTable = () => {
       field: 'actions',
       headerName: 'Actions',
       renderCell: ({ row }) => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }} >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Tooltip title="View">
-            <IconButton component={Link} state={{ id : row?.institute?.uuid }} size="small" sx={{ color: 'text.secondary' }} to={`/payment-management/payments/${row?.institute?.uuid}/view`}>
+            <IconButton
+              component={Link}
+              state={{ id: row?.institute?.uuid }}
+              size="small"
+              sx={{ color: 'text.secondary' }}
+              to={`/payment-management/payments/${row?.institute?.uuid}/view`}
+            >
               <Icon icon="tabler:eye" />
             </IconButton>
           </Tooltip>
@@ -290,7 +296,7 @@ const FeesTable = () => {
     }
   ];
 
-  const loading = useSelector(selectLoading)
+  const loading = useSelector(selectLoading);
 
   return (
     <DatePickerWrapper>
@@ -300,7 +306,7 @@ const FeesTable = () => {
         }
       }} titleTypographyProps={true} /> */}
       <Grid container spacing={2}>
-        <Grid item xs={12} sx={{ display: "none"}}>
+        <Grid item xs={12} sx={{ display: 'none' }}>
           <Card>
             <CardContent>
               <Grid container spacing={2}>
@@ -353,7 +359,7 @@ const FeesTable = () => {
           </Card>
         </Grid>
         <Grid item xs={12}>
-          {!loading && <PaymentCardHeader selectedBranchId={selectedBranchId}  selectedRows={selectedRows}  toggle={toggleAddUserDrawer} /> }
+          {!loading && <PaymentCardHeader selectedBranchId={selectedBranchId} selectedRows={selectedRows} toggle={toggleAddUserDrawer} />}
         </Grid>
         <Grid item xs={12}>
           <Card>
@@ -361,23 +367,23 @@ const FeesTable = () => {
               <FeesTableSkeleton />
             ) : (
               <DataGrid
-                sx={{ 
-              "& .MuiDataGrid-row" : {
-                border : "1px solid #e6e5e7",
-                borderLeft: "none",
-                borderRight: "none",
-                ":hover" : {
-                   backgroundColor : "#f5f5f7",
-                   border : "1px solid #e6e5e7",
-                   borderLeft: "none",
-                   borderRight: "none"
-                }
-              },
-              "& .MuiDataGrid-columnHeaders" : {
-                   border : "1px solid #e6e5e7",
-                   borderLeft: "none",
-                   borderRight: "none"
-              }
+                sx={{
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    ':hover': {
+                      backgroundColor: '#f5f5f7',
+                      border: '1px solid #e6e5e7',
+                      borderLeft: 'none',
+                      borderRight: 'none'
+                    }
+                  },
+                  '& .MuiDataGrid-columnHeaders': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
+                  }
                 }}
                 autoHeight
                 pagination
@@ -392,7 +398,7 @@ const FeesTable = () => {
                 onPaginationModelChange={setPaginationModel}
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
                 slots={{
-                  noRowsOverlay : CustomNoRowsOverlay
+                  noRowsOverlay: CustomNoRowsOverlay
                 }}
                 disableColumnMenu={true}
                 disableColumnFilter={true}
@@ -402,12 +408,21 @@ const FeesTable = () => {
         </Grid>
       </Grid>
 
-      { payments.last_page !== 1&& <Grid container spacing={3} sx={{ pl: 5, mt: 1 ,alignItems:'right' ,justifyContent:'right'}}>
-                  <Stack spacing={2}>
-                    <Pagination page={page} onChange={(e,newPage) => {console.log(newPage);setPage(newPage)}} count={payments.last_page } color="primary" />
-                  </Stack>
-                </Grid>
-                }
+      {payments.last_page !== 1 && (
+        <Grid container spacing={3} sx={{ pl: 5, mt: 1, alignItems: 'right', justifyContent: 'right' }}>
+          <Stack spacing={2}>
+            <Pagination
+              page={page}
+              onChange={(e, newPage) => {
+                console.log(newPage);
+                setPage(newPage);
+              }}
+              count={payments.last_page}
+              color="primary"
+            />
+          </Stack>
+        </Grid>
+      )}
 
       {/* <PaymentAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} /> */}
       <PaymentEditDrawer

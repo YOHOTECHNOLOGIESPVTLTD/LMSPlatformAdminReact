@@ -43,9 +43,9 @@ const Institutes = () => {
   // const [value, setValue] = useState('');
   // const [status, setStatus] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 1 });
   // const [allInstitutes, setAllInstitutes] = useState('');
- 
 
   const [selectedInstitutes, setSelectedInstitutes] = useState(null);
   const [selectedInstitutesStatus, setSelectedInstitutesStatus] = useState(null);
@@ -53,20 +53,30 @@ const Institutes = () => {
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const { showSpinnerFn, hideSpinnerFn } = useSpinner();
+  const [filteredInstitutes, setFilteredInstitutes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const dispatch = useDispatch();
   const allInstitutes = useSelector(selectInstitutes);
-  console.log(allInstitutes)
+  console.log(allInstitutes);
   const instituteLoading = useSelector(selectLoading);
 
   useEffect(() => {
     showSpinnerFn();
-    dispatch(getAllInstitutes());
+    dispatch(getAllInstitutes({ page: currentPage, perPage: 10 }));
     hideSpinnerFn();
-  }, [dispatch, getAllInstitutes, selectedBranchId, refetch]);
+  }, [dispatch, currentPage, getAllInstitutes, selectedBranchId, refetch]);
 
   console.log(allInstitutes);
 
+  useEffect(() => {
+    if (allInstitutes?.data) {
+      const fInstitute = allInstitutes?.data?.filter((institute) =>
+        institute?.institute_name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredInstitutes(fInstitute);
+    }
+  }, [allInstitutes, searchTerm]);
   // const handleFilter = useCallback((val) => {
   //   setValue(val);
   // }, []);
@@ -332,7 +342,7 @@ const Institutes = () => {
         <Grid container spacing={3}>
           {/* User Header Section */}
           <Grid item xs={12}>
-            <InstituteHeaderSection users={allInstitutes?.data} groups={allInstitutes?.data} />
+            <InstituteHeaderSection allInstitutes={allInstitutes?.data} groups={allInstitutes?.data} />
           </Grid>
 
           {/* User Filter Card */}
@@ -386,22 +396,37 @@ const Institutes = () => {
         </Grid> */}
 
           <Grid item xs={12}>
-            <TableHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
+            <TableHeader
+              searchTerm={searchTerm}
+              handleFilter={(val) => setSearchTerm(val)}
+              toggle={toggleAddUserDrawer}
+              selectedBranchId={selectedBranchId}
+            />
           </Grid>
 
           {/* Display Skeleton or User Body Section based on loading state */}
 
           <Grid container spacing={3} sx={{ paddingLeft: '24px' }}>
-            {allInstitutes?.data?.map((institute, index) => (
-              <InstituteCard institute={institute} key={institute?._id} index={index} />
-            ))}
+            {filteredInstitutes?.length > 0 ? (
+              filteredInstitutes?.map((institute, index) => <InstituteCard institute={institute} key={institute?._id} index={index} />)
+            ) : (
+              <Box sx={{width:"100%",textAlign: 'center',mt:5}}>
+                <Typography >No Institutes Found</Typography>
+              </Box>
+            )}
           </Grid>
-         { allInstitutes.last_page >=1&& <Grid container spacing={3} sx={{ pl: 5, mt: 1 ,alignItems:'right' ,justifyContent:'right'}}>
-            <Stack spacing={2}>
-              <Pagination count={allInstitutes.last_page } color="primary" />
-            </Stack>
-          </Grid>
-          }
+          {allInstitutes.last_page >= 1 && (
+            <Grid container spacing={3} sx={{ pl: 5, mt: 1, alignItems: 'right', justifyContent: 'right' }}>
+              <Stack spacing={2}>
+                <Pagination
+                  count={allInstitutes?.last_page}
+                  page={currentPage}
+                  onChange={(e, page) => setCurrentPage(page)}
+                  color="primary"
+                />
+              </Stack>
+            </Grid>
+          )}
 
           {instituteLoading ? (
             <UserSkeleton />
@@ -413,12 +438,15 @@ const Institutes = () => {
                   autoHeight
                   // rowHeight={90}
                   getRowHeight={() => 'auto'}
-                  rows={allInstitutes}
+                  rows={filteredInstitutes || []}
                   columns={columns}
                   disableRowSelectionOnClick
                   pageSizeOptions={[10, 25, 50]}
-                  paginationModel={paginationModel}
-                  onPaginationModelChange={setPaginationModel}
+                  paginationModel={{ page: currentPage - 1, pageSize: paginationModel.pageSize }}
+                  onPaginationModelChange={(model) => {
+                    setPaginationModel(model);
+                    setCurrentPage(model.page + 1);
+                  }}
                 />
               </Card>
             </Grid>

@@ -15,9 +15,13 @@ import { useLocation } from 'react-router-dom';
 
 // import { getUserProfileById } from 'features/user-management/users-page/services/userServices';
 import { getProfileWithId } from 'features/authentication/forgot-password-page/service/forgotPasswordService';
+import { useDispatch } from 'react-redux';
+import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 
 const UserView = () => {
+  const dispatch=useDispatch()
   const location = useLocation();
+  console.log('loc',location)
 
   useEffect(() => {
     setUserId(location);
@@ -29,7 +33,6 @@ const UserView = () => {
   const [loading, setLoading] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const [userData, setUserData] = useState([]);
-
   useEffect(() => {
     getUserData(userId);
   }, [userId, refetch]);
@@ -38,11 +41,13 @@ const UserView = () => {
     try {
       // setLoading(true);
       const result = await getProfileWithId(id);
+      
       console.log('result',result);
       
       if (result.status==="success") {
         console.log('User:', result.data);
         setUserData(result.data);
+        dispatch(setUsers(result.data))
         console.log('setUserData',userData);
         
         setLoading(false);
@@ -55,6 +60,7 @@ const UserView = () => {
     }
   };
   console.log('userData',userData);
+  console.log('userID',userId)
   
   return (
     <>

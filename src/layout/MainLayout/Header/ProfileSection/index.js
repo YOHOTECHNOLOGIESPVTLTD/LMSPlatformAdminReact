@@ -13,14 +13,17 @@ import {
   ClickAwayListener,
   Divider,
   Grid,
+  InputAdornment,
   // InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  OutlinedInput,
   // OutlinedInput,
   Paper,
   Popper,
+  Stack,
   // Stack,
   Switch,
   Typography
@@ -34,16 +37,16 @@ import MainCard from 'components/cards/MainCard';
 import Transitions from 'components/extended/Transitions';
 // import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
-import { useNavigate } from 'react-router-dom';
+// import { useLocation, useNavigate } from 'react-router-dom';
 import { logout } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 
 // assets
-import {
-  IconLogout,
-  IconSettings,
-} from '@tabler/icons';
-// import { useNavigate } from 'react-router-dom';
+import { IconLogout, IconSettings } from '@tabler/icons';
+// import { selectUsers } from 'features/user-management/users-page/redux/userSelectors';
+// import { getUserById } from 'features/user-management/users-page/services/userServices';
+import { useNavigate } from 'react-router-dom';
+import { getImageUrl } from 'themes/imageUtlis';
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
@@ -51,6 +54,10 @@ const ProfileSection = () => {
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userDatas = useSelector((state) => state.auth.userData);
+
+  console.log('usersss',userDatas);
+  
 
   const [sdm, setSdm] = useState(true);
   // const [value, setValue] = useState('');
@@ -69,6 +76,43 @@ const ProfileSection = () => {
     dispatch(logout());
   };
 
+  // const location = useLocation();
+
+  // useEffect(() => {
+  //   setUserId(location?.state?.id);
+  // }, [location]);
+
+  // const [userId, setUserId] = useState(location?.state?.id);
+  // const [loading, setLoading] = useState(false);
+  // const [userData, setUserData] = useState([]);
+
+  // useEffect(() => {
+  //   if (userId) {
+  //     getUserData(userId);
+  //   }
+  // }, [userId]);
+
+  // const getUserData = async (id) => {
+  //   try {
+  //     const data = {
+  //       id: id
+  //     };
+  //     setLoading(false);
+  //     const result = await getUserById(data);
+  //     if (result.success) {
+  //       console.log('User:', result.data);
+  //       setUserData(result.data);
+  //       // setLoading(false);
+  //     } else {
+  //       console.log(result.message);
+  //       // setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // console.log('userdata from header', userData);
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
@@ -106,28 +150,28 @@ const ProfileSection = () => {
           alignItems: 'center',
           borderRadius: '27px',
           transition: 'all .2s ease-in-out',
-          borderColor: theme.palette.primary.light,
-          backgroundColor: theme.palette.primary.light,
-          '&[aria-controls="menu-list-grow"], &:hover': {
-            borderColor: theme.palette.primary.main,
-            background: `${theme.palette.primary.main}!important`,
-            color: theme.palette.primary.light,
-            '& svg': {
-              stroke: theme.palette.primary.light
-            }
-          },
-          '& .MuiChip-label': {
-            lineHeight: 0
-          }
+          // borderColor: theme.palette.primary.light,
+          // backgroundColor: theme.palette.primary.light,
+          // '&[aria-controls="menu-list-grow"], &:hover': {
+          //   borderColor: theme.palette.primary.main,
+          //   background: `${theme.palette.primary.main}!important`,
+          //   color: theme.palette.primary.light,
+          //   '& svg': {
+          //     stroke: theme.palette.primary.light
+          //   }
+          // },
+          // '& .MuiChip-label': {
+          //   lineHeight: 0
+          // }
         }}
         icon={
           <Avatar
-            src={User1}
-            sx={{
-              ...theme.typography.mediumAvatar,
-              margin: '8px 0 8px 8px !important',
-              cursor: 'pointer'
-            }}
+            src={getImageUrl(userDatas?.image)||User1}
+            // sx={{
+            //   ...theme.typography.mediumAvatar,
+            //   margin: '8px 0 8px 8px !important',
+            //   cursor: 'pointer'
+            // }}
             ref={anchorRef}
             aria-controls={open ? 'menu-list-grow' : undefined}
             aria-haspopup="true"
@@ -135,12 +179,12 @@ const ProfileSection = () => {
           />
         }
         // label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
-        variant="outlined"
+        // variant="contained"
         ref={anchorRef}
         aria-controls={open ? 'menu-list-grow' : undefined}
         aria-haspopup="true"
         onClick={handleToggle}
-        color="primary"
+        // color="primary"
       />
       <Popper
         placement="bottom-end"
@@ -165,7 +209,7 @@ const ProfileSection = () => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
-                  {/* <Box sx={{ p: 2 }}>
+                  <Box sx={{ p: 2 }}>
                     <Stack>
                       <Stack direction="row" spacing={0.5} alignItems="center">
                         <Typography variant="h4">Good Morning,</Typography>
@@ -184,7 +228,7 @@ const ProfileSection = () => {
                       startAdornment={
                         <InputAdornment position="start">
                           {/* <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} /> */}
-                        {/* </InputAdornment>
+                   </InputAdornment>
                       }
                       aria-describedby="search-helper-text"
                       inputProps={{
@@ -192,7 +236,7 @@ const ProfileSection = () => {
                       }}
                     />
                      <Divider /> 
-                  </Box> */} 
+                  </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>
                       {/* <UpgradePlanCard /> */}
@@ -316,11 +360,9 @@ const ProfileSection = () => {
             </Paper>
           </Transitions>
         )}
-
       </Popper>
     </>
   );
 };
-
 
 export default ProfileSection;

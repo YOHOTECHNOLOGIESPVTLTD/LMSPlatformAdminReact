@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -55,11 +55,13 @@ const status = [
 // ==============================|| NOTIFICATION ||============================== //
 
 const NotificationSection = () => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
+  const [page, setPage] = useState(1);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
@@ -88,6 +90,11 @@ const NotificationSection = () => {
     if (event?.target.value) setValue(event?.target.value);
   };
 
+  const handleNavigate=()=>{
+    navigate('/notification-management/notifications')
+    handleToggle()
+    setPage(2)
+  }
   return (
     <>
       <Box
@@ -196,13 +203,13 @@ const NotificationSection = () => {
                             <Divider sx={{ my: 0 }} />
                           </Grid>
                         </Grid>
-                        <NotificationList />
+                        <NotificationList page={page}/>
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>
                   <Divider />
                   <CardActions sx={{ p: 1.25, justifyContent: 'center' }}>
-                    <Button size="small" disableElevation>
+                    <Button onClick={handleNavigate} size="small" disableElevation>
                       View All
                     </Button>
                   </CardActions>

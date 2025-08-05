@@ -80,7 +80,7 @@ const MainLayout = () => {
           transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
         }}
       >
-        <Toolbar sx={{ borderRadius: "15px", boxShadow: 1, margin: "1rem", backgroundColor: "white"}} >
+        <Toolbar sx={{ borderRadius: "15px", boxShadow: 1, margin: "1rem", backgroundColor: "#002B38"}} >
           <Header handleLeftDrawerToggle={handleLeftDrawerToggle} />
         </Toolbar>
       </AppBar>

@@ -13,7 +13,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectInstitutes } from 'features/institute-management/redux/instituteSelectors';
 import { useSpinner } from 'context/spinnerContext';
 import toast from 'react-hot-toast';
-import { createInstituteNotification, getInstituteBrancheswithId } from 'features/notification-management/notifications/services/instituteNotificationServices';
+import {
+  createInstituteNotification,
+  getInstituteBrancheswithId
+} from 'features/notification-management/notifications/services/instituteNotificationServices';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -39,33 +42,32 @@ const schema = yup.object().shape({
     .required(),
   body: yup.string().required('Body field is required').min(2),
   institutes: yup.object().required('instituteList field is required'),
-  branches : yup.array().min(1,"Select at least one branches").required("branch is required"),
-  link : yup.string().optional()
+  branches: yup.array().min(1, 'Select at least one branches').required('branch is required'),
+  link: yup.string().optional()
 });
 
 const defaultValues = {
   title: '',
   institutes: {},
-  branches : [],
+  branches: [],
   body: '',
-  link:''
+  link: ''
 };
 
 const SidebarAddUser = (props) => {
   const { open, toggle } = props;
-  const [branchList,setBranchList] = useState([])
+  const [branchList, setBranchList] = useState([]);
   // const [inputValue, setInputValue] = useState('');
   // const image = require('../../../assets/images/avatar/1.png');
   // const [imgSrc, setImgSrc] = useState(image);
   // const [selectedImage, setSelectedImage] = useState('');
-  const dispatch = useDispatch()
-  const instituteList = useSelector(selectInstitutes)
-  const { showSpinnerFn , hideSpinnerFn } = useSpinner()
+  const dispatch = useDispatch();
+  const instituteList = useSelector(selectInstitutes);
+  const { showSpinnerFn, hideSpinnerFn } = useSpinner();
 
   useEffect(() => {
-    dispatch(getAllInstitutes())
+    dispatch(getAllInstitutes());
   }, [dispatch]);
-
 
   const {
     reset,
@@ -81,29 +83,31 @@ const SidebarAddUser = (props) => {
   });
 
   const onSubmit = async (data) => {
-    
     try {
-      showSpinnerFn()
-      const filterbranches = data.branches?.map((e) => e.uuid)
-      console.log(filterbranches,data);
+      showSpinnerFn();
+      const filterbranches = data?.branches?.map((e) => e.uuid);
+      console.log(filterbranches, data);
       const new_notification = {
-      title : data.title,
-      body : data.body,
-      link : data.link,
-      institute_id : data?.institutes?._id,
-      branches : filterbranches
-    }
-    await createInstituteNotification(new_notification)
+        title: data.title,
+        body: data.body,
+        link: data.link,
+        institute_id: data?.institutes?._id,
+        branches: filterbranches
+      };
+      const response = createInstituteNotification(new_notification);
+      if (response.status === 'success') {
+        toast.success(response.message);
+      }
       setError('');
       toggle();
       reset();
     } catch (error) {
-      toast.error(error?.message)
-    }finally{
-     hideSpinnerFn()
+      toast.error(error?.message);
+    } finally {
+      hideSpinnerFn();
     }
   };
-  console.log(instituteList,"instituteList",errors,control)
+  console.log(instituteList?.data, 'instituteList', errors, control);
   // const ImgStyled = styled('img')(({ theme }) => ({
   //   width: 100,
   //   height: 100,
@@ -136,7 +140,7 @@ const SidebarAddUser = (props) => {
     toggle();
     reset();
   };
-  
+
   return (
     <Drawer
       open={open}
@@ -158,8 +162,8 @@ const SidebarAddUser = (props) => {
             backgroundColor: 'action.selected',
             '&:hover': {
               backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`,
-              rotate: "90deg",
-              transition: "roatate 0.3s ease-in"
+              rotate: '90deg',
+              transition: 'roatate 0.3s ease-in'
             }
           }}
         >
@@ -184,7 +188,7 @@ const SidebarAddUser = (props) => {
               </ButtonStyled>
             </div>
           </Box> */}
-           <Grid>
+          <Grid>
             <Controller
               name="institutes"
               control={control}
@@ -194,24 +198,25 @@ const SidebarAddUser = (props) => {
                   // multiple
                   id="select-multiple-chip"
                   sx={{ mb: 4 }}
-                  options={instituteList}
-                  getOptionLabel={(option) => option.institute_name}
+                  options={Array.isArray(instituteList?.data) ? instituteList?.data : []}
+                  getOptionLabel={(option) => option?.institute_name || ''}
                   value={value}
                   onChange={async (e, newValue) => {
-                    console.log(newValue)
-                      try {
-                        showSpinnerFn()
-                        onChange(newValue);
-                        const data = { institute : newValue?.uuid}
-                        console.log(data,newValue,"data and new value")
-                        const response = await getInstituteBrancheswithId(data)
-                        console.log(response,"response")
-                        setBranchList(response?.data?.data)
-                      } catch (error) {
-                        toast.error(error?.message)
-                      }finally{
-                        hideSpinnerFn()
-                      }
+                    console.log(newValue);
+                    try {
+                      showSpinnerFn();
+                      onChange(newValue);
+                      const data = { institute: newValue?.uuid };
+                      console.log(data, newValue, 'data and new value');
+                      const response = await getInstituteBrancheswithId(data);
+
+                      console.log(response, 'response');
+                      setBranchList(response?.data?.data);
+                    } catch (error) {
+                      toast.error(error?.message);
+                    } finally {
+                      hideSpinnerFn();
+                    }
                   }}
                   renderInput={(params) => (
                     <TextField
@@ -269,8 +274,8 @@ const SidebarAddUser = (props) => {
                   getOptionLabel={(option) => option.branch_identity}
                   value={value}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.id === 'selectAll')) {
-                      onChange(instituteList.filter((option) => option.id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option?.id === 'selectAll')) {
+                      onChange(instituteList?.filter((option) => option?.id !== 'selectAll'));
                     } else {
                       onChange(newValue);
                     }
@@ -359,53 +364,53 @@ const SidebarAddUser = (props) => {
             />
           </Grid>
           <Grid>
-            <Controller 
-             name="link"
-             control={control}
-             rules={{ required: false }}
-             render={({ field : { value, onChange}}) => (
-              <TextField
-               fullWidth
-               sx={{ mb: 4}}
-               label="Link"
-               placeholder='https://www.{some_notification_related_links}.com'
-               onChange={onChange}
-               value={value}
-               error={Boolean(errors?.link)}
-               helperText={errors?.link?.message || ''}
-              // {...(errors?.link) && { helperText: errors?.link?.message} }
-              />
-             )}
+            <Controller
+              name="link"
+              control={control}
+              rules={{ required: false }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  fullWidth
+                  sx={{ mb: 4 }}
+                  label="Link"
+                  placeholder="https://www.{some_notification_related_links}.com"
+                  onChange={onChange}
+                  value={value}
+                  error={Boolean(errors?.link)}
+                  helperText={errors?.link?.message || ''}
+                  // {...(errors?.link) && { helperText: errors?.link?.message} }
+                />
+              )}
             />
           </Grid>
-          <Box sx={{ display: 'flex', alignItems: 'center',justifyContent: 'center', mt: 3 }}>
-  <Button
-    type="submit"
-    variant="contained"
-    sx={{ 
-      mr: 3, 
-      borderRadius: 2, 
-       boxShadow: 3,
-      '&:hover': { boxShadow: 6 }
-    }}
-  >
-    Submit
-  </Button>
-  <Button
-    variant="contained"
-    color="secondary"
-    sx={{ 
-      backgroundColor: '#f0f0f0', 
-      color: '#333', 
-      borderRadius: 2, 
-      boxShadow: 1, 
-      '&:hover': { backgroundColor: '#e0e0e0', boxShadow: 4 }
-    }}
-    onClick={handleClose}
-  >
-    Cancel
-  </Button>
-</Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 3 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                mr: 3,
+                borderRadius: 2,
+                boxShadow: 3,
+                '&:hover': { boxShadow: 6 }
+              }}
+            >
+              Submit
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{
+                backgroundColor: '#f0f0f0',
+                color: '#333',
+                borderRadius: 2,
+                boxShadow: 1,
+                '&:hover': { backgroundColor: '#e0e0e0', boxShadow: 4 }
+              }}
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+          </Box>
 
           {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>

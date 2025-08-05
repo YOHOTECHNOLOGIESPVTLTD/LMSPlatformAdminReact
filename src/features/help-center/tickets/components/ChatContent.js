@@ -41,7 +41,9 @@ const ChatContent = (props) => {
     sidebarWidth,
     userProfileRightOpen,
     handleLeftSidebarToggle,
-    handleUserProfileRightSidebarToggle,selectedTicket,handleSendMessages
+    handleUserProfileRightSidebarToggle,
+    selectedTicket,
+    handleSendMessages
   } = props;
 
   const handleStartConversation = () => {
@@ -49,11 +51,12 @@ const ChatContent = (props) => {
       handleLeftSidebarToggle();
     }
   };
+ 
 
   const renderContent = () => {
     if (store) {
       const selectedChat = store.selectedChat;
-      if (!selectedChat  || !selectedTicket ) {
+      if (!selectedChat || !selectedTicket) {
         return (
           <ChatWrapperStartChat
             sx={{
@@ -65,7 +68,7 @@ const ChatContent = (props) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                mb: 6,
+                mb: 6
               }}
             >
               <MuiAvatar
@@ -113,8 +116,8 @@ const ChatContent = (props) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                backgroundColor: "#0CCE7F",
-                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.15)",
+                backgroundColor: '#0CCE7F',
+                boxShadow: '0 2px 5px rgba(0, 0, 0, 0.15)',
                 color: 'white',
                 borderBottom: (theme) => `1px solid ${theme.palette.divider}`
               }}
@@ -148,14 +151,18 @@ const ChatContent = (props) => {
                     }
                   >
                     {selectedTicket?.user?.image ? (
-                      <MuiAvatar sx={{ width: 38, height: 38 }} src={getImageUrl(selectedTicket?.user?.image)} alt={selectedTicket?.user?.first_name} />
+                      <MuiAvatar
+                        sx={{ width: 38, height: 38 }}
+                        src={getImageUrl(selectedTicket?.user?.image)}
+                        alt={selectedTicket?.user?.first_name}
+                      />
                     ) : (
                       <CustomAvatar
                         skin="light"
                         color={selectedChat.contact.avatarColor}
                         sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                       >
-                        {getInitials(selectedTicket?.user?.first_name ?? "CHANDRAN")}
+                        {getInitials(selectedTicket?.user?.first_name ?? 'CHANDRAN')}
                       </CustomAvatar>
                     )}
                   </Badge>
@@ -167,14 +174,14 @@ const ChatContent = (props) => {
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <OptionsMenu
-                    menuProps={{ sx: { mt: 2 } }}
-                    icon={<Icon icon="tabler:dots-vertical" />}
-                    iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-                    options={['Close Ticket']}
-                  />
-                </Box>
-
+                <OptionsMenu
+                  menuProps={{ sx: { mt: 2 } }}
+                  icon={<Icon icon="tabler:dots-vertical" />}
+                  iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                  options={['Close Ticket']}
+                  onClick={()=>handleClose(console.log("Hello"))}
+                />
+              </Box>
             </Box>
 
             {selectedChat && store.userProfile ? (

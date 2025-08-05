@@ -206,7 +206,7 @@ const Helps = () => {
   );
   return (
     <Fragment>
-      <HelpHeader />
+      <HelpHeader data={data}/>
       {data !== null ? (
         <HelpPage SetLoad={SetLoad} data={data} helps={helps} activeTab={activeTab} handleChange={handleChange} />
       ) : (

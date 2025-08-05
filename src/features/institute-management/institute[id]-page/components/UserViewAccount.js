@@ -3,7 +3,7 @@ import { Box, List, ListItemButton, ListItemText, Typography } from '@mui/materi
 import InstituteProfile from 'features/institute-management/institute[id]-page/components/InstituteProfile';
 import InstituteSocialmedia from './Profile/InstituteSocialmedia';
 import InstituteProfileimage from './Profile/InstituteProfileimage';
-import InstitutePassword from './Profile/InstitutePassword';
+// import InstitutePassword from './Profile/InstitutePassword';
 import InstituteDocument from './Profile/InstituteDocument';
 import InstituteActivityLog from './InstituteActivityLog';
 
@@ -15,7 +15,6 @@ const UserViewAccount = ({ institute }) => {
     { label: 'Profile', component: <InstituteProfileimage institute={institute} /> },
     { label: 'Social Media', component: <InstituteSocialmedia institute={institute} /> },
     { label: 'Documents', component: <InstituteDocument institute={institute} /> },
-    { label: 'Change Password', component: <InstitutePassword institute={institute} /> },
     { label: 'InstituteActivityLog', component: <InstituteActivityLog institute={institute} /> },
   ];
 

@@ -50,26 +50,27 @@ const SidebarLeft = (props) => {
     removeSelectedChat,
     userProfileLeftOpen,
     handleLeftSidebarToggle,
-    handleUserProfileLeftSidebarToggle,handleSelectTickets
+    handleUserProfileLeftSidebarToggle,
+    handleSelectTickets
   } = props;
 
   // ** States
   const [query, setQuery] = useState('');
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [active, setActive] = useState(null);
-  console.log(store);
+  console.log('store', store);
 
   const statusColor = {
-    opened: "#7367F0",
-    closed: "#EBA13A",
-    resolved : "#280587"
+    opened: '#7367F0',
+    closed: '#EBA13A',
+    resolved: '#280587'
   };
 
   const priorityColors = {
     High: '#FF6B6B',
     Medium: '#FFD93D',
     Low: '#B2DFDB',
-    Urgent: '#D32F2F',
+    Urgent: '#D32F2F'
   };
 
   useEffect(() => {
@@ -106,20 +107,27 @@ const SidebarLeft = (props) => {
         return arrToMap !== null
           ? arrToMap.map((contact, index) => {
               return (
-                <Card key={index} onClick={()=>handleSelectTickets(contact)} sx={{ mb: 2, boxShadow: "0 4px 6px rgba(0, 0, 0, 0.08)", backgroundColor: "#ffffff",
-                  transition: 'transform 0.3s, box-shadow 0.3s',
-                  cursor: "pointer",
-                  '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 .5rem 1.5rem 0 rgba(38,43,67,.25)',
-                  },
-                  animation: 'fadeIn 0.5s forwards',
-                 }}>
+                <Card
+                  key={index}
+                  onClick={() => handleSelectTickets(contact)}
+                  sx={{
+                    mb: 2,
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.08)',
+                    backgroundColor: '#ffffff',
+                    transition: 'transform 0.3s, box-shadow 0.3s',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'translateY(-5px)',
+                      boxShadow: '0 .5rem 1.5rem 0 rgba(38,43,67,.25)'
+                    },
+                    animation: 'fadeIn 0.5s forwards'
+                  }}
+                >
                   <CardContent sx={{}}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Avatar
                         alt={contact?.user?.first_name}
-                        src={ contact?.user?.image ? getImageUrl(contact?.user?.image) : imagePlaceholder}
+                        src={contact?.user?.image ? getImageUrl(contact?.user?.image) : imagePlaceholder}
                         sx={{ width: 40, height: 40, bgcolor: contact.avatarColor }}
                       >
                         {!contact.user && getInitials(contact.user.first_name + contact?.user?.last_name)}
@@ -146,8 +154,21 @@ const SidebarLeft = (props) => {
                       </Typography>
 
                       <Box sx={{ display: 'flex', mt: 2, gap: 2 }}>
-                        <CustomChip rounded size="small" skin="light" sx={{ backgroundColor: statusColor[contact?.status], color: "white"}} color={'info'} label={contact?.status} />
-                        <CustomChip rounded size="small" skin="light" sx={{ backgroundColor: priorityColors[contact?.priority],color: "white"}}   label={contact?.priority} />
+                        <CustomChip
+                          rounded
+                          size="small"
+                          skin="light"
+                          sx={{ backgroundColor: statusColor[contact?.status], color: 'white' }}
+                          color={'info'}
+                          label={contact?.status}
+                        />
+                        <CustomChip
+                          rounded
+                          size="small"
+                          skin="light"
+                          sx={{ backgroundColor: priorityColors[contact?.priority], color: 'white' }}
+                          label={contact?.priority}
+                        />
                       </Box>
                     </Box>
                   </CardContent>
@@ -160,15 +181,26 @@ const SidebarLeft = (props) => {
   };
 
   const handleFilter = (e) => {
-    setQuery(e.target.value);
-    if (store.chats !== null && store.contacts !== null) {
-      const searchFilterFunction = (contact) => contact.fullName.toLowerCase().includes(e.target.value.toLowerCase());
-      const filteredChatsArr = store.chats.filter(searchFilterFunction);
-      const filteredContactsArr = store.contacts.filter(searchFilterFunction);
-      setFilteredChat(filteredChatsArr);
-      setFilteredContacts(filteredContactsArr);
+    const searchValue=e.target.value.toLowerCase()
+    setQuery(searchValue);
+    if (store.data) {
+  const searchFilterFunction = (contact) => contact.user.first_name.toLowerCase().includes(searchValue);
+  // const filteredChatsArr = store?.data?.filter(searchFilterFunction);
+  const filteredContactsArr = store.data.filter(searchFilterFunction);
+  // setFilteredChat(filteredChatsArr);
+  setFilteredContacts(filteredContactsArr);
+  console.log('filtered contacts', filteredContacts);
     }
   };
+  // const handleFilter = (e) => {
+  //   const searchValue = e.target.value.toLowerCase();
+  //   setQuery(searchValue);
+
+  //   if (store?.data) {
+  //     const filteredContactsArr = store.data.filter((contact) => contact?.user?.first_name.toLowerCase().includes(searchValue));
+  //     setFilteredContacts(filteredContactsArr);
+  //   }
+  // };
 
   return (
     <div>
@@ -201,13 +233,13 @@ const SidebarLeft = (props) => {
       >
         <Box
           sx={{
-            pt:"20px",
-            pb: "19px",
+            pt: '20px',
+            pb: '19px',
             px: 5,
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: "#111B21",
-            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+            backgroundColor: '#111B21',
+            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
             borderBottom: (theme) => `1px solid ${theme.palette.divider}`
           }}
         >
@@ -246,11 +278,13 @@ const SidebarLeft = (props) => {
             value={query}
             onChange={handleFilter}
             placeholder="Search for contact..."
-            sx={{ '& .MuiInputBase-root': { borderRadius: '30px !important'},
-            "& .MuiFormControl-root-MuiTextField-root .MuiInputBase-root" : { backgroundColor: "white",color: "wheat"} }}
+            sx={{
+              '& .MuiInputBase-root': { borderRadius: '30px !important' },
+              '& .MuiFormControl-root-MuiTextField-root .MuiInputBase-root': { backgroundColor: 'white', color: 'wheat' }
+            }}
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start" sx={{ color: "wheat" }}>
+                <InputAdornment position="start" sx={{ color: 'wheat' }}>
                   <Icon fontSize="1.25rem" icon="tabler:search" />
                 </InputAdornment>
               )
@@ -263,7 +297,14 @@ const SidebarLeft = (props) => {
           ) : null}
         </Box>
 
-        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden', backgroundColor: "#f7f8fc",boxShadow: "2px 0 10px rgba(0, 0, 0, 0.1)", }}>
+        <Box
+          sx={{
+            height: `calc(100% - 4.0625rem)`,
+            overflow: ' hidden',
+            backgroundColor: '#f7f8fc',
+            boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)'
+          }}
+        >
           <ScrollWrapper hidden={hidden}>
             <Box sx={{ p: (theme) => theme.spacing(5, 3, 3) }}>
               {/* <Typography variant="h5" sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
@@ -278,7 +319,7 @@ const SidebarLeft = (props) => {
               <Icon icon="mingcute:down-fill" color="primary.main" />
               </Box>
               </Box> */}
-        
+
               <List sx={{ p: 0 }}>{renderContacts()}</List>
             </Box>
           </ScrollWrapper>

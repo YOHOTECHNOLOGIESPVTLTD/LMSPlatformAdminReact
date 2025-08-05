@@ -42,13 +42,13 @@ const FormStep3SocialLinks = (props) => {
         </Grid>
 
         {/* Group 1: Social Links */}
-        <Grid container item>
+        <Grid container item gap={10}>
           <Grid item xs={3}>
             <Typography variant="h4" sx={{ fontWeight: 'bold', mt: 3 }}>
               Give your Social Links here
             </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Paper elevation={3} sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 {/* Twitter */}
@@ -57,10 +57,11 @@ const FormStep3SocialLinks = (props) => {
                     name="twitter"
                     control={socialControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.twitter}
+                        onBlur={onBlur}
                         label="Twitter"
                         onChange={(e) => {
                           onChange(e);
@@ -89,10 +90,11 @@ const FormStep3SocialLinks = (props) => {
                     name="facebook"
                     control={socialControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.facebook}
+                        onBlur={onBlur}
                         label="Facebook"
                         onChange={(e) => {
                           onChange(e);
@@ -121,10 +123,11 @@ const FormStep3SocialLinks = (props) => {
                     name="instagram"
                     control={socialControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.instagram}
+                        onBlur={onBlur}
                         label="Instagram"
                         onChange={(e) => {
                           onChange(e);
@@ -153,10 +156,11 @@ const FormStep3SocialLinks = (props) => {
                     name="linkedIn"
                     control={socialControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.linkedIn}
+                        onBlur={onBlur}
                         label="LinkedIn"
                         onChange={(e) => {
                           onChange(e);
@@ -185,10 +189,11 @@ const FormStep3SocialLinks = (props) => {
                     name="pinterest"
                     control={socialControl}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
+                    render={({ field: { value, onChange,onBlur} }) => (
                       <CustomTextField
                         fullWidth
                         value={value || formData.pinterest}
+                        onBlur={onBlur}
                         label="Pinterest"
                         onChange={(e) => {
                           onChange(e);
