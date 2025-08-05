@@ -97,8 +97,19 @@ const SidebarLeft = (props) => {
     if (store && store.data && store.data.length) {
       if (query.length && !filteredContacts.length) {
         return (
-          <ListItem>
-            <Typography sx={{ color: 'text.secondary' }}>No Contacts Found</Typography>
+          <ListItem sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%', 
+          }}> 
+            <Typography sx={{ 
+              color: 'text.secondary' ,
+             fontWeight: 'bold',
+             textAlign: 'center',
+             fontSize: '1.2rem',}}>
+               No Contacts Found 
+            </Typography>
           </ListItem>
         );
       } else {
@@ -180,28 +191,31 @@ const SidebarLeft = (props) => {
     }
   };
 
-  const handleFilter = (e) => {
-    const searchValue=e.target.value.toLowerCase()
-    setQuery(searchValue);
-    if (store.data) {
-  const searchFilterFunction = (contact) => contact.user.first_name.toLowerCase().includes(searchValue);
-  // const filteredChatsArr = store?.data?.filter(searchFilterFunction);
-  const filteredContactsArr = store.data.filter(searchFilterFunction);
-  // setFilteredChat(filteredChatsArr);
-  setFilteredContacts(filteredContactsArr);
-  console.log('filtered contacts', filteredContacts);
-    }
-  };
   // const handleFilter = (e) => {
-  //   const searchValue = e.target.value.toLowerCase();
-  //   setQuery(searchValue);
-
-  //   if (store?.data) {
-  //     const filteredContactsArr = store.data.filter((contact) => contact?.user?.first_name.toLowerCase().includes(searchValue));
+  //   setQuery(e.target.value);
+  //   if (store.chats !== null && store.contacts !== null) {
+  //     const searchFilterFunction = (contact) => contact.fullName.toLowerCase().includes(e.target.value.toLowerCase());
+  //     const filteredChatsArr = store.chats.filter(searchFilterFunction);
+  //     const filteredContactsArr = store.contacts.filter(searchFilterFunction);
+  //     setFilteredChat(filteredChatsArr);
   //     setFilteredContacts(filteredContactsArr);
   //   }
   // };
-
+  const handleFilter = (e) => {
+    const searchQuery = e.target.value.toLowerCase();
+    setQuery(searchQuery);
+  
+    if (store && store.data) {
+      const filtered = store.data.filter((contact) => {
+        const fullName = `${contact?.user?.first_name || ''} ${contact?.user?.last_name || ''}`.toLowerCase();
+        const queryText = contact?.query?.toLowerCase() || '';
+        return fullName.includes(searchQuery) || queryText.includes(searchQuery);
+      });
+  
+      setFilteredContacts(filtered);
+    }
+  };
+  
   return (
     <div>
       <Drawer

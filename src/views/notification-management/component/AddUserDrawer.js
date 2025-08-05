@@ -39,11 +39,11 @@ const schema = yup.object().shape({
   title: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-    .required(),
+    .required(' Enter the Title field '),
   body: yup.string().required('Body field is required').min(2),
   institutes: yup.object().required('instituteList field is required'),
-  branches: yup.array().min(1, 'Select at least one branches').required('branch is required'),
-  link: yup.string().optional()
+  branches : yup.array().min(1,"Select at least one branches").required("branch is required"),
+  link : yup.string().optional().url('Enter a valid URL')
 });
 
 const defaultValues = {
@@ -61,10 +61,10 @@ const SidebarAddUser = (props) => {
   // const image = require('../../../assets/images/avatar/1.png');
   // const [imgSrc, setImgSrc] = useState(image);
   // const [selectedImage, setSelectedImage] = useState('');
-  const dispatch = useDispatch();
-  const instituteList = useSelector(selectInstitutes);
-  const { showSpinnerFn, hideSpinnerFn } = useSpinner();
-
+  const dispatch = useDispatch()
+  const instituteList = useSelector(selectInstitutes)
+  const { showSpinnerFn , hideSpinnerFn } = useSpinner()
+ 
   useEffect(() => {
     dispatch(getAllInstitutes());
   }, [dispatch]);
@@ -361,64 +361,43 @@ const SidebarAddUser = (props) => {
                   {...(errors.body && { helperText: errors.body.message })}
                 />
               )}
-            />
+            />  
           </Grid>
           <Grid>
-            <Controller
-              name="link"
-              control={control}
-              rules={{ required: false }}
-              render={({ field: { value, onChange } }) => (
-                <TextField
-                  fullWidth
-                  sx={{ mb: 4 }}
-                  label="Link"
-                  placeholder="https://www.{some_notification_related_links}.com"
-                  onChange={onChange}
-                  value={value}
-                  error={Boolean(errors?.link)}
-                  helperText={errors?.link?.message || ''}
-                  // {...(errors?.link) && { helperText: errors?.link?.message} }
-                />
-              )}
+            <Controller 
+             name="link" 
+             control={control}
+             rules={{ required: false }}
+             render={({ field : { value, onChange}}) => (
+              <TextField
+               fullWidth
+               sx={{ mb: 4}}
+               label="Link"
+               placeholder='https://www.{some_notification_related_links}.com'
+               onChange={onChange}
+               value={value}
+               error={Boolean(errors?.link)}
+               helperText={errors?.link?.message || ''}
+               {...(errors?.link) && { helperText: errors?.link?.message} }
+              />
+             )}
             />
           </Grid>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 3 }}>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                mr: 3,
-                borderRadius: 2,
-                boxShadow: 3,
-                '&:hover': { boxShadow: 6 }
-              }}
-            >
-              Submit
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{
-                backgroundColor: '#f0f0f0',
-                color: '#333',
-                borderRadius: 2,
-                boxShadow: 1,
-                '&:hover': { backgroundColor: '#e0e0e0', boxShadow: 4 }
-              }}
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-          </Box>
-
-          {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center"}}>
+        <Button type="submit" variant="contained" 
+            sx={{ mr: 3, 
+                  padding: '12px 24px',
+                  fontSize: '1rem',
+                  minWidth: '120px' 
+                 }}>
               Submit
             </Button>
             <Button variant="contained" color="secondary" onClick={handleClose} 
              sx={{
               border: '1px solid',
+              padding: '12px 24px', 
+              fontSize: '1rem',
+               minWidth: '120px' ,
               borderColor: 'secondary.main',
               '&:hover': {
                 backgroundColor: 'secondary.orange'

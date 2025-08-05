@@ -20,7 +20,8 @@ import DeleteDialog from 'features/user-management/groups-page/components/GroupD
 import { useState } from 'react';
 import HelpAddModal from './Modal/helpAddModal';
 import HelpEditModal from './Modal/helpEditModal';
-import png from '../../../../assets/images/—Pngtree—flat meeting discussion people_5409602.png'
+import pngImg from '../../../../assets/images/—Pngtree—flat meeting discussion people_5409602.png'
+import pngImgs from '../../../../assets/images/—Pngtree—people working in a table_7537097 (1).png'
 
 const MuiBox = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -186,7 +187,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
   };
 
   const renderTabs = () => {
-    if (data !== null) {
+    if (data !== null) {    
       return helps?.map((tab, index) => {
         if (tab?.sub_module?.platformfaqs?.length) {
           return <Tab key={index} value={tab.module} label={tab.module} icon={<Icon icon={'tabler:credit-card'} />} />;
@@ -213,19 +214,24 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
                 gap: 45,
                 display: 'flex',
                 justifyContent: 'center',
-                '& img': { maxWidth: '100%', display: { xs: 'none', md: 'block' } }
+                '& img': { maxWidth: '100%', 
+                  display: { xs: 'none', md: 'block' },
+                  backgroundColor: 'transparent',
+                  borderRadius: 0,
+                  boxShadow: 'none',
+                 }
               }}
             >
               <img
-                src={png}
+                src={pngImg}
                 alt="illustration"
                 width="230"
               />
               <img
-                src="https://img.freepik.com/free-vector/people-recording-listening-podcasts_23-2148792135.jpg?ga=GA1.1.1859712288.1740632123&semt=ais_hybrid"
-                alt="teamwork"
-                width="230"
-              />
+    src={pngImgs}
+    alt="teamwork"
+    width="230"
+  /> 
             </Box>
           </Box>
           {renderTabContent()}
@@ -252,6 +258,22 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
           </Button>
         </Box>
       </Grid>
+        
+      <Grid container spacing={3} >
+        <Grid item sm={3} xs={12}>
+          <Typography sx={{ fontWeight: 'bold', textDecoration: 'underline' ,textDecorationColor: 'blue'}}>Get Started</Typography>
+        <Typography>To get started with creating a FAQ (Frequently Asked Questions) page, first identify the most common questions people have about your product, service, or topic by analyzing customer inquiries .</Typography>
+        </Grid>
+        <Grid item sm={3} xs={12}>
+          <Typography sx={{ fontWeight: 'bold', textDecoration: 'underline' ,textDecorationColor: 'blue'}}>Troubleshooting</Typography>
+          <Typography>Troubleshooting FAQs can include information on how to identify and fix common problems, such as connectivity issues .</Typography>
+        </Grid>
+        <Grid item sm={3} xs={12}>
+          <Typography sx={{ fontWeight: 'bold', textDecoration: 'underline' ,textDecorationColor: 'blue'}}>Copyright and Legal</Typography>
+          <Typography>A  Copyright and Legal  section in a FAQ would typically address questions about the intellectual property rights related to the content on a website . </Typography>
+          </Grid>
+      </Grid>
+        
     </>
   );
 };

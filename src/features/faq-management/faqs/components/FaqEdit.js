@@ -180,33 +180,36 @@ const FaqEdit = (props) => {
               />
             )}
           /> */}
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: 'center' }}>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                mr: 3,
-                backgroundColor: '#6d788d',
-                color: '#fff',
-                '&:hover': { backgroundColor: '#5a667a' }
-              }}
-            >
-              Save Changes
-            </Button>
-            <Button
-              variant="contained"
-              size="medium"
-              sx={{
-                color: '#fff',
-                border: '1px solid #6d788d',
-                backgroundColor: '#6d788d',
-                '&:hover': { backgroundColor: '#5a667a', borderColor: '#5a667a' }
-              }}
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-          </Box>
+<Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
+  <Button 
+    type="submit" 
+    variant="contained" 
+    onClick={handleSubmit(onSubmit)}
+    sx={{ 
+      mr: 3, 
+      backgroundColor: "#6d788d", 
+      color: "#fff", 
+      '&:hover': { backgroundColor: "#5a667a" } 
+    }}
+  >
+    Save Changes
+  </Button>
+  <Button 
+    variant="contained" 
+    size="medium" 
+    sx={{ 
+      color: "#fff", 
+      border: "1px solid #6d788d", 
+      backgroundColor: "#6d788d", 
+      '&:hover': { backgroundColor: "#5a667a", borderColor: "#5a667a" } 
+    }} 
+    onClick={handleClose}
+  >
+    Cancel
+  </Button>
+</Box>
+
+          
         </form>
       </Box>
     </Drawer>

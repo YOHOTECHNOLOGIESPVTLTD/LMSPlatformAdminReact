@@ -32,7 +32,7 @@ export const getAllTickets = async (data) => {
 
 export const updateTicket = async (data) => {
   try {
-    const response = await axios.post(`${_TICKET_UPDATE_API_END_POINT}/update`, data, {
+    const response = await axios.put(`${_TICKET_UPDATE_API_END_POINT}api/auth/update-password`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

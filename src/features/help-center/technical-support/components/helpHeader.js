@@ -28,9 +28,13 @@ const Autocomplete = styled(CustomAutocomplete)(({ theme }) => ({
   }
 }));
 
-const HelpHeader = ({ allArticles }) => {
+const HelpHeader = ({ allArticles = [] }) => {
   const [value, setValue] = useState('');
   const [open, setOpen] = useState(false);
+  
+  const handleRedirection = (option) => {
+    console.log('Redirecting to:', option);
+  };
   return (
     <CardContent
       sx={{
@@ -60,7 +64,7 @@ const HelpHeader = ({ allArticles }) => {
         }}
         getOptionLabel={(option) => option.title || ''}
         isOptionEqualToValue={(option, value) => value === option}
-        onChange={(event, option) => handleRedirection(option)}
+        onChange={(event, option) => option && handleRedirection(option)}
         onInputChange={(event, value) => {
           setValue(value);
           setOpen(!!event.target.value);

@@ -121,19 +121,19 @@ export const updateUserStatus = async (data) => {
     throw error;
   }
 };
-export const userChangePassword = async (data, id) => {
-  try {
+export const userChangePassword = async (data) => {
+   try {
     const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/auth/update-password`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
       },
-      params: {
-        data: data,
-        id: id
-      }
+      //   params:{
+      //  data:data,
+      //   id:id
+      // }
     });
-    console.log(response);
+    console.log(response, 'password change');
     if (response.data.status) {
       return { success: true, message: 'User status updated successfully' };
     } else {
@@ -144,16 +144,31 @@ export const userChangePassword = async (data, id) => {
     throw error;
   }
 };
-export const updateUser = async (data) => {
+export const updateUser = async (data, onUpdate) => {
   try {
-    const response = await axios.post(`${USER_API_ENDPOINT}/update`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+//      const response = await axios.post(`${USER_API_ENDPOINT}/update`, data, {
+//        headers: {
+//           'Content-Type': 'application/json',
+//          Authorization: `Bearer ${localStorage.getItem('token')}`
+//        }
+//      }
+//     );
+     const response = await axios.post(
+          `${process.env.REACT_APP_PUBLIC_API_URL}/api/auth/update-status/`,
+          data,
+           {
+             headers: {
+               'Content-Type': 'application/json',
+               Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+         );
+    
     console.log(response);
     if (response.data.status) {
+      if (typeof onUpdate === 'function') {
+        onUpdate(response.data);
+      }
       return { success: true, message: 'User updated successfully' };
     } else {
       return { success: false, message: response.data.message };
@@ -318,3 +333,4 @@ export const getUserProfileById = async (data) => {
     throw error;
   }
 };
+

@@ -1,8 +1,10 @@
 // ** React Imports
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 // ** MUI Imports
 import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 
@@ -16,16 +18,7 @@ const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
   padding: theme.spacing(3),
 }));
 
-const ChatMessage = styled(Box)(({ theme, isCurrentUser }) => ({
-  maxWidth: "75%",
-  padding: theme.spacing(1.5, 2),
-  borderRadius: isCurrentUser
-    ? "10px 10px 0px 10px" 
-    : "10px 10px 10px 0px",
-  backgroundColor: isCurrentUser ? "#dcf8c6" : "#ffffff", 
-  boxShadow: theme.shadows[1],
-  wordBreak: "break-word",
-}));
+
 
 const ChatLog = (props) => {
   // ** Props
@@ -34,20 +27,33 @@ const ChatLog = (props) => {
 
   // ** Ref
   const chatArea = useRef(null);
-  const scrollToBottom = () => {
-    if (chatArea.current) {
-      if (hidden) {
-        chatArea.current.scrollTop = chatArea.current.scrollHeight;
-      } else {
-        chatArea.current._container.scrollTop = chatArea.current._container.scrollHeight;
-      }
+
+
+  const formatMessageDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date(); 
+
+    const isToday = date.toDateString() === now.toDateString();
+    const yesterday = new Date();
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday = date.toDateString() === yesterday.toDateString();
+
+    if (isToday) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (isYesterday) {
+      return `Yesterday, ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    } else {
+      return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
     }
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [selectedTicket]);
-
+  // Function to render chat messages with WhatsApp-like styling
   const renderMessages = () => {
     if (selectedTicket && selectedTicket.messages?.length > 0) {
       return selectedTicket.messages.map((message, index) => {
@@ -72,26 +78,42 @@ const ChatLog = (props) => {
                   : {})}
               />
             )}
-            <ChatMessage isCurrentUser={isCurrentUser}>
-              {!isCurrentUser && (
-                <Typography variant="subtitle2" color="textSecondary">
-                  {message.sender.fullName}
+            <Card
+              sx={{
+                maxWidth: '70%',
+                backgroundColor: isCurrentUser ? '#dcf8c6' : '#ffffff',
+                borderRadius: isCurrentUser
+                  ? '15px 15px 0 15px' // Top right rounded for user
+                  : '15px 15px 15px 0', // Top left rounded for others
+                boxShadow: 1,
+                p: 2,
+              }}
+            >
+              <CardContent sx={{ p: 0 }}>
+                {!isCurrentUser && (
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {message.sender.fullName}
+                  </Typography>
+                )}
+                <Typography variant="body1" sx={{ wordWrap: 'break-word' }}>
+                  {message.content}
                 </Typography>
-              )}
-              <Typography variant="body1" sx={{ fontSize: "1.2rem", fontWeight: 500 }}>
-                   {message.content}
-              </Typography>
-              <Typography
-                variant="caption"
-                color="textSecondary"
-                sx={{ display: "flex", justifyContent: "flex-end", mt: 0.5, fontSize: "0.75rem" }}
-              >
-                {new Date(message.date).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </Typography>
-            </ChatMessage>
+                <Typography
+                  variant="caption"
+                  color="textSecondary"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: isCurrentUser ? 'flex-end' : 'flex-start',
+                    mt: 1,
+                  }}
+                >{formatMessageDate(message.date)}
+                  {/* {new Date(message.date).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })} */}
+                </Typography>
+              </CardContent>
+            </Card>
           </Box>
         );
       });

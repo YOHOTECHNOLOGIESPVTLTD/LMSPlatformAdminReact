@@ -20,7 +20,7 @@ import * as yup from 'yup';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 import { updateInstitute } from 'features/institute-management/services/instituteService';
 import toast from 'react-hot-toast';
-import { Card, CardContent, Chip, Divider, MenuItem } from '@mui/material';
+import { Card, CardContent, Chip, Divider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCitiesForFormA, selectCountries, selectStates } from 'features/cities/redux/locationSelectors';
 import { loadCitiesForFromA, loadCountries, loadStates } from 'features/cities/redux/locationThunks';
@@ -144,12 +144,7 @@ const InstituteProfile = ({ institute }) => {
       dispatch(loadCitiesForFromA(defaultCountry[0].iso2, selectedState[0]?.iso2));
     }
   }, [states, countries]);
-  const handleStateChange = (e) => {
-    const stateCode = e.target.value;
-    if (defaultCountry.length) {
-      dispatch(loadCitiesForFromA(defaultCountry[0].iso2, stateCode));
-    }
-  };
+
 
   const existingCity = cities.find((city) => city.name === institute?.contact_info?.address?.city);
   console.log('existing City', existingCity);
@@ -158,8 +153,7 @@ const InstituteProfile = ({ institute }) => {
   const [openEdit, setOpenEdit] = useState(false);
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-  const [sname, setSname] = useState('');
-  const [cname, setCname] = useState('');
+
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true);
   const handleEditClose = () => setOpenEdit(false);
@@ -215,8 +209,8 @@ const InstituteProfile = ({ institute }) => {
         address: {
           address1: data.address_line_1,
           address2: data.address_line_2,
-          state: sname ||'Tamil Nadu',
-          city: cname ||'Tiruchirappalli',
+          state: 'Tamil Nadu',
+          city: 'Tiruchirappalli',
           pincode: data.pin_code
         }
       },
@@ -315,305 +309,294 @@ const InstituteProfile = ({ institute }) => {
 
             <Divider sx={{ my: 2 }} />
 
-            <CardActions sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-              <Button variant="contained" sx={{ borderRadius: 2, px: 3, backgroundColor: 'black' }} onClick={handleEditClickOpen}>
-                Edit
-              </Button>
-              <Button color="error" variant="outlined" sx={{ borderRadius: 2, px: 3, ml: 2 }} onClick={() => setSuspendDialogOpen(true)}>
-                Suspend
-              </Button>
-            </CardActions>
-          </Card>
+              <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Button variant="contained" sx={{ mr: 2,minWidth: 100 }} onClick={handleEditClickOpen}>
+                  Edit
+                </Button>
+                <Button color="error" variant="contained" sx={{ minWidth: 100 }} onClick={() => setSuspendDialogOpen(true)}>
+                  Suspend
+                </Button>
+              </CardActions>
 
-          {/* EditInstituteDialouge */}
-          <Dialog
-            open={openEdit}
-            onClose={handleEditClose}
-            aria-labelledby="user-view-edit"
-            aria-describedby="user-view-edit-description"
-            sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
-          >
-            <DialogTitle
-              id="user-view-edit"
-              sx={{
-                textAlign: 'center',
-                fontSize: '1.5rem !important',
-                px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
-                pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`]
-              }}
-            >
-              Edit institute Information
-            </DialogTitle>
-            <DialogContent
-              sx={{
-                pt: (theme) => [`${theme.spacing(8)} !important`, `${theme.spacing(2)} !important`],
-                pb: (theme) => `${theme.spacing(2)} !important`,
-                px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
-              }}
-            >
-              <form onSubmit={handlePersonalSubmit(onSubmit)}>
-                <Grid container spacing={4}>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="name"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          // value={value}
-                          // defaultValue={institute?.institute_name}
-                          value={value}
-                          label="Institute Name"
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          onChange={onChange}
-                          placeholder="Leonard"
-                          error={Boolean(personalErrors['name'])}
-                          aria-describedby="stepper-linear-personal-name"
-                          {...(personalErrors['name'] && { helperText: personalErrors.name?.message })}
+              {/* EditInstituteDialouge */}
+              <Dialog
+                open={openEdit}
+                onClose={handleEditClose}
+                aria-labelledby="user-view-edit"
+                aria-describedby="user-view-edit-description"
+                sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+              >
+                <DialogTitle
+                  id="user-view-edit"
+                  sx={{
+                    textAlign: 'center',
+                    fontSize: '1.5rem !important',
+                    px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
+                    pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`]
+                  }}
+                >
+                  Edit institute Information
+                </DialogTitle>
+                <DialogContent
+                  sx={{
+                    //pt: (theme) => [`${theme.spacing(8)} !important`, `${theme.spacing(2)} !important`],
+                    pb: (theme) => `${theme.spacing(3)} !important`,
+                    px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(6)} !important`]
+                  }}
+                >
+                  <form onSubmit={handlePersonalSubmit(onSubmit)} >
+                    <Grid container spacing={4} sx={{
+                            // Text color inside the input
+                            input: {
+                              color: 'black', // Indigo
+                            },
+
+                            // Label color
+                            label: {
+                              color: 'black',
+                            },
+
+                            // Label when focused
+                            '& label.Mui-focused': {
+                              color: '#3949ab', // Darker Indigo
+                            },
+
+                            // Outline color
+                            '& .MuiOutlinedInput-root': {
+                              '& fieldset': {
+                                borderColor: 'black',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: '#3949ab',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: '#3949ab',
+                                borderWidth: '2px',
+                              },
+                            },
+                          }}>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="name"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                            fullWidth
+                            defaultValue={institute?.institute_name}
+                            label="Institute Name"
+                            onChange={onChange}
+                            placeholder="doe"
+                            error={Boolean(personalErrors['name'])}
+                            aria-describedby="stepper-linear-personal-name"
+                            {...(personalErrors['name'] && { helperText: 'This field is required' })}
+                            
+                          />
+                          
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="registered_date"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { value, onChange } }) => (
-                        <DatePicker
-                          id="issue-date"
-                          dateFormat={'dd/MM/yyyy'}
-                          // defaultValue={institute?.registered_date}
-                          value={value}
-                          selected={value}
-                          customInput={
-                            <CustomInput
-                              label="Registered Date"
-                              sx={{
-                                '& .MuiInputBase-input': { color: 'black' }
-                              }}
-                              error={Boolean(personalErrors['registered_date'])}
-                              aria-describedby="stepper-linear-personal-registered_date"
-                              {...(personalErrors['registered_date'] && { helperText: personalErrors?.registered_date?.message })}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="registered_date"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { value, onChange } }) => (
+                            <DatePicker
+                              id="issue-date"
+                              dateFormat={'dd/MM/yyyy'}
+                              defaultValue={institute?.registered_date}
+                              selected={value}
+                              customInput={
+                                <CustomInput
+                                  label="Registered Date"
+                                  error={Boolean(personalErrors['registered_date'])}
+                                  aria-describedby="stepper-linear-personal-registered_date"
+                                  {...(personalErrors['registered_date'] && { helperText: 'This field is required' })}
+                                />
+                              }
+                              onChange={onChange}
                             />
-                          }
-                          onChange={onChange}
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
+                      </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="state"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          select
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // value={value}
-                          // defaultValue={institute?.contact_info.address.state}
-                          value={value || selectedState[0]?.iso2}
-                          label="State"
-                          onChange={(e) => {
-                            const ssState = states.find((state) => state.iso2 === e.target.value);
-                            onChange(ssState.iso2);
-                            setSname(ssState.name);
-                            handleStateChange(e);
-                          }}
-                          error={Boolean(personalErrors.state)}
-                          aria-describedby="stepper-linear-personal-state-helper"
-                          {...(personalErrors.state && { helperText: personalErrors?.state?.message })}
-                        >
-                          {states.map((state) => (
-                            <MenuItem key={state.iso2} value={state.iso2}>
-                              {state.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="city"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          select
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.contact_info.address.city}
-                          value={value || existingCity?.id}
-                          label="City"
-                          onChange={(e) => {
-                            const ccity = cities.find((city) => city.id === e.target.value);
-                            console.log('ccity', ccity);
-                            onChange(ccity.id);
-                            setCname(ccity.name);
-                          }}
-                          error={Boolean(personalErrors.city)}
-                          aria-describedby="stepper-linear-personal-city-helper"
-                          {...(personalErrors?.city && { helperText: personalErrors?.city?.message })}
-                        >
-                          {cities.map((city) => (
-                            <MenuItem key={city.id} value={city.id}>
-                              {city.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="pin_code"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.contact_info?.address?.pincode}
-                          value={value}
-                          label="Pin Code"
-                          type="number"
-                          onChange={onChange}
-                          placeholder="631001"
-                          error={Boolean(personalErrors['pin_code'])}
-                          aria-describedby="stepper-linear-personal-pin_code"
-                          {...(personalErrors['pin_code'] && { helperText: personalErrors?.pin_code?.message })}
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="state"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              // value={value}
+                             
+                              defaultValue={institute?.contact_info.address.state}
+                              label="State"
+                               placeholder="state"
+                              onChange={onChange}
+                              error={Boolean(personalErrors.state)}
+                              aria-describedby="stepper-linear-personal-state-helper"
+                              {...(personalErrors.state && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="address_line_1"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.contact_info.address.address1}
-                          value={value}
-                          label="Address Line One"
-                          onChange={onChange}
-                          placeholder="Carter"
-                          error={Boolean(personalErrors['address_line_1'])}
-                          aria-describedby="stepper-linear-personal-address_line_1"
-                          {...(personalErrors['address_line_1'] && { helperText: personalErrors?.address_line_1?.message })}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="city"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.contact_info.address.city}
+                              label="City"
+                              onChange={onChange}
+                              error={Boolean(personalErrors.city)}
+                              aria-describedby="stepper-linear-personal-city-helper"
+                              {...(personalErrors?.city && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="address_line_2"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.contact_info.address.address2}
-                          value={value}
-                          label="Address Line Two"
-                          onChange={onChange}
-                          placeholder="Carter"
-                          error={Boolean(personalErrors['address_line_2'])}
-                          aria-describedby="stepper-linear-personal-address_line_2"
-                          {...(personalErrors['address_line_2'] && { helperText: personalErrors?.address_line_2.message })}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="pin_code"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.contact_info.address.pincode}
+                              label="Pin Code"
+                              type="number"
+                              onChange={onChange}
+                              placeholder="600076"
+                              error={Boolean(personalErrors['pin_code'])}
+                              aria-describedby="stepper-linear-personal-pin_code"
+                              {...(personalErrors['pin_code'] && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="phone"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          type="number"
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.contact_info?.phone_no}
-                          value={value}
-                          label="Phone Number"
-                          onChange={onChange}
-                          placeholder="Carter"
-                          error={Boolean(personalErrors['phone'])}
-                          aria-describedby="stepper-linear-personal-phone"
-                          {...(personalErrors['phone'] && { helperText: personalErrors?.phone?.message })}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="address_line_1"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.contact_info.address.address1}
+                              label="Address Line One"
+                              onChange={onChange}
+                              placeholder=".........."
+                              error={Boolean(personalErrors['address_line_1'])}
+                              aria-describedby="stepper-linear-personal-address_line_1"
+                              {...(personalErrors['address_line_1'] && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="alternate_number"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          sx={{ '& .MuiInputBase-input': { color: 'black' } }}
-                          // defaultValue={institute?.contact_info?.alternate_no}
-                          value={value}
-                          type="number"
-                          label="Alt Phone Number"
-                          onChange={onChange}
-                          placeholder="Carter"
-                          error={Boolean(personalErrors['alternate_number'])}
-                          aria-describedby="stepper-linear-personal-alternate_number"
-                          {...(personalErrors['alternate_number'] && { helperText: personalErrors?.alternate_number?.message })}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="address_line_2"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.contact_info.address.address2}
+                              label="Address Line Two"
+                              onChange={onChange}
+                              placeholder=".........."
+                              error={Boolean(personalErrors['address_line_2'])}
+                              aria-describedby="stepper-linear-personal-address_line_2"
+                              {...(personalErrors['address_line_2'] && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="official_website"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.website}
-                          value={value}
-                          label="Official Website"
-                          onChange={onChange}
-                          placeholder="Carter"
-                          error={Boolean(personalErrors['official_website'])}
-                          aria-describedby="stepper-linear-personal-official_website"
-                          {...(personalErrors['official_website'] && { helperText: personalErrors?.official_website?.message })}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="phone"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              type="number"
+                              defaultValue={institute?.contact_info.phone_no}
+                              label="Phone Number"
+                              onChange={onChange}
+                              placeholder="Carter"
+                              error={Boolean(personalErrors['phone'])}
+                              aria-describedby="stepper-linear-personal-phone"
+                              {...(personalErrors['phone'] && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="alternate_number"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.contact_info.alternate_no}
+                              type="number"
+                              label="Alt Phone Number"
+                              onChange={onChange}
+                              placeholder="9876543211"
+                              error={Boolean(personalErrors['alternate_number'])}
+                              aria-describedby="stepper-linear-personal-alternate_number"
+                              {...(personalErrors['alternate_number'] && { helperText: 'This field is required' })}
+                            />
+                          )}
+                        />
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="official_email"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.admin?.email}
+                              label="Official Email"
+                              onChange={onChange}
+                              placeholder="jhon@gmail.com"
+                              error={Boolean(personalErrors['official_email'])}
+                              aria-describedby="stepper-linear-personal-official_email"
+                              {...(personalErrors['official_email'] && { helperText: 'This field is required' })}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="official_website"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.official_website}
+                              label="Official Website"
+                              onChange={onChange}
+                              placeholder="website"
+                              error={Boolean(personalErrors['official_website'])}
+                              aria-describedby="stepper-linear-personal-official_website"
+                              {...(personalErrors['official_website'] && { helperText: 'This field is required' })}
+                            />
+                          )}
+                        />
+                      </Grid>
 
                   {/* <Grid item xs={12} sm={6}>
                         <Controller
@@ -642,148 +625,124 @@ const InstituteProfile = ({ institute }) => {
                         />
                       </Grid> */}
 
-                  <Grid item xs={12} sm={12}>
-                    <Controller
-                      name="description"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          multiline
-                          rows={3}
-                          // defaultValue={institute?.description}
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          value={value}
-                          label="description"
-                          onChange={onChange}
-                          placeholder="Carter"
-                          error={Boolean(personalErrors['description'])}
-                          aria-describedby="stepper-linear-personal-description"
-                          {...(personalErrors['description'] && { helperText: personalErrors?.description?.message })}
+                      <Grid item xs={12} sm={12}>
+                        <Controller
+                          name="description"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              multiline
+                              rows={3}
+                              defaultValue={institute?.description}
+                              label="description"
+                              onChange={onChange}
+                              placeholder="enter the somethings"
+                              error={Boolean(personalErrors['description'])}
+                              aria-describedby="stepper-linear-personal-description"
+                              {...(personalErrors['description'] && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="instagram"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.social_media?.instagram_id}
-                          value={value}
-                          label="Insta"
-                          onChange={onChange}
-                          placeholder="INSTA"
-                          error={Boolean(personalErrors['instagram'])}
-                          aria-describedby="stepper-linear-personal-instagram"
-                          {...(personalErrors['instagram'] && { helperText: personalErrors?.instagram?.message })}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="instagram"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.social_media?.instagram_id}
+                              label="Insta"
+                              onChange={onChange}
+                              placeholder="INSTA"
+                              error={Boolean(personalErrors['instagram'])}
+                              aria-describedby="stepper-linear-personal-instagram"
+                              {...(personalErrors['instagram'] && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="facebook"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          value={value}
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.social_media?.facebook_id}
-                          label="Facebook URL"
-                          onChange={onChange}
-                          placeholder="FbLink"
-                          error={Boolean(personalErrors['facebook'])}
-                          aria-describedby="stepper-linear-personal-facebook"
-                          {...(personalErrors['facebook'] && { helperText: personalErrors?.facebook?.message })}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="facebook"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.social_media?.facebook_id}
+                              label="Facebook URL"
+                              onChange={onChange}
+                              placeholder="FbLink"
+                              error={Boolean(personalErrors['facebook'])}
+                              aria-describedby="stepper-linear-personal-facebook"
+                              {...(personalErrors['facebook'] && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
+                      </Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="email"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          value={value}
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.email}
-                          label="Email"
-                          onChange={onChange}
-                          placeholder="Carter"
-                          error={Boolean(personalErrors['email'])}
-                          aria-describedby="stepper-linear-personal-email"
-                          {...(personalErrors['email'] && { helperText: personalErrors?.email?.message })}
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="email"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.email}
+                              label="Email"
+                              onChange={onChange}
+                              placeholder="mail"
+                              error={Boolean(personalErrors['email'])}
+                              aria-describedby="stepper-linear-personal-email"
+                              {...(personalErrors['email'] && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="linkedin"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.social_media?.linkedin_id}
-                          value={value}
-                          label="LinkedIn"
-                          onChange={onChange}
-                          placeholder="Carter"
-                          error={Boolean(personalErrors['linkedin'])}
-                          aria-describedby="stepper-linear-personal-linkedin"
-                          {...(personalErrors['linkedIn'] && { helperText: personalErrors?.linkedIn?.message })}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="linkedin"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.social_media?.linkedin_id}
+                              label="LinkedIn"
+                              onChange={onChange}
+                              placeholder="in"
+                              error={Boolean(personalErrors['linkedin'])}
+                              aria-describedby="stepper-linear-personal-linkedin"
+                              {...(personalErrors['linkedIn'] && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="twitter"
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <TextField
-                          fullWidth
-                          value={value}
-                          sx={{
-                            '& .MuiInputBase-input': { color: 'black' }
-                          }}
-                          // defaultValue={institute?.social_media?.twitter_id}
-                          label="Twitter URL"
-                          onChange={onChange}
-                          placeholder="Carter"
-                          error={Boolean(personalErrors['twitter'])}
-                          aria-describedby="stepper-linear-personal-twitter"
-                          {...(personalErrors['twitter'] && { helperText: personalErrors?.twitter?.message })}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Controller
+                          name="twitter"
+                          control={personalControl}
+                          rules={{ required: true }}
+                          render={({ field: { onChange } }) => (
+                            <TextField
+                              fullWidth
+                              defaultValue={institute?.social_media?.twitter_id}
+                              label="Twitter URL"
+                              onChange={onChange}
+                              placeholder="twitter"
+                              error={Boolean(personalErrors['twitter'])}
+                              aria-describedby="stepper-linear-personal-twitter"
+                              {...(personalErrors['twitter'] && { helperText: 'This field is required' })}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                  </Grid>
-                  {/* <Grid item xs={12} sm={6}>
+                      </Grid> 
+                      <Grid item xs={12} sm={6}>
                         <Controller
                           name="pinterest"
                           control={personalControl}
@@ -794,30 +753,31 @@ const InstituteProfile = ({ institute }) => {
                               defaultValue={institute?.social_media?.pinterest_id}
                               label="Pinterest URL"
                               onChange={onChange}
-                              placeholder="Carter"
+                              placeholder="pin"
                               error={Boolean(personalErrors['pinterest'])}
                               aria-describedby="stepper-linear-personal-pinterest"
                               {...(personalErrors['pinterest'] && { helperText: 'This field is required' })}
                             />
                           )}
                         />
-                      </Grid> */}
-                  <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                    <Button variant="tonal" color="secondary" onClick={handleEditClose}>
-                      Cancel
-                    </Button>
-                    <Button type="submit" variant="contained">
-                      Submit
-                    </Button>
-                  </Grid>
-                </Grid>
-              </form>
-            </DialogContent>
-          </Dialog>
-          <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
-          <UserSubscriptionDialog open={subscriptionDialogOpen} setOpen={setSubscriptionDialogOpen} />
+                      </Grid>
+                      <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                        <Button variant="contained" color="secondary" onClick={handleEditClose}>
+                          Cancel
+                        </Button> 
+                        <Button type="submit" variant="contained">
+                          Submit
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </form>
+                </DialogContent>
+              </Dialog>
+              <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+              <UserSubscriptionDialog open={subscriptionDialogOpen} setOpen={setSubscriptionDialogOpen} />
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
     );
   } else {
     return null;

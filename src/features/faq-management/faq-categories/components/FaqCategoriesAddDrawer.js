@@ -1,5 +1,5 @@
 // ** MUI Imports
-import { Button, Grid, Modal, Typography } from '@mui/material';
+import { Button, Grid, Modal, Typography, Skeleton  } from '@mui/material';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 // ** Third Party Imports
@@ -11,7 +11,7 @@ import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import { addFaqCategory } from '../services/faqCategoryServices';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 const schema = yup.object().shape({
   name: yup.string().required('Full the Category Name is required').min(3, 'Category Name must be at least 3 characters'),
@@ -23,10 +23,22 @@ const defaultValues = {
   description: ''
 };
 
+const LoadingSkeleton = () => {
+  return (
+    <Box sx={{ padding: 2 }}>
+      <Skeleton variant="text" width="60%" height={40} />
+      <Skeleton variant="rectangular" height={100} sx={{ marginTop: 2 }} />
+      <Skeleton variant="text" width="80%" height={40} sx={{ marginTop: 2 }} />
+      <Skeleton variant="rectangular" height={100} sx={{ marginTop: 2 }} />
+    </Box>
+  );
+};
+
 const FaqCategoriesAddDrawer = (props) => {
   // ** Props
   const { open = false, toggle, setRefetch } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -39,6 +51,16 @@ const FaqCategoriesAddDrawer = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+
+  useEffect(() => {
+    if (open) {
+      setIsLoading(true);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 1000); 
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
 
   const onSubmit = async (data) => {
     const isConfirmed = window.confirm('Are you sure you want to submit the form?');
@@ -116,78 +138,75 @@ const FaqCategoriesAddDrawer = (props) => {
           <Typography variant="h3">Add Faq Categories</Typography>
         </Box>
         <Box>
+        {isLoading ? (
+          <LoadingSkeleton />
+        ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box
-              sx={{
-                padding: 2
-              }}
-            >
-              <Grid item xs={12} sm={12}>
-                <Controller
-                  name="name"
-                  control={control}
-                  render={({ field: { value, onChange } }) => (
-                    <TextField
-                      fullWidth
-                      value={value}
-                      sx={{ mb: 2 }}
-                      label="Title"
-                      placeholder="Enter FAQ Title"
-                      onChange={onChange}
-                      error={Boolean(errors.name)}
-                      helperText={errors.name?.message}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field: { value, onChange } }) => (
-                    <TextField
-                      fullWidth
-                      value={value}
-                      sx={{ mb: 2 }}
-                      label="Description"
-                      placeholder="Enter the Description"
-                      onChange={onChange}
-                      error={Boolean(errors.description)}
-                      helperText={errors.description?.message}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mt: 3 }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    minWidth: 120,
-                    padding: '0.6rem 1.5rem',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Submit
-                </Button>
-
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleClose}
-                  sx={{
-                    minWidth: 120,
-                    padding: '0.6rem 1.5rem',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Box>
+            <Grid item xs={12} sm={12}>
+              <Controller
+                name="name"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    sx={{ mb: 2 }}
+                    label="Title"
+                    placeholder="Enter category name"
+                    onChange={onChange}
+                    error={Boolean(errors.name)}
+                    helperText={errors.name?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    sx={{ mb: 2 }}
+                    label="Description"
+                    placeholder="Enter Description name"
+                    onChange={onChange}
+                    error={Boolean(errors.description)}
+                    helperText={errors.description?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4, justifyContent: "center" }}>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={isSubmitting}
+                sx={{
+                  mr: 3,
+                  backgroundColor: "#6d788d",
+                  color: "#fff",
+                  '&:hover': { backgroundColor: "#5a667a" }
+                }}
+              >
+               {isSubmitting ? "Submitting..." : "Submit"}
+              </Button>
+              <Button
+                variant="contained"
+                size="medium"
+                sx={{
+                  color: "#fff",
+                  backgroundColor: "#6d788d",
+                  '&:hover': { backgroundColor: "#5a667a" }
+                }}
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
             </Box>
           </form>
+           )}
         </Box>
       </Box>
     </Modal>

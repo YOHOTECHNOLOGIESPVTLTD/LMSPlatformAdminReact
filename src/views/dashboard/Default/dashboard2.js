@@ -10,13 +10,13 @@ import axios from 'axios';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-const DASHBOARD_API_ENDPOINT = `http://localhost:3002/api/institutes/platform/report`;
+const DASHBOARD_API_ENDPOINT = 'http://localhost:3001/api/institutes/platform/report';
 
 const Dashboard2 = () => {
   const theme = useTheme();
 
   const [month, setMonth] = useState('');
-  const [year, setYear] = useState(2024);
+  const [year, setYear] = useState('');
   const [metrics, setMetrics] = useState({
     totalInstitutes: 0,
     totalUsers: 0,
@@ -28,6 +28,10 @@ const Dashboard2 = () => {
   const [revenueDatas, setRevenueDatas] = useState([]);
   const [subscriptionData, setSubscriptionData] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [month, year]);
 
   const fetchDashboardData = async () => {
     try {
@@ -74,18 +78,20 @@ const Dashboard2 = () => {
 
       let revenueData;
       if (month === '') {
+        // If no specific month is selected, show data for all months
         revenueData = monthData.map((item, index) => ({
           month: item.month,
-          revenue: data.revenue[index] || 0 
+          revenue: data.revenue[index]
         }));
       } else {
-        const monthIndex = monthData.find((item) => item.month === month)?.index;
-        const monthlyRevenue = monthIndex !== undefined ? data.revenue[monthIndex] : 0;
+        // Map revenue data for the selected month
+        const revenueTrends = data.revenue.filter((item, index) => index === monthData.find((item2) => item2.month === month).index);
+        console.log(revenueTrends[0]);
 
         revenueData = [
           {
             month: month,
-            revenue: monthlyRevenue
+            revenue: revenueTrends[0]
           }
         ];
       }
@@ -102,10 +108,6 @@ const Dashboard2 = () => {
       console.error('Error fetching dashboard data:', error);
     }
   };
-  useEffect(() => {
-    fetchDashboardData();
-  }, [month, year]);
-
   const handleMonthChange = (event) => {
     setMonth(event.target.value);
   };
@@ -166,8 +168,6 @@ const Dashboard2 = () => {
                     Year
                   </Typography>
                   <TextField select fullWidth value={year} onChange={handleYearChange} variant="outlined">
-                    <MenuItem value="2025">2025</MenuItem>
-                    <MenuItem value="2024">2024</MenuItem>
                     <MenuItem value="2023">2023</MenuItem>
                     <MenuItem value="2022">2022</MenuItem>
                     <MenuItem value="2021">2021</MenuItem>
@@ -234,7 +234,7 @@ const Dashboard2 = () => {
           <Card
             sx={{
               position: 'relative',
-              background: 'white',
+              background: 'black',
               borderRadius: '12px',
               boxShadow: theme.shadows[3],
               transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
@@ -394,7 +394,7 @@ const Dashboard2 = () => {
                   <AreaChart
                     width={500}
                     height={400}
-                    data={revenueData}
+                    data={revenueData ? revenueData : data.revenue}
                     margin={{
                       top: 10,
                       right: 30,
@@ -417,9 +417,9 @@ const Dashboard2 = () => {
                     />
                     <YAxis
                       // Make YAxis labels bold
-                      tick={{ fontSize: 13, fontWeight: 'bold' }}
+                      tick={{ fontSize: 13, fontWeight: 'bold'}}
                     />
-                    <Tooltip sx={{}} />
+                    <Tooltip sx={{}}  />
                     <Area
                       type="monotone"
                       dataKey="revenue"
@@ -506,3 +506,4 @@ const Dashboard2 = () => {
 };
 
 export default Dashboard2;
+

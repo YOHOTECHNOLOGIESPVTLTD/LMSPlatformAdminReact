@@ -248,9 +248,7 @@ const CategoriesDataGrid = () => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={3} align="center">
-                        No data found
-                      </TableCell>
+                      <TableCell colSpan={3} align="center" sx={{ fontSize: "1.2rem", fontWeight: "bold" }}>No Data Found</TableCell>
                     </TableRow>
                   )}
                 </TableBody>

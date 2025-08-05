@@ -30,8 +30,10 @@ const Notifications = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const loading = useSelector(selectLoading)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
+
   const [page,setPage] = useState(1)
   const { showSpinnerFn,hideSpinnerFn } = useSpinner()
+
   const dispatch = useDispatch()
   const notifications_list = useSelector(selectInstituteNotifications)
   console.log(notifications_list,"notification list")
@@ -167,10 +169,17 @@ const Notifications = () => {
   const getList = async (data) => {
     dispatch(getAllInstituteNotifications(data))
   }
-
   useEffect(() => {
-    getList({ page: page})
-  },[dispatch])
+  getList({ page });
+}, [page]);
+
+  // useEffect(() => {
+  //   getList({ page: page})
+  // },[dispath])
+
+  //  useEffect(() => {
+  //   getList({ page });
+  // }, [getList, page]);
 
   
   const handleFilter = useCallback((val) => {
@@ -193,7 +202,7 @@ const Notifications = () => {
 
 
 const RowOptions = ({data}) => (
-  <Button size="small" variant="outlined" onClick={() => handleResendNotification(data)} color="secondary">
+  <Button size="small" variant="contained" onClick={() => handleResendNotification(data)} color="secondary">
     Resend
   </Button>
 );
@@ -205,7 +214,7 @@ const columns = [
   field: 'Title',
   headerName: 'Title',
   renderCell: ({ row }) => (
-    <Typography noWrap sx={{ color: 'text.secondary' }}>
+    <Typography noWrap sx={{ color: 'text.secondary', }}>
       {row?.title}
     </Typography>
   ),
@@ -237,7 +246,7 @@ const columns = [
   ),
 },
 {
-  flex: 0.1,
+  flex: 0.12,
   minWidth: 100,
   field: 'status',
   headerName: 'Status',
@@ -253,7 +262,7 @@ const columns = [
   ),
 },
 {
-  flex: 0.1,
+  flex: 0.12,
   minWidth: 100,
   sortable: false,
   field: 'actions',
@@ -276,8 +285,12 @@ const columns = [
           fontSize: '18px',
         }}
       >
-        <Typography variant="body1" color="textSecondary">
-          No data available
+        <Typography variant="body1" color="textSecondary" 
+               sx={{ fontWeight: 'bold',
+                      fontSize: '20px' 
+                   }}
+        >
+          No Data Available
         </Typography>
       </Box>
     );
@@ -342,7 +355,7 @@ const columns = [
                 borderLeft: "none",
                 borderRight: "none",
                 ":hover" : {
-                   backgroundColor : "#f5f5f7",
+                   backgroundColor : "#e8f5e9",
                    border : "1px solid #e6e5e7",
                    borderLeft: "none",
                    borderRight: "none"
@@ -351,17 +364,20 @@ const columns = [
               "& .MuiDataGrid-columnHeaders" : {
                    border : "1px solid #e6e5e7",
                    borderLeft: "none",
-                   borderRight: "none"
+                   borderRight: "none",
+                   backgroundColor: "#4caf50",  
+                   color: "white",
+                   fontWeight: "bold" ,   
               }
                  }}
-                autoHeight
+                autoHeight 
                 rowHeight={62}
                 rows={notifications_list?.data ?? []}
                 columns={columns}
                 disableRowSelectionOnClick
-                hideFooterPagination
-                hideFooter
-                pageSizeOptions={[10, 25, 50]}
+               // hideFooterPagination
+               // hideFooter
+                pageSizeOptions={[5,10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 disableColumnFilter={true}
@@ -375,8 +391,9 @@ const columns = [
           {
             notifications_list?.last_page !== 1 && !loading && 
             <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: "flex-end"}}>
-               <Pagination
-               count={notifications_list?.last_page}
+                <Pagination
+               count={notifications_list?.last_page }
+                rowCount={100}
                page={page}
                color="primary"
                onChange={async(e,page) => {
@@ -384,7 +401,13 @@ const columns = [
                  setPage(page)
                  getList(data)
                }}
-               />
+               /> 
+                {/* <Pagination
+        count={notifications_list?.last_page ?? 1}
+        page={page}
+        onChange={(event, value) => setPage(value)}
+        color="primary"
+      /> */}
             </Grid>
           }
           <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />

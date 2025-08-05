@@ -62,19 +62,21 @@ const UserProfileRight = (props) => {
     >
       {store && store.selectedChat ? (
         <Fragment>
-          <Box sx={{ position: 'relative' }}>
+          <Box sx={{ position: 'relative' ,
+            borderBottom: '1px solid #ccc',
+          }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', p: (theme) => theme.spacing(6, 6) }}>
-              <Typography variant="h5" sx={{ textAlign: 'center' }}>
+              <Typography variant="h5" sx={{ textAlign: 'center',fontWeight: 'bold' }}>
                 {visitorInfo.fullName}
               </Typography>
-              <Typography sx={{ textAlign: 'center', color: 'text.secondary' }}>{visitorInfo.role}</Typography>
+              <Typography sx={{ textAlign: 'center', color: 'text.secondary', }}>{visitorInfo.role}</Typography>
             </Box>
           </Box>
 
           <Box sx={{ height: 'calc(100% - 13.3125rem)', px: 4 }}>
             <ScrollWrapper>
               <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
+                <Typography variant="body2" sx={{ mb: 3.5,mt: 3,  fontSize: '16px', color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' ,fontWeight: 'bold'}}>
                   Basic Details
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -148,7 +150,7 @@ const UserProfileRight = (props) => {
 
               {/* Device Details */}
               <Box>
-                <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
+                <Typography variant="body2" sx={{ mb: 3.5, fontSize: '16px',fontWeight:'bold', color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
                   Device Details
                 </Typography>
 

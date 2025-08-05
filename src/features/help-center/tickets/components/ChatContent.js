@@ -52,6 +52,20 @@ const ChatContent = (props) => {
     }
   };
  
+  const handleCloseTicket = () => {
+    if (!selectedTicket) return;
+
+    const confirmClose = window.confirm("Are you sure you want to close this ticket?");
+    if (confirmClose) {
+      console.log('Closing ticket:', selectedTicket._id);
+
+       // You could call a function like:
+  // dispatch(closeTicketAction(selectedTicket._id));
+
+  // Or if using API directly:
+  // axios.post(`/api/tickets/${selectedTicket._id}/close`).then(...)
+    }
+  };
 
   const renderContent = () => {
     if (store) {
@@ -68,7 +82,7 @@ const ChatContent = (props) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                mb: 6
+                mb: 6,
               }}
             >
               <MuiAvatar
@@ -92,8 +106,8 @@ const ChatContent = (props) => {
                 boxShadow: 3,
                 borderRadius: 5,
                 backgroundColor: 'background.paper',
-                cursor: mdAbove ? 'default' : 'pointer'
-              }}
+                cursor: mdAbove ? 'default' : 'pointer',
+              }}     
             >
               <Typography sx={{ fontWeight: 500, fontSize: '1.125rem', lineHeight: 'normal' }}>Start Conversation</Typography>
             </Box>
@@ -174,14 +188,17 @@ const ChatContent = (props) => {
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <OptionsMenu
-                  menuProps={{ sx: { mt: 2 } }}
-                  icon={<Icon icon="tabler:dots-vertical" />}
-                  iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-                  options={['Close Ticket']}
-                  onClick={()=>handleClose(console.log("Hello"))}
-                />
-              </Box>
+                  <OptionsMenu
+                    menuProps={{ sx: { mt: 2 } }}
+                    icon={<Icon icon="tabler:dots-vertical" />}
+                    iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                    options={['Close Ticket']}
+                    onClick={(option) => {
+                      if (option === 'Close Ticket') handleCloseTicket();
+                    }}
+                  />
+                </Box>
+
             </Box>
 
             {selectedChat && store.userProfile ? (
@@ -209,5 +226,4 @@ const ChatContent = (props) => {
 
   return renderContent();
 };
-
 export default ChatContent;

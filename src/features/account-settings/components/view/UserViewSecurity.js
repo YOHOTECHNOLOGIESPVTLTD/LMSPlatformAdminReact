@@ -12,7 +12,6 @@ import TextField from '@mui/material/TextField';
 import Icon from 'components/icon';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-// import { userChangePassword } from '../../../user-view/services/viewUserServices';
 import { userChangePassword } from 'features/user-management/users-page/services/userServices';
 
 const UserViewSecurity = ({ id }) => {
@@ -26,11 +25,16 @@ const UserViewSecurity = ({ id }) => {
   });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [passwordStrength, setPasswordStrength] = useState('');
+  const [loading, setLoading] = useState(false);
   const user = localStorage.getItem('userData');
   const userData = JSON.parse(user);
   console.log('usersssss', userData);
 
   const handleNewPasswordChange = (prop) => (event) => {
+    const password = event.target.value;
+    setValues({ ...values, [prop]: password });
+    checkPasswordStrength(password);
+    setPasswordsMatch(password === values.confirmNewPassword);
     setValues({ ...values, [prop]: event.target.value });
     if (prop === 'newPassword') {
       checkPasswordStrength(event.target.value);
@@ -42,8 +46,9 @@ const UserViewSecurity = ({ id }) => {
   };
 
   const handleConfirmNewPasswordChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-    setPasswordsMatch(values.newPassword === event.target.value);
+    const confirmPassword = event.target.value;
+    setValues({ ...values, [prop]: confirmPassword });
+    setPasswordsMatch(values.newPassword === confirmPassword);
   };
 
   const checkPasswordStrength = (password) => {
@@ -63,46 +68,68 @@ const UserViewSecurity = ({ id }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (values.newPassword === values.confirmNewPassword && values.newPassword !== '' && values.confirmNewPassword !== '') {
-      try {
-        let data = {
-          user_id: userData?._id,
-          email:userData?.email,
-          confirmPassword: values.confirmNewPassword,
-          newPassword: values.newPassword
-        };
-        const result = await userChangePassword(data);
-        if (result.success) {
-          toast.success(result.message);
-          setValues({
-            newPassword: '',
-            confirmNewPassword: '',
-            showNewPassword: false,
-            showConfirmNewPassword: false
-          });
-          setPasswordsMatch(true);
-        } else {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        console.error('Error:', error);
+    if (values.newPassword === '' || values.confirmNewPassword === '') {
+      toast.error('Please fill out both fields');
+      return;
+    }
+
+    if (!passwordsMatch) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    if (passwordStrength !== 'Strong') {
+      toast.error('Password strength must be Strong');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const data = {
+        user_id: id,
+        c_password: values.confirmNewPassword,
+        password: values.newPassword
+      };
+      
+      const result = await userChangePassword(data);
+
+      if (result.success) {
+        toast.success(result.message || 'Password changed successfully!');
+        setValues({
+          newPassword: '',
+          confirmNewPassword: '',
+          showNewPassword: false,
+          showConfirmNewPassword: false
+        });
+        setPasswordsMatch(true);
+        setPasswordStrength('');
+      } else {
+        toast.error(result.message || 'Failed to change password');
       }
-    } else {
-      setPasswordsMatch(false);
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Something went wrong while changing password');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <Card>
-          <CardHeader title="Change Password" />
+        <Card sx={{ boxShadow: 6, borderRadius: 3 }}>
+          <CardHeader title={
+    <Typography variant="h5" sx={{ color: 'blue', fontWeight: 'bold',fontSize: '1.5rem' }}>
+      Change Password
+    </Typography>
+  } />
           <CardContent>
             <Alert icon={false} severity="warning" sx={{ mb: 4 }}>
               <AlertTitle sx={{ fontWeight: 500, fontSize: '1.125rem', mb: (theme) => `${theme.spacing(2.5)} !important` }}>
-                Ensure that these requirements are met
+                Password requirements:
               </AlertTitle>
-              Minimum 8 characters long, uppercase & symbol
+              Minimum 8 characters, at least 1 uppercase letter and 1 number.
             </Alert>
 
             <form onSubmit={handleSubmit}>
@@ -111,9 +138,8 @@ const UserViewSecurity = ({ id }) => {
                   <TextField
                     fullWidth
                     label="New Password"
-                    placeholder="············"
+                    placeholder="Enter New Password"
                     value={values.newPassword}
-                    //id="user-view-security-new-password"
                     onChange={handleNewPasswordChange('newPassword')}
                     type={values.showNewPassword ? 'text' : 'password'}
                     InputProps={{
@@ -131,16 +157,17 @@ const UserViewSecurity = ({ id }) => {
                       )
                     }}
                   />
-                  <Typography variant="body2">{passwordStrength}</Typography>
+                  <Typography variant="body2" color={passwordStrength === 'Strong' ? 'success.main' : passwordStrength === 'Medium' ? 'warning.main' : 'error'}>
+                    {passwordStrength}
+                  </Typography>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    placeholder="············"
+                    placeholder="Re-enter new password"
                     label="Confirm New Password"
                     value={values.confirmNewPassword}
-                    // id="user-view-security-confirm-new-password"
                     type={values.showConfirmNewPassword ? 'text' : 'password'}
                     onChange={handleConfirmNewPasswordChange('confirmNewPassword')}
                     InputProps={{
@@ -166,8 +193,12 @@ const UserViewSecurity = ({ id }) => {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Button type="submit" variant="contained" disabled={!passwordsMatch}>
-                    Change Password
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={loading || !passwordsMatch || passwordStrength !== 'Strong'}
+                  >
+                    {loading ? 'Updating...' : 'Reset Password'}
                   </Button>
                 </Grid>
               </Grid>
