@@ -1,7 +1,6 @@
 // ** React Imports
 import { useState, useEffect } from 'react'
 
-// ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Tooltip from '@mui/material/Tooltip'
@@ -14,7 +13,6 @@ import ToggleButton from '@mui/material/ToggleButton'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 
-// ** Icon Imports
 import Icon from 'components/icon'
 
 // ** Third Party Components
